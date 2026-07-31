@@ -2,47 +2,51 @@ import Image from "next/image";
 import Link from "next/link";
 import { CircleUserRound, Handbag, Search } from "lucide-react";
 
-const navLinks = ["SHOP", "ABOUT", "COFFEE", "EVENT"] as const;
+const navLinks = ["HOME", "ABOUT", "CONTACT"] as const;
+
+const iconClassName = "size-[13px] md:size-4";
 
 export function Navbar() {
   return (
-    <header className="absolute inset-x-0 top-0 z-20 px-[18px] py-6">
-      <nav className="grid grid-cols-3 items-center">
-        <ul className="flex items-center gap-8">
-          {navLinks.map((link) => (
-            <li key={link}>
-              <Link
-                href={`/${link.toLowerCase()}`}
-                className="font-owners-medium text-base uppercase tracking-wide text-cream transition-opacity hover:opacity-70"
-              >
-                {link}
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <header
+      className="z-20 col-span-full row-start-1 row-end-2 flex items-center justify-between px-(--grid-inset) text-cream md:grid md:px-0"
+      style={{ gridTemplateColumns: "var(--grid-columns)" }}
+    >
+      <ul className="flex items-center gap-3 text-[11px] md:col-start-2 md:col-end-4 md:gap-4 md:pl-(--grid-gutter) md:text-[14px]">
+        {navLinks.map((link) => (
+          <li key={link}>
+            <Link
+              href={`/${link.toLowerCase()}`}
+              className="font-owners-medium uppercase tracking-wide transition-opacity hover:opacity-70"
+            >
+              {link}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-        <Link href="/" className="flex justify-center">
-          <Image
-            src="/brand/logonav.svg"
-            alt="Moment"
-            width={155}
-            height={29}
-            priority
-          />
-        </Link>
+      <Link href="/" className="flex justify-center md:col-start-5 md:col-end-6">
+        <Image
+          src="/brand/logonav.svg"
+          alt="Moment"
+          width={110}
+          height={21}
+          preload
+          className="h-auto w-[70px] md:w-[106px]"
+        />
+      </Link>
 
-        <div className="flex items-center justify-end gap-6">
-          <button type="button" aria-label="Account" className="text-cream">
-            <CircleUserRound size={20} strokeWidth={1.5} />
-          </button>
-          <button type="button" aria-label="Search" className="text-cream">
-            <Search size={20} strokeWidth={1.5} />
-          </button>
-          <button type="button" aria-label="Bag" className="text-cream">
-            <Handbag size={20} strokeWidth={1.5} />
-          </button>
-        </div>
-      </nav>
+      <div className="flex items-center gap-3 md:col-start-7 md:col-end-9 md:justify-end md:gap-4 md:pr-(--grid-gutter)">
+        <button type="button" aria-label="Bag">
+          <Handbag className={iconClassName} strokeWidth={1.5} />
+        </button>
+        <button type="button" aria-label="Search">
+          <Search className={iconClassName} strokeWidth={1.5} />
+        </button>
+        <button type="button" aria-label="Account">
+          <CircleUserRound className={iconClassName} strokeWidth={1.5} />
+        </button>
+      </div>
     </header>
   );
 }

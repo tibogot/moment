@@ -11,8 +11,59 @@
   --font-archivo-light-italic: var(--font-face-archivo-light-italic);
 }
 
+:root {
+  /* Viewport edge -> first/last column line. */
+  --grid-margin: max(1.25rem, 4.9vw);
+  /* Column line -> content. Applied on both sides of a line. */
+  --grid-gutter: max(0.75rem, 3.5vw);
+  /* Empty band above the first row line and below the last one. */
+  --grid-band: max(3.25rem, 8.6svh);
+  /* Viewport edge -> content, for anything not placed on a column. */
+  --grid-inset: calc(var(--grid-margin) + var(--grid-gutter));
+
+  /* Track 1 and the last track are the margins; the rest are the columns. */
+  --grid-columns: var(--grid-margin) repeat(3, minmax(0, 1fr))
+    var(--grid-margin);
+  --grid-rows: var(--grid-band) repeat(3, minmax(0, 1fr)) var(--grid-band);
+}
+
+@media (width >= 48rem) {
+  :root {
+    --grid-columns: var(--grid-margin) repeat(7, minmax(0, 1fr))
+      var(--grid-margin);
+  }
+}
+
+html {
+  background: var(--color-cream);
+  scrollbar-gutter: stable;
+  scroll-behavior: auto !important;
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 body {
   background: var(--color-cream);
   color: var(--color-black);
   font-family: var(--font-archivo-light), sans-serif;
+}
+
+a,
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
 }
