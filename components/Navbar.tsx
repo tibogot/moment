@@ -4,7 +4,7 @@ import { CircleUserRound, Handbag, Search } from "lucide-react";
 
 const navLinks = ["HOME", "ABOUT", "CONTACT"] as const;
 
-const iconClassName = "size-[13px] md:size-4";
+const iconStyle = { width: "var(--nav-icon)", height: "var(--nav-icon)" };
 
 export function Navbar() {
   return (
@@ -12,7 +12,10 @@ export function Navbar() {
       className="z-20 col-span-full row-start-1 row-end-2 flex items-center justify-between px-(--grid-inset) text-cream md:grid md:px-0"
       style={{ gridTemplateColumns: "var(--grid-columns)" }}
     >
-      <ul className="flex items-center gap-3 text-[11px] md:col-start-2 md:col-end-4 md:gap-4 md:pl-(--grid-gutter) md:text-[14px]">
+      <ul
+        className="flex items-center gap-3 md:col-start-2 md:col-end-4 md:gap-4 md:pl-(--grid-gutter)"
+        style={{ fontSize: "var(--nav-text)" }}
+      >
         {navLinks.map((link) => (
           <li key={link}>
             <Link
@@ -32,19 +35,20 @@ export function Navbar() {
           width={110}
           height={21}
           preload
-          className="h-auto w-[70px] md:w-[106px]"
+          className="h-auto"
+          style={{ width: "var(--nav-logo)" }}
         />
       </Link>
 
       <div className="flex items-center gap-3 md:col-start-7 md:col-end-9 md:justify-end md:gap-4 md:pr-(--grid-gutter)">
         <button type="button" aria-label="Bag">
-          <Handbag className={iconClassName} strokeWidth={1.5} />
+          <Handbag style={iconStyle} strokeWidth={1.5} />
         </button>
         <button type="button" aria-label="Search">
-          <Search className={iconClassName} strokeWidth={1.5} />
+          <Search style={iconStyle} strokeWidth={1.5} />
         </button>
         <button type="button" aria-label="Account">
-          <CircleUserRound className={iconClassName} strokeWidth={1.5} />
+          <CircleUserRound style={iconStyle} strokeWidth={1.5} />
         </button>
       </div>
     </header>

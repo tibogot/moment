@@ -49,7 +49,10 @@ export function Hero() {
       >
         <Navbar />
 
-        <h1 className="col-start-2 col-end-5 row-start-4 row-end-5 self-end pb-4 pl-(--grid-gutter) font-owners-narrow-bold text-[16vw] leading-[0.9] tracking-[-0.005em] uppercase md:col-end-7 md:row-start-3 md:row-end-5 md:pb-[2.2vw] md:text-[10.6vw]">
+        <h1
+          className="col-start-2 col-end-5 row-start-4 row-end-5 self-end pb-4 pl-(--grid-gutter) font-owners-narrow-bold leading-[0.9] tracking-[-0.005em] uppercase md:col-end-7 md:row-start-3 md:row-end-5 md:pb-[3.3svh]"
+          style={{ fontSize: "var(--hero-headline)" }}
+        >
           Un moment
           <br />
           gourmand,
@@ -57,7 +60,10 @@ export function Hero() {
           simplement.
         </h1>
 
-        <p className="col-start-3 col-end-5 row-start-3 row-end-4 self-end pr-(--grid-gutter) pb-4 text-right font-archivo-light text-[13px] leading-[1.43] md:col-start-7 md:col-end-9 md:row-start-4 md:row-end-5 md:pb-[2.85vw] md:text-[1.63vw]">
+        <p
+          className="col-start-3 col-end-5 row-start-3 row-end-4 self-end pr-(--grid-gutter) pb-4 text-right font-archivo-light leading-[1.43] md:col-start-7 md:col-end-9 md:row-start-4 md:row-end-5 md:pb-[4.3svh]"
+          style={{ fontSize: "var(--hero-body)" }}
+        >
           Moment, c&apos;est un traiteur pour particuliers et entreprises,
           celles qui veulent projeter leur image auprès de leurs clients.
         </p>

@@ -25,12 +25,31 @@
   --grid-columns: var(--grid-margin) repeat(3, minmax(0, 1fr))
     var(--grid-margin);
   --grid-rows: var(--grid-band) repeat(3, minmax(0, 1fr)) var(--grid-band);
+
+  /* Type is sized off the width, but the rules it has to sit between are
+     positioned off the height. The svh term stops the headline outgrowing its
+     rows on viewports wider than ~16:10 — raise it to let type run bigger. */
+  --hero-headline: min(16vw, 19svh);
+  --hero-body: 13px;
+  --nav-text: 11px;
+  --nav-logo: 70px;
+  --nav-icon: 13px;
 }
 
 @media (width >= 48rem) {
   :root {
     --grid-columns: var(--grid-margin) repeat(7, minmax(0, 1fr))
       var(--grid-margin);
+
+    /* The reference art is 1.47 aspect, where these two terms are equal. Any
+       wider and the svh term governs, holding the headline at ~75% of its two
+       rows. Raise the svh value to let the type run closer to the rule above. */
+    --hero-headline: min(10.6vw, 15svh);
+    --hero-body: min(1.63vw, 2.4svh);
+    /* Hold the sizes tuned at 1440, then keep scaling past it. */
+    --nav-text: max(14px, 0.97vw);
+    --nav-logo: max(106px, 7.36vw);
+    --nav-icon: max(16px, 1.11vw);
   }
 }
 
@@ -66,4 +85,37 @@ a,
 button:not(:disabled),
 [role="button"]:not(:disabled) {
   cursor: pointer;
+}
+
+.block-line-wrapper {
+  position: relative;
+  width: max-content;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-left .block-line-wrapper {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.block-line {
+  position: relative;
+  display: block;
+}
+
+.block-revealer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 101%;
+  height: 101%;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 1;
+}
+
+[data-text-reveal] {
+  visibility: hidden;
 }

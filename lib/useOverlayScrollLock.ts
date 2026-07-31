@@ -1,6 +1,6 @@
 "use client";
 
-import { useLenis } from "@/components/SmoothScroll";
+import { useLenis } from "lenis/react";
 import { useEffect } from "react";
 
 export function useOverlayScrollLock(active: boolean) {
