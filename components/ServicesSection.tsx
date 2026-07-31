@@ -26,7 +26,7 @@ const services = [
 export function ServicesSection() {
   return (
     <GridSection className="pb-[14svh]">
-      <ul className="col-start-2 col-end-5 md:col-end-9">
+      <ul className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-9">
         {services.map(({ index, title, href, body }) => (
           <li key={index} className="border-t border-sky">
             <Link
@@ -37,7 +37,7 @@ export function ServicesSection() {
                 {index}
               </span>
 
-              <h3 className="font-owners-narrow-bold text-[9vw] leading-[0.95] text-black uppercase md:col-span-6 md:text-[4vw]">
+              <h3 className="font-owners-narrow-bold text-[8vw] leading-[0.95] wrap-break-word text-black uppercase md:col-span-6 md:text-[min(4vw,6svh)]">
                 {title}
               </h3>
 

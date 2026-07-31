@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import {
   archivoLight,
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body className="min-h-svh flex flex-col">
         <SmoothScroll>
           <ScrollToTop />
+          <Navbar />
           <div className="relative flex flex-1 flex-col">{children}</div>
         </SmoothScroll>
       </body>

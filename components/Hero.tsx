@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { GridLines } from "@/components/GridLines";
-import { Navbar } from "@/components/Navbar";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
 
 /** Cells the type sits in, so the rules can be dropped there. */
@@ -16,7 +15,10 @@ const mobileHoles: GridHole[] = [
 
 export function Hero() {
   return (
-    <section className="relative h-svh w-full overflow-hidden">
+    <section
+      className="relative h-svh w-full overflow-hidden"
+      data-transparent-nav
+    >
       <Image
         src="/images/anita-austvika.jpg"
         alt=""
@@ -47,8 +49,6 @@ export function Hero() {
           gridTemplateRows: "var(--grid-rows)",
         }}
       >
-        <Navbar />
-
         <h1
           className="col-start-2 col-end-5 row-start-4 row-end-5 self-end pb-4 pl-(--grid-gutter) font-owners-narrow-bold leading-[0.9] tracking-[-0.005em] uppercase md:col-end-7 md:row-start-3 md:row-end-5 md:pb-[3.3svh]"
           style={{ fontSize: "var(--hero-headline)" }}
