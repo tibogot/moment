@@ -29,8 +29,8 @@
   /* Type is sized off the width, but the rules it has to sit between are
      positioned off the height. The svh term stops the headline outgrowing its
      rows on viewports wider than ~16:10 — raise it to let type run bigger. */
-  --hero-headline: min(16vw, 19svh);
-  --hero-body: 13px;
+  --hero-headline: min(17vw, 8svh);
+  --hero-body: 14px;
   --nav-text: 11px;
   --nav-logo: 70px;
   --nav-icon: 13px;

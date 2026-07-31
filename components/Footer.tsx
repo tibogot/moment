@@ -1,13 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { mainNav } from "@/lib/routes";
 
-const footerLinks = [
-  { label: "Shop", href: "/shop" },
-  { label: "About", href: "/about" },
-  { label: "Coffee", href: "/coffee" },
-  { label: "Event", href: "/event" },
-  { label: "Contact", href: "/contact" },
-] as const;
+const footerLinks = mainNav;
 
 const socialLinks = [
   { label: "Instagram", href: "#", icon: "/brand/instagram.svg" },

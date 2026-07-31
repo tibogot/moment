@@ -1,12 +1,14 @@
 import { Footer } from "@/components/Footer";
-import { GridSection } from "@/components/GridSection";
 import { Hero } from "@/components/Hero";
+import { IntroSection } from "@/components/IntroSection";
+import { ServicesSection } from "@/components/ServicesSection";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <GridSection className="min-h-svh" />
+      <IntroSection />
+      <ServicesSection />
       <Footer />
     </>
   );
