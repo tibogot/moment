@@ -10,6 +10,7 @@ import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 import { CartPanel } from "@/components/CartPanel";
 import { GridLines } from "@/components/GridLines";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
+import { ShopNavMenu } from "@/components/ShopNavMenu";
 import { SearchPanel } from "@/components/SearchPanel";
 import {
   getCartSnapshot,
@@ -18,11 +19,13 @@ import {
 } from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { mainNav, routes } from "@/lib/routes";
-import type { ShopifyProduct } from "@/lib/shopify/queries";
+import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
 const DURATION = 0.48;
 const EASE = "power2.out";
 const CLOSE_EASE = "power2.inOut";
+const MENU_CONTENT_OFFSET = 6;
+const CONTENT_REVEAL_AT = 0.22;
 
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
 const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
@@ -52,9 +55,16 @@ const BLACK = "#000000";
 
 type NavbarProps = {
   products?: ShopifyProduct[];
+  collections?: ShopifyCollection[];
 };
 
-export function Navbar({ products = [] }: NavbarProps) {
+type NavAppearance = {
+  solid: boolean;
+  expanded: boolean;
+  immediate?: boolean;
+};
+
+export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const pathname = usePathname();
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
   const isMobileNav = useSyncExternalStore(
@@ -67,8 +77,12 @@ export function Navbar({ products = [] }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [navSolid, setNavSolid] = useState(!allowsTransparentNav);
+
+  const overlayOpen = cartOpen || searchOpen || menuOpen;
+  const navExpanded = shopMenuOpen && !overlayOpen && !isMobileNav;
 
   const cart = useSyncExternalStore(
     subscribeCart,
@@ -82,6 +96,7 @@ export function Navbar({ products = [] }: NavbarProps) {
     const openCart = () => {
       setMenuOpen(false);
       setSearchOpen(false);
+      setShopMenuOpen(false);
       setCartOpen(true);
     };
 
@@ -93,23 +108,34 @@ export function Navbar({ products = [] }: NavbarProps) {
   const shellRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuInnerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLSpanElement>(null);
   const navTweenRef = useRef<gsap.core.Timeline | null>(null);
+  const menuMeasureAttemptsRef = useRef(0);
   const scrollNavTriggerRef = useRef<ScrollTriggerType | null>(null);
   const hasTransparentHeroRef = useRef(allowsTransparentNav);
   const navHoveredRef = useRef(navHovered);
+  const navExpandedRef = useRef(navExpanded);
+  const overlayOpenRef = useRef(overlayOpen);
 
-  const isNavSolid = allowsTransparentNav ? navSolid || navHovered : true;
+  const isNavSolid =
+    allowsTransparentNav ? navSolid || navHovered || overlayOpen || navExpanded : true;
 
   // Keep refs current before GSAP reads them — useEffect is too late for the
   // hover-leave path.
   useLayoutEffect(() => {
     hasTransparentHeroRef.current = allowsTransparentNav;
     navHoveredRef.current = navHovered;
+    navExpandedRef.current = navExpanded;
+    overlayOpenRef.current = overlayOpen;
   });
 
   const shouldScrollControlNav = () =>
-    hasTransparentHeroRef.current && !navHoveredRef.current;
+    hasTransparentHeroRef.current &&
+    !navHoveredRef.current &&
+    !overlayOpenRef.current &&
+    !navExpandedRef.current;
 
   /** Drive the whole appearance off a single 0→1 scrub value. */
   const applyScrollNavAppearance = (progress: number, navHeight: number) => {
@@ -146,17 +172,29 @@ export function Navbar({ products = [] }: NavbarProps) {
     applyScrollNavAppearance(trigger.progress, nav.offsetHeight);
   };
 
-  const runNavAnimation = (solid: boolean, immediate = false) => {
+  const runNavAnimation = ({
+    solid,
+    expanded,
+    immediate = false,
+  }: NavAppearance) => {
     const nav = navRef.current;
     const bg = bgRef.current;
+    const menu = menuRef.current;
+    const menuInner = menuInnerRef.current;
     const logo = logoRef.current;
     if (!nav || !bg || !logo) return;
 
     navTweenRef.current?.kill();
+    if (menu) gsap.killTweensOf(menu);
+    if (menuInner) gsap.killTweensOf(menuInner);
     gsap.killTweensOf(bg);
 
     const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
     const navHeight = nav.offsetHeight;
+    const menuHeight =
+      expanded && menuInner
+        ? Math.max(menuInner.offsetHeight, menuInner.scrollHeight)
+        : 0;
     const duration = immediate ? 0 : DURATION;
     const colorAt = duration * 0.52;
 
@@ -167,12 +205,87 @@ export function Navbar({ products = [] }: NavbarProps) {
     });
     navTweenRef.current = tl;
 
+    const bgScaleY = Number(gsap.getProperty(bg, "scaleY") ?? 0);
+    const bgVisible = bgScaleY > 0.01;
+    const menuCurrentH = menu
+      ? Number(gsap.getProperty(menu, "height") ?? 0)
+      : 0;
+    const menuIsOpen = menuCurrentH > 1;
+
     if (solid) {
       tl.set(links, { color: BLACK }, 0);
       tl.set(logo, { filter: "brightness(0)" }, 0);
-      tl.to(bg, { scaleY: 1, height: navHeight, duration: duration * 0.75 }, 0);
+
+      const showMenu =
+        expanded && menu != null && menuInner != null && menuHeight > 0;
+
+      if (showMenu) {
+        if (!menuIsOpen) {
+          tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET }, 0);
+        }
+
+        tl.to(
+          bg,
+          {
+            scaleY: 1,
+            height: navHeight + menuHeight,
+            duration: duration * (bgVisible ? 1 : 1.1),
+          },
+          0,
+        );
+        tl.to(menu, { height: menuHeight, duration: duration * 1.1 }, 0);
+        tl.to(
+          menuInner,
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: duration * 0.7,
+          },
+          duration * CONTENT_REVEAL_AT,
+        );
+      } else if (menuIsOpen && menu && menuInner) {
+        tl.to(
+          menuInner,
+          {
+            autoAlpha: 0,
+            y: MENU_CONTENT_OFFSET,
+            duration: duration * 0.28,
+            ease: "power1.out",
+          },
+          0,
+        );
+        tl.to(menu, { height: 0, ease: CLOSE_EASE }, 0);
+        tl.to(bg, { scaleY: 1, height: navHeight, ease: CLOSE_EASE }, 0);
+      } else {
+        if (menu) tl.set(menu, { height: 0 });
+        if (menuInner)
+          tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+        tl.to(
+          bg,
+          { scaleY: 1, height: navHeight, duration: duration * 0.75 },
+          0,
+        );
+      }
     } else {
-      tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
+      if (menuIsOpen && menu && menuInner) {
+        tl.to(
+          menuInner,
+          {
+            autoAlpha: 0,
+            y: MENU_CONTENT_OFFSET,
+            duration: duration * 0.28,
+            ease: "power1.out",
+          },
+          0,
+        );
+        tl.to(menu, { height: 0, ease: CLOSE_EASE }, 0);
+        tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
+      } else {
+        if (menu) tl.set(menu, { height: 0 });
+        if (menuInner)
+          tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+        tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
+      }
       tl.to(links, { color: CREAM, duration: duration * 0.35 }, colorAt);
       tl.to(
         logo,
@@ -182,6 +295,23 @@ export function Navbar({ products = [] }: NavbarProps) {
     }
 
     if (immediate) tl.progress(1, false);
+
+    if (
+      expanded &&
+      menuInner &&
+      menuHeight === 0 &&
+      menuMeasureAttemptsRef.current < 2
+    ) {
+      menuMeasureAttemptsRef.current += 1;
+      requestAnimationFrame(() => {
+        runNavAnimation({ solid, expanded, immediate });
+      });
+      return;
+    }
+
+    if (menuHeight > 0) {
+      menuMeasureAttemptsRef.current = 0;
+    }
   };
 
   // Scrub the nav from transparent to cream across the bottom of the hero.
@@ -192,7 +322,7 @@ export function Navbar({ products = [] }: NavbarProps) {
       if (!bg || !nav) return;
 
       if (!allowsTransparentNav) {
-        runNavAnimation(true, true);
+        runNavAnimation({ solid: true, expanded: false, immediate: true });
         return;
       }
 
@@ -209,7 +339,7 @@ export function Navbar({ products = [] }: NavbarProps) {
         TRANSPARENT_NAV_SELECTOR,
       );
       if (!transparentSection) {
-        runNavAnimation(true, true);
+        runNavAnimation({ solid: true, expanded: false, immediate: true });
         return;
       }
 
@@ -260,6 +390,19 @@ export function Navbar({ products = [] }: NavbarProps) {
     { scope: headerRef, dependencies: [allowsTransparentNav, pathname] },
   );
 
+  // Park the shop submenu off-screen before its first open.
+  useGSAP(
+    () => {
+      const menu = menuRef.current;
+      const menuInner = menuInnerRef.current;
+      if (!menu || !menuInner) return;
+
+      gsap.set(menu, { height: 0, overflow: "hidden" });
+      gsap.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+    },
+    { scope: headerRef },
+  );
+
   // Hover over the hero forces the cream state; leaving hands control back to
   // the scrub.
   useGSAP(
@@ -268,29 +411,142 @@ export function Navbar({ products = [] }: NavbarProps) {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      if (allowsTransparentNav && !navHovered) {
+      if (
+        allowsTransparentNav &&
+        !navHovered &&
+        !overlayOpen &&
+        !navExpanded
+      ) {
         const progress = scrollNavTriggerRef.current?.progress ?? 0;
 
         if (progress <= 0.01) {
-          runNavAnimation(false, reduceMotion);
+          runNavAnimation({
+            solid: false,
+            expanded: false,
+            immediate: reduceMotion,
+          });
         } else if (progress >= 0.99) {
-          runNavAnimation(true, reduceMotion);
+          runNavAnimation({
+            solid: true,
+            expanded: false,
+            immediate: reduceMotion,
+          });
         } else {
           syncScrollNavAppearance();
         }
         return;
       }
 
-      runNavAnimation(isNavSolid, reduceMotion);
+      runNavAnimation({
+        solid: isNavSolid,
+        expanded: navExpanded,
+        immediate: reduceMotion || overlayOpen,
+      });
     },
     {
       scope: headerRef,
-      dependencies: [navHovered, allowsTransparentNav, isNavSolid],
+      dependencies: [
+        navHovered,
+        allowsTransparentNav,
+        isNavSolid,
+        navExpanded,
+        overlayOpen,
+        collections.length,
+      ],
+    },
+  );
+
+  useGSAP(
+    () => {
+      const menuInner = menuInnerRef.current;
+      const menu = menuRef.current;
+      const bg = bgRef.current;
+      const nav = navRef.current;
+      if (!menuInner || !menu || !bg || !nav || !navExpanded) return;
+
+      const observer = new ResizeObserver(() => {
+        if (!navExpandedRef.current) return;
+
+        const navHeight = nav.offsetHeight;
+        const menuHeight = menuInner.offsetHeight;
+
+        gsap.to(menu, {
+          height: menuHeight,
+          duration: DURATION * 0.35,
+          ease: EASE,
+          overwrite: "auto",
+        });
+        gsap.to(bg, {
+          height: navHeight + menuHeight,
+          duration: DURATION * 0.35,
+          ease: EASE,
+          overwrite: "auto",
+        });
+      });
+
+      observer.observe(menuInner);
+      return () => observer.disconnect();
+    },
+    {
+      scope: headerRef,
+      dependencies: [navExpanded],
     },
   );
 
   const linkClassName =
     "font-owners-medium uppercase tracking-wide transition-opacity hover:opacity-70";
+
+  const [shopNav, ...otherNav] = mainNav;
+
+  const openShopMenu = () => {
+    if (cartOpen || searchOpen || menuOpen || isMobileNav) return;
+    setShopMenuOpen(true);
+  };
+
+  const closeShopMenu = () => {
+    setShopMenuOpen(false);
+  };
+
+  useLayoutEffect(() => {
+    if (!overlayOpen) return;
+
+    menuMeasureAttemptsRef.current = 0;
+    runNavAnimation({
+      solid: isNavSolid,
+      expanded: false,
+      immediate: true,
+    });
+  }, [overlayOpen, isNavSolid]);
+
+  useLayoutEffect(() => {
+    if (navExpanded) return;
+
+    const menu = menuRef.current;
+    const bg = bgRef.current;
+    const nav = navRef.current;
+    if (!menu || !bg || !nav) return;
+
+    const menuCurrentH = Number(gsap.getProperty(menu, "height") ?? 0);
+    const navHeight = nav.offsetHeight;
+    const bgHeight = Number(gsap.getProperty(bg, "height") ?? 0);
+
+    if (menuCurrentH <= 1 && bgHeight <= navHeight + 1) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    runNavAnimation({
+      solid: isNavSolid,
+      expanded: false,
+      immediate: reduceMotion || overlayOpen,
+    });
+  }, [navExpanded, isNavSolid, overlayOpen]);
+
+  useLayoutEffect(() => {
+    setShopMenuOpen(false);
+    menuMeasureAttemptsRef.current = 0;
+  }, [pathname]);
 
   return (
     <header
@@ -310,6 +566,9 @@ export function Navbar({ products = [] }: NavbarProps) {
         onMouseLeave={() => {
           navHoveredRef.current = false;
           setNavHovered(false);
+          if (!cartOpen && !searchOpen) {
+            setShopMenuOpen(false);
+          }
         }}
       >
         <div
@@ -333,7 +592,10 @@ export function Navbar({ products = [] }: NavbarProps) {
           }}
         >
           {/* Mobile: menu + search sit together on the left. */}
-          <div className="flex items-center gap-3.5 justify-self-start nav:hidden">
+          <div
+            className="flex items-center gap-3.5 justify-self-start nav:hidden"
+            onMouseEnter={closeShopMenu}
+          >
             <button
               type="button"
               aria-label="Open menu"
@@ -341,6 +603,7 @@ export function Navbar({ products = [] }: NavbarProps) {
               onClick={() => {
                 setSearchOpen(false);
                 setCartOpen(false);
+                setShopMenuOpen(false);
                 setMenuOpen(true);
               }}
             >
@@ -353,6 +616,7 @@ export function Navbar({ products = [] }: NavbarProps) {
               onClick={() => {
                 setMenuOpen(false);
                 setCartOpen(false);
+                setShopMenuOpen(false);
                 setSearchOpen(true);
               }}
             >
@@ -364,8 +628,17 @@ export function Navbar({ products = [] }: NavbarProps) {
             className="hidden nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-4 nav:pl-(--grid-gutter)"
             style={{ fontSize: "var(--nav-text)" }}
           >
-            {mainNav.map(({ label, href }) => (
-              <li key={href}>
+            <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
+              <Link
+                href={shopNav.href}
+                className={linkClassName}
+                data-nav-link
+              >
+                {shopNav.label}
+              </Link>
+            </li>
+            {otherNav.map(({ label, href }) => (
+              <li key={href} onMouseEnter={closeShopMenu}>
                 <Link href={href} className={linkClassName} data-nav-link>
                   {label}
                 </Link>
@@ -377,6 +650,7 @@ export function Navbar({ products = [] }: NavbarProps) {
             href={routes.home}
             aria-label="Moment home"
             className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6"
+            onMouseEnter={closeShopMenu}
           >
             <span ref={logoRef} data-nav-logo className="inline-flex">
               <Image
@@ -391,7 +665,10 @@ export function Navbar({ products = [] }: NavbarProps) {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--grid-gutter)">
+          <div
+            className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--grid-gutter)"
+            onMouseEnter={closeShopMenu}
+          >
             <button
               type="button"
               aria-label="Search"
@@ -400,6 +677,7 @@ export function Navbar({ products = [] }: NavbarProps) {
               onClick={() => {
                 setMenuOpen(false);
                 setCartOpen(false);
+                setShopMenuOpen(false);
                 setSearchOpen(true);
               }}
             >
@@ -422,6 +700,7 @@ export function Navbar({ products = [] }: NavbarProps) {
               onClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(false);
+                setShopMenuOpen(false);
                 setCartOpen(true);
               }}
               className="relative"
@@ -435,9 +714,25 @@ export function Navbar({ products = [] }: NavbarProps) {
             </button>
           </div>
         </nav>
+
+        <div
+          ref={menuRef}
+          className={`relative hidden h-0 overflow-hidden nav:grid nav:grid-cols-(--grid-columns) nav:block ${
+            navExpanded ? "" : "pointer-events-none"
+          }`}
+          aria-hidden={!navExpanded}
+        >
+          <div ref={menuInnerRef} className="nav:col-start-2 nav:col-end-9">
+            <ShopNavMenu collections={collections} />
+          </div>
+        </div>
       </div>
 
-      <MobileNavMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileNavMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        collections={collections}
+      />
       <SearchPanel
         open={searchOpen}
         onClose={() => setSearchOpen(false)}

@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
-import { mainNav } from "@/lib/routes";
+import { mainNav, routes } from "@/lib/routes";
+import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
 type MobileNavMenuProps = {
   open: boolean;
   onClose: () => void;
+  collections?: ShopifyCollection[];
 };
 
 const ANIM_DURATION = 0.75;
@@ -21,11 +23,16 @@ const CLOSE_EASE = "power3.inOut";
  * Stays mounted and slides in and out, so there is no open/closing state to
  * juggle — `open` alone drives the timeline.
  */
-export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
+export function MobileNavMenu({
+  open,
+  onClose,
+  collections = [],
+}: MobileNavMenuProps) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);
   const hasOpenedRef = useRef(false);
+  const [shopOpen, setShopOpen] = useState(false);
 
   useOverlayScrollLock(open);
 
@@ -46,11 +53,15 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
   useEffect(() => {
     if (previousPathname.current === pathname) return;
     previousPathname.current = pathname;
+    setShopOpen(false);
     onClose();
   }, [pathname, onClose]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      setShopOpen(false);
+      return;
+    }
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -108,6 +119,8 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
     };
   }, [open]);
 
+  const [shopNav, ...otherNav] = mainNav;
+
   return (
     <div
       ref={panelRef}
@@ -135,9 +148,65 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
           </button>
         </div>
 
-        <nav className="row-start-2 row-end-5 flex flex-col justify-center px-(--grid-inset)">
+        <nav className="row-start-2 row-end-5 flex flex-col justify-center overflow-y-auto px-(--grid-inset)">
           <ul className="flex flex-col gap-2">
-            {mainNav.map(({ label, href }) => (
+            <li className="overflow-hidden">
+              <div className="flex items-center justify-between gap-4">
+                <Link
+                  href={shopNav.href}
+                  data-menu-item
+                  onClick={onClose}
+                  className="font-owners-narrow-bold block text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                >
+                  {shopNav.label}
+                </Link>
+                {collections.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShopOpen((current) => !current)}
+                    aria-expanded={shopOpen}
+                    aria-label={
+                      shopOpen ? "Hide collections" : "Show collections"
+                    }
+                    className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                  >
+                    {shopOpen ? "−" : "+"}
+                  </button>
+                )}
+              </div>
+
+              {collections.length > 0 && (
+                <div
+                  className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                  style={{ maxHeight: shopOpen ? "24rem" : "0" }}
+                >
+                  <ul className="mt-3 flex flex-col gap-2 border-l border-sky pl-4">
+                    <li>
+                      <Link
+                        href={routes.shop}
+                        onClick={onClose}
+                        className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                      >
+                        All
+                      </Link>
+                    </li>
+                    {collections.map((collection) => (
+                      <li key={collection.id}>
+                        <Link
+                          href={routes.collection(collection.handle)}
+                          onClick={onClose}
+                          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                        >
+                          {collection.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+
+            {otherNav.map(({ label, href }) => (
               <li key={href} className="overflow-hidden">
                 <Link
                   href={href}

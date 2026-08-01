@@ -3,6 +3,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import { getProducts } from "@/lib/shopify/products";
+import { getCollections } from "@/lib/shopify/collections";
 import {
   archivoLight,
   archivoLightItalic,
@@ -23,7 +24,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const products = await getProducts();
+  const [products, collections] = await Promise.all([
+    getProducts(),
+    getCollections(),
+  ]);
+  const navCollections = collections.filter(
+    (collection) => collection.handle !== "frontpage",
+  );
 
   return (
     <html
@@ -41,7 +48,7 @@ export default async function RootLayout({
       <body className="min-h-svh flex flex-col">
         <SmoothScroll>
           <ScrollToTop />
-          <Navbar products={products} />
+          <Navbar products={products} collections={navCollections} />
           <div className="relative flex flex-1 flex-col">{children}</div>
         </SmoothScroll>
       </body>
