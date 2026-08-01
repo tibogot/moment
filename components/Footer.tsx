@@ -47,15 +47,18 @@ export function Footer() {
           gridTemplateRows: "var(--grid-rows)",
         }}
       >
-        {/* Logo rides in the top band, outside the ruled field. */}
-        <div className="col-start-2 col-end-5 row-start-1 row-end-2 self-center px-(--grid-gutter) md:col-end-4">
-          <Link href={routes.home} className="inline-flex">
+        {/* Logo sits inside the first cell of the ruled field — the square
+            directly above the headline — so the box frames it. Sized as a
+            share of the cell rather than in px, since the cell is a column
+            wide and that changes with the viewport. */}
+        <div className="col-start-2 col-end-3 row-start-2 row-end-3 flex items-center justify-center">
+          <Link href={routes.home} className="flex w-full justify-center">
             <Image
               src="/brand/logonav.svg"
               alt={siteConfig.name}
               width={155}
               height={29}
-              className="h-auto w-[100px] md:w-[120px]"
+              className="h-auto w-[62%] max-w-30"
               style={{ filter: "brightness(0)" }}
             />
           </Link>
