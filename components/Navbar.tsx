@@ -10,6 +10,7 @@ import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 import { CartPanel } from "@/components/CartPanel";
 import { GridLines } from "@/components/GridLines";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
+import { SearchPanel } from "@/components/SearchPanel";
 import {
   getCartSnapshot,
   getServerCartSnapshot,
@@ -39,6 +40,7 @@ export function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [navSolid, setNavSolid] = useState(!hasTransparentHero);
 
@@ -53,6 +55,7 @@ export function Navbar() {
   useEffect(() => {
     const openCart = () => {
       setMenuOpen(false);
+      setSearchOpen(false);
       setCartOpen(true);
     };
 
@@ -267,6 +270,7 @@ export function Navbar() {
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-40">
       <div
         ref={shellRef}
+        data-nav-intro
         className="relative"
         onMouseEnter={() => {
           navHoveredRef.current = true;
@@ -339,12 +343,16 @@ export function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4 md:col-start-6 md:col-end-9 md:justify-end md:pr-(--grid-gutter)">
-            {/* Search still has no backing page. */}
             <button
               type="button"
               aria-label="Search"
               data-nav-link
               className="hidden md:block"
+              onClick={() => {
+                setMenuOpen(false);
+                setCartOpen(false);
+                setSearchOpen(true);
+              }}
             >
               <Search style={iconStyle} strokeWidth={1.5} />
             </button>
@@ -362,7 +370,11 @@ export function Navbar() {
               type="button"
               aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
               data-nav-link
-              onClick={() => setCartOpen(true)}
+              onClick={() => {
+                setMenuOpen(false);
+                setSearchOpen(false);
+                setCartOpen(true);
+              }}
               className="relative"
             >
               <Handbag style={iconStyle} strokeWidth={1.5} />
@@ -377,6 +389,7 @@ export function Navbar() {
       </div>
 
       <MobileNavMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );

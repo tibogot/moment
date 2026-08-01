@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
 import { mainNav } from "@/lib/routes";
@@ -13,7 +13,8 @@ type MobileNavMenuProps = {
   onClose: () => void;
 };
 
-const ANIM_DURATION = 0.5;
+const ANIM_DURATION = 0.55;
+const ANIM_EASE = "power4.inOut";
 
 /**
  * Stays mounted and slides in and out, so there is no open/closing state to
@@ -25,6 +26,12 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
   const previousPathname = useRef(pathname);
 
   useOverlayScrollLock(open);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    gsap.set(panel, { yPercent: -100 });
+  }, []);
 
   // Close once navigation has actually happened.
   useEffect(() => {
@@ -49,13 +56,14 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
     if (!panel) return;
 
     const items = panel.querySelectorAll("[data-menu-item]");
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      defaults: { ease: ANIM_EASE, overwrite: "auto" },
+    });
 
     if (open) {
       tl.to(panel, {
         yPercent: 0,
         duration: ANIM_DURATION,
-        ease: "power4.inOut",
       });
       tl.fromTo(
         items,
@@ -67,7 +75,6 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
       tl.to(panel, {
         yPercent: -100,
         duration: ANIM_DURATION,
-        ease: "power4.inOut",
       });
     }
 
@@ -79,7 +86,7 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
   return (
     <div
       ref={panelRef}
-      className="fixed inset-0 z-50 -translate-y-full bg-cream text-black md:hidden"
+      className="fixed inset-0 z-50 bg-cream text-black md:hidden"
       role="dialog"
       aria-modal="true"
       aria-label="Menu"

@@ -3,8 +3,12 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { GridLines } from "@/components/GridLines";
+import TextReveal from "@/components/TextReveal";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+
+/** Matches --color-sky; TextReveal paints the block with an inline style. */
+const SKY = "#a7c5ee";
 
 // The calendar sits in the page's 7 columns — a Monday-to-Sunday week is why
 // the grid is 7 wide. The outer template only carries the margins; the inner
@@ -123,9 +127,15 @@ export function CalendarSection({
       >
         <div className="col-start-2">
           <div className="flex flex-wrap items-end justify-between gap-4 px-(--grid-gutter) pb-[4svh]">
-            <h2 className="font-owners-narrow-bold text-[16vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
-              {monthLabel}
-            </h2>
+            {/* text-left: TextReveal centres each split line unless an ancestor opts out.
+                key remounts the reveal when Prev/Next changes the month. */}
+            <div className="min-w-0 flex-1 text-left">
+              <TextReveal key={monthLabel} blockColor={SKY} stagger={0.12}>
+                <h2 className="font-owners-narrow-bold text-[16vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
+                  {monthLabel}
+                </h2>
+              </TextReveal>
+            </div>
 
             <div className="flex items-center gap-4 pb-2">
               <button

@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+} from "react";
 import { gsap } from "@/lib/gsapConfig";
 import { removeFromCart, updateCartLine } from "@/app/actions/cart";
 import {
@@ -19,7 +26,8 @@ type CartPanelProps = {
   onClose: () => void;
 };
 
-const ANIM_DURATION = 0.5;
+const ANIM_DURATION = 0.55;
+const ANIM_EASE = "power4.inOut";
 
 export function CartPanel({ open, onClose }: CartPanelProps) {
   const cart = useSyncExternalStore(
@@ -28,10 +36,22 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     getServerCartSnapshot,
   );
   const panelRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   useOverlayScrollLock(open);
+
+  // Park off-screen before paint — no Tailwind translate utilities, they stack
+  // with GSAP's xPercent and leave the panel stuck out of view.
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    if (!panel || !backdrop) return;
+
+    gsap.set(panel, { xPercent: 100 });
+    gsap.set(backdrop, { autoAlpha: 0 });
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -46,16 +66,23 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
   useEffect(() => {
     const panel = panelRef.current;
-    if (!panel) return;
+    const backdrop = backdropRef.current;
+    if (!panel || !backdrop) return;
 
-    const tween = gsap.to(panel, {
-      xPercent: open ? 0 : 100,
-      duration: ANIM_DURATION,
-      ease: "power4.inOut",
+    const tl = gsap.timeline({
+      defaults: { duration: ANIM_DURATION, ease: ANIM_EASE, overwrite: "auto" },
     });
 
+    if (open) {
+      tl.to(backdrop, { autoAlpha: 1 }, 0);
+      tl.to(panel, { xPercent: 0 }, 0);
+    } else {
+      tl.to(panel, { xPercent: 100 }, 0);
+      tl.to(backdrop, { autoAlpha: 0 }, 0);
+    }
+
     return () => {
-      tween.kill();
+      tl.kill();
     };
   }, [open]);
 
@@ -76,16 +103,16 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   return (
     <>
       <div
-        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-500 ${
-          open ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        ref={backdropRef}
+        className="pointer-events-none fixed inset-0 z-40 bg-black/40"
         onClick={onClose}
         aria-hidden
+        style={{ pointerEvents: open ? "auto" : "none" }}
       />
 
       <div
         ref={panelRef}
-        className="fixed inset-y-0 right-0 z-50 flex w-full max-w-[440px] translate-x-full flex-col bg-cream text-black"
+        className="fixed inset-y-0 right-0 z-50 flex w-full max-w-[440px] flex-col bg-cream text-black"
         role="dialog"
         aria-modal="true"
         aria-label="Cart"

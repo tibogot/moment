@@ -130,3 +130,26 @@ button:not(:disabled),
 .reveal-js [data-text-reveal] {
   visibility: hidden;
 }
+
+@keyframes nav-intro-drop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Drop the nav in from above on first paint. Scoped to .reveal-js so a
+ * failed/disabled script leaves the bar in place. cubic-bezier ≈ power3.out.
+ */
+.reveal-js [data-nav-intro] {
+  animation: nav-intro-drop 0.85s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-js [data-nav-intro] {
+    animation: none;
+  }
+}
