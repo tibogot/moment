@@ -257,15 +257,17 @@ export function ServicesSection() {
                         </p>
                       </TextReveal>
 
-                      <span className="font-owners-medium mt-5 inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-                        {service.cta}
-                        <span
-                          className="transition-transform duration-500 group-hover:translate-x-1.5"
-                          aria-hidden
-                        >
-                          &rarr;
+                      <div className="mt-5 inline-block border border-sky bg-cream px-3 py-2.5 transition-colors duration-500 group-hover:bg-sky">
+                        <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+                          {service.cta}
+                          <span
+                            className="transition-transform duration-500 group-hover:translate-x-1.5"
+                            aria-hidden
+                          >
+                            &rarr;
+                          </span>
                         </span>
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </Link>
