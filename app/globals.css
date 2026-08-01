@@ -101,6 +101,11 @@ button:not(:disabled),
   margin-right: auto;
 }
 
+.text-right .block-line-wrapper {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 .block-line {
   position: relative;
   display: block;
