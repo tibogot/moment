@@ -18,6 +18,7 @@ import {
 } from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { mainNav, routes } from "@/lib/routes";
+import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 const DURATION = 0.48;
 const EASE = "power2.out";
@@ -34,7 +35,11 @@ const NAV_SCROLL_REVEAL_DISTANCE = 120;
 const CREAM = "#f8f7f2";
 const BLACK = "#000000";
 
-export function Navbar() {
+type NavbarProps = {
+  products?: ShopifyProduct[];
+};
+
+export function Navbar({ products = [] }: NavbarProps) {
   const pathname = usePathname();
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
 
@@ -389,7 +394,11 @@ export function Navbar() {
       </div>
 
       <MobileNavMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchPanel
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        products={products}
+      />
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );

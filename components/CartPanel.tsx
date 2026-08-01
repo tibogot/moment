@@ -123,17 +123,21 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         aria-hidden={!open}
         inert={!open}
       >
-        <div className="flex items-center justify-between border-b border-sky px-6 py-5">
-          <p className="font-owners-medium text-[12px] uppercase tracking-wide">
-            Cart{cart?.totalQuantity ? ` (${cart.totalQuantity})` : ""}
-          </p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60"
-          >
-            Close
-          </button>
+        {/* Same band height + type size as the closed navbar / search overlay. */}
+        <div>
+          <div className="flex min-h-(--grid-band) items-center justify-between px-6">
+            <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
+              Cart{cart?.totalQuantity ? ` (${cart.totalQuantity})` : ""}
+            </p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
+            >
+              Close
+            </button>
+          </div>
+          <div className="h-px bg-sky" aria-hidden />
         </div>
 
         <div className="flex-1 overflow-y-auto" data-lenis-prevent>

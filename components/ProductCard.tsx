@@ -7,16 +7,24 @@ type ProductCardProps = {
   product: ShopifyProduct;
   /** Feeds the `sizes` hint; matches the shop grid's column count. */
   sizes?: string;
+  /** Tighter padding for overlays like search. */
+  compact?: boolean;
+  onNavigate?: () => void;
 };
 
 export function ProductCard({
   product,
   sizes = "(max-width: 768px) 50vw, 33vw",
+  compact = false,
+  onNavigate,
 }: ProductCardProps) {
   return (
     <Link
       href={routes.product(product.handle)}
-      className="group block h-full py-[4svh]"
+      onClick={onNavigate}
+      className={
+        compact ? "group block h-full py-5" : "group block h-full py-[4svh]"
+      }
     >
       <div className="px-(--grid-gutter)">
         <div className="relative aspect-4/5 w-full overflow-hidden bg-sky/20">
@@ -37,11 +45,17 @@ export function ProductCard({
         </div>
       </div>
 
-      <div className="mt-3 flex items-baseline justify-between gap-3 px-(--grid-gutter)">
-        <h3 className="font-owners-medium text-[13px] uppercase tracking-wide">
+      <div
+        className={
+          compact
+            ? "mt-3 flex flex-col gap-1 px-(--grid-gutter)"
+            : "mt-3 flex items-baseline justify-between gap-3 px-(--grid-gutter)"
+        }
+      >
+        <h3 className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
           {product.title}
         </h3>
-        <span className="font-archivo-light shrink-0 text-[13px]">
+        <span className="font-archivo-light text-[12px] md:text-[13px]">
           {product.price}
         </span>
       </div>

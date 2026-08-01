@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
+import { getProducts } from "@/lib/shopify/products";
 import {
   archivoLight,
   archivoLightItalic,
@@ -17,11 +18,13 @@ export const metadata: Metadata = {
   description: "Moment — coffee, events, and more.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const products = await getProducts();
+
   return (
     <html
       lang="en"
@@ -38,7 +41,7 @@ export default function RootLayout({
       <body className="min-h-svh flex flex-col">
         <SmoothScroll>
           <ScrollToTop />
-          <Navbar />
+          <Navbar products={products} />
           <div className="relative flex flex-1 flex-col">{children}</div>
         </SmoothScroll>
       </body>
