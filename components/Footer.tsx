@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CookiePreferencesButton } from "@/components/CookieConsent";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
@@ -82,6 +83,9 @@ export function Footer() {
             © {new Date().getFullYear()} {siteConfig.name}
           </p>
           <ul className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
+            <li>
+              <CookiePreferencesButton className={legalLinkClassName} />
+            </li>
             {legalNav.map(({ label, href }) => (
               <li key={href}>
                 <Link href={href} className={legalLinkClassName}>

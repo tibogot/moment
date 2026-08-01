@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ScrollToTop from "@/components/ScrollToTop";
+import { ConsentScripts } from "@/components/ConsentScripts";
+import { CookieConsent } from "@/components/CookieConsent";
 import { PaletteToggle } from "@/components/PaletteToggle";
 import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -53,6 +55,8 @@ export default async function RootLayout({
           <ScrollToTop />
           <Navbar products={products} collections={navCollections} />
           <div className="relative flex flex-1 flex-col">{children}</div>
+          <CookieConsent />
+          <ConsentScripts />
           <PaletteToggle />
         </SmoothScroll>
       </body>
