@@ -133,18 +133,21 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2">
-          <div className="flex flex-wrap items-end justify-between gap-4 px-(--grid-gutter) pb-[4svh]">
+          {/* On a phone the month takes the whole width and Prev/Next sit
+              under it. Sharing one row squeezed the longest names until the
+              last letter wrapped onto its own line. */}
+          <div className="flex flex-col items-start gap-4 px-(--grid-gutter) pb-[4svh] md:flex-row md:flex-wrap md:items-end md:justify-between">
             {/* text-left: TextReveal centres each split line unless an ancestor opts out.
                 key remounts the reveal when Prev/Next changes the month. */}
-            <div className="min-w-0 flex-1 text-left">
+            <div className="w-full min-w-0 text-left md:flex-1">
               <TextReveal key={monthLabel} blockColor={SKY} stagger={0.12}>
-                <h2 className="font-owners-narrow-bold text-[16vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
+                <h2 className="font-owners-narrow-bold text-[13vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
                   {monthLabel}
                 </h2>
               </TextReveal>
             </div>
 
-            <div className="flex items-center gap-4 pb-2">
+            <div className="flex items-center gap-4 md:pb-2">
               <button
                 type="button"
                 onClick={() => shiftMonth(-1)}
