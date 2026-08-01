@@ -18,7 +18,7 @@ const linkClassName =
 
 export function Footer() {
   return (
-    <footer className="relative w-full bg-cream text-black">
+    <footer className="relative w-full border-t border-sky bg-cream text-black">
       <GridLines lineClassName="bg-sky" />
 
       <div
@@ -73,7 +73,11 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) pt-5 md:col-end-9">
+        {/* Full-bleed rule: it breaks out of the column tracks so it runs the
+            whole width of the screen, unlike the inset rules above. */}
+        <div className="col-span-full h-px bg-sky" />
+
+        <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-9">
           <p className="font-archivo-light text-[12px]">
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>

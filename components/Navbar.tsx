@@ -3,12 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useGSAP } from "@gsap/react";
 import { CircleUserRound, Handbag, Menu, Search } from "lucide-react";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
+import { CartPanel } from "@/components/CartPanel";
 import { GridLines } from "@/components/GridLines";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
+import {
+  getCartSnapshot,
+  getServerCartSnapshot,
+  subscribeCart,
+} from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { mainNav, routes } from "@/lib/routes";
 
@@ -19,10 +25,10 @@ const CLOSE_EASE = "power2.inOut";
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
 const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
 
-// Start the reveal while the hero still sits behind the navbar. Waiting for the
-// hero bottom to reach the viewport top puts the cream section under the nav
-// before the wipe runs, so scaleY 0→1 would be invisible.
-const NAV_SCROLL_REVEAL_OFFSET = 72;
+// The nav turns cream almost immediately: the wipe completes over the first
+// NAV_SCROLL_REVEAL_DISTANCE pixels of scroll rather than waiting for the hero
+// to leave the viewport.
+const NAV_SCROLL_REVEAL_DISTANCE = 120;
 
 const CREAM = "#f8f7f2";
 const BLACK = "#000000";
@@ -32,8 +38,27 @@ export function Navbar() {
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [navSolid, setNavSolid] = useState(!hasTransparentHero);
+
+  const cart = useSyncExternalStore(
+    subscribeCart,
+    getCartSnapshot,
+    getServerCartSnapshot,
+  );
+  const cartCount = cart?.totalQuantity ?? 0;
+
+  // AddToCartButton opens the panel after a successful add.
+  useEffect(() => {
+    const openCart = () => {
+      setMenuOpen(false);
+      setCartOpen(true);
+    };
+
+    window.addEventListener("cart-open", openCart);
+    return () => window.removeEventListener("cart-open", openCart);
+  }, []);
 
   const headerRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -159,15 +184,14 @@ export function Navbar() {
         return;
       }
 
-      const revealOffset = Math.max(nav.offsetHeight, NAV_SCROLL_REVEAL_OFFSET);
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
       const trigger = ScrollTrigger.create({
         trigger: transparentSection,
-        start: reduceMotion ? "bottom top" : `bottom top+=${revealOffset}`,
-        end: "bottom top",
+        start: "top top",
+        end: `top top-=${NAV_SCROLL_REVEAL_DISTANCE}`,
         invalidateOnRefresh: true,
         ...(reduceMotion
           ? {
@@ -314,8 +338,8 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* Buttons rather than links until Shopify cart/search/account exist. */}
           <div className="flex items-center gap-4 md:col-start-6 md:col-end-9 md:justify-end md:pr-(--grid-gutter)">
+            {/* Search still has no backing page. */}
             <button
               type="button"
               aria-label="Search"
@@ -324,22 +348,36 @@ export function Navbar() {
             >
               <Search style={iconStyle} strokeWidth={1.5} />
             </button>
-            <button
-              type="button"
+
+            <Link
+              href={routes.account}
               aria-label="Account"
               data-nav-link
               className="hidden md:block"
             >
               <CircleUserRound style={iconStyle} strokeWidth={1.5} />
-            </button>
-            <button type="button" aria-label="Cart" data-nav-link>
+            </Link>
+
+            <button
+              type="button"
+              aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
+              data-nav-link
+              onClick={() => setCartOpen(true)}
+              className="relative"
+            >
               <Handbag style={iconStyle} strokeWidth={1.5} />
+              {cartCount > 0 && (
+                <span className="font-archivo-light absolute -top-1.5 -right-2 text-[10px] leading-none">
+                  {cartCount}
+                </span>
+              )}
             </button>
           </div>
         </nav>
       </div>
 
       <MobileNavMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 }

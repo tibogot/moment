@@ -9,6 +9,8 @@ export type ShopifyProduct = {
   productType: string;
   tags: string[];
   availableForSale: boolean;
+  /** First variant — traiteur products are single-variant, so this is the one. */
+  variantId: string | null;
 };
 
 export type ShopifyProductNode = {
@@ -23,6 +25,9 @@ export type ShopifyProductNode = {
     minVariantPrice: { amount: string; currencyCode: string };
   };
   featuredImage: { url: string; altText: string | null } | null;
+  variants: {
+    edges: { node: { id: string; availableForSale: boolean } }[];
+  };
 };
 
 export type ProductsQueryResponse = {
@@ -57,6 +62,14 @@ const PRODUCT_FIELDS = `
   featuredImage {
     url
     altText
+  }
+  variants(first: 1) {
+    edges {
+      node {
+        id
+        availableForSale
+      }
+    }
   }
 `;
 

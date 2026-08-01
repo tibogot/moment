@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { AddToCartButton } from "@/components/AddToCartButton";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { getProductByHandle, getProducts } from "@/lib/shopify/products";
@@ -65,11 +66,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </p>
           )}
 
-          {!product.availableForSale && (
-            <p className="font-owners-medium mt-6 text-[12px] uppercase tracking-wide">
-              Sold out
-            </p>
-          )}
+          <AddToCartButton
+            variantId={product.variantId}
+            available={product.availableForSale}
+            className="mt-8 max-w-xs"
+          />
         </div>
       </GridSection>
 

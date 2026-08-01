@@ -1,14 +1,46 @@
+import { CalendarSection } from "@/components/CalendarSection";
+import { CollectionsSection } from "@/components/CollectionsSection";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
 import { ServicesSection } from "@/components/ServicesSection";
+import { SplitImageSection } from "@/components/SplitImageSection";
+import { getCollections } from "@/lib/shopify/collections";
 
-export default function Home() {
+export default async function Home() {
+  const collections = await getCollections();
+
+  // Shopify seeds every store with a "frontpage" collection; skip it and show
+  // the first three real ones.
+  const featured = collections
+    .filter((collection) => collection.handle !== "frontpage")
+    .slice(0, 3);
+
   return (
     <>
       <Hero />
       <IntroSection />
+
+      {/* Image fills the left half — 3 columns x 3 rows — with the right half
+          left as bare grid. The second reprises it smaller, on the right. */}
+      <SplitImageSection
+        src="/images/anita-austvika.jpg"
+        alt=""
+        colStart={1}
+        colSpan={3}
+      />
+      <SplitImageSection
+        src="/images/kateryna-hliznitsova.jpg"
+        alt=""
+        colStart={5}
+        colSpan={2}
+        rowStart={1}
+        rowSpan={2}
+      />
+
+      <CollectionsSection collections={featured} />
       <ServicesSection />
+      <CalendarSection />
       <Footer />
     </>
   );

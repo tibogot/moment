@@ -38,6 +38,7 @@ export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
     productType: node.productType,
     tags: node.tags,
     availableForSale: node.availableForSale,
+    variantId: node.variants?.edges[0]?.node.id ?? null,
   };
 }
 

@@ -10,6 +10,9 @@ export const routes = {
   cart: "/cart",
   search: "/search",
   account: "/account",
+  signIn: "/signin",
+  authLogin: "/api/auth/login",
+  authLogout: "/api/auth/logout",
   product: (handle: string) => `/products/${handle}`,
   collection: (handle: string) => `/collections/${handle}`,
 } as const;
