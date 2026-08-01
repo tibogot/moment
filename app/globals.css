@@ -122,6 +122,11 @@ button:not(:disabled),
   z-index: 1;
 }
 
-[data-text-reveal] {
+/*
+ * Only hide reveal targets once the inline guard in the root layout has
+ * confirmed JS is running. Without the class the text renders normally, so a
+ * failed or disabled script leaves the copy readable instead of invisible.
+ */
+.reveal-js [data-text-reveal] {
   visibility: hidden;
 }
