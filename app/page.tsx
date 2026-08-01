@@ -28,12 +28,20 @@ export default async function Home() {
       <IntroSection />
 
       {/* Image fills the left half — 3 columns x 3 rows — with the right half
-          left as bare grid. The second reprises it smaller, on the right. */}
+          left as bare grid. The second reprises it smaller, on the right.
+          On mobile the grid runs taller so each image reads at a useful size. */}
       <SplitImageSection
         src="/images/anita-austvika.jpg"
         alt=""
         colStart={1}
         colSpan={3}
+        mobile={{
+          rows: 5,
+          colStart: 1,
+          colSpan: 5,
+          rowStart: 1,
+          rowSpan: 4,
+        }}
       />
       <SplitImageSection
         src="/images/kateryna-hliznitsova.jpg"
@@ -42,6 +50,13 @@ export default async function Home() {
         colSpan={2}
         rowStart={1}
         rowSpan={2}
+        mobile={{
+          rows: 4,
+          colStart: 3,
+          colSpan: 4,
+          rowStart: 1,
+          rowSpan: 3,
+        }}
         continueGrid
         fullBleedBottom
       />

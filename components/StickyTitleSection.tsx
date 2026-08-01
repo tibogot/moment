@@ -50,7 +50,7 @@ export function StickyTitleSection({
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2 md:h-full">
-          <div className="grid border-y border-sky md:h-full md:grid-cols-2">
+          <div className="grid border-y border-l border-sky md:h-full md:grid-cols-2">
             <div className="relative">
               {/* The bare cells behind the type. The sticky block below is
                   painted cream, so it wipes these as it travels down rather
@@ -75,7 +75,14 @@ export function StickyTitleSection({
                   {label}
                 </span>
 
-                <div className="mt-4 mb-6 h-px bg-sky" aria-hidden />
+                <div
+                  className="mt-4 mb-6 h-px bg-sky"
+                  style={{
+                    marginInline: "calc(-1 * var(--grid-gutter))",
+                    width: "calc(100% + 2 * var(--grid-gutter))",
+                  }}
+                  aria-hidden
+                />
 
                 <TextReveal blockColor={SKY} stagger={0.12}>
                   <h2 className="font-owners-narrow-bold text-[11vw] leading-[0.95] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(4.4vw,7svh)]">
@@ -85,7 +92,7 @@ export function StickyTitleSection({
               </div>
             </div>
 
-            <div className="relative aspect-4/5 overflow-hidden border-t border-sky md:aspect-auto md:h-full md:border-t-0 md:border-l">
+            <div className="relative aspect-4/5 overflow-hidden border-t border-sky md:aspect-auto md:h-full md:border-t-0 md:border-l md:border-sky">
               <Image
                 src={src}
                 alt={alt}
