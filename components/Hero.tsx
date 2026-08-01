@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { GridLines } from "@/components/GridLines";
+import { HeroParallaxImage } from "@/components/HeroParallaxImage";
 import TextReveal from "@/components/TextReveal";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
 
@@ -26,14 +26,7 @@ export function Hero() {
       className="relative h-svh w-full overflow-hidden"
       data-transparent-nav
     >
-      <Image
-        src="/images/anita-austvika.jpg"
-        alt=""
-        fill
-        preload
-        sizes="100vw"
-        className="object-cover"
-      />
+      <HeroParallaxImage src="/images/anita-austvika.jpg" />
       <div className="absolute inset-0 bg-black/20" aria-hidden />
 
       <GridLines
