@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { GridSection } from "@/components/GridSection";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
+import { routes } from "@/lib/routes";
 
 export function IntroSection() {
   return (
@@ -24,6 +26,21 @@ export function IntroSection() {
             delivered ready to serve. We run events end to end, and keep a
             coffee desk open for anyone passing by.
           </p>
+
+          <Link
+            href={routes.about}
+            className="group mt-5 inline-block border border-sky bg-cream px-3 py-2.5 transition-colors duration-500 hover:bg-sky"
+          >
+            <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+              About us
+              <span
+                className="transition-transform duration-500 group-hover:translate-x-1.5"
+                aria-hidden
+              >
+                &rarr;
+              </span>
+            </span>
+          </Link>
         </TextReveal>
       </div>
     </GridSection>
