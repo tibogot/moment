@@ -30,10 +30,10 @@
      positioned off the height. The svh term stops the headline outgrowing its
      rows on viewports wider than ~16:10 — raise it to let type run bigger. */
   --hero-headline: min(17vw, 8svh);
-  --hero-body: 14px;
-  --nav-text: 11px;
-  --nav-logo: 70px;
-  --nav-icon: 13px;
+  --hero-body: 16px;
+  --nav-text: 12px;
+  --nav-logo: 92px;
+  --nav-icon: 20px;
 }
 
 @media (width >= 48rem) {

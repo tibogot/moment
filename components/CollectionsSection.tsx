@@ -12,7 +12,7 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
   if (collections.length === 0) return null;
 
   return (
-    <GridSection className="pb-[14svh]">
+    <GridSection className="pt-[10svh] pb-[14svh]">
       <div className="col-start-2 col-end-5 px-(--grid-gutter) pb-[5svh] md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
           Collections

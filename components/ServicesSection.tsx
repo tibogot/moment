@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { GridSection } from "@/components/GridSection";
+import TextReveal from "@/components/TextReveal";
 import { routes } from "@/lib/routes";
+
+/** Matches --color-sky; TextReveal paints the block with an inline style. */
+const SKY = "#a7c5ee";
 
 const services = [
   {
@@ -31,19 +35,31 @@ export function ServicesSection() {
           <li key={index} className="border-t border-sky">
             <Link
               href={href}
-              className="group grid grid-cols-1 gap-3 py-[5svh] transition-opacity hover:opacity-60 md:grid-cols-12 md:gap-6"
+              className="group grid grid-cols-1 gap-3 py-[5svh] text-left transition-opacity hover:opacity-60 md:grid-cols-12 md:gap-6"
             >
-              <span className="font-archivo-light text-[12px] text-black md:col-span-1">
-                {index}
-              </span>
+              <div className="min-w-0 md:col-span-1">
+                <TextReveal blockColor={SKY} stagger={0.08} duration={0.6}>
+                  <span className="font-archivo-light text-[12px] text-black">
+                    {index}
+                  </span>
+                </TextReveal>
+              </div>
 
-              <h3 className="font-owners-narrow-bold text-[8vw] leading-[0.95] wrap-break-word text-black uppercase md:col-span-6 md:text-[min(4vw,6svh)]">
-                {title}
-              </h3>
+              <div className="min-w-0 md:col-span-6">
+                <TextReveal blockColor={SKY} stagger={0.12}>
+                  <h3 className="font-owners-narrow-bold text-[8vw] leading-[0.95] wrap-break-word text-black uppercase md:text-[min(4vw,6svh)]">
+                    {title}
+                  </h3>
+                </TextReveal>
+              </div>
 
-              <p className="font-archivo-light max-w-prose text-[14px] leading-[1.5] text-black md:col-span-5 md:text-[min(1.15vw,1.7svh)]">
-                {body}
-              </p>
+              <div className="min-w-0 md:col-span-5">
+                <TextReveal blockColor={SKY} stagger={0.08} duration={0.6}>
+                  <p className="font-archivo-light max-w-prose text-[14px] leading-[1.5] text-black md:text-[min(1.15vw,1.7svh)]">
+                    {body}
+                  </p>
+                </TextReveal>
+              </div>
             </Link>
           </li>
         ))}

@@ -37,6 +37,7 @@ export default async function Home() {
         rowStart={1}
         rowSpan={2}
         continueGrid
+        fullBleedBottom
       />
 
       <CollectionsSection collections={featured} />

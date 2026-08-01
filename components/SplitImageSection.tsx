@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { GridLines } from "@/components/GridLines";
+import { ParallaxImage } from "@/components/ParallaxImage";
 import { cn } from "@/lib/utils";
 
 // This section runs on 6 columns rather than the page's 7, so a half is
@@ -24,6 +24,11 @@ type SplitImageSectionProps = {
    * into a double-weight line.
    */
   continueGrid?: boolean;
+  /**
+   * Replace the last row's cell border-b with a viewport-wide sky rule —
+   * same full-bleed separators used above the calendar / intro.
+   */
+  fullBleedBottom?: boolean;
   className?: string;
 };
 
@@ -36,6 +41,7 @@ export function SplitImageSection({
   rowSpan = SPLIT_ROWS,
   priority = false,
   continueGrid = false,
+  fullBleedBottom = false,
   className,
 }: SplitImageSectionProps) {
   // The image is positioned over the cells rather than placed as a grid item:
@@ -74,30 +80,38 @@ export function SplitImageSection({
             )}
           >
             {Array.from({ length: SPLIT_COLUMNS * SPLIT_ROWS }).map(
-              (_, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "aspect-square border-b border-sky",
-                    index % SPLIT_COLUMNS !== 0 && "border-l",
-                  )}
-                />
-              ),
+              (_, index) => {
+                const isLastRow =
+                  Math.floor(index / SPLIT_COLUMNS) === SPLIT_ROWS - 1;
+
+                return (
+                  <div
+                    key={index}
+                    className={cn(
+                      "aspect-square border-sky",
+                      !(fullBleedBottom && isLastRow) && "border-b",
+                      index % SPLIT_COLUMNS !== 0 && "border-l",
+                    )}
+                  />
+                );
+              },
             )}
           </div>
 
-          <div className="absolute overflow-hidden" style={frame}>
-            <Image
-              src={src}
-              alt={alt}
-              fill
-              priority={priority}
-              sizes={`${Math.round((colSpan / SPLIT_COLUMNS) * 100)}vw`}
-              className="object-cover"
-            />
-          </div>
+          <ParallaxImage
+            src={src}
+            alt={alt}
+            priority={priority}
+            sizes={`${Math.round((colSpan / SPLIT_COLUMNS) * 100)}vw`}
+            className="absolute"
+            style={frame}
+          />
         </div>
       </div>
+
+      {fullBleedBottom && (
+        <div className="h-px w-full bg-sky" aria-hidden />
+      )}
     </section>
   );
 }

@@ -118,11 +118,14 @@ export function CalendarSection({
   const shiftMonth = (delta: number) => setCursor(new Date(year, month + delta, 1));
 
   return (
-    <section className="relative w-full bg-cream pt-[10svh] pb-[14svh] text-black">
+    <section className="relative w-full bg-cream pb-[14svh] text-black">
+      {/* Full-bleed sky rule separating this block from Services above. */}
+      <div className="h-px w-full bg-sky" aria-hidden />
+
       <GridLines lineClassName="bg-sky" />
 
       <div
-        className="relative grid"
+        className="relative grid pt-[10svh]"
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2">
