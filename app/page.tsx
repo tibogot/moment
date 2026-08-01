@@ -69,6 +69,13 @@ export default async function Home() {
         src="/images/dan-smedley.jpg"
       />
 
+      <StickyTitleSection
+        theme="sky"
+        label="Delivery"
+        title="Prepared at dawn, served by lunch."
+        src="/images/william-king.jpg"
+      />
+
       <ServicesSection />
 
       {/* Full-height breath between the services index and the calendar. */}

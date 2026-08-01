@@ -59,11 +59,11 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
                     {collection.title}
                   </h3>
 
-                  {collection.description && (
+                  {/* {collection.description && (
                     <p className="font-archivo-light mt-3 line-clamp-3 text-[16px] leading-normal md:text-[18px]">
                       {collection.description}
                     </p>
-                  )}
+                  )} */}
                 </div>
               </Link>
             </li>

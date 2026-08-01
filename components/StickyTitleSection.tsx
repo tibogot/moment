@@ -5,8 +5,30 @@ import { cn } from "@/lib/utils";
 
 /** Matches --color-sky; TextReveal paints the block with an inline style. */
 const SKY = "#a7c5ee";
+const CREAM = "#f8f7f2";
 
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
+
+const THEMES = {
+  cream: {
+    section: "bg-cream",
+    sticky: "bg-cream",
+    line: "bg-sky",
+    lineMuted: "bg-sky/45",
+    border: "border-sky",
+    reveal: SKY,
+  },
+  sky: {
+    section: "bg-sky text-black",
+    sticky: "bg-sky",
+    line: "bg-cream",
+    lineMuted: "bg-cream/45",
+    border: "border-cream",
+    reveal: CREAM,
+  },
+} as const;
+
+type StickyTitleSectionTheme = keyof typeof THEMES;
 
 /**
  * The halves are a straight 50/50, so the seam falls mid-column rather than on
@@ -27,6 +49,7 @@ type StickyTitleSectionProps = {
   src: string;
   alt?: string;
   className?: string;
+  theme?: StickyTitleSectionTheme;
 };
 
 /**
@@ -40,21 +63,24 @@ export function StickyTitleSection({
   src,
   alt = "",
   className,
+  theme = "cream",
 }: StickyTitleSectionProps) {
+  const palette = THEMES[theme];
+
   return (
-    <section className={cn("relative w-full bg-cream md:h-svh", className)}>
-      <GridLines lineClassName="bg-sky" />
+    <section className={cn("relative w-full md:h-svh", palette.section, className)}>
+      <GridLines lineClassName={palette.line} />
 
       <div
         className="relative grid md:h-full"
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2 md:h-full">
-          <div className="grid border-y border-l border-sky md:h-full md:grid-cols-2">
+          <div className={cn("grid md:h-full md:grid-cols-2", palette.border, "border-y border-l")}>
             <div className="relative">
               {/* The bare cells behind the type. The sticky block below is
-                  painted cream, so it wipes these as it travels down rather
-                  than letting a rule run through the headline. */}
+                  painted to match the section, so it wipes these as it travels
+                  down rather than letting a rule run through the headline. */}
               <div
                 className="pointer-events-none absolute inset-0 hidden md:block"
                 aria-hidden
@@ -62,7 +88,7 @@ export function StickyTitleSection({
                 {TITLE_RULES.map((fraction) => (
                   <span
                     key={fraction}
-                    className="absolute inset-y-0 w-px bg-sky/45"
+                    className={cn("absolute inset-y-0 w-px", palette.lineMuted)}
                     style={{ left: `${fraction * 100}%` }}
                   />
                 ))}
@@ -70,13 +96,18 @@ export function StickyTitleSection({
 
               {/* text-left: TextReveal centres each split line unless an
                   ancestor opts out. */}
-              <div className="relative bg-cream px-(--grid-gutter) py-[6svh] text-left md:sticky md:top-(--grid-band)">
+              <div
+                className={cn(
+                  "relative px-(--grid-gutter) py-[6svh] text-left md:sticky md:top-(--grid-band)",
+                  palette.sticky,
+                )}
+              >
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide">
                   {label}
                 </span>
 
                 <div
-                  className="mt-4 mb-6 h-px bg-sky"
+                  className={cn("mt-4 mb-6 h-px", palette.line)}
                   style={{
                     marginInline: "calc(-1 * var(--grid-gutter))",
                     width: "calc(100% + 2 * var(--grid-gutter))",
@@ -84,7 +115,7 @@ export function StickyTitleSection({
                   aria-hidden
                 />
 
-                <TextReveal blockColor={SKY} stagger={0.12}>
+                <TextReveal blockColor={palette.reveal} stagger={0.12}>
                   <h2 className="font-owners-narrow-bold text-[11vw] leading-[0.95] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(4.4vw,7svh)]">
                     {title}
                   </h2>
@@ -92,7 +123,13 @@ export function StickyTitleSection({
               </div>
             </div>
 
-            <div className="relative aspect-4/5 overflow-hidden border-t border-sky md:aspect-auto md:h-full md:border-t-0 md:border-l md:border-sky">
+            <div
+              className={cn(
+                "relative aspect-4/5 overflow-hidden md:aspect-auto md:h-full md:border-t-0 md:border-l",
+                palette.border,
+                "border-t",
+              )}
+            >
               <Image
                 src={src}
                 alt={alt}
