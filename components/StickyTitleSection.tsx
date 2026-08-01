@@ -51,6 +51,7 @@ function titleRules(imagePosition: "left" | "right") {
 type StickyTitleSectionProps = {
   label: string;
   title: string;
+  body?: string;
   src: string;
   alt?: string;
   className?: string;
@@ -67,6 +68,7 @@ type StickyTitleSectionProps = {
 export function StickyTitleSection({
   label,
   title,
+  body,
   src,
   alt = "",
   className,
@@ -115,6 +117,20 @@ export function StickyTitleSection({
             {title}
           </h2>
         </TextReveal>
+
+        {body && (
+          <div className="mt-[4svh]">
+            <TextReveal
+              blockColor={palette.reveal}
+              stagger={0.08}
+              duration={0.6}
+            >
+              <p className="font-archivo-light max-w-full text-[18px] leading-normal md:max-w-[52ch]">
+                {body}
+              </p>
+            </TextReveal>
+          </div>
+        )}
       </div>
     </div>
   );

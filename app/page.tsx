@@ -66,6 +66,7 @@ export default async function Home() {
       <StickyTitleSection
         label="The kitchen"
         title="Cooked the morning it is eaten."
+        body="We start before dawn, when the city is still quiet. Plates, salads and cold-pressed juices are made from scratch that same morning — seasonal produce, sauces reduced overnight, dressings mixed at the last minute. Nothing reheated, nothing left over from the day before."
         src="/images/dan-smedley.jpg"
       />
 
@@ -74,6 +75,7 @@ export default async function Home() {
         imagePosition="left"
         label="Delivery"
         title="Prepared at dawn, served by lunch."
+        body="We pack and send across Brussels in the early hours, so lunch arrives as the kitchen intended. Insulated boxes, portions already set, garnishes kept separate — ready to unwrap and serve at your desk, in a meeting room, or at home before your guests walk in."
         src="/images/william-king.jpg"
       />
 
