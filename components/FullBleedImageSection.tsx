@@ -21,7 +21,7 @@ export function FullBleedImageSection({
   className,
 }: FullBleedImageSectionProps) {
   return (
-    <section className={cn("relative h-svh w-full overflow-hidden", className)}>
+    <section className={cn("relative h-[85svh] w-full overflow-hidden md:h-svh", className)}>
       <ParallaxImage
         src={src}
         alt={alt}
