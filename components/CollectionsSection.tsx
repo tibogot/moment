@@ -12,7 +12,7 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
   if (collections.length === 0) return null;
 
   return (
-    <GridSection className="pt-[10svh] pb-[14svh]">
+    <GridSection className="pt-[10svh] pb-0 md:pb-[14svh]">
       <div className="col-start-2 col-end-5 px-(--grid-gutter) pb-[5svh] md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
           Collections
@@ -23,14 +23,14 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
           the ones above the intro and the calendar. Padding rather than column
           placement keeps the cards on the grid while the borders sit outside
           it, so they reach the edges. */}
-      <div className="col-span-full border-y border-sky px-(--grid-margin)">
+      <div className="col-span-full border-t border-sky px-(--grid-margin) md:border-y">
         {/* Title sits above a two-row subgrid (rule + image) so the divider
             and image still line up across columns. */}
         <ul className="grid md:grid-cols-3 md:grid-rows-[auto_auto]">
           {collections.map((collection) => (
             <li
               key={collection.id}
-              className="collection-card border-b border-sky last:border-b-0 md:row-span-2 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:last:border-r-0"
+              className="collection-card -mx-(--grid-margin) border-b border-sky px-(--grid-margin) last:border-b-0 md:mx-0 md:row-span-2 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:px-0 md:last:border-r-0"
             >
               <Link
                 href={routes.collection(collection.handle)}

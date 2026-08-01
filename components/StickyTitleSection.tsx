@@ -139,7 +139,13 @@ export function StickyTitleSection({
   );
 
   return (
-    <section className={cn("relative w-full md:h-svh", palette.section, className)}>
+    <section
+      className={cn(
+        "relative w-full pb-[10svh] md:h-svh md:pb-0",
+        palette.section,
+        className,
+      )}
+    >
       <GridLines lineClassName={palette.line} />
 
       <div
@@ -147,7 +153,13 @@ export function StickyTitleSection({
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2 md:h-full">
-          <div className={cn("grid md:h-full md:grid-cols-2", palette.border, "border-y border-l")}>
+          <div
+            className={cn(
+              "grid md:h-full md:grid-cols-2",
+              palette.border,
+              "border-y border-x",
+            )}
+          >
             {imagePosition === "left" ? (
               <>
                 {imagePanel}
