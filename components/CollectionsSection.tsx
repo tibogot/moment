@@ -55,7 +55,7 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
                 </h3>
 
                 {collection.description && (
-                  <p className="font-archivo-light mt-3 line-clamp-3 text-[14px] leading-normal">
+                  <p className="font-archivo-light mt-3 line-clamp-3 text-[16px] leading-normal md:text-[18px]">
                     {collection.description}
                   </p>
                 )}

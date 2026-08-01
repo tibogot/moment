@@ -58,6 +58,7 @@ export function SearchPanel({
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasOpenedRef = useRef(false);
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query.trim());
 
@@ -91,6 +92,12 @@ export function SearchPanel({
     const backdrop = backdropRef.current;
     if (!panel || !backdrop) return;
 
+    if (!open && !hasOpenedRef.current) {
+      gsap.set(panel, { yPercent: -100 });
+      gsap.set(backdrop, { autoAlpha: 0 });
+      return;
+    }
+
     const ease = open ? OPEN_EASE : CLOSE_EASE;
     const tl = gsap.timeline({
       defaults: { duration: ANIM_DURATION, ease, overwrite: "auto" },
@@ -100,6 +107,7 @@ export function SearchPanel({
     });
 
     if (open) {
+      hasOpenedRef.current = true;
       tl.to(backdrop, { autoAlpha: 1, duration: ANIM_DURATION * 0.85 }, 0);
       tl.to(panel, { yPercent: 0 }, 0);
     } else {
@@ -148,7 +156,7 @@ export function SearchPanel({
       <div
         ref={panelRef}
         data-overlay-panel
-        className="fixed inset-x-0 top-0 z-50 max-h-svh overflow-y-auto bg-cream text-black"
+        className="fixed inset-0 z-50 overflow-y-auto bg-cream text-black md:inset-x-0 md:bottom-auto md:max-h-svh"
         role="dialog"
         aria-modal="true"
         aria-label="Search"
@@ -159,11 +167,11 @@ export function SearchPanel({
         <GridLines lineClassName="bg-sky" />
 
         <div
-          className="relative grid"
+          className="relative grid min-h-full md:min-h-0"
           style={{ gridTemplateColumns: "var(--grid-columns)" }}
         >
-          {/* Full-bleed rule under a band the same height as the navbar. */}
-          <div className="col-span-full">
+          {/* Sticky band — matches navbar height so Close stays reachable. */}
+          <div className="sticky top-0 z-10 col-span-full bg-cream">
             <div
               className="grid min-h-(--grid-band) items-center"
               style={{ gridTemplateColumns: "var(--grid-columns)" }}
@@ -186,7 +194,7 @@ export function SearchPanel({
 
           <form
             onSubmit={handleSubmit}
-            className="col-start-2 col-end-5 px-(--grid-gutter) py-[5svh] md:col-end-9"
+            className="col-start-2 col-end-5 px-(--grid-gutter) pt-[6svh] pb-[4svh] md:col-end-9 md:py-[5svh]"
           >
             <label htmlFor="site-search" className="sr-only">
               Search products
@@ -200,23 +208,19 @@ export function SearchPanel({
               onChange={(event) => setQuery(event.target.value)}
               placeholder="What are you looking for?"
               autoComplete="off"
-              className="font-owners-narrow-bold w-full border-b border-sky bg-transparent pb-4 text-[8vw] leading-[1.05] text-black uppercase outline-none placeholder:text-black/25 md:text-[min(4.5vw,4.5rem)]"
+              enterKeyHint="search"
+              className="font-owners-narrow-bold w-full border-b border-sky bg-transparent pb-4 text-[9vw] leading-[1.05] text-black uppercase outline-none placeholder:text-black/25 md:text-[min(4.5vw,4.5rem)]"
             />
           </form>
 
-          {/* Full-bleed rule above the popular block — one line, not per-column. */}
+          {/* Popular — wrap row on mobile, stacked column on desktop. */}
           <div className="col-span-full h-px bg-sky" aria-hidden />
 
-          {/*
-            Prefer h-px / w-px rules over stacking border-b + border-t — two
-            1px sky borders on the same edge read as a thick near-black line.
-            self-start: don't stretch to the products row height.
-          */}
           <div className="relative col-start-2 col-end-5 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh] md:col-end-4">
             <p className="font-owners-medium text-[11px] uppercase tracking-wide">
               Popular searches
             </p>
-            <ul className="mt-6 flex flex-col gap-3">
+            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-3 md:mt-6 md:flex-col md:gap-3">
               {POPULAR_SEARCHES.map((term) => (
                 <li key={term}>
                   <button
@@ -232,24 +236,20 @@ export function SearchPanel({
                 </li>
               ))}
             </ul>
-            {/* Mobile-only closer — on desktop the panel bottom rule is enough
-                and a second line under this short column reads as a double. */}
             <div className="mt-[4svh] h-px bg-sky md:hidden" aria-hidden />
           </div>
 
-          <div className="relative col-start-2 col-end-5 md:col-start-4 md:col-end-9">
-            {/* Outer verticals live in the content layer — GridLines sit behind
-                the cream cells so the product box needs its own L/R rules. */}
+          <div className="relative col-start-2 col-end-5 pb-[8svh] md:col-start-4 md:col-end-9 md:pb-0">
             <span
-              className="pointer-events-none absolute inset-y-0 left-0 w-px bg-sky"
+              className="pointer-events-none absolute inset-y-0 left-0 hidden w-px bg-sky md:block"
               aria-hidden
             />
             <span
-              className="pointer-events-none absolute inset-y-0 right-0 w-px bg-sky"
+              className="pointer-events-none absolute inset-y-0 right-0 hidden w-px bg-sky md:block"
               aria-hidden
             />
 
-            <div className="px-(--grid-gutter) pt-[4svh] pb-4">
+            <div className="px-(--grid-gutter) pt-[4svh] pb-4 md:pt-[4svh]">
               <p className="font-owners-medium text-[11px] uppercase tracking-wide">
                 {isSearching ? "Results" : "Popular products"}
               </p>
@@ -271,10 +271,6 @@ export function SearchPanel({
               </div>
             ) : (
               <>
-                {/*
-                  gap-px draws interior rules only. Left/right edges are the
-                  absolute spines above — never border-l + neighbour border-r.
-                */}
                 <div className="h-px bg-sky" aria-hidden />
                 <ul className="grid grid-cols-2 gap-px bg-sky md:grid-cols-4">
                   {visibleProducts.map((product) => (
@@ -292,7 +288,6 @@ export function SearchPanel({
             )}
           </div>
 
-          {/* Full-bleed closer + bottom band — single h-px, not a border-t. */}
           <div className="col-span-full h-px bg-sky" aria-hidden />
           <div className="col-span-full min-h-(--grid-band)" />
         </div>

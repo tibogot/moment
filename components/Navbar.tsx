@@ -306,15 +306,33 @@ export function Navbar({ products = [] }: NavbarProps) {
             color: hasTransparentHero ? CREAM : BLACK,
           }}
         >
-          <button
-            type="button"
-            aria-label="Open menu"
-            data-nav-link
-            onClick={() => setMenuOpen(true)}
-            className="md:hidden"
-          >
-            <Menu style={iconStyle} strokeWidth={1.5} />
-          </button>
+          {/* Mobile: menu + search sit together on the left. */}
+          <div className="flex items-center gap-3.5 md:hidden">
+            <button
+              type="button"
+              aria-label="Open menu"
+              data-nav-link
+              onClick={() => {
+                setSearchOpen(false);
+                setCartOpen(false);
+                setMenuOpen(true);
+              }}
+            >
+              <Menu style={iconStyle} strokeWidth={1.5} />
+            </button>
+            <button
+              type="button"
+              aria-label="Search"
+              data-nav-link
+              onClick={() => {
+                setMenuOpen(false);
+                setCartOpen(false);
+                setSearchOpen(true);
+              }}
+            >
+              <Search style={iconStyle} strokeWidth={1.5} />
+            </button>
+          </div>
 
           <ul
             className="hidden md:col-start-2 md:col-end-5 md:flex md:items-center md:gap-4 md:pl-(--grid-gutter)"
