@@ -50,8 +50,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     const backdrop = backdropRef.current;
     if (!panel || !backdrop) return;
 
-    gsap.set(panel, { xPercent: 100 });
-    gsap.set(backdrop, { autoAlpha: 0 });
+    gsap.set(panel, { xPercent: 100, visibility: "visible" });
+    gsap.set(backdrop, { autoAlpha: 0, visibility: "visible" });
   }, []);
 
   useEffect(() => {
@@ -106,6 +106,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     <>
       <div
         ref={backdropRef}
+        data-overlay-backdrop
         className="pointer-events-none fixed inset-0 z-40 bg-black/40"
         onClick={onClose}
         aria-hidden
@@ -114,6 +115,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
       <div
         ref={panelRef}
+        data-overlay-panel
         className="fixed inset-y-0 right-0 z-50 flex w-full max-w-[440px] flex-col bg-cream text-black"
         role="dialog"
         aria-modal="true"

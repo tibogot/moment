@@ -153,3 +153,12 @@ button:not(:disabled),
     animation: none;
   }
 }
+
+/*
+ * Hide slide-in overlays until GSAP parks them off-screen. Without this the
+ * search/cart panels flash in the viewport for a frame before hydration.
+ */
+.reveal-js [data-overlay-panel],
+.reveal-js [data-overlay-backdrop] {
+  visibility: hidden;
+}

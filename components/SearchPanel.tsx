@@ -30,8 +30,8 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
     const backdrop = backdropRef.current;
     if (!panel || !backdrop) return;
 
-    gsap.set(panel, { yPercent: -100 });
-    gsap.set(backdrop, { autoAlpha: 0 });
+    gsap.set(panel, { yPercent: -100, visibility: "visible" });
+    gsap.set(backdrop, { autoAlpha: 0, visibility: "visible" });
   }, []);
 
   useEffect(() => {
@@ -83,6 +83,7 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
     <>
       <div
         ref={backdropRef}
+        data-overlay-backdrop
         className="pointer-events-none fixed inset-0 z-40 bg-black/40"
         onClick={onClose}
         aria-hidden
@@ -91,6 +92,7 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
 
       <div
         ref={panelRef}
+        data-overlay-panel
         className="fixed inset-x-0 top-0 z-50 bg-cream text-black"
         role="dialog"
         aria-modal="true"

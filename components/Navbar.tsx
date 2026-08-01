@@ -283,7 +283,7 @@ export function Navbar() {
       >
         <div
           ref={bgRef}
-          className="pointer-events-none absolute inset-x-0 top-0 bg-cream"
+          className="pointer-events-none absolute inset-x-0 top-0 border-b border-sky bg-cream"
           style={{
             transform: hasTransparentHero ? "scaleY(0)" : "scaleY(1)",
             transformOrigin: "top center",
