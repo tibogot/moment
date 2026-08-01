@@ -23,6 +23,13 @@ const COLUMNS = 7;
 const TYPE_COLUMNS = 3;
 const TYPE_WIDTH = `calc(${TYPE_COLUMNS * 100}% / ${COLUMNS})`;
 
+/**
+ * The bare half of each row is split into two bands, making the cells out
+ * there roughly square. Every frame currently claims both bands — a service
+ * can take just one, which is why placement carries a rowStart/rowSpan.
+ */
+const FRAME_ROWS = 2;
+
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 
 const services = [
@@ -33,8 +40,8 @@ const services = [
     cta: "Order delivery",
     body: "Plates, salads and juices prepared each morning and delivered ready to serve — to a desk, a boardroom or a kitchen table.",
     src: "/images/william-king.jpg",
-    /** 1-based placement of the feature image inside the row's 7 columns. */
-    frame: { colStart: 5, colSpan: 3 },
+    /** 1-based placement in the row's 7 columns x FRAME_ROWS bands. */
+    frame: { colStart: 5, colSpan: 3, rowStart: 1, rowSpan: 2 },
   },
   {
     index: "02",
@@ -43,7 +50,7 @@ const services = [
     cta: "Plan an event",
     body: "From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open.",
     src: "/images/nicole-herrero.jpg",
-    frame: { colStart: 4, colSpan: 2 },
+    frame: { colStart: 4, colSpan: 2, rowStart: 1, rowSpan: 2 },
   },
   {
     index: "03",
@@ -53,7 +60,7 @@ const services = [
     body: "A coffee desk for anyone passing by, and the same pastries and juices we send out to our clients.",
     // Placeholder until the coffee desk is shot — swap for a /public image.
     src: "https://picsum.photos/seed/moment-coffee/1200/1600",
-    frame: { colStart: 6, colSpan: 2 },
+    frame: { colStart: 6, colSpan: 2, rowStart: 1, rowSpan: 2 },
   },
 ] as const;
 
@@ -76,16 +83,20 @@ export function ServicesSection() {
     const row = rowRefs.current[activeRef.current];
     if (!container || !frame || !row) return;
 
-    const { colStart, colSpan } = services[activeRef.current].frame;
+    const { colStart, colSpan, rowStart, rowSpan } =
+      services[activeRef.current].frame;
     const width = container.clientWidth;
 
     // +1 / -1 keeps the row's 1px top rule visible above the image, rather
     // than the photo edge painting over it.
+    const rowTop = row.offsetTop + 1;
+    const rowHeight = row.offsetHeight - 1;
+
     gsap.set(frame, {
       left: ((colStart - 1) / COLUMNS) * width,
       width: (colSpan / COLUMNS) * width,
-      top: row.offsetTop + 1,
-      height: row.offsetHeight - 1,
+      top: rowTop + ((rowStart - 1) / FRAME_ROWS) * rowHeight,
+      height: (rowSpan / FRAME_ROWS) * rowHeight,
     });
   }, []);
 
@@ -146,7 +157,7 @@ export function ServicesSection() {
 
   return (
     <section
-      className="relative w-full bg-cream pb-[14svh]"
+      className="relative w-full bg-cream pt-[12svh] pb-[14svh]"
       style={{ "--type-width": TYPE_WIDTH } as CSSProperties}
     >
       <GridLines lineClassName="bg-sky" />
@@ -186,11 +197,26 @@ export function ServicesSection() {
                     (_, n) => n + TYPE_COLUMNS,
                   ).map((boundary) => (
                     <span
-                      key={boundary}
+                      key={`column-${boundary}`}
                       className="absolute inset-y-0 w-px bg-sky/45"
                       style={{ left: `${(boundary / COLUMNS) * 100}%` }}
                     />
                   ))}
+
+                  {/* The band rules the frame lands on, drawn only across the
+                      image zone so they never reach the headline. */}
+                  {Array.from({ length: FRAME_ROWS - 1 }, (_, n) => n + 1).map(
+                    (band) => (
+                      <span
+                        key={`band-${band}`}
+                        className="absolute right-0 h-px bg-sky/45"
+                        style={{
+                          left: `${(TYPE_COLUMNS / COLUMNS) * 100}%`,
+                          top: `${(band / FRAME_ROWS) * 100}%`,
+                        }}
+                      />
+                    ),
+                  )}
                 </div>
 
                 <Link
@@ -226,7 +252,7 @@ export function ServicesSection() {
 
                     <div>
                       <TextReveal blockColor={SKY} stagger={0.08} duration={0.6}>
-                        <p className="font-archivo-light max-w-[34ch] text-[14px] leading-normal md:max-w-[28ch] md:text-[min(1.05vw,1.6svh)]">
+                        <p className="font-archivo-light max-w-[36ch] text-[18px] leading-normal">
                           {service.body}
                         </p>
                       </TextReveal>

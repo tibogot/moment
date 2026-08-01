@@ -1,14 +1,20 @@
 import { CalendarSection } from "@/components/CalendarSection";
 import { CollectionsSection } from "@/components/CollectionsSection";
 import { Footer } from "@/components/Footer";
+import { FullBleedImageSection } from "@/components/FullBleedImageSection";
 import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitImageSection } from "@/components/SplitImageSection";
+import { StickyTitleSection } from "@/components/StickyTitleSection";
 import { getCollections } from "@/lib/shopify/collections";
+import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 
 export default async function Home() {
-  const collections = await getCollections();
+  const [collections, availability] = await Promise.all([
+    getCollections(),
+    getDeliveryAvailability(),
+  ]);
 
   // Shopify seeds every store with a "frontpage" collection; skip it and show
   // the first three real ones.
@@ -41,8 +47,19 @@ export default async function Home() {
       />
 
       <CollectionsSection collections={featured} />
+
+      <StickyTitleSection
+        label="The kitchen"
+        title="Cooked the morning it is eaten."
+        src="/images/dan-smedley.jpg"
+      />
+
       <ServicesSection />
-      <CalendarSection />
+
+      {/* Full-height breath between the services index and the calendar. */}
+      <FullBleedImageSection src="/images/svitlana.jpg" />
+
+      <CalendarSection availability={availability} />
       <Footer />
     </>
   );

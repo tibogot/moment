@@ -1,9 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
+import { setDeliveryDate } from "@/app/actions/cart";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
+import { notifyCartUpdated } from "@/lib/cart-store";
+import {
+  LEAD_TIME_DAYS,
+  formatDeliveryDate,
+  isBookable,
+  parseISODate,
+  toISODate,
+  type DeliveryAvailability,
+} from "@/lib/delivery";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
@@ -27,22 +37,6 @@ const WEEKDAYS = [
   "Sunday",
 ] as const;
 
-/** Deliveries need notice, so the first bookable day is this far out. */
-const LEAD_TIME_DAYS = 2;
-
-/** Sunday is closed. */
-const CLOSED_WEEKDAYS = new Set([0]);
-
-function startOfDay(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-
 /** Monday-first offset for the 1st of the month. */
 function leadingBlanks(year: number, month: number) {
   return (new Date(year, month, 1).getDay() + 6) % 7;
@@ -52,36 +46,33 @@ function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
-function toKey(date: Date) {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-}
+type Status =
+  | { kind: "idle" }
+  | { kind: "saved"; date: string }
+  | { kind: "error"; message: string };
 
 type CalendarSectionProps = {
-  /** ISO dates (YYYY-MM-DD) already taken — rendered blue, with no number. */
-  bookedDates?: string[];
-  /** Overrides "today" in previews. */
-  today?: Date;
+  /**
+   * Resolved on the server: today in Brussels, the lead time, and the days the
+   * owners closed in the Shopify admin. The calendar never asks the visitor's
+   * clock what day it is — a browser in another timezone would disagree with
+   * the kitchen about which days are still bookable.
+   */
+  availability: DeliveryAvailability;
 };
 
-export function CalendarSection({
-  bookedDates = [],
-  today,
-}: CalendarSectionProps) {
-  const now = useMemo(() => startOfDay(today ?? new Date()), [today]);
-  const firstBookable = useMemo(() => addDays(now, LEAD_TIME_DAYS), [now]);
-  const booked = useMemo(() => {
-    return new Set(
-      bookedDates.map((iso) => {
-        const [year, month, day] = iso.split("-").map(Number);
-        return toKey(new Date(year, month - 1, day));
-      }),
-    );
-  }, [bookedDates]);
+export function CalendarSection({ availability }: CalendarSectionProps) {
+  const today = useMemo(
+    () => parseISODate(availability.today) ?? new Date(),
+    [availability.today],
+  );
 
   const [cursor, setCursor] = useState(
-    () => new Date(now.getFullYear(), now.getMonth(), 1),
+    () => new Date(today.getFullYear(), today.getMonth(), 1),
   );
-  const [selected, setSelected] = useState<Date | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [isPending, startTransition] = useTransition();
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
@@ -99,23 +90,36 @@ export function CalendarSection({
     return days;
   }, [year, month]);
 
-  const isAvailable = (day: number) => {
-    const date = new Date(year, month, day);
-    if (CLOSED_WEEKDAYS.has(date.getDay())) return false;
-    if (booked.has(toKey(date))) return false;
-    return date.getTime() >= firstBookable.getTime();
-  };
-
-  const isSelected = (day: number) =>
-    selected !== null &&
-    selected.getFullYear() === year &&
-    selected.getMonth() === month &&
-    selected.getDate() === day;
+  const isoFor = (day: number) => toISODate(new Date(year, month, day));
 
   const monthLabel = cursor.toLocaleDateString("en-GB", { month: "long" });
-  const atFirstMonth = year === now.getFullYear() && month === now.getMonth();
+  const atFirstMonth =
+    year === today.getFullYear() && month === today.getMonth();
 
   const shiftMonth = (delta: number) => setCursor(new Date(year, month + delta, 1));
+
+  const chooseDay = (iso: string) => {
+    setSelected(iso);
+    setStatus({ kind: "idle" });
+  };
+
+  const confirmDate = () => {
+    if (!selected) return;
+
+    startTransition(async () => {
+      const result = await setDeliveryDate(selected);
+
+      if (!result.ok) {
+        setStatus({ kind: "error", message: result.error });
+        return;
+      }
+
+      // The action may have opened the cart that now holds this date, so the
+      // navbar badge and panel need to re-read it.
+      notifyCartUpdated();
+      setStatus({ kind: "saved", date: result.date });
+    });
+  };
 
   return (
     <section className="relative w-full bg-cream pb-[14svh] text-black">
@@ -186,11 +190,10 @@ export function CalendarSection({
                 );
               }
 
-              const available = isAvailable(day);
-              const selectedDay = isSelected(day);
+              const iso = isoFor(day);
 
               // Unavailable days are solid sky with no number at all.
-              if (!available) {
+              if (!isBookable(iso, availability)) {
                 return (
                   <div
                     key={day}
@@ -200,13 +203,15 @@ export function CalendarSection({
                 );
               }
 
+              const selectedDay = selected === iso;
+
               return (
                 <button
                   key={day}
                   type="button"
                   aria-pressed={selectedDay}
                   aria-label={`${day} ${monthLabel} ${year}`}
-                  onClick={() => setSelected(new Date(year, month, day))}
+                  onClick={() => chooseDay(iso)}
                   className={cn(
                     cellClassName,
                     // Buttons centre their content by default; pin the number
@@ -224,23 +229,65 @@ export function CalendarSection({
           </div>
 
           <div className="px-(--grid-gutter) pt-[4svh]">
-            <p className="font-archivo-light text-[15px] leading-normal">
-              {selected
-                ? `Delivery on ${selected.toLocaleDateString("en-GB", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                  })}.`
-                : `Dated days are open for delivery. Blue days are already taken or closed — we need ${LEAD_TIME_DAYS} days' notice and we do not deliver on Sundays.`}
-            </p>
+            {status.kind === "saved" ? (
+              <>
+                <p className="font-archivo-light text-[15px] leading-normal">
+                  Delivery set for {formatDeliveryDate(status.date)}. It travels
+                  with your order — you can keep shopping and change it here any
+                  time before checkout.
+                </p>
 
-            {selected && (
-              <Link
-                href={routes.contact}
-                className="font-owners-medium mt-6 inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
-              >
-                Request this date
-              </Link>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href={routes.shop}
+                    className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+                  >
+                    Choose your plates
+                  </Link>
+                  <Link
+                    href={routes.cart}
+                    className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                  >
+                    View cart
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="font-archivo-light text-[15px] leading-normal">
+                  {selected
+                    ? `Delivery on ${formatDeliveryDate(selected)}.`
+                    : `Dated days are open for delivery. Blue days are already taken or closed — we need ${LEAD_TIME_DAYS} days' notice and we do not deliver on Sundays.`}
+                </p>
+
+                {status.kind === "error" && (
+                  <p
+                    role="alert"
+                    className="font-archivo-light mt-3 text-[14px] leading-normal"
+                  >
+                    {status.message}
+                  </p>
+                )}
+
+                {selected && (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={confirmDate}
+                      disabled={isPending}
+                      className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80 disabled:opacity-40"
+                    >
+                      {isPending ? "Saving…" : "Request this date"}
+                    </button>
+                    <Link
+                      href={routes.contact}
+                      className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                    >
+                      Ask about this date
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

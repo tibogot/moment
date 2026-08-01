@@ -1,3 +1,4 @@
+import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery";
 import { getShopifyClient, isShopifyConfigured } from "./client";
 
 export const CART_COOKIE_NAME = "shopify_cart_id";
@@ -22,6 +23,8 @@ export type Cart = {
   totalQuantity: number;
   totalPrice: string;
   lines: CartLine[];
+  /** The day picked on the calendar, `YYYY-MM-DD`, or null if none yet. */
+  deliveryDate: string | null;
 };
 
 type CartResult = { id: string; checkoutUrl: string; totalQuantity: number };
@@ -37,6 +40,7 @@ type CartMutationResponse = {
     cartLinesAdd?: MutationPayload;
     cartLinesUpdate?: MutationPayload;
     cartLinesRemove?: MutationPayload;
+    cartAttributesUpdate?: MutationPayload;
   };
   errors?: { message: string }[];
 };
@@ -47,6 +51,7 @@ type CartQueryResponse = {
       id: string;
       checkoutUrl: string;
       totalQuantity: number;
+      attributes: { key: string; value: string | null }[];
       cost: { totalAmount: { amount: string; currencyCode: string } };
       lines: {
         edges: {
@@ -105,12 +110,24 @@ const CART_LINES_REMOVE_MUTATION = `
   }
 `;
 
+const CART_ATTRIBUTES_UPDATE_MUTATION = `
+  mutation CartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
+    cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
+      ${CART_RESULT_FIELDS}
+    }
+  }
+`;
+
 const CART_QUERY = `
   query GetCart($cartId: ID!) {
     cart(id: $cartId) {
       id
       checkoutUrl
       totalQuantity
+      attributes {
+        key
+        value
+      }
       cost {
         totalAmount {
           amount
@@ -201,12 +218,18 @@ function mapCartNode(
     })
     .filter((line): line is CartLine => line !== null);
 
+  const deliveryDate =
+    node.attributes?.find(
+      (attribute) => attribute.key === DELIVERY_DATE_ATTRIBUTE,
+    )?.value ?? null;
+
   return {
     id: node.id,
     checkoutUrl: node.checkoutUrl,
     totalQuantity: node.totalQuantity,
     totalPrice: formatPrice(amount, currencyCode),
     lines,
+    deliveryDate,
   };
 }
 
@@ -305,6 +328,47 @@ export async function addVariantToCart(
     { input: { lines: [{ merchandiseId: variantId, quantity }] } },
     "cartCreate",
     "Could not create a cart. Check that the Storefront token has write_checkouts access.",
+  );
+}
+
+/**
+ * Writes the chosen delivery day onto the cart. Cart attributes survive
+ * checkout, so the date lands on the order in the Shopify admin — this is the
+ * only thing that actually tells the owners which day a customer picked.
+ *
+ * Note that `cartAttributesUpdate` replaces the whole attribute set. It is the
+ * only attribute we write today; add a read-merge-write step here before
+ * introducing a second one.
+ *
+ * Picking a date is allowed before there is anything in the basket, so with no
+ * cart yet this opens an empty one carrying just the attribute.
+ */
+export async function setCartDeliveryDate(
+  isoDate: string,
+  existingCartId?: string,
+) {
+  if (!isShopifyConfigured()) {
+    return { ok: false as const, error: "The shop is not configured." };
+  }
+
+  const attributes = [{ key: DELIVERY_DATE_ATTRIBUTE, value: isoDate }];
+
+  if (existingCartId) {
+    const updated = await runCartMutation(
+      CART_ATTRIBUTES_UPDATE_MUTATION,
+      { cartId: existingCartId, attributes },
+      "cartAttributesUpdate",
+      "Could not save your delivery date.",
+    );
+
+    if (updated.ok) return updated;
+  }
+
+  return runCartMutation(
+    CART_CREATE_MUTATION,
+    { input: { attributes } },
+    "cartCreate",
+    "Could not start a cart for this date.",
   );
 }
 

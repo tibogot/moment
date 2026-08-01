@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { getCart } from "@/app/actions/cart";
+import { formatDeliveryDate } from "@/lib/delivery";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -75,6 +76,26 @@ export default async function CartPage() {
                   </li>
                 ))}
               </ul>
+
+              {/* Carried as a cart attribute, so it follows the order into
+                  the Shopify admin. Set on the calendar on the home page. */}
+              <div className="flex items-baseline justify-between border-t border-sky py-6">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  Delivery
+                </span>
+                {cart.deliveryDate ? (
+                  <span className="font-archivo-light text-[13px]">
+                    {formatDeliveryDate(cart.deliveryDate)}
+                  </span>
+                ) : (
+                  <Link
+                    href={routes.home}
+                    className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
+                  >
+                    Pick a date
+                  </Link>
+                )}
+              </div>
 
               <div className="flex items-baseline justify-between border-t border-sky pt-6">
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide">

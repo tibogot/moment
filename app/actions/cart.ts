@@ -7,9 +7,12 @@ import {
   getCartById,
   getCartCookieOptions,
   removeCartLines,
+  setCartDeliveryDate,
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import { isShopifyConfigured } from "@/lib/shopify/client";
+import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import { isBookable } from "@/lib/delivery";
 import { routes } from "@/lib/routes";
 
 async function getCartIdFromCookies() {
@@ -64,6 +67,43 @@ export async function addToCart(variantId: string, quantity = 1) {
   revalidatePath(routes.cart);
 
   return { ok: true as const, totalQuantity: result.totalQuantity };
+}
+
+/**
+ * The calendar's own paint job is only as fresh as the page it was rendered
+ * into, so the rules are checked again here against live availability. A page
+ * left open overnight, or one served from the static shell, cannot book a day
+ * the owners have since closed.
+ */
+export async function setDeliveryDate(isoDate: string) {
+  if (!isShopifyConfigured()) {
+    return { ok: false as const, error: "The shop is not configured." };
+  }
+
+  const availability = await getDeliveryAvailability();
+  if (!isBookable(isoDate, availability)) {
+    return {
+      ok: false as const,
+      error: "That day is no longer available. Please pick another.",
+    };
+  }
+
+  const existingCartId = await getCartIdFromCookies();
+  let result = await setCartDeliveryDate(isoDate, existingCartId);
+
+  // Same stale-cart recovery as addToCart: an expired or completed cart id
+  // fails the update, so drop the cookie and open a fresh one.
+  if (!result.ok && existingCartId) {
+    await clearCartCookie();
+    result = await setCartDeliveryDate(isoDate);
+  }
+
+  if (!result.ok) return result;
+
+  await setCartCookie(result.cartId);
+  revalidatePath(routes.cart);
+
+  return { ok: true as const, date: isoDate };
 }
 
 export async function updateCartLine(lineId: string, quantity: number) {
