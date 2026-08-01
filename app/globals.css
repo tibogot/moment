@@ -15,6 +15,11 @@
 }
 
 :root {
+  --palette-page: #f8f7f2;
+  --palette-line: #a7c5ee;
+  --palette-reveal: #a7c5ee;
+  --palette-reveal-on-sky: #f8f7f2;
+
   /* Viewport edge -> first/last column line. */
   --grid-margin: max(1.25rem, 4.9vw);
   /* Column line -> content. Applied on both sides of a line. */
@@ -189,4 +194,70 @@ button:not(:disabled),
 .reveal-js [data-overlay-panel],
 .reveal-js [data-overlay-backdrop] {
   visibility: hidden;
+}
+
+/*
+ * Palette preview — swap cream page surfaces with sky and sky rules with
+ * cream. Literal cream/sky tokens stay unchanged so buttons keep cream text.
+ */
+html[data-palette="sky"] {
+  --palette-page: #a7c5ee;
+  --palette-line: #f8f7f2;
+  --palette-reveal: #f8f7f2;
+  --palette-reveal-on-sky: #a7c5ee;
+}
+
+html[data-palette="sky"],
+html[data-palette="sky"] body {
+  background: var(--palette-page);
+}
+
+html[data-palette="sky"] .bg-cream {
+  background-color: var(--palette-page);
+}
+
+html[data-palette="sky"] .border-sky {
+  border-color: var(--palette-line);
+}
+
+html[data-palette="sky"] .border-cream {
+  border-color: var(--palette-reveal-on-sky);
+}
+
+html[data-palette="sky"] .bg-cream\/45 {
+  background-color: color-mix(
+    in srgb,
+    var(--palette-reveal-on-sky) 45%,
+    transparent
+  );
+}
+
+html[data-palette="sky"] .bg-sky {
+  background-color: var(--palette-line);
+}
+
+html[data-palette="sky"] .bg-sky\/20 {
+  background-color: color-mix(in srgb, var(--palette-line) 20%, transparent);
+}
+
+html[data-palette="sky"] .bg-sky\/30 {
+  background-color: color-mix(in srgb, var(--palette-line) 30%, transparent);
+}
+
+html[data-palette="sky"] .bg-sky\/45 {
+  background-color: color-mix(in srgb, var(--palette-line) 45%, transparent);
+}
+
+@media (hover: hover) {
+  html[data-palette="sky"] .hover\:bg-sky\/30:hover {
+    background-color: color-mix(in srgb, var(--palette-line) 30%, transparent);
+  }
+
+  html[data-palette="sky"] .hover\:bg-sky:hover {
+    background-color: var(--palette-line);
+  }
+
+  html[data-palette="sky"] .group:hover .group-hover\:bg-sky {
+    background-color: var(--palette-line);
+  }
 }

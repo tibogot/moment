@@ -2,10 +2,7 @@ import Image from "next/image";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { cn } from "@/lib/utils";
-
-/** Matches --color-sky; TextReveal paints the block with an inline style. */
-const SKY = "#a7c5ee";
-const CREAM = "#f8f7f2";
+import { REVEAL_BLOCK, REVEAL_BLOCK_ON_SKY } from "@/lib/colors";
 
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 
@@ -16,7 +13,7 @@ const THEMES = {
     line: "bg-sky",
     lineMuted: "bg-sky/45",
     border: "border-sky",
-    reveal: SKY,
+    reveal: REVEAL_BLOCK,
   },
   sky: {
     section: "bg-sky text-black",
@@ -24,7 +21,7 @@ const THEMES = {
     line: "bg-cream",
     lineMuted: "bg-cream/45",
     border: "border-cream",
-    reveal: CREAM,
+    reveal: REVEAL_BLOCK_ON_SKY,
   },
 } as const;
 

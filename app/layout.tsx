@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ScrollToTop from "@/components/ScrollToTop";
+import { PaletteToggle } from "@/components/PaletteToggle";
 import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import { getProducts } from "@/lib/shopify/products";
@@ -13,6 +14,7 @@ import {
 import "./globals.css";
 
 const REVEAL_GUARD = `(function(){try{document.documentElement.classList.add("reveal-js")}catch(e){}})()`;
+const PALETTE_GUARD = `(function(){try{var p=localStorage.getItem("moment-palette");if(p==="sky")document.documentElement.dataset.palette="sky"}catch(e){}})()`;
 
 export const metadata: Metadata = {
   title: "Moment",
@@ -44,12 +46,14 @@ export default async function RootLayout({
             hidden without ever flashing. If JS is off or this fails, the class
             is never set and the copy simply stays visible. */}
         <script dangerouslySetInnerHTML={{ __html: REVEAL_GUARD }} />
+        <script dangerouslySetInnerHTML={{ __html: PALETTE_GUARD }} />
       </head>
       <body className="min-h-svh flex flex-col">
         <SmoothScroll>
           <ScrollToTop />
           <Navbar products={products} collections={navCollections} />
           <div className="relative flex flex-1 flex-col">{children}</div>
+          <PaletteToggle />
         </SmoothScroll>
       </body>
     </html>

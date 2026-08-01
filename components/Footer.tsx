@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
+import { REVEAL_BLOCK } from "@/lib/colors";
 import { legalNav, routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site";
 
@@ -17,9 +18,6 @@ const holes: GridHole[] = [
 const mobileHoles: GridHole[] = [
   { col: [1, 3], row: [2, 3] }, // headline
 ];
-
-/** Matches --color-sky; TextReveal paints the block with an inline style. */
-const SKY = "#a7c5ee";
 
 const legalLinkClassName =
   "font-archivo-light text-[11px] transition-opacity hover:opacity-60 md:text-[12px]";
@@ -66,7 +64,7 @@ export function Footer() {
         {/* Headline — open across the left; the rest of the field stays squared.
             text-left: TextReveal centres each split line unless an ancestor opts out. */}
         <div className="col-start-2 col-end-5 row-start-3 row-end-5 min-w-0 self-end pb-5 pl-(--grid-gutter) text-left md:col-end-6 md:pb-[4svh]">
-          <TextReveal blockColor={SKY} stagger={0.12}>
+          <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
             <p className="font-owners-narrow-bold max-w-full text-[13vw] leading-[0.88] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(7vw,12svh)]">
               Un moment,
               <br />

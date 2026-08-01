@@ -1,8 +1,6 @@
 import { GridSection } from "@/components/GridSection";
 import TextReveal from "@/components/TextReveal";
-
-/** Matches --color-sky; TextReveal paints the block with an inline style. */
-const SKY = "#a7c5ee";
+import { REVEAL_BLOCK } from "@/lib/colors";
 
 export function IntroSection() {
   return (
@@ -10,7 +8,7 @@ export function IntroSection() {
       {/* Long sky rule setting the section off from the hero. */}
       <div className="col-span-full mb-[6svh] h-px bg-sky" />
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
-        <TextReveal blockColor={SKY} stagger={0.12}>
+        <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
           <h2 className="font-owners-narrow-bold max-w-full text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(6vw,9svh)]">
             A traiteur in Brussels for people who care how it tastes — and how
             it looks.
@@ -19,7 +17,7 @@ export function IntroSection() {
       </div>
 
       <div className="col-start-2 col-end-5 mt-[6svh] min-w-0 px-(--grid-gutter) text-left md:col-start-5 md:col-end-8 md:mt-[10svh]">
-        <TextReveal blockColor={SKY} stagger={0.08} duration={0.6}>
+        <TextReveal blockColor={REVEAL_BLOCK} stagger={0.08} duration={0.6}>
           <p className="font-archivo-light max-w-full text-[15px] leading-[1.5] wrap-break-word text-black md:text-[min(1.35vw,2svh)]">
             We cook for private hosts and companies across the city. Seasonal
             plates, salads and cold-pressed juices, prepared each morning and

@@ -8,10 +8,8 @@ import { useGSAP } from "@gsap/react";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { Flip, gsap } from "@/lib/gsapConfig";
+import { REVEAL_BLOCK } from "@/lib/colors";
 import { routes } from "@/lib/routes";
-
-/** Matches --color-sky; TextReveal paints the block with an inline style. */
-const SKY = "#a7c5ee";
 
 /**
  * The rows run on the page's 7 columns — the same ones the hero and the
@@ -229,7 +227,7 @@ export function ServicesSection() {
                       {service.index}
                     </span>
 
-                    <TextReveal blockColor={SKY} stagger={0.12}>
+                    <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                       <h3 className="font-owners-narrow-bold text-[13vw] leading-[0.9] wrap-break-word uppercase md:text-[min(5.6vw,9svh)]">
                         {service.title}
                       </h3>
@@ -248,7 +246,7 @@ export function ServicesSection() {
                     </div>
 
                     <div>
-                      <TextReveal blockColor={SKY} stagger={0.08} duration={0.6}>
+                      <TextReveal blockColor={REVEAL_BLOCK} stagger={0.08} duration={0.6}>
                         <p className="font-archivo-light max-w-[36ch] text-[18px] leading-normal">
                           {service.body}
                         </p>

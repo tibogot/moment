@@ -17,8 +17,7 @@ import {
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
-/** Matches --color-sky; TextReveal paints the block with an inline style. */
-const SKY = "#a7c5ee";
+import { REVEAL_BLOCK } from "@/lib/colors";
 
 // The calendar sits in the page's 7 columns — a Monday-to-Sunday week is why
 // the grid is 7 wide. The outer template only carries the margins; the inner
@@ -146,7 +145,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
             {/* text-left: TextReveal centres each split line unless an ancestor opts out.
                 key remounts the reveal when Prev/Next changes the month. */}
             <div className="w-full min-w-0 text-left md:flex-1">
-              <TextReveal key={monthLabel} blockColor={SKY} stagger={0.12}>
+              <TextReveal key={monthLabel} blockColor={REVEAL_BLOCK} stagger={0.12}>
                 <h2 className="font-owners-narrow-bold text-[13vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
                   {monthLabel}
                 </h2>
