@@ -26,17 +26,17 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
       <div className="col-span-full border-y border-sky px-(--grid-margin)">
         {/* Sky rules between the cards continue the grid rather than boxing
             each card in its own border. */}
-        <ul className="grid md:grid-cols-3">
+        <ul className="grid md:grid-cols-3 md:gap-y-[4svh]">
           {collections.map((collection) => (
             <li
               key={collection.id}
-              className="border-b border-sky last:border-b-0 md:border-r md:border-b-0 md:last:border-r-0"
+              className="border-b border-sky last:border-b-0 md:row-span-3 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:last:border-r-0"
             >
               <Link
                 href={routes.collection(collection.handle)}
-                className="group block h-full py-[4svh]"
+                className="group block py-[4svh] md:contents"
               >
-                <div className="px-(--grid-gutter)">
+                <div className="px-(--grid-gutter) md:pt-[4svh]">
                   <div className="relative aspect-4/3 w-full overflow-hidden bg-sky/20">
                     {collection.imageUrl && (
                       <Image
@@ -50,11 +50,10 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
                   </div>
                 </div>
 
-                {/* Runs the full column width so it meets the vertical grid
-                    lines, rather than stopping at the gutter. */}
-                <div className="mt-[4svh] h-px bg-sky" />
+                {/* Subgrid row — every card's rule shares one horizontal track. */}
+                <div className="mt-[4svh] h-px bg-sky md:mt-0" />
 
-                <div className="px-(--grid-gutter) pt-5">
+                <div className="px-(--grid-gutter) pt-5 md:pb-[4svh]">
                   <h3 className="font-owners-narrow-bold text-[7vw] leading-[0.95] wrap-break-word uppercase md:text-[min(2.4vw,4svh)]">
                     {collection.title}
                   </h3>

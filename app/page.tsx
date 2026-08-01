@@ -71,6 +71,7 @@ export default async function Home() {
 
       <StickyTitleSection
         theme="sky"
+        imagePosition="left"
         label="Delivery"
         title="Prepared at dawn, served by lunch."
         src="/images/william-king.jpg"

@@ -136,6 +136,14 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
             <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
               Book for delivery
             </h2>
+            <div
+              className="mt-4 h-px bg-sky"
+              style={{
+                marginInline: "calc(-1 * var(--grid-gutter))",
+                width: "calc(100% + 2 * var(--grid-gutter))",
+              }}
+              aria-hidden
+            />
           </div>
 
           {/* On a phone the month takes the whole width and Prev/Next sit

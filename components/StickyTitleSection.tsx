@@ -34,11 +34,19 @@ type StickyTitleSectionTheme = keyof typeof THEMES;
  */
 const COLUMNS = 7;
 
-/** Page column lines that land inside the left half, as a fraction of it. */
-const TITLE_RULES = Array.from(
-  { length: COLUMNS - 1 },
-  (_, index) => ((index + 1) / COLUMNS) * 2,
-).filter((fraction) => fraction < 1);
+/** Page column lines inside the title half, as a fraction of that half's width. */
+function titleRules(imagePosition: "left" | "right") {
+  if (imagePosition === "right") {
+    return Array.from(
+      { length: COLUMNS - 1 },
+      (_, index) => ((index + 1) / COLUMNS) * 2,
+    ).filter((fraction) => fraction < 1);
+  }
+
+  return Array.from({ length: COLUMNS - 1 }, (_, index) => (index + 1) / COLUMNS)
+    .filter((fraction) => fraction > 0.5)
+    .map((fraction) => (fraction - 0.5) * 2);
+}
 
 type StickyTitleSectionProps = {
   label: string;
@@ -47,6 +55,8 @@ type StickyTitleSectionProps = {
   alt?: string;
   className?: string;
   theme?: StickyTitleSectionTheme;
+  /** Desktop layout — mobile always stacks image below the title. */
+  imagePosition?: "left" | "right";
 };
 
 /**
@@ -61,8 +71,72 @@ export function StickyTitleSection({
   alt = "",
   className,
   theme = "cream",
+  imagePosition = "right",
 }: StickyTitleSectionProps) {
   const palette = THEMES[theme];
+  const rules = titleRules(imagePosition);
+
+  const titlePanel = (
+    <div className={cn("relative", imagePosition === "left" && "order-1 md:order-2")}>
+      <div
+        className="pointer-events-none absolute inset-0 hidden md:block"
+        aria-hidden
+      >
+        {rules.map((fraction) => (
+          <span
+            key={fraction}
+            className={cn("absolute inset-y-0 w-px", palette.lineMuted)}
+            style={{ left: `${fraction * 100}%` }}
+          />
+        ))}
+      </div>
+
+      <div
+        className={cn(
+          "relative px-(--grid-gutter) py-[6svh] text-left md:sticky md:top-(--grid-band)",
+          palette.sticky,
+        )}
+      >
+        <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+          {label}
+        </span>
+
+        <div
+          className={cn("mt-4 mb-6 h-px", palette.line)}
+          style={{
+            marginInline: "calc(-1 * var(--grid-gutter))",
+            width: "calc(100% + 2 * var(--grid-gutter))",
+          }}
+          aria-hidden
+        />
+
+        <TextReveal blockColor={palette.reveal} stagger={0.12}>
+          <h2 className="font-owners-narrow-bold text-[11vw] leading-[0.95] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(4.4vw,7svh)]">
+            {title}
+          </h2>
+        </TextReveal>
+      </div>
+    </div>
+  );
+
+  const imagePanel = (
+    <div
+      className={cn(
+        "relative aspect-4/5 overflow-hidden md:aspect-auto md:h-full md:border-t-0",
+        palette.border,
+        "border-t",
+        imagePosition === "left" ? "order-2 md:order-1 md:border-r" : "md:border-l",
+      )}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 100vw, 45vw"
+        className="object-cover"
+      />
+    </div>
+  );
 
   return (
     <section className={cn("relative w-full md:h-svh", palette.section, className)}>
@@ -74,67 +148,17 @@ export function StickyTitleSection({
       >
         <div className="col-start-2 md:h-full">
           <div className={cn("grid md:h-full md:grid-cols-2", palette.border, "border-y border-l")}>
-            <div className="relative">
-              {/* The bare cells behind the type. The sticky block below is
-                  painted to match the section, so it wipes these as it travels
-                  down rather than letting a rule run through the headline. */}
-              <div
-                className="pointer-events-none absolute inset-0 hidden md:block"
-                aria-hidden
-              >
-                {TITLE_RULES.map((fraction) => (
-                  <span
-                    key={fraction}
-                    className={cn("absolute inset-y-0 w-px", palette.lineMuted)}
-                    style={{ left: `${fraction * 100}%` }}
-                  />
-                ))}
-              </div>
-
-              {/* text-left: TextReveal centres each split line unless an
-                  ancestor opts out. */}
-              <div
-                className={cn(
-                  "relative px-(--grid-gutter) py-[6svh] text-left md:sticky md:top-(--grid-band)",
-                  palette.sticky,
-                )}
-              >
-                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  {label}
-                </span>
-
-                <div
-                  className={cn("mt-4 mb-6 h-px", palette.line)}
-                  style={{
-                    marginInline: "calc(-1 * var(--grid-gutter))",
-                    width: "calc(100% + 2 * var(--grid-gutter))",
-                  }}
-                  aria-hidden
-                />
-
-                <TextReveal blockColor={palette.reveal} stagger={0.12}>
-                  <h2 className="font-owners-narrow-bold text-[11vw] leading-[0.95] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(4.4vw,7svh)]">
-                    {title}
-                  </h2>
-                </TextReveal>
-              </div>
-            </div>
-
-            <div
-              className={cn(
-                "relative aspect-4/5 overflow-hidden md:aspect-auto md:h-full md:border-t-0 md:border-l",
-                palette.border,
-                "border-t",
-              )}
-            >
-              <Image
-                src={src}
-                alt={alt}
-                fill
-                sizes="(max-width: 768px) 100vw, 45vw"
-                className="object-cover"
-              />
-            </div>
+            {imagePosition === "left" ? (
+              <>
+                {imagePanel}
+                {titlePanel}
+              </>
+            ) : (
+              <>
+                {titlePanel}
+                {imagePanel}
+              </>
+            )}
           </div>
         </div>
       </div>
