@@ -1,7 +1,6 @@
 import { GridLines } from "@/components/GridLines";
-import { HeroParallaxImage } from "@/components/HeroParallaxImage";
 import TextReveal from "@/components/TextReveal";
-import { REVEAL_HERO } from "@/lib/colors";
+import { REVEAL_BLOCK } from "@/lib/colors";
 import {
   GRID_COLUMNS,
   GRID_COLUMNS_MOBILE,
@@ -9,30 +8,26 @@ import {
   HERO_GRID_HOLES_MOBILE,
 } from "@/lib/grid";
 
-export function Hero() {
+export function AboutHero() {
   return (
-    <section
-      className="relative h-svh w-full overflow-hidden"
-      data-transparent-nav
-    >
-      <HeroParallaxImage src="/images/anita-austvika.jpg" />
-      <div className="absolute inset-0 bg-black/20" aria-hidden />
-
+    <section className="relative h-svh w-full overflow-hidden bg-cream">
       <GridLines
         ruled
         columns={GRID_COLUMNS_MOBILE}
         holes={HERO_GRID_HOLES_MOBILE}
+        lineClassName="bg-sky"
         className="md:hidden"
       />
       <GridLines
         ruled
         columns={GRID_COLUMNS}
         holes={HERO_GRID_HOLES}
+        lineClassName="bg-sky"
         className="hidden md:block"
       />
 
       <div
-        className="absolute inset-0 grid text-cream"
+        className="absolute inset-0 grid text-black"
         style={{
           gridTemplateColumns: "var(--grid-columns)",
           gridTemplateRows: "var(--grid-rows)",
@@ -41,16 +36,16 @@ export function Hero() {
         {/* text-left is required: the TextReveal CSS centres each split line
             unless an ancestor opts out. */}
         <div className="col-start-2 col-end-5 row-start-4 row-end-5 min-w-0 self-end px-(--grid-gutter) pb-4 text-left md:col-end-7 md:row-start-3 md:row-end-5 md:pb-[3.3svh]">
-          <TextReveal animateOnScroll={false} blockColor={REVEAL_HERO} delay={0.25}>
+          <TextReveal
+            animateOnScroll={false}
+            blockColor={REVEAL_BLOCK}
+            delay={0.25}
+          >
             <h1
               className="font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] uppercase"
               style={{ fontSize: "var(--hero-headline)" }}
             >
-              Un moment
-              <br />
-              gourmand,
-              <br />
-              simplement.
+              About
             </h1>
           </TextReveal>
         </div>
@@ -58,7 +53,7 @@ export function Hero() {
         <div className="col-start-3 col-end-5 row-start-3 row-end-4 min-w-0 self-end px-(--grid-gutter) pb-4 text-right md:col-start-7 md:col-end-9 md:row-start-4 md:row-end-5 md:pb-[4.3svh]">
           <TextReveal
             animateOnScroll={false}
-            blockColor={REVEAL_HERO}
+            blockColor={REVEAL_BLOCK}
             delay={0.5}
             stagger={0.08}
             duration={0.6}
@@ -67,8 +62,8 @@ export function Hero() {
               className="font-archivo-light max-w-full leading-[1.43]"
               style={{ fontSize: "var(--hero-body)" }}
             >
-              Moment, c&apos;est un traiteur pour particuliers et entreprises,
-              celles qui veulent projeter leur image auprès de leurs clients.
+              Moment is a traiteur in Brussels. We cook for private hosts and
+              for companies who want the food to say something about them.
             </p>
           </TextReveal>
         </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { AboutHero } from "@/components/AboutHero";
 import { Footer } from "@/components/Footer";
-import { PageIntro } from "@/components/PageIntro";
 
 export const metadata: Metadata = {
   title: "About — Moment",
@@ -11,10 +11,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <PageIntro
-        title="About"
-        lead="Moment is a traiteur in Brussels. We cook for private hosts and for companies who want the food to say something about them."
-      />
+      <AboutHero />
       <Footer />
     </>
   );

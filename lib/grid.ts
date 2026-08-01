@@ -18,3 +18,14 @@ export type GridHole = {
   col: [number, number];
   row: [number, number];
 };
+
+/** Cells the hero type sits in, so the rules can be dropped there. */
+export const HERO_GRID_HOLES: GridHole[] = [
+  { col: [1, 5], row: [2, 3] }, // headline
+  { col: [6, 7], row: [3, 3] }, // paragraph
+];
+
+export const HERO_GRID_HOLES_MOBILE: GridHole[] = [
+  { col: [1, 3], row: [3, 3] }, // headline
+  { col: [2, 3], row: [2, 2] }, // paragraph
+];
