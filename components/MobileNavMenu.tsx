@@ -13,8 +13,9 @@ type MobileNavMenuProps = {
   onClose: () => void;
 };
 
-const ANIM_DURATION = 0.55;
-const ANIM_EASE = "power4.inOut";
+const ANIM_DURATION = 0.75;
+const OPEN_EASE = "power3.out";
+const CLOSE_EASE = "power3.inOut";
 
 /**
  * Stays mounted and slides in and out, so there is no open/closing state to
@@ -57,24 +58,32 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
 
     const items = panel.querySelectorAll("[data-menu-item]");
     const tl = gsap.timeline({
-      defaults: { ease: ANIM_EASE, overwrite: "auto" },
+      defaults: { overwrite: "auto" },
     });
 
     if (open) {
       tl.to(panel, {
         yPercent: 0,
         duration: ANIM_DURATION,
+        ease: OPEN_EASE,
       });
       tl.fromTo(
         items,
         { yPercent: 100, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.5, stagger: 0.05 },
-        "-=0.2",
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.55,
+          stagger: 0.04,
+          ease: "power2.out",
+        },
+        "-=0.35",
       );
     } else {
       tl.to(panel, {
         yPercent: -100,
         duration: ANIM_DURATION,
+        ease: CLOSE_EASE,
       });
     }
 

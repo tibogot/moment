@@ -26,8 +26,9 @@ type CartPanelProps = {
   onClose: () => void;
 };
 
-const ANIM_DURATION = 0.55;
-const ANIM_EASE = "power4.inOut";
+const ANIM_DURATION = 0.75;
+const OPEN_EASE = "power3.out";
+const CLOSE_EASE = "power3.inOut";
 
 export function CartPanel({ open, onClose }: CartPanelProps) {
   const cart = useSyncExternalStore(
@@ -69,16 +70,17 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     const backdrop = backdropRef.current;
     if (!panel || !backdrop) return;
 
+    const ease = open ? OPEN_EASE : CLOSE_EASE;
     const tl = gsap.timeline({
-      defaults: { duration: ANIM_DURATION, ease: ANIM_EASE, overwrite: "auto" },
+      defaults: { duration: ANIM_DURATION, ease, overwrite: "auto" },
     });
 
     if (open) {
-      tl.to(backdrop, { autoAlpha: 1 }, 0);
+      tl.to(backdrop, { autoAlpha: 1, duration: ANIM_DURATION * 0.85 }, 0);
       tl.to(panel, { xPercent: 0 }, 0);
     } else {
       tl.to(panel, { xPercent: 100 }, 0);
-      tl.to(backdrop, { autoAlpha: 0 }, 0);
+      tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
     }
 
     return () => {

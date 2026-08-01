@@ -12,8 +12,9 @@ type SearchPanelProps = {
   onClose: () => void;
 };
 
-const ANIM_DURATION = 0.55;
-const ANIM_EASE = "power4.inOut";
+const ANIM_DURATION = 0.75;
+const OPEN_EASE = "power3.out";
+const CLOSE_EASE = "power3.inOut";
 
 export function SearchPanel({ open, onClose }: SearchPanelProps) {
   const router = useRouter();
@@ -49,19 +50,20 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
     const backdrop = backdropRef.current;
     if (!panel || !backdrop) return;
 
+    const ease = open ? OPEN_EASE : CLOSE_EASE;
     const tl = gsap.timeline({
-      defaults: { duration: ANIM_DURATION, ease: ANIM_EASE, overwrite: "auto" },
+      defaults: { duration: ANIM_DURATION, ease, overwrite: "auto" },
       onComplete: () => {
         if (open) inputRef.current?.focus();
       },
     });
 
     if (open) {
-      tl.to(backdrop, { autoAlpha: 1 }, 0);
+      tl.to(backdrop, { autoAlpha: 1, duration: ANIM_DURATION * 0.85 }, 0);
       tl.to(panel, { yPercent: 0 }, 0);
     } else {
       tl.to(panel, { yPercent: -100 }, 0);
-      tl.to(backdrop, { autoAlpha: 0 }, 0);
+      tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
     }
 
     return () => {
