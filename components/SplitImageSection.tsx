@@ -18,6 +18,12 @@ type SplitImageSectionProps = {
   rowStart?: number;
   rowSpan?: number;
   priority?: boolean;
+  /**
+   * Drop the top rule when this block continues a previous SplitImageSection.
+   * Otherwise the previous block's bottom borders and this top border stack
+   * into a double-weight line.
+   */
+  continueGrid?: boolean;
   className?: string;
 };
 
@@ -29,16 +35,27 @@ export function SplitImageSection({
   rowStart = 1,
   rowSpan = SPLIT_ROWS,
   priority = false,
+  continueGrid = false,
   className,
 }: SplitImageSectionProps) {
   // The image is positioned over the cells rather than placed as a grid item:
   // an explicitly-placed item would push the auto-flowed cells out of the way
   // and break the grid it is supposed to sit on.
+  // When the frame meets the right (or bottom) edge, pin with `right`/`bottom`
+  // so percentage rounding can't leave a hairline gap beside the spine.
+  const colEnd = colStart + colSpan - 1;
+  const rowEnd = rowStart + rowSpan - 1;
   const frame = {
     left: `${((colStart - 1) / SPLIT_COLUMNS) * 100}%`,
-    width: `${(colSpan / SPLIT_COLUMNS) * 100}%`,
+    right:
+      colEnd === SPLIT_COLUMNS
+        ? "0"
+        : `${((SPLIT_COLUMNS - colEnd) / SPLIT_COLUMNS) * 100}%`,
     top: `${((rowStart - 1) / SPLIT_ROWS) * 100}%`,
-    height: `${(rowSpan / SPLIT_ROWS) * 100}%`,
+    bottom:
+      rowEnd === SPLIT_ROWS
+        ? "0"
+        : `${((SPLIT_ROWS - rowEnd) / SPLIT_ROWS) * 100}%`,
   };
 
   return (
@@ -50,12 +67,20 @@ export function SplitImageSection({
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="relative col-start-2">
-          <div className="grid grid-cols-6 border-t border-r border-sky">
+          <div
+            className={cn(
+              "grid grid-cols-6 border-sky",
+              !continueGrid && "border-t",
+            )}
+          >
             {Array.from({ length: SPLIT_COLUMNS * SPLIT_ROWS }).map(
               (_, index) => (
                 <div
                   key={index}
-                  className="aspect-square border-b border-l border-sky"
+                  className={cn(
+                    "aspect-square border-b border-sky",
+                    index % SPLIT_COLUMNS !== 0 && "border-l",
+                  )}
                 />
               ),
             )}

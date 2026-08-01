@@ -59,13 +59,17 @@ export function GridLines({
       className={cn("pointer-events-none absolute inset-0", className)}
       aria-hidden
     >
-      {[0, columns].map((boundary) => (
-        <span
-          key={`edge-${boundary}`}
-          className={cn("absolute inset-y-0 w-px", lineClassName)}
-          style={{ left: x(boundary, columns) }}
-        />
-      ))}
+      {/* Both spines sit just inside the content box. Using `left` for the
+          right spine would paint it in the margin, so an image flush to the
+          edge reads as a double line (photo edge + rule). */}
+      <span
+        className={cn("absolute inset-y-0 w-px", lineClassName)}
+        style={{ left: x(0, columns) }}
+      />
+      <span
+        className={cn("absolute inset-y-0 w-px", lineClassName)}
+        style={{ left: x(columns, columns), transform: "translateX(-100%)" }}
+      />
 
       {ruled && (
         <>

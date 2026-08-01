@@ -36,6 +36,7 @@ export default async function Home() {
         colSpan={2}
         rowStart={1}
         rowSpan={2}
+        continueGrid
       />
 
       <CollectionsSection collections={featured} />
