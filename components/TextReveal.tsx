@@ -262,7 +262,7 @@ export default function TextReveal({
   );
 
   return (
-    <div ref={containerRef} data-text-reveal>
+    <div ref={containerRef} data-text-reveal className="max-w-full min-w-0">
       {children}
     </div>
   );

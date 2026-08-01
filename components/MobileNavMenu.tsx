@@ -25,13 +25,21 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);
+  const hasOpenedRef = useRef(false);
 
   useOverlayScrollLock(open);
 
+  // Park off-screen + reveal after the CSS overlay guard. Same pattern as
+  // SearchPanel / CartPanel so a refresh never flashes the links.
   useLayoutEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
-    gsap.set(panel, { yPercent: -100 });
+
+    gsap.set(panel, { yPercent: -100, visibility: "visible" });
+    gsap.set(panel.querySelectorAll("[data-menu-item]"), {
+      yPercent: 100,
+      opacity: 0,
+    });
   }, []);
 
   // Close once navigation has actually happened.
@@ -56,12 +64,20 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
     const panel = panelRef.current;
     if (!panel) return;
 
+    // First mount is already parked — don't tween closed from y=0 (that flash
+    // is what you see on mobile refresh).
+    if (!open && !hasOpenedRef.current) {
+      gsap.set(panel, { yPercent: -100 });
+      return;
+    }
+
     const items = panel.querySelectorAll("[data-menu-item]");
     const tl = gsap.timeline({
       defaults: { overwrite: "auto" },
     });
 
     if (open) {
+      hasOpenedRef.current = true;
       tl.to(panel, {
         yPercent: 0,
         duration: ANIM_DURATION,
@@ -95,6 +111,7 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
   return (
     <div
       ref={panelRef}
+      data-overlay-panel
       className="fixed inset-0 z-50 bg-cream text-black md:hidden"
       role="dialog"
       aria-modal="true"
