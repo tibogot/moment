@@ -6,9 +6,9 @@ const SKY = "#a7c5ee";
 
 export function IntroSection() {
   return (
-    <GridSection className="pt-[18svh] pb-[14svh]">
+    <GridSection className="pt-[10svh] pb-[14svh]">
       {/* Long sky rule setting the section off from the hero. */}
-      <div className="col-span-full mb-[10svh] h-px bg-sky" />
+      <div className="col-span-full mb-[6svh] h-px bg-sky" />
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
         <TextReveal blockColor={SKY} stagger={0.12}>
           <h2 className="font-owners-narrow-bold max-w-full text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(6vw,9svh)]">

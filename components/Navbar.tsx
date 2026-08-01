@@ -300,14 +300,13 @@ export function Navbar({ products = [] }: NavbarProps) {
 
         <nav
           ref={navRef}
-          className="relative flex min-h-(--grid-band) items-center justify-between px-(--grid-inset) select-none md:grid md:px-0"
+          className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset) select-none md:grid-cols-(--grid-columns) md:px-0"
           style={{
-            gridTemplateColumns: "var(--grid-columns)",
             color: hasTransparentHero ? CREAM : BLACK,
           }}
         >
           {/* Mobile: menu + search sit together on the left. */}
-          <div className="flex items-center gap-3.5 md:hidden">
+          <div className="flex items-center gap-3.5 justify-self-start md:hidden">
             <button
               type="button"
               aria-label="Open menu"
@@ -350,7 +349,7 @@ export function Navbar({ products = [] }: NavbarProps) {
           <Link
             href={routes.home}
             aria-label="Moment home"
-            className="flex justify-center md:col-start-5 md:col-end-6"
+            className="flex justify-center justify-self-center md:col-start-5 md:col-end-6"
           >
             <span ref={logoRef} className="inline-flex">
               <Image
@@ -365,7 +364,7 @@ export function Navbar({ products = [] }: NavbarProps) {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4 md:col-start-6 md:col-end-9 md:justify-end md:pr-(--grid-gutter)">
+          <div className="flex items-center gap-4 justify-self-end md:col-start-6 md:col-end-9 md:justify-end md:pr-(--grid-gutter)">
             <button
               type="button"
               aria-label="Search"
