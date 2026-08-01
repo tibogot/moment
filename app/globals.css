@@ -261,3 +261,10 @@ html[data-palette="sky"] .bg-sky\/45 {
     background-color: var(--palette-line);
   }
 }
+
+@media (width >= 48rem) {
+  /* Local title row, then two synced subgrid rows for the rule and image. */
+  .collection-card {
+    grid-template-rows: auto subgrid;
+  }
+}

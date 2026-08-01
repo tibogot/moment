@@ -24,19 +24,35 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
           placement keeps the cards on the grid while the borders sit outside
           it, so they reach the edges. */}
       <div className="col-span-full border-y border-sky px-(--grid-margin)">
-        {/* Sky rules between the cards continue the grid rather than boxing
-            each card in its own border. */}
-        <ul className="grid md:grid-cols-3 md:gap-y-[4svh]">
+        {/* Title sits above a two-row subgrid (rule + image) so the divider
+            and image still line up across columns. */}
+        <ul className="grid md:grid-cols-3 md:grid-rows-[auto_auto]">
           {collections.map((collection) => (
             <li
               key={collection.id}
-              className="border-b border-sky last:border-b-0 md:row-span-3 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:last:border-r-0"
+              className="collection-card border-b border-sky last:border-b-0 md:row-span-2 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:last:border-r-0"
             >
               <Link
                 href={routes.collection(collection.handle)}
-                className="group block py-[4svh] md:contents"
+                className="group block md:contents"
               >
-                <div className="px-(--grid-gutter) md:pt-[4svh]">
+                <div className="px-(--grid-gutter) pt-[3svh] pb-[2svh] md:pt-[4svh] md:pb-[2.5svh]">
+                  <h3 className="font-owners-narrow-bold text-[7vw] leading-[0.95] wrap-break-word uppercase md:text-[min(2.4vw,4svh)]">
+                    {collection.title}
+                  </h3>
+
+                  {/* {collection.description && (
+                    <p className="font-archivo-light mt-3 line-clamp-3 text-[16px] leading-normal md:text-[18px]">
+                      {collection.description}
+                    </p>
+                  )} */}
+                </div>
+
+                {/* Runs the full column width so it meets the vertical grid
+                    lines, rather than stopping at the gutter. */}
+                <div className="h-px bg-sky" />
+
+                <div className="px-(--grid-gutter) pt-[2.5svh] pb-[1.5svh] md:pt-[4svh] md:pb-[2.5svh]">
                   <div className="relative aspect-4/3 w-full overflow-hidden bg-sky/20">
                     {collection.imageUrl && (
                       <Image
@@ -48,21 +64,6 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
                       />
                     )}
                   </div>
-                </div>
-
-                {/* Subgrid row — every card's rule shares one horizontal track. */}
-                <div className="mt-[4svh] h-px bg-sky md:mt-0" />
-
-                <div className="px-(--grid-gutter) pt-5 md:pb-[4svh]">
-                  <h3 className="font-owners-narrow-bold text-[7vw] leading-[0.95] wrap-break-word uppercase md:text-[min(2.4vw,4svh)]">
-                    {collection.title}
-                  </h3>
-
-                  {/* {collection.description && (
-                    <p className="font-archivo-light mt-3 line-clamp-3 text-[16px] leading-normal md:text-[18px]">
-                      {collection.description}
-                    </p>
-                  )} */}
                 </div>
               </Link>
             </li>
