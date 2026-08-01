@@ -133,6 +133,12 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2">
+          <div className="px-(--grid-gutter) pb-[5svh]">
+            <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
+              Book for delivery
+            </h2>
+          </div>
+
           {/* On a phone the month takes the whole width and Prev/Next sit
               under it. Sharing one row squeezed the longest names until the
               last letter wrapped onto its own line. */}

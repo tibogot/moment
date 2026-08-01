@@ -161,6 +161,28 @@ button:not(:disabled),
 }
 
 /*
+ * On viewports below the nav breakpoint, always show the cream nav — the
+ * transparent-over-hero treatment is desktop-only.
+ */
+@media (width < 75rem) {
+  [data-nav-transparent] [data-nav-bg] {
+    transform: scaleY(1) !important;
+  }
+
+  [data-nav-transparent] [data-nav-shell] {
+    color: #000000;
+  }
+
+  [data-nav-transparent] [data-nav-link] {
+    color: #000000 !important;
+  }
+
+  [data-nav-transparent] [data-nav-logo] {
+    filter: brightness(0);
+  }
+}
+
+/*
  * Hide slide-in overlays until GSAP parks them off-screen. Without this the
  * search/cart panels flash in the viewport for a frame before hydration.
  */

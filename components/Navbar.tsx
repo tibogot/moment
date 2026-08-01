@@ -26,6 +26,21 @@ const CLOSE_EASE = "power2.inOut";
 
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
 const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
+const NAV_MOBILE_MQ = "(width < 75rem)";
+
+function subscribeMobileNav(onStoreChange: () => void) {
+  const mq = window.matchMedia(NAV_MOBILE_MQ);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getMobileNavSnapshot() {
+  return window.matchMedia(NAV_MOBILE_MQ).matches;
+}
+
+function getMobileNavServerSnapshot() {
+  return false;
+}
 
 // The nav turns cream almost immediately: the wipe completes over the first
 // NAV_SCROLL_REVEAL_DISTANCE pixels of scroll rather than waiting for the hero
@@ -42,12 +57,18 @@ type NavbarProps = {
 export function Navbar({ products = [] }: NavbarProps) {
   const pathname = usePathname();
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
+  const isMobileNav = useSyncExternalStore(
+    subscribeMobileNav,
+    getMobileNavSnapshot,
+    getMobileNavServerSnapshot,
+  );
+  const allowsTransparentNav = hasTransparentHero && !isMobileNav;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
-  const [navSolid, setNavSolid] = useState(!hasTransparentHero);
+  const [navSolid, setNavSolid] = useState(!allowsTransparentNav);
 
   const cart = useSyncExternalStore(
     subscribeCart,
@@ -75,15 +96,15 @@ export function Navbar({ products = [] }: NavbarProps) {
   const logoRef = useRef<HTMLSpanElement>(null);
   const navTweenRef = useRef<gsap.core.Timeline | null>(null);
   const scrollNavTriggerRef = useRef<ScrollTriggerType | null>(null);
-  const hasTransparentHeroRef = useRef(hasTransparentHero);
+  const hasTransparentHeroRef = useRef(allowsTransparentNav);
   const navHoveredRef = useRef(navHovered);
 
-  const isNavSolid = hasTransparentHero ? navSolid || navHovered : true;
+  const isNavSolid = allowsTransparentNav ? navSolid || navHovered : true;
 
   // Keep refs current before GSAP reads them — useEffect is too late for the
   // hover-leave path.
   useLayoutEffect(() => {
-    hasTransparentHeroRef.current = hasTransparentHero;
+    hasTransparentHeroRef.current = allowsTransparentNav;
     navHoveredRef.current = navHovered;
   });
 
@@ -170,7 +191,7 @@ export function Navbar({ products = [] }: NavbarProps) {
       const nav = navRef.current;
       if (!bg || !nav) return;
 
-      if (!hasTransparentHero) {
+      if (!allowsTransparentNav) {
         runNavAnimation(true, true);
         return;
       }
@@ -236,7 +257,7 @@ export function Navbar({ products = [] }: NavbarProps) {
         trigger.kill();
       };
     },
-    { scope: headerRef, dependencies: [hasTransparentHero, pathname] },
+    { scope: headerRef, dependencies: [allowsTransparentNav, pathname] },
   );
 
   // Hover over the hero forces the cream state; leaving hands control back to
@@ -247,7 +268,7 @@ export function Navbar({ products = [] }: NavbarProps) {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      if (hasTransparentHero && !navHovered) {
+      if (allowsTransparentNav && !navHovered) {
         const progress = scrollNavTriggerRef.current?.progress ?? 0;
 
         if (progress <= 0.01) {
@@ -264,7 +285,7 @@ export function Navbar({ products = [] }: NavbarProps) {
     },
     {
       scope: headerRef,
-      dependencies: [navHovered, hasTransparentHero, isNavSolid],
+      dependencies: [navHovered, allowsTransparentNav, isNavSolid],
     },
   );
 
@@ -272,10 +293,15 @@ export function Navbar({ products = [] }: NavbarProps) {
     "font-owners-medium uppercase tracking-wide transition-opacity hover:opacity-70";
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40">
+    <header
+      ref={headerRef}
+      className="fixed inset-x-0 top-0 z-40"
+      {...(hasTransparentHero ? { "data-nav-transparent": "" } : {})}
+    >
       <div
         ref={shellRef}
         data-nav-intro
+        data-nav-shell
         className="relative"
         onMouseEnter={() => {
           navHoveredRef.current = true;
@@ -288,9 +314,10 @@ export function Navbar({ products = [] }: NavbarProps) {
       >
         <div
           ref={bgRef}
+          data-nav-bg
           className="pointer-events-none absolute inset-x-0 top-0 border-b border-sky bg-cream"
           style={{
-            transform: hasTransparentHero ? "scaleY(0)" : "scaleY(1)",
+            transform: allowsTransparentNav ? "scaleY(0)" : "scaleY(1)",
             transformOrigin: "top center",
           }}
           aria-hidden="true"
@@ -302,7 +329,7 @@ export function Navbar({ products = [] }: NavbarProps) {
           ref={navRef}
           className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset) select-none nav:grid-cols-(--grid-columns) nav:px-0"
           style={{
-            color: hasTransparentHero ? CREAM : BLACK,
+            color: allowsTransparentNav ? CREAM : BLACK,
           }}
         >
           {/* Mobile: menu + search sit together on the left. */}
@@ -351,7 +378,7 @@ export function Navbar({ products = [] }: NavbarProps) {
             aria-label="Moment home"
             className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6"
           >
-            <span ref={logoRef} className="inline-flex">
+            <span ref={logoRef} data-nav-logo className="inline-flex">
               <Image
                 src="/brand/logonav.svg"
                 alt="Moment"

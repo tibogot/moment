@@ -167,13 +167,10 @@ export function ServicesSection() {
         style={{ gridTemplateColumns: MARGIN_COLUMNS }}
       >
         <div className="col-start-2">
-          <div className="flex items-baseline justify-between px-(--grid-gutter) pb-[5svh]">
+          <div className="px-(--grid-gutter) pb-[5svh]">
             <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
               What we do
             </h2>
-            <span className="font-archivo-light text-[12px] tabular-nums">
-              ({String(services.length).padStart(2, "0")})
-            </span>
           </div>
 
           <div ref={rowsRef} className="relative border-b border-sky">
