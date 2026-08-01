@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useGSAP } from "@gsap/react";
 import { CircleUserRound, Handbag, Menu, Search } from "lucide-react";
+import { useLenis } from "lenis/react";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 import { CartPanel } from "@/components/CartPanel";
 import { GridLines } from "@/components/GridLines";
@@ -66,6 +67,7 @@ type NavAppearance = {
 
 export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const pathname = usePathname();
+  const lenis = useLenis();
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
   const isMobileNav = useSyncExternalStore(
     subscribeMobileNav,
@@ -507,6 +509,22 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     setShopMenuOpen(false);
   };
 
+  const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== routes.home) return;
+
+    event.preventDefault();
+    setMenuOpen(false);
+    setCartOpen(false);
+    setSearchOpen(false);
+    setShopMenuOpen(false);
+
+    if (lenis) {
+      lenis.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   useLayoutEffect(() => {
     if (!overlayOpen) return;
 
@@ -651,6 +669,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             aria-label="Moment home"
             className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6"
             onMouseEnter={closeShopMenu}
+            onClick={handleLogoClick}
           >
             <span ref={logoRef} data-nav-logo className="inline-flex">
               <Image

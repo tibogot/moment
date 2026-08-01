@@ -1,10 +1,23 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { Handbag } from "lucide-react";
 import { gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
+import {
+  getCartSnapshot,
+  getServerCartSnapshot,
+  subscribeCart,
+} from "@/lib/cart-store";
 import { mainNav, routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -33,6 +46,12 @@ export function MobileNavMenu({
   const previousPathname = useRef(pathname);
   const hasOpenedRef = useRef(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const cart = useSyncExternalStore(
+    subscribeCart,
+    getCartSnapshot,
+    getServerCartSnapshot,
+  );
+  const cartCount = cart?.totalQuantity ?? 0;
 
   useOverlayScrollLock(open);
 
@@ -138,20 +157,60 @@ export function MobileNavMenu({
         className="relative grid h-full"
         style={{ gridTemplateRows: "var(--grid-rows)" }}
       >
-        <div className="flex items-center justify-end px-(--grid-inset)">
-          <button
-            type="button"
-            onClick={onClose}
-            className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60"
-          >
-            Close
-          </button>
+        <div className="border-b border-sky">
+          <nav className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset)">
+            <button
+              type="button"
+              onClick={onClose}
+              className="font-owners-medium justify-self-start text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60"
+            >
+              Close
+            </button>
+
+            <Link
+              href={routes.home}
+              aria-label="Moment home"
+              className="flex justify-center justify-self-center"
+              onClick={onClose}
+            >
+              <span className="inline-flex" style={{ filter: "brightness(0)" }}>
+                <Image
+                  src="/brand/logonav.svg"
+                  alt="Moment"
+                  width={110}
+                  height={21}
+                  className="h-auto"
+                  style={{ width: "var(--nav-logo)" }}
+                />
+              </span>
+            </Link>
+
+            <button
+              type="button"
+              aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
+              onClick={() => {
+                onClose();
+                window.dispatchEvent(new Event("cart-open"));
+              }}
+              className="relative justify-self-end"
+            >
+              <Handbag
+                style={{ width: "var(--nav-icon)", height: "var(--nav-icon)" }}
+                strokeWidth={1.5}
+              />
+              {cartCount > 0 && (
+                <span className="font-archivo-light absolute -top-1.5 -right-2 text-[10px] leading-none">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          </nav>
         </div>
 
-        <nav className="row-start-2 row-end-5 flex flex-col justify-center overflow-y-auto px-(--grid-inset)">
-          <ul className="flex flex-col gap-2">
-            <li className="overflow-hidden">
-              <div className="flex items-center justify-between gap-4">
+        <nav className="row-start-2 row-end-5 overflow-y-auto pt-[3svh]">
+          <ul className="border-b border-sky">
+            <li className="overflow-hidden border-t border-sky">
+              <div className="flex items-center justify-between gap-4 px-(--grid-inset) py-4">
                 <Link
                   href={shopNav.href}
                   data-menu-item
@@ -180,7 +239,7 @@ export function MobileNavMenu({
                   className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                   style={{ maxHeight: shopOpen ? "24rem" : "0" }}
                 >
-                  <ul className="mt-3 flex flex-col gap-2 border-l border-sky pl-4">
+                  <ul className="flex flex-col gap-2 border-t border-sky px-(--grid-inset) py-4">
                     <li>
                       <Link
                         href={routes.shop}
@@ -207,12 +266,12 @@ export function MobileNavMenu({
             </li>
 
             {otherNav.map(({ label, href }) => (
-              <li key={href} className="overflow-hidden">
+              <li key={href} className="overflow-hidden border-t border-sky">
                 <Link
                   href={href}
                   data-menu-item
                   onClick={onClose}
-                  className="font-owners-narrow-bold block text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                  className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                 >
                   {label}
                 </Link>
@@ -220,6 +279,11 @@ export function MobileNavMenu({
             ))}
           </ul>
         </nav>
+
+        <div
+          className="row-start-5 border-t border-sky min-h-(--grid-band)"
+          aria-hidden="true"
+        />
       </div>
     </div>
   );

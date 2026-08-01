@@ -13,10 +13,25 @@ export function CollectionsSection({ collections }: CollectionsSectionProps) {
 
   return (
     <GridSection className="pt-[10svh] pb-0 md:pb-[14svh]">
-      <div className="col-start-2 col-end-5 px-(--grid-gutter) pb-[5svh] md:col-end-9">
+      <div className="col-start-2 col-end-5 flex flex-col items-start gap-4 px-(--grid-gutter) pb-[5svh] md:col-end-9 md:flex-row md:items-end md:justify-between">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
           Collections
         </h2>
+
+        <Link
+          href={routes.shop}
+          className="group inline-block border border-sky bg-cream px-3 py-2.5 transition-colors duration-500 hover:bg-sky"
+        >
+          <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+            View all
+            <span
+              className="transition-transform duration-500 group-hover:translate-x-1.5"
+              aria-hidden
+            >
+              &rarr;
+            </span>
+          </span>
+        </Link>
       </div>
 
       {/* The rules that open and close the block run the full viewport, like
