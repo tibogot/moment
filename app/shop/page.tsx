@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductGrid } from "@/components/ProductGrid";
 import { routes } from "@/lib/routes";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
@@ -35,35 +35,23 @@ export default async function ShopPage() {
 
       <GridSection className="pb-[14svh]">
         {visibleCollections.length > 0 && (
-          <ul className="col-start-2 col-end-5 flex flex-wrap gap-x-4 gap-y-2 px-(--grid-gutter) pb-[6svh] md:col-end-9">
-            {visibleCollections.map((collection) => (
-              <li key={collection.id}>
-                <Link
-                  href={routes.collection(collection.handle)}
-                  className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                >
-                  {collection.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-9">
-          {products.length === 0 ? (
-            <p className="font-archivo-light text-[15px]">
-              The catalogue is not available right now. Please try again later.
-            </p>
-          ) : (
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6">
-              {products.map((product) => (
-                <li key={product.id}>
-                  <ProductCard product={product} />
+          <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) py-[4svh] md:col-end-9">
+            <ul className="flex flex-wrap gap-x-4 gap-y-2">
+              {visibleCollections.map((collection) => (
+                <li key={collection.id}>
+                  <Link
+                    href={routes.collection(collection.handle)}
+                    className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                  >
+                    {collection.title}
+                  </Link>
                 </li>
               ))}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
+
+        <ProductGrid products={products} />
       </GridSection>
 
       <Footer />
