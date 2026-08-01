@@ -112,7 +112,7 @@ export function MobileNavMenu({ open, onClose }: MobileNavMenuProps) {
     <div
       ref={panelRef}
       data-overlay-panel
-      className="fixed inset-0 z-50 bg-cream text-black md:hidden"
+      className="fixed inset-0 z-50 bg-cream text-black nav:hidden"
       role="dialog"
       aria-modal="true"
       aria-label="Menu"

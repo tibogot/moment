@@ -300,13 +300,13 @@ export function Navbar({ products = [] }: NavbarProps) {
 
         <nav
           ref={navRef}
-          className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset) select-none md:grid-cols-(--grid-columns) md:px-0"
+          className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset) select-none nav:grid-cols-(--grid-columns) nav:px-0"
           style={{
             color: hasTransparentHero ? CREAM : BLACK,
           }}
         >
           {/* Mobile: menu + search sit together on the left. */}
-          <div className="flex items-center gap-3.5 justify-self-start md:hidden">
+          <div className="flex items-center gap-3.5 justify-self-start nav:hidden">
             <button
               type="button"
               aria-label="Open menu"
@@ -334,7 +334,7 @@ export function Navbar({ products = [] }: NavbarProps) {
           </div>
 
           <ul
-            className="hidden md:col-start-2 md:col-end-5 md:flex md:items-center md:gap-4 md:pl-(--grid-gutter)"
+            className="hidden nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-4 nav:pl-(--grid-gutter)"
             style={{ fontSize: "var(--nav-text)" }}
           >
             {mainNav.map(({ label, href }) => (
@@ -349,7 +349,7 @@ export function Navbar({ products = [] }: NavbarProps) {
           <Link
             href={routes.home}
             aria-label="Moment home"
-            className="flex justify-center justify-self-center md:col-start-5 md:col-end-6"
+            className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6"
           >
             <span ref={logoRef} className="inline-flex">
               <Image
@@ -364,12 +364,12 @@ export function Navbar({ products = [] }: NavbarProps) {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4 justify-self-end md:col-start-6 md:col-end-9 md:justify-end md:pr-(--grid-gutter)">
+          <div className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--grid-gutter)">
             <button
               type="button"
               aria-label="Search"
               data-nav-link
-              className="hidden md:block"
+              className="hidden nav:block"
               onClick={() => {
                 setMenuOpen(false);
                 setCartOpen(false);
@@ -383,7 +383,7 @@ export function Navbar({ products = [] }: NavbarProps) {
               href={routes.account}
               aria-label="Account"
               data-nav-link
-              className="hidden md:block"
+              className="hidden nav:block"
             >
               <CircleUserRound style={iconStyle} strokeWidth={1.5} />
             </Link>

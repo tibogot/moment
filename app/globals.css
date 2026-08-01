@@ -9,6 +9,9 @@
   --font-owners-narrow-bold: var(--font-face-owners-narrow-bold);
   --font-archivo-light: var(--font-face-archivo-light);
   --font-archivo-light-italic: var(--font-face-archivo-light-italic);
+
+  /* Navbar switches from mobile menu to inline links at this width. */
+  --breakpoint-nav: 75rem;
 }
 
 :root {

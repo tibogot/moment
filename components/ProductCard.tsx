@@ -49,7 +49,7 @@ export function ProductCard({
         className={
           compact
             ? "mt-3 flex flex-col gap-1 px-(--grid-gutter)"
-            : "mt-3 flex items-baseline justify-between gap-3 px-(--grid-gutter)"
+            : "mt-3 flex flex-col gap-1 px-(--grid-gutter) md:flex-row md:items-baseline md:justify-between md:gap-3"
         }
       >
         <h3 className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
