@@ -722,7 +722,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           }`}
           aria-hidden={!navExpanded}
         >
-          <div ref={menuInnerRef} className="nav:col-start-2 nav:col-end-9">
+          <div ref={menuInnerRef} className="nav:col-span-full">
             <ShopNavMenu collections={collections} />
           </div>
         </div>

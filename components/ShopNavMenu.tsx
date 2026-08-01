@@ -40,10 +40,13 @@ export function ShopNavMenu({ collections }: ShopNavMenuProps) {
   const featured = collections.filter((collection) => collection.imageUrl).slice(0, 2);
 
   return (
-    <div className="grid items-start gap-8 border-t border-sky py-[3svh] pb-[4svh] pl-(--grid-gutter) pr-(--grid-gutter) nav:grid-cols-[minmax(0,1fr)_auto] nav:gap-12 lg:gap-16">
+    <div
+      className="grid border-t border-sky"
+      style={{ gridTemplateColumns: "var(--grid-columns)" }}
+    >
       <nav
         aria-label="Shop"
-        className="flex flex-col gap-2.5 py-1 nav:min-w-36 lg:min-w-44"
+        className="relative col-start-2 col-end-4 flex flex-col gap-2.5 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh]"
       >
         <Link href={routes.shop} className={linkClassName}>
           All
@@ -60,12 +63,26 @@ export function ShopNavMenu({ collections }: ShopNavMenuProps) {
       </nav>
 
       {featured.length > 0 && (
-        <div className="flex gap-5 lg:gap-8">
-          {featured.map((collection) => (
-            <FeaturedCard key={collection.id} collection={collection} />
-          ))}
+        <div className="relative col-start-4 col-end-9">
+          <span
+            className="pointer-events-none absolute inset-y-0 left-0 w-px bg-sky"
+            aria-hidden
+          />
+          <span
+            className="pointer-events-none absolute inset-y-0 right-0 w-px bg-sky"
+            aria-hidden
+          />
+
+          <div className="flex gap-5 px-(--grid-gutter) pt-[4svh] pb-4 lg:gap-8">
+            {featured.map((collection) => (
+              <FeaturedCard key={collection.id} collection={collection} />
+            ))}
+          </div>
         </div>
       )}
+
+      <div className="col-span-full h-px bg-sky" aria-hidden />
+      <div className="col-span-full min-h-(--grid-band)" />
     </div>
   );
 }
