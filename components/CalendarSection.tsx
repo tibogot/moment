@@ -1,15 +1,17 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { setDeliveryDate } from "@/app/actions/cart";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
+import { monthCells, monthName, WEEKDAYS } from "@/lib/calendar";
 import { notifyCartUpdated } from "@/lib/cart-store";
+import { gsap } from "@/lib/gsapConfig";
 import {
   LEAD_TIME_DAYS,
+  dayState,
   formatDeliveryDate,
-  isBookable,
   parseISODate,
   toISODate,
   type DeliveryAvailability,
@@ -26,24 +28,7 @@ import { REVEAL_BLOCK } from "@/lib/colors";
 const MARGIN_COLUMNS =
   "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 
-const WEEKDAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
-
-/** Monday-first offset for the 1st of the month. */
-function leadingBlanks(year: number, month: number) {
-  return (new Date(year, month, 1).getDay() + 6) % 7;
-}
-
-function daysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
+const BAR_DURATION = 0.55;
 
 type Status =
   | { kind: "idle" }
@@ -72,26 +57,16 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [isPending, startTransition] = useTransition();
+  const barRef = useRef<HTMLDivElement>(null);
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
 
-  // Pad to whole weeks so the grid always closes off cleanly.
-  const cells = useMemo(() => {
-    const blanks = leadingBlanks(year, month);
-    const total = daysInMonth(year, month);
-    const days: (number | null)[] = [
-      ...Array.from({ length: blanks }, () => null),
-      ...Array.from({ length: total }, (_, index) => index + 1),
-    ];
-
-    while (days.length % 7 !== 0) days.push(null);
-    return days;
-  }, [year, month]);
+  const cells = useMemo(() => monthCells(year, month), [year, month]);
 
   const isoFor = (day: number) => toISODate(new Date(year, month, day));
 
-  const monthLabel = cursor.toLocaleDateString("en-GB", { month: "long" });
+  const monthLabel = monthName(cursor);
   const atFirstMonth =
     year === today.getFullYear() && month === today.getMonth();
 
@@ -99,6 +74,11 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
 
   const chooseDay = (iso: string) => {
     setSelected(iso);
+    setStatus({ kind: "idle" });
+  };
+
+  const dismissBar = () => {
+    setSelected(null);
     setStatus({ kind: "idle" });
   };
 
@@ -119,6 +99,34 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
       setStatus({ kind: "saved", date: result.date });
     });
   };
+
+  // Park the bar below the fold before first paint, so it slides in on the
+  // first selection rather than flashing at the bottom of the page on load.
+  useLayoutEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    gsap.set(bar, { yPercent: 100, visibility: "visible" });
+  }, []);
+
+  const barOpen = selected !== null;
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+
+    const tween = gsap.to(bar, {
+      yPercent: barOpen ? 0 : 100,
+      duration: BAR_DURATION,
+      ease: barOpen ? "power3.out" : "power3.in",
+      overwrite: "auto",
+    });
+
+    return () => {
+      tween.kill();
+    };
+  }, [barOpen]);
+
+  const isSaved = status.kind === "saved";
 
   return (
     <section className="relative w-full bg-cream pb-[14svh] text-black">
@@ -207,15 +215,36 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               }
 
               const iso = isoFor(day);
+              const state = dayState(iso, availability);
+              const number = String(day).padStart(2, "0");
 
-              // Unavailable days are solid sky with no number at all.
-              if (!isBookable(iso, availability)) {
+              // Only days the kitchen turned down get the solid fill. Painting
+              // the lead time and the days already gone the same way made the
+              // first half of every month read as "fully booked".
+              if (state === "closed") {
                 return (
                   <div
                     key={day}
                     className={cn(cellClassName, "bg-sky")}
                     aria-hidden
                   />
+                );
+              }
+
+              if (state === "past") {
+                return (
+                  <div
+                    key={day}
+                    className={cn(
+                      cellClassName,
+                      "flex items-start justify-end opacity-25",
+                    )}
+                    aria-hidden
+                  >
+                    <span className="font-owners-medium text-[10px] md:text-[12px]">
+                      {number}
+                    </span>
+                  </div>
                 );
               }
 
@@ -237,7 +266,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                   )}
                 >
                   <span className="font-owners-medium text-[10px] md:text-[12px]">
-                    {String(day).padStart(2, "0")}
+                    {number}
                   </span>
                 </button>
               );
@@ -245,64 +274,130 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
           </div>
 
           <div className="px-(--grid-gutter) pt-[4svh]">
-            {status.kind === "saved" ? (
-              <>
-                <p className="font-archivo-light text-[15px] leading-normal">
-                  Delivery set for {formatDeliveryDate(status.date)}. It travels
-                  with your order — you can keep shopping and change it here any
-                  time before checkout.
-                </p>
+            {/* The three cell treatments read as one scale of "less available"
+                unless they are named. Body copy alone left visitors guessing
+                which blue meant what. */}
+            <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <li className="flex items-center gap-2">
+                <span
+                  className="size-3 border border-sky bg-cream"
+                  aria-hidden
+                />
+                <span className="font-owners-medium text-[10px] uppercase tracking-wide">
+                  Open
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="size-3 border border-sky bg-sky" aria-hidden />
+                <span className="font-owners-medium text-[10px] uppercase tracking-wide">
+                  Closed or full
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span
+                  className="size-3 border border-sky bg-cream opacity-25"
+                  aria-hidden
+                />
+                <span className="font-owners-medium text-[10px] uppercase tracking-wide">
+                  Too soon
+                </span>
+              </li>
+            </ul>
 
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href={routes.shop}
-                    className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
-                  >
-                    Choose your plates
-                  </Link>
-                  <Link
-                    href={routes.cart}
-                    className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                  >
-                    View cart
-                  </Link>
-                </div>
-              </>
+            <p className="font-archivo-light mt-5 text-[15px] leading-normal">
+              Pick any open day to add it to your order — you do not need
+              anything in your basket yet. We need {LEAD_TIME_DAYS}{" "}
+              days&apos; notice and we do not deliver on Sundays.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* A bar rather than a dialog: picking a delivery day is a comparison, so
+          the grid has to stay on screen and stay clickable while it is up. The
+          confirm used to sit below the calendar, a full screen away from the
+          cell being tapped on a phone. */}
+      <div
+        ref={barRef}
+        className="fixed inset-x-0 bottom-0 z-30 invisible border-t border-sky bg-cream text-black"
+        role="region"
+        aria-label="Selected delivery date"
+        aria-hidden={!barOpen}
+        inert={!barOpen}
+      >
+        <div className="flex flex-col gap-4 px-(--grid-inset) py-5 md:flex-row md:items-center md:justify-between md:gap-8">
+          <div className="flex min-w-0 items-baseline gap-4">
+            {/* Dismiss sits with the text, away from the two CTAs — nothing
+                good comes of putting "never mind" next to "confirm". */}
+            <button
+              type="button"
+              onClick={dismissBar}
+              aria-label="Dismiss"
+              className="font-owners-medium shrink-0 text-[11px] uppercase tracking-wide opacity-60 transition-opacity hover:opacity-100"
+            >
+              Close
+            </button>
+
+            <div className="min-w-0">
+            {isSaved ? (
+              <p className="font-archivo-light text-[14px] leading-normal">
+                Delivery set for{" "}
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  {formatDeliveryDate(status.date)}
+                </span>
+                . It travels with your order — change it any time before
+                checkout.
+              </p>
             ) : (
               <>
-                <p className="font-archivo-light text-[15px] leading-normal">
-                  {selected
-                    ? `Delivery on ${formatDeliveryDate(selected)}.`
-                    : `Dated days are open for delivery. Blue days are already taken or closed — we need ${LEAD_TIME_DAYS} days' notice and we do not deliver on Sundays.`}
+                <p className="font-archivo-light text-[14px] leading-normal">
+                  Delivery on{" "}
+                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                    {selected ? formatDeliveryDate(selected) : ""}
+                  </span>
                 </p>
-
                 {status.kind === "error" && (
-                  <p
-                    role="alert"
-                    className="font-archivo-light mt-3 text-[14px] leading-normal"
-                  >
+                  <p role="alert" className="font-archivo-light mt-1 text-[13px]">
                     {status.message}
                   </p>
                 )}
+              </>
+            )}
+            </div>
+          </div>
 
-                {selected && (
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <button
-                      type="button"
-                      onClick={confirmDate}
-                      disabled={isPending}
-                      className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80 disabled:opacity-40"
-                    >
-                      {isPending ? "Saving…" : "Request this date"}
-                    </button>
-                    <Link
-                      href={routes.contact}
-                      className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                    >
-                      Ask about this date
-                    </Link>
-                  </div>
-                )}
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
+            {isSaved ? (
+              <>
+                <Link
+                  href={routes.shop}
+                  className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+                >
+                  Choose your plates
+                </Link>
+                <Link
+                  href={routes.cart}
+                  className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                >
+                  View cart
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={confirmDate}
+                  disabled={isPending}
+                  className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80 disabled:opacity-40"
+                >
+                  {isPending ? "Saving…" : "Save to my order"}
+                </button>
+                <Link
+                  href={routes.contact}
+                  className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                >
+                  Ask about this date
+                </Link>
               </>
             )}
           </div>

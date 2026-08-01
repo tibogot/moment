@@ -2,9 +2,11 @@
 // Fetches once on first subscription, deduplicates in-flight requests, and
 // refreshes whenever a `cart-updated` event fires.
 
+import type { DeliveryAvailability } from "@/lib/delivery";
 import type { Cart } from "@/lib/shopify/cart";
 
 let cart: Cart | null = null;
+let availability: DeliveryAvailability | null = null;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
 const listeners = new Set<() => void>();
@@ -24,8 +26,12 @@ function fetchCart(): Promise<void> {
         return;
       }
 
-      const data = (await response.json()) as { cart: Cart | null };
+      const data = (await response.json()) as {
+        cart: Cart | null;
+        availability: DeliveryAvailability | null;
+      };
       cart = data.cart;
+      availability = data.availability;
     } catch {
       // Keep the last known cart on network errors.
     } finally {
@@ -49,6 +55,19 @@ export function getCartSnapshot(): Cart | null {
 }
 
 export function getServerCartSnapshot(): Cart | null {
+  return null;
+}
+
+/**
+ * Kept as its own subscription rather than folded into the cart snapshot: the
+ * navbar badge only wants the cart, and bundling the two into an object would
+ * hand `useSyncExternalStore` a fresh reference on every read.
+ */
+export function getAvailabilitySnapshot(): DeliveryAvailability | null {
+  return availability;
+}
+
+export function getServerAvailabilitySnapshot(): DeliveryAvailability | null {
   return null;
 }
 

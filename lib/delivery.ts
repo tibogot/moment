@@ -81,16 +81,36 @@ export function firstBookableDate(today: string) {
 }
 
 /**
- * The single definition of a blue cell. The calendar uses it to paint, and the
- * server action uses it again to decide whether to accept a submission — a
+ * Why a day looks the way it does.
+ *
+ * `past` and `closed` are both unbookable, but they mean opposite things to a
+ * visitor: one is a day that has already gone (or is inside the lead time), the
+ * other is a day the kitchen turned down. Painting them identically made the
+ * first half of every month read as "fully booked", so the calendars branch on
+ * this and only `closed` gets the solid fill.
+ */
+export type DayState = "past" | "closed" | "open";
+
+export function dayState(
+  iso: string,
+  availability: DeliveryAvailability,
+): DayState {
+  const date = parseISODate(iso);
+  if (!date) return "closed";
+
+  // Checked first: a Sunday that has already gone is past, not "closed today".
+  if (iso < availability.firstBookable) return "past";
+  if (CLOSED_WEEKDAYS.has(date.getDay())) return "closed";
+  return availability.closedDates.includes(iso) ? "closed" : "open";
+}
+
+/**
+ * The single definition of a bookable day. The calendars use it to paint, and
+ * the server action uses it again to decide whether to accept a submission — a
  * stale page must never be able to book a day that has since closed.
  */
 export function isBookable(iso: string, availability: DeliveryAvailability) {
-  const date = parseISODate(iso);
-  if (!date) return false;
-  if (iso < availability.firstBookable) return false;
-  if (CLOSED_WEEKDAYS.has(date.getDay())) return false;
-  return !availability.closedDates.includes(iso);
+  return dayState(iso, availability) === "open";
 }
 
 export function formatDeliveryDate(iso: string) {

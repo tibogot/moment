@@ -11,13 +11,21 @@ import {
   useTransition,
 } from "react";
 import { gsap } from "@/lib/gsapConfig";
-import { removeFromCart, updateCartLine } from "@/app/actions/cart";
 import {
+  removeFromCart,
+  setDeliveryDate,
+  updateCartLine,
+} from "@/app/actions/cart";
+import {
+  getAvailabilitySnapshot,
   getCartSnapshot,
+  getServerAvailabilitySnapshot,
   getServerCartSnapshot,
   notifyCartUpdated,
   subscribeCart,
 } from "@/lib/cart-store";
+import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
+import { formatDeliveryDate, isBookable, LEAD_TIME_DAYS } from "@/lib/delivery";
 import { routes } from "@/lib/routes";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
@@ -36,10 +44,16 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     getCartSnapshot,
     getServerCartSnapshot,
   );
+  const availability = useSyncExternalStore(
+    subscribeCart,
+    getAvailabilitySnapshot,
+    getServerAvailabilitySnapshot,
+  );
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   useOverlayScrollLock(open);
 
@@ -57,13 +71,20 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   useEffect(() => {
     if (!open) return;
 
+    // Escape backs out of the picker first — closing the whole panel from
+    // inside a sub-view loses more than the customer asked to lose.
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+      if (pickerOpen) {
+        setPickerOpen(false);
+        return;
+      }
+      onClose();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, onClose, pickerOpen]);
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -79,7 +100,14 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       tl.to(backdrop, { autoAlpha: 1, duration: ANIM_DURATION * 0.85 }, 0);
       tl.to(panel, { xPercent: 0 }, 0);
     } else {
-      tl.to(panel, { xPercent: 100 }, 0);
+      // Reopening should show the cart, not wherever the last visit left off.
+      // Reset once the panel is out of sight, or the view swaps under the
+      // customer mid-slide.
+      tl.to(
+        panel,
+        { xPercent: 100, onComplete: () => setPickerOpen(false) },
+        0,
+      );
       tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
     }
 
@@ -101,6 +129,28 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   };
 
   const isEmpty = !cart || cart.lines.length === 0;
+  const deliveryDate = cart?.deliveryDate ?? null;
+
+  // A date saved days ago can go stale while the cart sits — the owners may
+  // have closed it since. Shopify's hosted checkout will not let anyone edit a
+  // cart attribute, so this panel is the last place it can be put right.
+  const dateIsStale = Boolean(
+    deliveryDate && availability && !isBookable(deliveryDate, availability),
+  );
+  const needsDate = !deliveryDate || dateIsStale;
+
+  const chooseDate = (iso: string) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await setDeliveryDate(iso);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      notifyCartUpdated();
+      setPickerOpen(false);
+    });
+  };
 
   return (
     <>
@@ -127,21 +177,47 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         <div>
           <div className="flex min-h-(--grid-band) items-center justify-between px-6">
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
-              Cart{cart?.totalQuantity ? ` (${cart.totalQuantity})` : ""}
+              {pickerOpen
+                ? "Delivery date"
+                : `Cart${cart?.totalQuantity ? ` (${cart.totalQuantity})` : ""}`}
             </p>
             <button
               type="button"
-              onClick={onClose}
+              onClick={pickerOpen ? () => setPickerOpen(false) : onClose}
               className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
             >
-              Close
+              {pickerOpen ? "Back" : "Close"}
             </button>
           </div>
           <div className="h-px bg-sky" aria-hidden />
         </div>
 
         <div className="flex-1 overflow-y-auto" data-lenis-prevent>
-          {isEmpty ? (
+          {pickerOpen && availability ? (
+            <>
+              <p className="font-archivo-light px-6 pt-5 text-[13px] leading-normal">
+                Pick the day you want this delivered. Blue days are closed or
+                already full — we need {LEAD_TIME_DAYS}{" "}
+                days&apos; notice and we do not deliver on Sundays.
+              </p>
+
+              {error && (
+                <p
+                  role="alert"
+                  className="font-archivo-light px-6 pt-3 text-[13px]"
+                >
+                  {error}
+                </p>
+              )}
+
+              <DeliveryDatePicker
+                availability={availability}
+                value={deliveryDate}
+                onSelect={chooseDate}
+                disabled={isPending}
+              />
+            </>
+          ) : isEmpty ? (
             <p className="font-archivo-light px-6 py-10 text-[15px]">
               Your cart is empty.
             </p>
@@ -235,31 +311,87 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           )}
         </div>
 
-        {!isEmpty && (
-          <div className="border-t border-sky px-6 py-5">
-            {error && (
-              <p className="font-archivo-light mb-3 text-[13px]">{error}</p>
-            )}
+        {!isEmpty && !pickerOpen && (
+          <div className="border-t border-sky">
+            {/* The date has to be settled here. It travels to the order as a
+                cart attribute, and Shopify's hosted checkout gives the customer
+                no way to change it once they have left this panel. */}
+            <div className="border-b border-sky px-6 py-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  Delivery
+                </span>
 
-            <div className="flex items-baseline justify-between">
-              <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                Total
-              </span>
-              <span className="font-archivo-light text-[15px]">
-                {cart.totalPrice}
-              </span>
+                {deliveryDate && !dateIsStale ? (
+                  <span className="flex items-baseline gap-3">
+                    <span className="font-archivo-light text-[13px]">
+                      {formatDeliveryDate(deliveryDate)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setPickerOpen(true)}
+                      className="font-archivo-light text-[12px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                    >
+                      Change
+                    </button>
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setPickerOpen(true)}
+                    className="font-archivo-light text-[13px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                  >
+                    {dateIsStale ? "Pick another day" : "Choose a date"}
+                  </button>
+                )}
+              </div>
+
+              {dateIsStale && deliveryDate && (
+                <p role="alert" className="font-archivo-light mt-2 text-[12px]">
+                  {formatDeliveryDate(deliveryDate)} is no longer available.
+                  Please pick another day.
+                </p>
+              )}
             </div>
 
-            <p className="font-archivo-light mt-1 text-[12px] opacity-70">
-              Taxes and delivery calculated at checkout.
-            </p>
+            <div className="px-6 py-5">
+              {error && (
+                <p className="font-archivo-light mb-3 text-[13px]">{error}</p>
+              )}
 
-            <a
-              href={cart.checkoutUrl}
-              className="font-owners-medium mt-4 block bg-black px-6 py-4 text-center text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
-            >
-              Checkout
-            </a>
+              <div className="flex items-baseline justify-between">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  Total
+                </span>
+                <span className="font-archivo-light text-[15px]">
+                  {cart.totalPrice}
+                </span>
+              </div>
+
+              <p className="font-archivo-light mt-1 text-[12px] opacity-70">
+                Taxes and delivery calculated at checkout.
+              </p>
+
+              {/* Without a day there is nothing to check out to, so the picker
+                  takes the primary slot rather than disabling the button and
+                  leaving the customer to work out why. */}
+              {needsDate ? (
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(true)}
+                  className="font-owners-medium mt-4 block w-full bg-black px-6 py-4 text-center text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+                >
+                  Choose a delivery date
+                </button>
+              ) : (
+                <a
+                  href={cart.checkoutUrl}
+                  className="font-owners-medium mt-4 block bg-black px-6 py-4 text-center text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+                >
+                  Checkout
+                </a>
+              )}
+            </div>
           </div>
         )}
       </div>

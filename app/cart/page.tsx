@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { CartDeliverySection } from "@/components/CartDeliverySection";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { getCart } from "@/app/actions/cart";
-import { formatDeliveryDate } from "@/lib/delivery";
+import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function CartPage() {
-  const cart = await getCart();
+  const [cart, availability] = await Promise.all([
+    getCart(),
+    getDeliveryAvailability(),
+  ]);
   const isEmpty = !cart || cart.lines.length === 0;
 
   return (
@@ -77,41 +81,12 @@ export default async function CartPage() {
                 ))}
               </ul>
 
-              {/* Carried as a cart attribute, so it follows the order into
-                  the Shopify admin. Set on the calendar on the home page. */}
-              <div className="flex items-baseline justify-between border-t border-sky py-6">
-                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  Delivery
-                </span>
-                {cart.deliveryDate ? (
-                  <span className="font-archivo-light text-[13px]">
-                    {formatDeliveryDate(cart.deliveryDate)}
-                  </span>
-                ) : (
-                  <Link
-                    href={routes.home}
-                    className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
-                  >
-                    Pick a date
-                  </Link>
-                )}
-              </div>
-
-              <div className="flex items-baseline justify-between border-t border-sky pt-6">
-                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  Total
-                </span>
-                <span className="font-archivo-light text-[15px]">
-                  {cart.totalPrice}
-                </span>
-              </div>
-
-              <a
-                href={cart.checkoutUrl}
-                className="font-owners-medium mt-8 inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
-              >
-                Checkout
-              </a>
+              <CartDeliverySection
+                availability={availability}
+                deliveryDate={cart.deliveryDate}
+                totalPrice={cart.totalPrice}
+                checkoutUrl={cart.checkoutUrl}
+              />
             </>
           )}
         </div>
