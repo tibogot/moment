@@ -27,7 +27,7 @@ export function ProductCard({
       }
     >
       <div className="px-(--grid-gutter)">
-        <div className="relative aspect-4/5 w-full overflow-hidden bg-sky/20">
+        <div className="product-card__image relative aspect-4/5 w-full overflow-hidden">
           {product.imageUrl && (
             <Image
               src={product.imageUrl}

@@ -73,11 +73,11 @@ export function CollectionsSection({
             items.push(
               <li
                 key={collection.id}
-                className="collection-card -mx-(--grid-margin) border-b border-sky px-(--grid-margin) last:border-b-0 md:mx-0 md:row-span-2 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:px-0 md:last:border-r-0"
+                className="collection-card group -mx-(--grid-margin) border-b border-sky px-(--grid-margin) transition-colors duration-500 last:border-b-0 md:mx-0 md:row-span-2 md:grid md:grid-rows-subgrid md:border-r md:border-b-0 md:px-0 md:last:border-r-0"
               >
                 <Link
                   href={routes.collection(collection.handle)}
-                  className="group block md:contents"
+                  className="block md:contents"
                 >
                   <div className="px-(--grid-gutter) pt-[3svh] pb-[2svh] md:pt-[4svh] md:pb-[2.5svh]">
                     <h3 className="font-owners-narrow-bold text-[7vw] leading-[0.95] wrap-break-word uppercase md:text-[min(2.4vw,4svh)]">
@@ -93,10 +93,10 @@ export function CollectionsSection({
 
                   {/* Runs the full column width so it meets the vertical grid
                     lines, rather than stopping at the gutter. */}
-                  <div className="h-px bg-sky" />
+                  <div className="collection-card__rule h-px" />
 
                   <div className="px-(--grid-gutter) pt-[2.5svh] pb-[1.5svh] md:pt-[4svh] md:pb-[2.5svh]">
-                    <div className="relative aspect-4/3 w-full overflow-hidden bg-sky/20">
+                    <div className="collection-card__image relative aspect-4/3 w-full overflow-hidden">
                       {collection.imageUrl && (
                         <Image
                           src={collection.imageUrl}

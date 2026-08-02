@@ -268,3 +268,35 @@ html[data-palette="sky"] .bg-sky\/45 {
     grid-template-rows: auto subgrid;
   }
 }
+
+.collection-card__rule {
+  background-color: var(--palette-line);
+  transition: background-color 500ms;
+}
+
+.collection-card__image,
+.product-card__image {
+  background-color: color-mix(in srgb, var(--palette-line) 20%, transparent);
+  transition: background-color 500ms;
+}
+
+@media (hover: hover) {
+  .collection-card:hover {
+    background-color: var(--palette-reveal);
+    border-color: var(--palette-reveal-on-sky);
+  }
+
+  .collection-card:hover .collection-card__rule {
+    background-color: var(--palette-reveal-on-sky);
+  }
+
+  .collection-card:hover .collection-card__image,
+  .product-card:hover .product-card__image {
+    background-color: var(--palette-reveal);
+  }
+
+  .product-card:hover {
+    background-color: var(--palette-reveal);
+    border-color: var(--palette-reveal-on-sky);
+  }
+}

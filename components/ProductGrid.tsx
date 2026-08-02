@@ -25,7 +25,7 @@ export function ProductGrid({
   return (
     <ul className="col-start-2 col-end-5 grid grid-cols-2 border-t border-r border-sky md:col-end-9 md:grid-cols-3">
       {products.map((product) => (
-        <li key={product.id} className="border-b border-l border-sky">
+        <li key={product.id} className="product-card border-b border-l border-sky transition-colors duration-500">
           <ProductCard product={product} />
         </li>
       ))}
