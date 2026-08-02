@@ -237,7 +237,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                     key={day}
                     className={cn(
                       cellClassName,
-                      "flex items-start justify-end opacity-25",
+                      "flex items-start justify-end bg-sky/25",
                     )}
                     aria-hidden
                   >
@@ -295,7 +295,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               </li>
               <li className="flex items-center gap-2">
                 <span
-                  className="size-3 border border-sky bg-cream opacity-25"
+                  className="size-3 border border-sky bg-sky/25"
                   aria-hidden
                 />
                 <span className="font-owners-medium text-[10px] uppercase tracking-wide">
@@ -333,16 +333,16 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               type="button"
               onClick={dismissBar}
               aria-label="Dismiss"
-              className="font-owners-medium shrink-0 text-[11px] uppercase tracking-wide opacity-60 transition-opacity hover:opacity-100"
+              className="font-owners-medium shrink-0 text-[12px] uppercase tracking-wide opacity-60 transition-opacity hover:opacity-100 md:text-(length:--nav-text)"
             >
               Close
             </button>
 
             <div className="min-w-0">
             {isSaved ? (
-              <p className="font-archivo-light text-[14px] leading-normal">
+              <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
                 Delivery set for{" "}
-                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
                   {formatDeliveryDate(status.date)}
                 </span>
                 . It travels with your order — change it any time before
@@ -350,14 +350,14 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               </p>
             ) : (
               <>
-                <p className="font-archivo-light text-[14px] leading-normal">
+                <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
                   Delivery on{" "}
-                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
                     {selected ? formatDeliveryDate(selected) : ""}
                   </span>
                 </p>
                 {status.kind === "error" && (
-                  <p role="alert" className="font-archivo-light mt-1 text-[13px]">
+                  <p role="alert" className="font-archivo-light mt-1 text-[14px] md:text-[15px]">
                     {status.message}
                   </p>
                 )}

@@ -51,6 +51,9 @@ export function ShopNavMenu({ collections }: ShopNavMenuProps) {
         <Link href={routes.shop} className={linkClassName}>
           All
         </Link>
+        <Link href={routes.collections} className={linkClassName}>
+          Collections
+        </Link>
         {collections.map((collection) => (
           <Link
             key={collection.id}

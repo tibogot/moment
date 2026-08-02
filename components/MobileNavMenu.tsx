@@ -249,6 +249,15 @@ export function MobileNavMenu({
                         All
                       </Link>
                     </li>
+                    <li>
+                      <Link
+                        href={routes.collections}
+                        onClick={onClose}
+                        className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                      >
+                        Collections
+                      </Link>
+                    </li>
                     {collections.map((collection) => (
                       <li key={collection.id}>
                         <Link

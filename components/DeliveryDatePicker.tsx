@@ -121,7 +121,7 @@ export function DeliveryDatePicker({
               return (
                 <div
                   key={day}
-                  className={cn(cellClassName, "opacity-25")}
+                  className={cn(cellClassName, "bg-sky/25")}
                   aria-hidden
                 >
                   <span className="font-owners-medium text-[11px]">
