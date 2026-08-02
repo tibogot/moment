@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -27,6 +28,7 @@ import {
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { formatDeliveryDate, isBookable, LEAD_TIME_DAYS } from "@/lib/delivery";
 import { routes } from "@/lib/routes";
+import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
 type CartPanelProps = {
@@ -57,6 +59,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
   useOverlayScrollLock(open);
 
+  const closePanel = useCallback(() => {
+    blurFocusWithin(panelRef.current);
+    onClose();
+  }, [onClose]);
+
   // Park off-screen before paint — no Tailwind translate utilities, they stack
   // with GSAP's xPercent and leave the panel stuck out of view.
   useLayoutEffect(() => {
@@ -79,12 +86,12 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         setPickerOpen(false);
         return;
       }
-      onClose();
+      closePanel();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose, pickerOpen]);
+  }, [open, closePanel, pickerOpen]);
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -158,7 +165,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         ref={backdropRef}
         data-overlay-backdrop
         className="pointer-events-none fixed inset-0 z-40 bg-black/40"
-        onClick={onClose}
+        onClick={closePanel}
         aria-hidden
         style={{ pointerEvents: open ? "auto" : "none" }}
       />
@@ -183,7 +190,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             </p>
             <button
               type="button"
-              onClick={pickerOpen ? () => setPickerOpen(false) : onClose}
+              onClick={pickerOpen ? () => setPickerOpen(false) : closePanel}
               className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
             >
               {pickerOpen ? "Back" : "Close"}
@@ -230,7 +237,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 >
                   <Link
                     href={routes.product(line.productHandle)}
-                    onClick={onClose}
+                    onClick={closePanel}
                     className="relative aspect-4/5 w-20 shrink-0 overflow-hidden bg-sky/20"
                   >
                     {line.imageUrl && (
@@ -247,7 +254,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   <div className="flex min-w-0 flex-1 flex-col">
                     <Link
                       href={routes.product(line.productHandle)}
-                      onClick={onClose}
+                      onClick={closePanel}
                       className="font-owners-medium text-[12px] uppercase tracking-wide"
                     >
                       {line.title}

@@ -22,6 +22,7 @@ import {
 import { mainNav, routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { siteConfig } from "@/lib/site";
+import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
 const PLACEHOLDER_PHONE = "+32 2 512 34 56";
@@ -84,6 +85,7 @@ export function MobileNavMenu({
   const cartCount = cart?.totalQuantity ?? 0;
 
   const handleClose = useCallback(() => {
+    blurFocusWithin(panelRef.current);
     setShopOpen(false);
     onClose();
   }, [onClose]);

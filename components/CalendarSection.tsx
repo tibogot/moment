@@ -8,6 +8,7 @@ import TextReveal from "@/components/TextReveal";
 import { monthCells, monthName, WEEKDAYS } from "@/lib/calendar";
 import { notifyCartUpdated } from "@/lib/cart-store";
 import { gsap } from "@/lib/gsapConfig";
+import { blurFocusWithin } from "@/lib/overlayFocus";
 import {
   LEAD_TIME_DAYS,
   dayState,
@@ -78,6 +79,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
   };
 
   const dismissBar = () => {
+    blurFocusWithin(barRef.current);
     setSelected(null);
     setStatus({ kind: "idle" });
   };

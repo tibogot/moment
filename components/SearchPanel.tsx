@@ -16,6 +16,7 @@ import { GridLines } from "@/components/GridLines";
 import { ProductCard } from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
+import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
 type SearchPanelProps = {
@@ -66,11 +67,7 @@ export function SearchPanel({
   useOverlayScrollLock(open);
 
   const closePanel = useCallback(() => {
-    const panel = panelRef.current;
-    const active = document.activeElement;
-    if (panel && active instanceof HTMLElement && panel.contains(active)) {
-      active.blur();
-    }
+    blurFocusWithin(panelRef.current);
     setQuery("");
     onClose();
   }, [onClose]);

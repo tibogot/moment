@@ -26,6 +26,7 @@ import {
 } from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { startIntro } from "@/lib/intro";
+import { blurOpenOverlayFocus } from "@/lib/overlayFocus";
 import { mainNav, routes } from "@/lib/routes";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -107,6 +108,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const overlayOpen = cartOpen || searchOpen || menuOpen;
   const navExpanded = shopMenuOpen && !overlayOpen && !isMobileNav;
 
+  const withOverlayFocusRelease = (update: () => void) => {
+    blurOpenOverlayFocus();
+    update();
+  };
+
   const cart = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
@@ -123,10 +129,12 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   // AddToCartButton opens the panel after a successful add.
   useEffect(() => {
     const openCart = () => {
-      setMenuOpen(false);
-      setSearchOpen(false);
-      setShopMenuOpen(false);
-      setCartOpen(true);
+      withOverlayFocusRelease(() => {
+        setMenuOpen(false);
+        setSearchOpen(false);
+        setShopMenuOpen(false);
+        setCartOpen(true);
+      });
     };
 
     window.addEventListener("cart-open", openCart);
@@ -563,10 +571,12 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     if (pathname !== routes.home) return;
 
     event.preventDefault();
-    setMenuOpen(false);
-    setCartOpen(false);
-    setSearchOpen(false);
-    setShopMenuOpen(false);
+    withOverlayFocusRelease(() => {
+      setMenuOpen(false);
+      setCartOpen(false);
+      setSearchOpen(false);
+      setShopMenuOpen(false);
+    });
 
     if (lenis) {
       lenis.scrollTo(0);
@@ -663,12 +673,14 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               type="button"
               aria-label="Open menu"
               data-nav-link
-              onClick={() => {
-                setSearchOpen(false);
-                setCartOpen(false);
-                setShopMenuOpen(false);
-                setMenuOpen(true);
-              }}
+              onClick={() =>
+                withOverlayFocusRelease(() => {
+                  setSearchOpen(false);
+                  setCartOpen(false);
+                  setShopMenuOpen(false);
+                  setMenuOpen(true);
+                })
+              }
             >
               <Menu style={iconStyle} strokeWidth={1.5} />
             </button>
@@ -676,12 +688,14 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               type="button"
               aria-label="Search"
               data-nav-link
-              onClick={() => {
-                setMenuOpen(false);
-                setCartOpen(false);
-                setShopMenuOpen(false);
-                setSearchOpen(true);
-              }}
+              onClick={() =>
+                withOverlayFocusRelease(() => {
+                  setMenuOpen(false);
+                  setCartOpen(false);
+                  setShopMenuOpen(false);
+                  setSearchOpen(true);
+                })
+              }
             >
               <Search style={iconStyle} strokeWidth={1.5} />
             </button>
@@ -698,12 +712,14 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
                 data-nav-link
                 aria-expanded={shopMenuOpen}
                 aria-haspopup="true"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setCartOpen(false);
-                  setSearchOpen(false);
-                  setShopMenuOpen(true);
-                }}
+                onClick={() =>
+                  withOverlayFocusRelease(() => {
+                    setMenuOpen(false);
+                    setCartOpen(false);
+                    setSearchOpen(false);
+                    setShopMenuOpen(true);
+                  })
+                }
               >
                 {shopNav.label}
               </button>
@@ -746,12 +762,14 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               aria-label="Search"
               data-nav-link
               className="hidden nav:block"
-              onClick={() => {
-                setMenuOpen(false);
-                setCartOpen(false);
-                setShopMenuOpen(false);
-                setSearchOpen(true);
-              }}
+              onClick={() =>
+                withOverlayFocusRelease(() => {
+                  setMenuOpen(false);
+                  setCartOpen(false);
+                  setShopMenuOpen(false);
+                  setSearchOpen(true);
+                })
+              }
             >
               <Search style={iconStyle} strokeWidth={1.5} />
             </button>
@@ -769,12 +787,14 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               type="button"
               aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
               data-nav-link
-              onClick={() => {
-                setMenuOpen(false);
-                setSearchOpen(false);
-                setShopMenuOpen(false);
-                setCartOpen(true);
-              }}
+              onClick={() =>
+                withOverlayFocusRelease(() => {
+                  setMenuOpen(false);
+                  setSearchOpen(false);
+                  setShopMenuOpen(false);
+                  setCartOpen(true);
+                })
+              }
               className="relative"
             >
               <Handbag style={iconStyle} strokeWidth={1.5} />
