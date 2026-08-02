@@ -152,6 +152,8 @@ export function FooterGridCells({
 
       if (cell) {
         activateCell(cell);
+      } else {
+        deactivate();
       }
     };
 
@@ -179,22 +181,12 @@ export function FooterGridCells({
     return () => window.removeEventListener("resize", onResize);
   }, [positionHighlight]);
 
-  const totalGridRows = GRID_ROWS + 2;
   const cells = [];
 
   const cellProps = (style: CSSProperties) => ({
     className: "footer-grid-cell",
     style,
   });
-
-  for (let col = 1; col <= columns; col++) {
-    cells.push(
-      <div
-        key={`band-top-${col}`}
-        {...cellProps({ gridColumn: gridCol(col), gridRow: 1 })}
-      />,
-    );
-  }
 
   for (let designRow = 1; designRow <= GRID_ROWS; designRow++) {
     for (let col = 1; col <= columns; col++) {
@@ -210,18 +202,6 @@ export function FooterGridCells({
         />,
       );
     }
-  }
-
-  for (let col = 1; col <= columns; col++) {
-    cells.push(
-      <div
-        key={`band-bottom-${col}`}
-        {...cellProps({
-          gridColumn: gridCol(col),
-          gridRow: totalGridRows,
-        })}
-      />,
-    );
   }
 
   for (const hole of holes) {

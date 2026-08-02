@@ -26,7 +26,7 @@ const legalLinkClassName =
 
 export function Footer() {
   return (
-    <footer className="relative h-[90svh] w-full overflow-hidden border-t border-sky bg-cream text-black md:h-[80svh]">
+    <footer className="relative h-[90svh] w-full overflow-hidden bg-cream text-black md:h-[80svh]">
       <FooterGridCells
         columns={GRID_COLUMNS_MOBILE}
         holes={mobileHoles}
