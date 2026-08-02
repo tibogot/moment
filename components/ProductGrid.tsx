@@ -182,7 +182,7 @@ export function ProductGrid({
             <li key={collection.id}>
               <Link
                 href={routes.collection(collection.handle)}
-                className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                className="animated-underline font-owners-medium text-[12px] uppercase tracking-wide"
               >
                 {collection.title}
               </Link>

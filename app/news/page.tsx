@@ -25,7 +25,10 @@ export default async function NewsPage() {
         {articles.length > 0 ? (
           <ul className="col-start-2 col-end-5 grid border-t border-r border-sky md:col-end-9 md:grid-cols-3">
             {articles.map((article) => (
-              <li key={article._id} className="border-b border-l border-sky">
+              <li
+                key={article._id}
+                className="product-card border-b border-l border-sky transition-colors duration-500"
+              >
                 <NewsArticleCard article={article} />
               </li>
             ))}
