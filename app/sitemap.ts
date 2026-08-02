@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getNewsArticles } from "@/lib/sanity/queries";
+import { getMenus, getNewsArticles } from "@/lib/sanity/queries";
 import { routes } from "@/lib/routes";
 import { absoluteUrl } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
@@ -16,6 +16,7 @@ const staticRoutes: { path: string; changeFrequency: Entry["changeFrequency"]; p
   { path: routes.home, changeFrequency: "weekly", priority: 1 },
   { path: routes.shop, changeFrequency: "daily", priority: 0.9 },
   { path: routes.collections, changeFrequency: "weekly", priority: 0.8 },
+  { path: routes.menus, changeFrequency: "monthly", priority: 0.9 },
   { path: routes.events, changeFrequency: "monthly", priority: 0.8 },
   { path: routes.coffee, changeFrequency: "monthly", priority: 0.7 },
   { path: routes.about, changeFrequency: "monthly", priority: 0.7 },
@@ -42,10 +43,11 @@ async function safely<T>(load: () => Promise<T[]>, label: string): Promise<T[]> 
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, collections, articles] = await Promise.all([
+  const [products, collections, articles, menus] = await Promise.all([
     safely(getProducts, "products"),
     safely(getCollections, "collections"),
     safely(getNewsArticles, "articles"),
+    safely(getMenus, "menus"),
   ]);
 
   const now = new Date();
@@ -71,6 +73,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: absoluteUrl(routes.product(product.handle)),
       lastModified: now,
       changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
+    ...menus.map((menu) => ({
+      url: absoluteUrl(routes.menu(menu.slug.current)),
+      lastModified: now,
+      changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
     ...articles.map((article) => ({

@@ -1,6 +1,7 @@
 import { routes } from "./routes";
-import { absoluteUrl } from "./seo";
+import { absoluteUrl, fullTitle } from "./seo";
 import { siteConfig } from "./site";
+import type { Menu } from "./menus";
 import type { NewsArticle } from "./sanity/types";
 import type { ShopifyCollection, ShopifyProduct } from "./shopify/queries";
 
@@ -213,6 +214,91 @@ export function articleSchema(
     publisher: { "@id": ORGANIZATION_ID },
     isPartOf: { "@id": WEBSITE_ID },
   });
+}
+
+/**
+ * A catering menu. `Menu` inherits `offers` from CreativeWork, so the price can
+ * hang off the menu itself rather than off each dish — which is how it is
+ * actually sold: per head, for the whole format.
+ *
+ * The price is a UnitPriceSpecification with a reference quantity of one
+ * person, not a flat `price`. Stating "45" against a buffet without saying
+ * "per person" would be a wrong number, and prices in structured data are the
+ * one thing a search engine will quote back at a customer.
+ */
+export function menuSchema(menu: Menu) {
+  const url = absoluteUrl(routes.menu(menu.slug.current));
+
+  return compact({
+    "@type": "Menu",
+    "@id": `${url}#menu`,
+    name: menu.title,
+    description: menu.summary,
+    url,
+    inLanguage: siteConfig.defaultLocale,
+    provider: { "@id": `${siteConfig.url}/#business` },
+    isPartOf: { "@id": WEBSITE_ID },
+    hasMenuSection: menu.courses?.map((course) =>
+      compact({
+        "@type": "MenuSection",
+        name: course.title,
+        hasMenuItem: course.items?.map((item) => ({
+          "@type": "MenuItem",
+          name: item,
+        })),
+      }),
+    ),
+    offers: compact({
+      "@type": "Offer",
+      url,
+      priceCurrency: "EUR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: menu.pricePerPerson,
+        priceCurrency: "EUR",
+        // The menu is quoted before VAT; saying otherwise misstates the price.
+        valueAddedTaxIncluded: false,
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: 1,
+          unitText: "person",
+        },
+      },
+      eligibleQuantity: compact({
+        "@type": "QuantitativeValue",
+        minValue: menu.minGuests,
+        maxValue: menu.maxGuests,
+        unitText: "person",
+      }),
+      seller: { "@id": ORGANIZATION_ID },
+      // Quote-only: there is no checkout for these, the enquiry is the action.
+      availability: "https://schema.org/InStock",
+    }),
+  });
+}
+
+/** The menus index, as a list pointing at each menu's own node. */
+export function menuListSchema(menus: Menu[]) {
+  const url = absoluteUrl(routes.menus);
+
+  return {
+    "@type": "CollectionPage",
+    "@id": `${url}#menus`,
+    name: fullTitle("Menus"),
+    url,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": `${siteConfig.url}/#business` },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: menus.length,
+      itemListElement: menus.map((menu, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: menu.title,
+        url: absoluteUrl(routes.menu(menu.slug.current)),
+      })),
+    },
+  };
 }
 
 /** Wraps one or more nodes in the `@context` the parser expects. */

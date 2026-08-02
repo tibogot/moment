@@ -138,17 +138,28 @@ function TextField({
   );
 }
 
+type ContactFormProps = {
+  /**
+   * Starting contents of the boxes. Resolved on the server — a visitor arriving
+   * from a menu page lands with the format and its price already written into
+   * the message. Defaults to an empty form.
+   */
+  initialValues?: ContactValues;
+};
+
 /**
  * The quote request. Held in one client component rather than split per field:
  * the values are controlled so a rejected submission comes back with the copy
  * still in the boxes, and is only cleared once the mail has actually gone.
  */
-export function ContactForm() {
+export function ContactForm({
+  initialValues = EMPTY_CONTACT_VALUES,
+}: ContactFormProps = {}) {
   const [state, formAction, pending] = useActionState(
     sendContactRequest,
     INITIAL_CONTACT_STATE,
   );
-  const [values, setValues] = useState<ContactValues>(EMPTY_CONTACT_VALUES);
+  const [values, setValues] = useState<ContactValues>(initialValues);
 
   /**
    * The confirmation the visitor has clicked past. Held as the state object
@@ -158,9 +169,11 @@ export function ContactForm() {
   const [dismissed, setDismissed] = useState<ContactFormState | null>(null);
   const sent = state.status === "success" && dismissed !== state;
 
+  // Back to the prefill, not to blank: someone sending a second request from a
+  // menu page is still asking about that menu.
   const reopen = () => {
     setDismissed(state);
-    setValues(EMPTY_CONTACT_VALUES);
+    setValues(initialValues);
   };
 
   const update = (field: ContactField) => (value: string) =>
