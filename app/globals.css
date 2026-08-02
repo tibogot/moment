@@ -337,6 +337,19 @@ html[data-palette="sky"] .bg-sky\/45 {
   background-color: var(--palette-reveal);
 }
 
+/* The footer's bottom band carries the copyright plus six legal links. Below md
+   those stack and the links wrap to two or three lines — more than the shared
+   band height holds, so the type ended up crushed against the viewport edge and
+   clipped by the footer's overflow. Give the footer its own taller band on
+   mobile. Both the row template and GridLines derive their geometry from this
+   one token, so the rules and the cells stay in sync; the three ruled rows
+   absorb the difference since the footer's height is fixed. */
+@media (width < 48rem) {
+  .site-footer {
+    --grid-band: max(6rem, 12svh);
+  }
+}
+
 @media (hover: hover) {
   .collection-card:hover {
     background-color: var(--palette-reveal);
