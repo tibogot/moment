@@ -211,26 +211,38 @@ export function MobileNavMenu({
           <ul className="border-b border-sky">
             <li className="overflow-hidden border-t border-sky">
               <div className="flex items-center justify-between gap-4 px-(--grid-inset) py-4">
-                <Link
-                  href={shopNav.href}
-                  data-menu-item
-                  onClick={onClose}
-                  className="font-owners-narrow-bold block text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
-                >
-                  {shopNav.label}
-                </Link>
-                {collections.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setShopOpen((current) => !current)}
-                    aria-expanded={shopOpen}
-                    aria-label={
-                      shopOpen ? "Hide collections" : "Show collections"
-                    }
-                    className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                {collections.length > 0 ? (
+                  <>
+                    <button
+                      type="button"
+                      data-menu-item
+                      onClick={() => setShopOpen((current) => !current)}
+                      aria-expanded={shopOpen}
+                      className="font-owners-narrow-bold block text-left text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                    >
+                      {shopNav.label}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShopOpen((current) => !current)}
+                      aria-expanded={shopOpen}
+                      aria-label={
+                        shopOpen ? "Hide shop links" : "Show shop links"
+                      }
+                      className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                    >
+                      {shopOpen ? "−" : "+"}
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href={routes.shop}
+                    data-menu-item
+                    onClick={onClose}
+                    className="font-owners-narrow-bold block text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                   >
-                    {shopOpen ? "−" : "+"}
-                  </button>
+                    {shopNav.label}
+                  </Link>
                 )}
               </div>
 

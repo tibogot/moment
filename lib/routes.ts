@@ -26,7 +26,7 @@ export const routes = {
 
 /** The links that appear in the navbar and the mobile menu, in order. */
 export const mainNav = [
-  { label: "Shop", href: routes.shop },
+  { label: "Shop", opensShopMenu: true as const },
   { label: "Events", href: routes.events },
   { label: "Coffee", href: routes.coffee },
   { label: "News", href: routes.news },

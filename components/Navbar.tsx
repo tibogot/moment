@@ -647,13 +647,21 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             style={{ fontSize: "var(--nav-text)" }}
           >
             <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
-              <Link
-                href={shopNav.href}
+              <button
+                type="button"
                 className={linkClassName}
                 data-nav-link
+                aria-expanded={shopMenuOpen}
+                aria-haspopup="true"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setCartOpen(false);
+                  setSearchOpen(false);
+                  setShopMenuOpen(true);
+                }}
               >
                 {shopNav.label}
-              </Link>
+              </button>
             </li>
             {otherNav.map(({ label, href }) => (
               <li key={href} onMouseEnter={closeShopMenu}>
