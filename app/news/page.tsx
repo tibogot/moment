@@ -22,6 +22,7 @@ export default async function NewsPage() {
       <PageIntro
         title="News"
         lead="From the kitchen, the counter and the table — what we are cooking, serving and thinking about."
+        leadClassName="text-[18px] md:text-[18px]"
       />
 
       <GridSection className="pb-[14svh]">

@@ -23,6 +23,7 @@ export default function EventsPage() {
       <PageIntro
         title="Events"
         lead="From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open."
+        leadClassName="text-[18px] md:text-[18px]"
       />
       <Footer />
     </>

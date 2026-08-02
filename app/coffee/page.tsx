@@ -18,6 +18,7 @@ export default function CoffeePage() {
       <PageIntro
         title="Coffee"
         lead="A coffee desk for anyone passing by, serving the same pastries and juices we send out to our clients."
+        leadClassName="text-[18px] md:text-[18px]"
       />
       <Footer />
     </>

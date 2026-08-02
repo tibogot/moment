@@ -36,6 +36,7 @@ export default function ContactPage() {
       <PageIntro
         title="Contact"
         lead="Tell us the date, the number of people and roughly what you have in mind. We will come back with a menu and a price."
+        leadClassName="text-[18px] md:text-[18px]"
       />
 
       <ContactForm />
