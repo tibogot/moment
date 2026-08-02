@@ -246,30 +246,30 @@ export function MobileNavMenu({
           >
             <ul className="border-b border-sky">
             <li className="overflow-hidden border-t border-sky">
-              <div className="flex items-center justify-between gap-4 px-(--grid-inset) py-4">
+              <div className="px-(--grid-inset) py-4">
                 {collections.length > 0 ? (
-                  <>
-                    <button
-                      type="button"
-                      data-menu-item
-                      onClick={() => setShopOpen((current) => !current)}
-                      aria-expanded={shopExpanded}
-                      className="font-owners-narrow-bold block text-left text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
-                    >
+                  <button
+                    type="button"
+                    data-menu-item
+                    onClick={() => setShopOpen((current) => !current)}
+                    aria-expanded={shopExpanded}
+                    aria-label={
+                      shopExpanded
+                        ? `Hide ${shopNav.label} links`
+                        : `Show ${shopNav.label} links`
+                    }
+                    className="flex w-full items-center justify-between gap-4 text-left transition-opacity hover:opacity-60"
+                  >
+                    <span className="font-owners-narrow-bold text-[10vw] leading-[1.05] uppercase">
                       {shopNav.label}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShopOpen((current) => !current)}
-                      aria-expanded={shopExpanded}
-                      aria-label={
-                        shopExpanded ? "Hide shop links" : "Show shop links"
-                      }
-                      className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                    </span>
+                    <span
+                      className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide"
+                      aria-hidden
                     >
                       {shopExpanded ? "−" : "+"}
-                    </button>
-                  </>
+                    </span>
+                  </button>
                 ) : (
                   <Link
                     href={routes.shop}
