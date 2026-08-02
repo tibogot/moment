@@ -45,10 +45,10 @@ export function AddToCartButton({
         onClick={handleClick}
         disabled={disabled}
         className={cn(
-          "group inline-block border border-sky bg-cream px-3 py-2.5 transition-colors duration-500",
+          "group inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500",
           disabled
             ? "cursor-not-allowed opacity-40"
-            : "hover:bg-sky",
+            : "hover:bg-cream",
         )}
       >
         <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">

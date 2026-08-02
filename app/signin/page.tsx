@@ -44,7 +44,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           {configured ? (
             <a
               href={routes.authLogin}
-              className="group inline-block border border-sky bg-cream px-3 py-2.5 transition-colors duration-500 hover:bg-sky"
+              className="group inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
             >
               <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
                 Continue with Shopify

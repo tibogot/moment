@@ -87,7 +87,7 @@ export default function NotFound() {
             </TextReveal>
 
             <Link href={routes.home} className="group inline-flex shrink-0">
-              <span className="border border-sky bg-cream px-3 py-2.5 transition-colors duration-500 group-hover:bg-sky">
+              <span className="border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 group-hover:bg-cream">
                 <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] tracking-wide uppercase">
                   Back to home
                   <span

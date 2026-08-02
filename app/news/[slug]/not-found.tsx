@@ -16,7 +16,7 @@ export default function NewsArticleNotFound() {
           </p>
           <Link
             href={routes.news}
-            className="font-owners-medium inline-block border border-sky bg-cream px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-sky"
+            className="font-owners-medium inline-block border border-sky bg-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-cream"
           >
             Back to news
           </Link>

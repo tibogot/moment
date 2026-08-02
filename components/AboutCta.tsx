@@ -51,7 +51,7 @@ export function AboutCta() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="group mt-5 mr-3 inline-block border border-cream bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+                className="group mt-5 mr-3 inline-block border border-cream bg-cream px-3 py-2.5 transition-colors duration-500 hover:bg-sky"
               >
                 <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
                   {link.label}
