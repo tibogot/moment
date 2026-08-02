@@ -5,7 +5,10 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PortableTextContent } from "@/components/PortableTextContent";
 import { SanityImage } from "@/components/SanityImage";
+import TextReveal from "@/components/TextReveal";
+import { REVEAL_BLOCK } from "@/lib/colors";
 import { routes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 import { formatArticleDate } from "@/lib/sanity/format";
 import {
   getNewsArticleBySlug,
@@ -46,37 +49,55 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
   }
 
   const category = article.categories?.[0]?.title;
+  const metadataLine = [
+    category,
+    article.publishedAt ? formatArticleDate(article.publishedAt) : null,
+    article.author?.name,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <>
       <GridSection className="pt-[22svh] pb-[8svh]">
         <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-black/50">
-            {category ? <span>{category}</span> : null}
-            {category && article.publishedAt ? (
-              <span aria-hidden="true">·</span>
-            ) : null}
-            {article.publishedAt ? (
-              <time dateTime={article.publishedAt}>
-                {formatArticleDate(article.publishedAt)}
-              </time>
-            ) : null}
-            {article.author?.name ? (
-              <>
-                <span aria-hidden="true">·</span>
-                <span>{article.author.name}</span>
-              </>
-            ) : null}
-          </div>
+          {metadataLine ? (
+            <TextReveal
+              blockColor={REVEAL_BLOCK}
+              animateOnScroll={false}
+              delay={0.05}
+            >
+              <p className="text-[11px] uppercase tracking-wide text-black/50">
+                {metadataLine}
+              </p>
+            </TextReveal>
+          ) : null}
 
-          <h1 className="font-owners-narrow-bold mt-6 max-w-full text-[11vw] leading-[0.9] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(8vw,12svh)]">
-            {article.title}
-          </h1>
+          <TextReveal
+            blockColor={REVEAL_BLOCK}
+            animateOnScroll={false}
+            delay={0.15}
+          >
+            <h1
+              className={cn(
+                "font-owners-narrow-bold max-w-full text-[11vw] leading-[0.9] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(8vw,12svh)]",
+                metadataLine && "mt-6",
+              )}
+            >
+              {article.title}
+            </h1>
+          </TextReveal>
 
           {article.excerpt ? (
-            <p className="font-archivo-light mt-[5svh] max-w-full text-[15px] leading-[1.5] text-black/70 md:text-[min(1.35vw,2svh)]">
-              {article.excerpt}
-            </p>
+            <TextReveal
+              blockColor={REVEAL_BLOCK}
+              animateOnScroll={false}
+              delay={0.35}
+            >
+              <p className="font-archivo-light mt-[5svh] max-w-[42ch] text-[15px] leading-[1.5] text-black/70 md:text-[min(1.35vw,2svh)]">
+                {article.excerpt}
+              </p>
+            </TextReveal>
           ) : null}
         </div>
       </GridSection>
