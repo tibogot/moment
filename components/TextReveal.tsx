@@ -5,6 +5,24 @@ import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsapConfig";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
+/*
+ * Each instance used to call ScrollTrigger.refresh() itself. The home page
+ * mounts 16 of them, so 16 full-document re-measures landed within a couple of
+ * frames of each other — enough main-thread stall that the hero's reveal, which
+ * plays immediately rather than on scroll, rendered in two or three frames
+ * instead of animating. Desktop absorbed the cost; mobile did not. Coalescing
+ * them means the work happens once, after the last instance has registered.
+ */
+let refreshFrame: number | null = null;
+
+function scheduleScrollTriggerRefresh() {
+  if (refreshFrame !== null) cancelAnimationFrame(refreshFrame);
+  refreshFrame = requestAnimationFrame(() => {
+    refreshFrame = null;
+    ScrollTrigger.refresh();
+  });
+}
+
 interface TextRevealProps {
   children: React.ReactNode;
   animateOnScroll?: boolean;
@@ -179,18 +197,22 @@ export default function TextReveal({
               );
               tl.pause();
               timelines.current.push(tl);
-
-              const trigger = ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: "top 90%",
-                once: true,
-                onEnter: () => tl.play(),
-              });
-              triggers.current.push(trigger);
             });
 
-            // Refresh after all triggers are created and DOM is stable
-            ScrollTrigger.refresh();
+            // One trigger for the whole block, not one per line. Every line
+            // shared the same trigger element and start position anyway, so
+            // the extra ScrollTriggers only ever added work to each refresh —
+            // 51 of them on the home page instead of 16.
+            const started = timelines.current.slice();
+            const trigger = ScrollTrigger.create({
+              trigger: containerRef.current,
+              start: "top 90%",
+              once: true,
+              onEnter: () => started.forEach((tl) => tl.play()),
+            });
+            triggers.current.push(trigger);
+
+            scheduleScrollTriggerRefresh();
           });
         });
       } else {
