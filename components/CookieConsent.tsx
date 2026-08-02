@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { OPTIONAL_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import {
   acceptAllConsent,
@@ -16,6 +16,7 @@ import {
 } from "@/lib/consent/store";
 import type { ConsentChoices } from "@/lib/consent/types";
 import { routes } from "@/lib/routes";
+import { useIsClient } from "@/lib/useIsClient";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
 function CookieCtaButton({
@@ -55,7 +56,98 @@ function choicesFromConsent(
   };
 }
 
+function CookiePreferencesPanel({
+  consent,
+  onClose,
+}: {
+  consent: ReturnType<typeof getConsentSnapshot>;
+  onClose: () => void;
+}) {
+  const [draft, setDraft] = useState(() => choicesFromConsent(consent));
+
+  return (
+    <div className="fixed inset-0 z-[95] flex items-end justify-center md:items-center md:p-6">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40"
+        aria-label="Close cookie preferences"
+        onClick={onClose}
+      />
+
+      <div
+        className="relative max-h-[90svh] w-full overflow-y-auto border-t border-sky bg-cream md:max-w-lg md:border"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Cookie preferences"
+        data-lenis-prevent
+      >
+        <div className="border-b border-sky px-(--grid-gutter) py-5">
+          <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
+            Cookie preferences
+          </h2>
+          <p className="font-archivo-light mt-2 text-[14px] leading-normal">
+            Strictly necessary cookies are always active. You can enable or
+            disable the categories below at any time.
+          </p>
+        </div>
+
+        <ul className="divide-y divide-sky">
+          <li className="px-(--grid-gutter) py-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  Strictly necessary
+                </p>
+                <p className="font-archivo-light mt-2 text-[14px] leading-normal">
+                  Required for cart, checkout, sign-in and site security.
+                </p>
+              </div>
+              <span className="font-archivo-light shrink-0 text-[12px] text-black/50">
+                Always on
+              </span>
+            </div>
+          </li>
+
+          {OPTIONAL_CONSENT_CATEGORIES.map(({ id, title, description }) => (
+            <li key={id} className="px-(--grid-gutter) py-5">
+              <label className="flex cursor-pointer items-start justify-between gap-4">
+                <span>
+                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                    {title}
+                  </span>
+                  <span className="font-archivo-light mt-2 block text-[14px] leading-normal">
+                    {description}
+                  </span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={draft[id]}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      [id]: event.target.checked,
+                    }))
+                  }
+                  className="mt-1 size-4 shrink-0 accent-black"
+                />
+              </label>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex flex-wrap gap-2 border-t border-sky px-(--grid-gutter) py-5">
+          <CookieCtaButton onClick={onClose}>Cancel</CookieCtaButton>
+          <CookieCtaButton onClick={() => saveConsent(draft)}>
+            Save preferences
+          </CookieCtaButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CookieConsent() {
+  const isClient = useIsClient();
   const consent = useSyncExternalStore(
     subscribeConsent,
     getConsentSnapshot,
@@ -66,24 +158,10 @@ export function CookieConsent() {
     getPreferencesOpenSnapshot,
     getServerPreferencesOpenSnapshot,
   );
-  const [mounted, setMounted] = useState(false);
-  const [draft, setDraft] = useState<ConsentChoices>({
-    analytics: false,
-    marketing: false,
-  });
 
   useOverlayScrollLock(preferencesOpen);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!preferencesOpen) return;
-    setDraft(choicesFromConsent(consent));
-  }, [preferencesOpen, consent]);
-
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   const showBanner = consent === null && !preferencesOpen;
 
@@ -134,85 +212,10 @@ export function CookieConsent() {
       )}
 
       {preferencesOpen && (
-        <div className="fixed inset-0 z-[95] flex items-end justify-center md:items-center md:p-6">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/40"
-            aria-label="Close cookie preferences"
-            onClick={() => setPreferencesOpen(false)}
-          />
-
-          <div
-            className="relative max-h-[90svh] w-full overflow-y-auto border-t border-sky bg-cream md:max-w-lg md:border"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Cookie preferences"
-            data-lenis-prevent
-          >
-            <div className="border-b border-sky px-(--grid-gutter) py-5">
-              <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-                Cookie preferences
-              </h2>
-              <p className="font-archivo-light mt-2 text-[14px] leading-normal">
-                Strictly necessary cookies are always active. You can enable or
-                disable the categories below at any time.
-              </p>
-            </div>
-
-            <ul className="divide-y divide-sky">
-              <li className="px-(--grid-gutter) py-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-owners-medium text-[12px] uppercase tracking-wide">
-                      Strictly necessary
-                    </p>
-                    <p className="font-archivo-light mt-2 text-[14px] leading-normal">
-                      Required for cart, checkout, sign-in and site security.
-                    </p>
-                  </div>
-                  <span className="font-archivo-light shrink-0 text-[12px] text-black/50">
-                    Always on
-                  </span>
-                </div>
-              </li>
-
-              {OPTIONAL_CONSENT_CATEGORIES.map(({ id, title, description }) => (
-                <li key={id} className="px-(--grid-gutter) py-5">
-                  <label className="flex cursor-pointer items-start justify-between gap-4">
-                    <span>
-                      <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                        {title}
-                      </span>
-                      <span className="font-archivo-light mt-2 block text-[14px] leading-normal">
-                        {description}
-                      </span>
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={draft[id]}
-                      onChange={(event) =>
-                        setDraft((current) => ({
-                          ...current,
-                          [id]: event.target.checked,
-                        }))
-                      }
-                      className="mt-1 size-4 shrink-0 accent-black"
-                    />
-                  </label>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex flex-wrap gap-2 border-t border-sky px-(--grid-gutter) py-5">
-              <CookieCtaButton onClick={() => setPreferencesOpen(false)}>
-                Cancel
-              </CookieCtaButton>
-              <CookieCtaButton onClick={() => saveConsent(draft)}>
-                Save preferences
-              </CookieCtaButton>
-            </div>
-          </div>
-        </div>
+        <CookiePreferencesPanel
+          consent={consent}
+          onClose={() => setPreferencesOpen(false)}
+        />
       )}
     </>
   );

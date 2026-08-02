@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
+import { useIsClient } from "@/lib/useIsClient";
 
 const STORAGE_KEY = "moment-palette";
 type Palette = "default" | "sky";
@@ -42,14 +43,10 @@ function applyPalette(palette: Palette) {
  * Dev-style preview: swap page cream ↔ sky and line sky ↔ cream site-wide.
  */
 export function PaletteToggle() {
+  const isClient = useIsClient();
   const palette = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   const isSky = palette === "sky";
 

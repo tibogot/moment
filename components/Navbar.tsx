@@ -82,6 +82,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [navSolid, setNavSolid] = useState(!allowsTransparentNav);
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
   const overlayOpen = cartOpen || searchOpen || menuOpen;
   const navExpanded = shopMenuOpen && !overlayOpen && !isMobileNav;
@@ -120,6 +121,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const navHoveredRef = useRef(navHovered);
   const navExpandedRef = useRef(navExpanded);
   const overlayOpenRef = useRef(overlayOpen);
+
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setShopMenuOpen(false);
+  }
 
   const isNavSolid =
     allowsTransparentNav ? navSolid || navHovered || overlayOpen || navExpanded : true;
@@ -315,6 +321,15 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
       menuMeasureAttemptsRef.current = 0;
     }
   };
+
+  const runNavAnimationRef = useRef(runNavAnimation);
+  useLayoutEffect(() => {
+    runNavAnimationRef.current = runNavAnimation;
+  });
+
+  useLayoutEffect(() => {
+    menuMeasureAttemptsRef.current = 0;
+  }, [pathname]);
 
   // Scrub the nav from transparent to cream across the bottom of the hero.
   useGSAP(
@@ -529,7 +544,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     if (!overlayOpen) return;
 
     menuMeasureAttemptsRef.current = 0;
-    runNavAnimation({
+    runNavAnimationRef.current({
       solid: isNavSolid,
       expanded: false,
       immediate: true,
@@ -554,17 +569,12 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    runNavAnimation({
+    runNavAnimationRef.current({
       solid: isNavSolid,
       expanded: false,
       immediate: reduceMotion || overlayOpen,
     });
   }, [navExpanded, isNavSolid, overlayOpen]);
-
-  useLayoutEffect(() => {
-    setShopMenuOpen(false);
-    menuMeasureAttemptsRef.current = 0;
-  }, [pathname]);
 
   return (
     <header

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import {
   FormEvent,
+  useCallback,
   useDeferredValue,
   useEffect,
   useLayoutEffect,
@@ -64,6 +65,11 @@ export function SearchPanel({
 
   useOverlayScrollLock(open);
 
+  const closePanel = useCallback(() => {
+    setQuery("");
+    onClose();
+  }, [onClose]);
+
   useLayoutEffect(() => {
     const panel = panelRef.current;
     const backdrop = backdropRef.current;
@@ -74,18 +80,15 @@ export function SearchPanel({
   }, []);
 
   useEffect(() => {
-    if (!open) {
-      setQuery("");
-      return;
-    }
+    if (!open) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") closePanel();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, closePanel]);
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -132,7 +135,7 @@ export function SearchPanel({
 
   const runSearch = (value: string) => {
     const trimmed = value.trim();
-    onClose();
+    closePanel();
     if (!trimmed) return;
     router.push(`${routes.shop}?q=${encodeURIComponent(trimmed)}`);
   };
@@ -148,7 +151,7 @@ export function SearchPanel({
         ref={backdropRef}
         data-overlay-backdrop
         className="pointer-events-none fixed inset-0 z-40 bg-black/40"
-        onClick={onClose}
+        onClick={closePanel}
         aria-hidden
         style={{ pointerEvents: open ? "auto" : "none" }}
       />
@@ -182,7 +185,7 @@ export function SearchPanel({
                 </p>
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={closePanel}
                   className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
                 >
                   Close
@@ -279,7 +282,7 @@ export function SearchPanel({
                         product={product}
                         compact
                         sizes="(max-width: 768px) 50vw, 20vw"
-                        onNavigate={onClose}
+                        onNavigate={closePanel}
                       />
                     </li>
                   ))}

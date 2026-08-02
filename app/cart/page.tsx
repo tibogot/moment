@@ -48,7 +48,7 @@ export default async function CartPage() {
                   >
                     <Link
                       href={routes.product(line.productHandle)}
-                      className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden bg-sky/20"
+                      className="relative aspect-4/5 w-24 shrink-0 overflow-hidden bg-sky/20"
                     >
                       {line.imageUrl && (
                         <Image

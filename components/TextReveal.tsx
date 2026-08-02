@@ -58,7 +58,7 @@ export default function TextReveal({
       splitRefs.current.forEach((split) => {
         try {
           split?.revert();
-        } catch (e) {
+        } catch {
           // Ignore errors if already reverted
         }
       });
@@ -144,7 +144,7 @@ export default function TextReveal({
       if (containerRef.current) {
         gsap.set(containerRef.current, { visibility: "visible" });
         // Force a reflow to ensure visibility change is applied
-        containerRef.current.offsetHeight;
+        void containerRef.current.offsetHeight;
       }
 
       const createBlockRevealAnimation = (
@@ -210,14 +210,14 @@ export default function TextReveal({
         triggers.current.forEach((t) => {
           try {
             t.kill();
-          } catch (e) {
+          } catch {
             // Ignore errors
           }
         });
         timelines.current.forEach((tl) => {
           try {
             tl.kill();
-          } catch (e) {
+          } catch {
             // Ignore errors
           }
         });
@@ -242,7 +242,7 @@ export default function TextReveal({
         splitRefs.current.forEach((split) => {
           try {
             split?.revert();
-          } catch (e) {
+          } catch {
             // Ignore errors if already reverted
           }
         });

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -46,12 +47,18 @@ export function MobileNavMenu({
   const previousPathname = useRef(pathname);
   const hasOpenedRef = useRef(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const shopExpanded = open && shopOpen;
   const cart = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
     getServerCartSnapshot,
   );
   const cartCount = cart?.totalQuantity ?? 0;
+
+  const handleClose = useCallback(() => {
+    setShopOpen(false);
+    onClose();
+  }, [onClose]);
 
   useOverlayScrollLock(open);
 
@@ -72,23 +79,19 @@ export function MobileNavMenu({
   useEffect(() => {
     if (previousPathname.current === pathname) return;
     previousPathname.current = pathname;
-    setShopOpen(false);
-    onClose();
-  }, [pathname, onClose]);
+    handleClose();
+  }, [pathname, handleClose]);
 
   useEffect(() => {
-    if (!open) {
-      setShopOpen(false);
-      return;
-    }
+    if (!open) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") handleClose();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, handleClose]);
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -130,6 +133,7 @@ export function MobileNavMenu({
         yPercent: -100,
         duration: ANIM_DURATION,
         ease: CLOSE_EASE,
+        onComplete: () => setShopOpen(false),
       });
     }
 
@@ -161,7 +165,7 @@ export function MobileNavMenu({
           <nav className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset)">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="font-owners-medium justify-self-start text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60"
             >
               Close
@@ -171,7 +175,7 @@ export function MobileNavMenu({
               href={routes.home}
               aria-label="Moment home"
               className="flex justify-center justify-self-center"
-              onClick={onClose}
+              onClick={handleClose}
             >
               <span className="inline-flex" style={{ filter: "brightness(0)" }}>
                 <Image
@@ -189,7 +193,7 @@ export function MobileNavMenu({
               type="button"
               aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
               onClick={() => {
-                onClose();
+                handleClose();
                 window.dispatchEvent(new Event("cart-open"));
               }}
               className="relative justify-self-end"
@@ -217,7 +221,7 @@ export function MobileNavMenu({
                       type="button"
                       data-menu-item
                       onClick={() => setShopOpen((current) => !current)}
-                      aria-expanded={shopOpen}
+                      aria-expanded={shopExpanded}
                       className="font-owners-narrow-bold block text-left text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                     >
                       {shopNav.label}
@@ -225,20 +229,20 @@ export function MobileNavMenu({
                     <button
                       type="button"
                       onClick={() => setShopOpen((current) => !current)}
-                      aria-expanded={shopOpen}
+                      aria-expanded={shopExpanded}
                       aria-label={
-                        shopOpen ? "Hide shop links" : "Show shop links"
+                        shopExpanded ? "Hide shop links" : "Show shop links"
                       }
                       className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide transition-opacity hover:opacity-60"
                     >
-                      {shopOpen ? "−" : "+"}
+                      {shopExpanded ? "−" : "+"}
                     </button>
                   </>
                 ) : (
                   <Link
                     href={routes.shop}
                     data-menu-item
-                    onClick={onClose}
+                    onClick={handleClose}
                     className="font-owners-narrow-bold block text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                   >
                     {shopNav.label}
@@ -249,13 +253,13 @@ export function MobileNavMenu({
               {collections.length > 0 && (
                 <div
                   className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                  style={{ maxHeight: shopOpen ? "24rem" : "0" }}
+                  style={{ maxHeight: shopExpanded ? "24rem" : "0" }}
                 >
                   <ul className="flex flex-col gap-2 border-t border-sky px-(--grid-inset) py-4">
                     <li>
                       <Link
                         href={routes.shop}
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
                       >
                         All
@@ -264,7 +268,7 @@ export function MobileNavMenu({
                     <li>
                       <Link
                         href={routes.collections}
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
                       >
                         Collections
@@ -274,7 +278,7 @@ export function MobileNavMenu({
                       <li key={collection.id}>
                         <Link
                           href={routes.collection(collection.handle)}
-                          onClick={onClose}
+                          onClick={handleClose}
                           className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
                         >
                           {collection.title}
@@ -291,7 +295,7 @@ export function MobileNavMenu({
                 <Link
                   href={href}
                   data-menu-item
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                 >
                   {label}

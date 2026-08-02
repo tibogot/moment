@@ -166,7 +166,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       <div
         ref={panelRef}
         data-overlay-panel
-        className="fixed inset-y-0 right-0 z-50 flex w-full max-w-[440px] flex-col bg-cream text-black"
+        className="fixed inset-y-0 right-0 z-50 flex w-full max-w-110 flex-col bg-cream text-black"
         role="dialog"
         aria-modal="true"
         aria-label="Cart"
@@ -197,8 +197,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             <>
               <p className="font-archivo-light px-6 pt-5 text-[13px] leading-normal">
                 Pick the day you want this delivered. Blue days are closed or
-                already full — we need {LEAD_TIME_DAYS}{" "}
-                days&apos; notice and we do not deliver on Sundays.
+                already full — we need {LEAD_TIME_DAYS} days&apos; notice and we
+                do not deliver on Sundays.
               </p>
 
               {error && (
@@ -231,7 +231,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   <Link
                     href={routes.product(line.productHandle)}
                     onClick={onClose}
-                    className="relative aspect-[4/5] w-20 shrink-0 overflow-hidden bg-sky/20"
+                    className="relative aspect-4/5 w-20 shrink-0 overflow-hidden bg-sky/20"
                   >
                     {line.imageUrl && (
                       <Image
