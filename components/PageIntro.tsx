@@ -1,14 +1,16 @@
 import { GridSection } from "@/components/GridSection";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
+import { cn } from "@/lib/utils";
 
 type PageIntroProps = {
   title: string;
   lead?: string;
+  leadClassName?: string;
 };
 
 /** Shared header for the inner pages until each gets its own design. */
-export function PageIntro({ title, lead }: PageIntroProps) {
+export function PageIntro({ title, lead, leadClassName }: PageIntroProps) {
   return (
     <GridSection className="pt-[22svh] pb-[12svh]">
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
@@ -22,7 +24,12 @@ export function PageIntro({ title, lead }: PageIntroProps) {
       {lead && (
         <div className="col-start-2 col-end-5 mt-[5svh] min-w-0 px-(--grid-gutter) text-left md:col-start-5 md:col-end-8">
           <TextReveal blockColor={REVEAL_BLOCK} animateOnScroll={false} delay={0.35}>
-            <p className="font-archivo-light max-w-full text-[15px] leading-[1.5] wrap-break-word text-black md:text-[min(1.35vw,2svh)]">
+            <p
+              className={cn(
+                "font-archivo-light max-w-full text-[15px] leading-[1.5] wrap-break-word text-black md:text-[min(1.35vw,2svh)]",
+                leadClassName,
+              )}
+            >
               {lead}
             </p>
           </TextReveal>
