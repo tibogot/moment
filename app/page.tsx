@@ -9,6 +9,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitImageSection } from "@/components/SplitImageSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
+import { WhyUsSection } from "@/components/WhyUsSection";
 import { routes } from "@/lib/routes";
 import { siteGraph } from "@/lib/schema";
 import { getCollections } from "@/lib/shopify/collections";
@@ -107,7 +108,10 @@ export default async function Home() {
 
       <ServicesSection />
 
-      {/* Full-height breath between the services index and the calendar. */}
+      {/* The reasons, once the visitor knows what we actually do. */}
+      <WhyUsSection />
+
+      {/* Full-height breath between the reasons and the calendar. */}
       <FullBleedImageSection src="/images/svitlana.jpg" />
 
       <CalendarSection availability={availability} />
