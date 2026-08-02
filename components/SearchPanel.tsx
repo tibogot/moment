@@ -66,6 +66,11 @@ export function SearchPanel({
   useOverlayScrollLock(open);
 
   const closePanel = useCallback(() => {
+    const panel = panelRef.current;
+    const active = document.activeElement;
+    if (panel && active instanceof HTMLElement && panel.contains(active)) {
+      active.blur();
+    }
     setQuery("");
     onClose();
   }, [onClose]);
@@ -276,7 +281,7 @@ export function SearchPanel({
             ) : (
               <>
                 <div className="h-px bg-sky" aria-hidden />
-                <ul className="grid grid-cols-2 gap-px bg-sky md:grid-cols-4">
+                <ul className="grid grid-cols-2 gap-px border-x border-sky bg-sky md:grid-cols-4 md:border-x-0">
                   {visibleProducts.map((product) => (
                     <li key={product.id} className="bg-cream">
                       <ProductCard

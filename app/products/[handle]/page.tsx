@@ -102,13 +102,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </p>
           ) : null}
 
-          {product.details && <ProductDetails details={product.details} />}
-
           <AddToCartButton
             variantId={product.variantId}
             available={product.availableForSale}
             className="mt-8"
           />
+
+          {product.details && <ProductDetails details={product.details} />}
         </div>
       </GridSection>
 

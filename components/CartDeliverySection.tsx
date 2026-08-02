@@ -131,16 +131,32 @@ export function CartDeliverySection({
         <button
           type="button"
           onClick={() => setPickerOpen(true)}
-          className="font-owners-medium mt-8 inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+          className="group mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
         >
-          Choose a delivery date
+          <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+            Choose a delivery date
+            <span
+              className="transition-transform duration-500 group-hover:translate-x-1.5"
+              aria-hidden
+            >
+              &rarr;
+            </span>
+          </span>
         </button>
       ) : (
         <a
           href={checkoutUrl}
-          className="font-owners-medium mt-8 inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+          className="group mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
         >
-          Checkout
+          <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+            Checkout
+            <span
+              className="transition-transform duration-500 group-hover:translate-x-1.5"
+              aria-hidden
+            >
+              &rarr;
+            </span>
+          </span>
         </a>
       )}
     </>

@@ -379,16 +379,32 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 <button
                   type="button"
                   onClick={() => setPickerOpen(true)}
-                  className="font-owners-medium mt-4 block w-full bg-black px-6 py-4 text-center text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+                  className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
                 >
-                  Choose a delivery date
+                  <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
+                    Choose a delivery date
+                    <span
+                      className="transition-transform duration-500 group-hover:translate-x-1.5"
+                      aria-hidden
+                    >
+                      &rarr;
+                    </span>
+                  </span>
                 </button>
               ) : (
                 <a
                   href={cart.checkoutUrl}
-                  className="font-owners-medium mt-4 block bg-black px-6 py-4 text-center text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
+                  className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
                 >
-                  Checkout
+                  <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
+                    Checkout
+                    <span
+                      className="transition-transform duration-500 group-hover:translate-x-1.5"
+                      aria-hidden
+                    >
+                      &rarr;
+                    </span>
+                  </span>
                 </a>
               )}
             </div>
