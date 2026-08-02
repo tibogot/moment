@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsapConfig";
+import { onIntroReady } from "@/lib/intro";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
 /*
@@ -46,6 +47,7 @@ export default function TextReveal({
   const blocks = useRef<HTMLDivElement[]>([]);
   const triggers = useRef<ScrollTriggerType[]>([]);
   const timelines = useRef<gsap.core.Timeline[]>([]);
+  const releaseIntroRef = useRef<(() => void) | null>(null);
 
   useGSAP(
     () => {
@@ -216,18 +218,29 @@ export default function TextReveal({
           });
         });
       } else {
+        // Built paused and released by the shared intro gate. Starting here
+        // would drop the reveal straight into hydration, where it renders in a
+        // handful of frames instead of animating — see lib/intro.ts.
         blocks.current.forEach((block, index) => {
           const tl = createBlockRevealAnimation(
             block,
             lines.current[index],
             index
           );
+          tl.pause();
           timelines.current.push(tl);
         });
+
+        const queued = timelines.current.slice();
+        releaseIntroRef.current = onIntroReady(() =>
+          queued.forEach((tl) => tl.play())
+        );
       }
 
       // Cleanup function
       return () => {
+        releaseIntroRef.current?.();
+        releaseIntroRef.current = null;
         // Kill all animations and triggers
         triggers.current.forEach((t) => {
           try {

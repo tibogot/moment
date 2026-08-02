@@ -25,6 +25,7 @@ import {
   subscribeCart,
 } from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
+import { startIntro } from "@/lib/intro";
 import { mainNav, routes } from "@/lib/routes";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -46,6 +47,19 @@ function subscribeMobileNav(onStoreChange: () => void) {
 
 function getMobileNavSnapshot() {
   return window.matchMedia(NAV_MOBILE_MQ).matches;
+}
+
+/*
+ * useSyncExternalStore hands back the server snapshot (desktop) for the whole
+ * hydration render, so anything keyed off `isMobileNav` is wrong for the first
+ * commit. Effects run on the client, where the media query can just be asked
+ * directly — that keeps mobile from building a ScrollTrigger and a 0.48s
+ * colour/filter timeline it is about to discard, in the same frames the hero
+ * reveal is trying to animate.
+ */
+function allowsTransparentNavNow(hasTransparentHero: boolean) {
+  if (!hasTransparentHero || typeof window === "undefined") return false;
+  return !window.matchMedia(NAV_MOBILE_MQ).matches;
 }
 
 function getMobileNavServerSnapshot() {
@@ -100,6 +114,12 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   );
   const cartCount = cart?.totalQuantity ?? 0;
 
+  // The navbar's own drop is gated on this, and it mounts on every route, so
+  // this is what guarantees the gate always opens.
+  useEffect(() => {
+    startIntro();
+  }, []);
+
   // AddToCartButton opens the panel after a successful add.
   useEffect(() => {
     const openCart = () => {
@@ -140,7 +160,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   // Keep refs current before GSAP reads them — useEffect is too late for the
   // hover-leave path.
   useLayoutEffect(() => {
-    hasTransparentHeroRef.current = allowsTransparentNav;
+    hasTransparentHeroRef.current = allowsTransparentNavNow(hasTransparentHero);
     navHoveredRef.current = navHovered;
     navExpandedRef.current = navExpanded;
     overlayOpenRef.current = overlayOpen;
@@ -345,7 +365,9 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
       const nav = navRef.current;
       if (!bg || !nav) return;
 
-      if (!allowsTransparentNav) {
+      // Not `allowsTransparentNav` — that is still the desktop server snapshot
+      // on a mobile hydration pass.
+      if (!allowsTransparentNavNow(hasTransparentHero)) {
         runNavAnimation({ solid: true, expanded: false, immediate: true });
         return;
       }
@@ -435,7 +457,18 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      if (allowsTransparentNav && !navHovered && !overlayOpen && !navExpanded) {
+      const allowsTransparent = allowsTransparentNavNow(hasTransparentHero);
+
+      if (!allowsTransparent) {
+        runNavAnimation({
+          solid: true,
+          expanded: navExpanded,
+          immediate: reduceMotion || overlayOpen,
+        });
+        return;
+      }
+
+      if (!navHovered && !overlayOpen && !navExpanded) {
         const progress = scrollNavTriggerRef.current?.progress ?? 0;
 
         if (progress <= 0.01) {
