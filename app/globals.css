@@ -211,12 +211,24 @@ button:not(:disabled),
  * transparent-over-hero treatment is desktop-only.
  */
 @media (width < 75rem) {
+  /*
+   * GSAP is the only thing that ever gives the band a height, so before
+   * hydration it paints at 0px — a scaleY(1) bar you cannot see, which reads
+   * as the transparent desktop treatment. Seed the band height from the same
+   * token the nav is min-height'd with; the inline value GSAP writes on the
+   * next frame takes over from here.
+   */
+  [data-nav-bg] {
+    height: var(--grid-band);
+  }
+
   [data-nav-transparent] [data-nav-bg] {
     transform: scaleY(1) !important;
   }
 
-  [data-nav-transparent] [data-nav-shell] {
-    color: #000000;
+  [data-nav-transparent] [data-nav-shell],
+  [data-nav-transparent] [data-nav-shell] nav {
+    color: #000000 !important;
   }
 
   [data-nav-transparent] [data-nav-link] {
