@@ -66,7 +66,7 @@ function CookiePreferencesPanel({
   const [draft, setDraft] = useState(() => choicesFromConsent(consent));
 
   return (
-    <div className="fixed inset-0 z-[95] flex items-end justify-center md:items-center md:p-6">
+    <div className="fixed inset-0 z-95 flex items-end justify-center md:items-center md:p-6">
       <button
         type="button"
         className="absolute inset-0 bg-black/40"

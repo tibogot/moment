@@ -3,7 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useGSAP } from "@gsap/react";
 import { CircleUserRound, Handbag, Menu, Search } from "lucide-react";
 import { useLenis } from "lenis/react";
@@ -127,8 +133,9 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     setShopMenuOpen(false);
   }
 
-  const isNavSolid =
-    allowsTransparentNav ? navSolid || navHovered || overlayOpen || navExpanded : true;
+  const isNavSolid = allowsTransparentNav
+    ? navSolid || navHovered || overlayOpen || navExpanded
+    : true;
 
   // Keep refs current before GSAP reads them — useEffect is too late for the
   // hover-leave path.
@@ -428,12 +435,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      if (
-        allowsTransparentNav &&
-        !navHovered &&
-        !overlayOpen &&
-        !navExpanded
-      ) {
+      if (allowsTransparentNav && !navHovered && !overlayOpen && !navExpanded) {
         const progress = scrollNavTriggerRef.current?.progress ?? 0;
 
         if (progress <= 0.01) {
@@ -754,7 +756,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
 
         <div
           ref={menuRef}
-          className={`relative hidden h-0 overflow-hidden nav:grid nav:grid-cols-(--grid-columns) nav:block ${
+          className={`relative hidden h-0 overflow-hidden nav:grid nav:grid-cols-(--grid-columns) ${
             navExpanded ? "" : "pointer-events-none"
           }`}
           aria-hidden={!navExpanded}

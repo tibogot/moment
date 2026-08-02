@@ -44,14 +44,18 @@ function applyPalette(palette: Palette) {
  */
 export function PaletteToggle() {
   const isClient = useIsClient();
-  const palette = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const palette = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   if (!isClient) return null;
 
   const isSky = palette === "sky";
 
   return (
-    <div className="fixed bottom-4 right-4 z-[100] flex shrink-0 items-center gap-3 rounded-full border border-black/10 bg-[#f8f7f2] px-4 py-2.5 shadow-sm">
+    <div className="fixed bottom-4 right-4 z-100 flex shrink-0 items-center gap-3 rounded-full border border-black/10 bg-[#f8f7f2] px-4 py-2.5 shadow-sm">
       <span className="font-owners-medium shrink-0 text-[10px] uppercase tracking-wide text-black/70">
         Palette
       </span>
