@@ -793,6 +793,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             navExpanded ? "" : "pointer-events-none"
           }`}
           aria-hidden={!navExpanded}
+          inert={!navExpanded}
         >
           <div ref={menuInnerRef} className="nav:col-span-full">
             <ShopNavMenu products={products} collections={collections} />
