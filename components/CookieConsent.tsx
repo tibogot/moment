@@ -169,7 +169,7 @@ export function CookieConsent() {
     <>
       {showBanner && (
         <div
-          className="fixed inset-x-0 bottom-0 z-[90] border-t border-sky bg-cream"
+          className="fixed inset-x-0 bottom-0 z-90 border-t border-sky bg-cream"
           role="dialog"
           aria-label="Cookie consent"
         >
@@ -202,7 +202,9 @@ export function CookieConsent() {
               <CookieCtaButton onClick={() => setPreferencesOpen(true)}>
                 Manage
               </CookieCtaButton>
-              <CookieCtaButton onClick={rejectAllConsent}>Reject</CookieCtaButton>
+              <CookieCtaButton onClick={rejectAllConsent}>
+                Reject
+              </CookieCtaButton>
               <CookieCtaButton onClick={acceptAllConsent}>
                 Accept all
               </CookieCtaButton>
@@ -222,11 +224,7 @@ export function CookieConsent() {
 }
 
 /** Footer control — reopens the preferences panel at any time. */
-export function CookiePreferencesButton({
-  className,
-}: {
-  className?: string;
-}) {
+export function CookiePreferencesButton({ className }: { className?: string }) {
   return (
     <button
       type="button"
