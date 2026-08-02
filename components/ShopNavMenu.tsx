@@ -8,7 +8,7 @@ type ShopNavMenuProps = {
 };
 
 const linkClassName =
-  "font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60";
+  "animated-underline font-owners-medium text-[12px] uppercase tracking-wide";
 
 type FeaturedCardProps = {
   collection: ShopifyCollection;

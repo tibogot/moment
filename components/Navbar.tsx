@@ -495,8 +495,8 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     },
   );
 
-  const linkClassName =
-    "font-owners-medium uppercase tracking-wide transition-opacity hover:opacity-70";
+  const navLinkClassName =
+    "animated-underline font-owners-medium uppercase tracking-wide";
 
   const [shopNav, ...otherNav] = mainNav;
 
@@ -649,7 +649,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
               <button
                 type="button"
-                className={linkClassName}
+                className={navLinkClassName}
                 data-nav-link
                 aria-expanded={shopMenuOpen}
                 aria-haspopup="true"
@@ -665,7 +665,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             </li>
             {otherNav.map(({ label, href }) => (
               <li key={href} onMouseEnter={closeShopMenu}>
-                <Link href={href} className={linkClassName} data-nav-link>
+                <Link href={href} className={navLinkClassName} data-nav-link>
                   {label}
                 </Link>
               </li>
