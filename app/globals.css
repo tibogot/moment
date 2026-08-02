@@ -310,6 +310,10 @@ html[data-palette="sky"] .bg-sky\/20 {
   background-color: color-mix(in srgb, var(--palette-line) 20%, transparent);
 }
 
+html[data-palette="sky"] .bg-sky\/25 {
+  background-color: color-mix(in srgb, var(--palette-line) 25%, transparent);
+}
+
 html[data-palette="sky"] .bg-sky\/30 {
   background-color: color-mix(in srgb, var(--palette-line) 30%, transparent);
 }
