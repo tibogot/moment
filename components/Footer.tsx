@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CookiePreferencesButton } from "@/components/CookieConsent";
+import { FooterGridCells } from "@/components/FooterGridCells";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
@@ -26,6 +27,17 @@ const legalLinkClassName =
 export function Footer() {
   return (
     <footer className="relative h-[90svh] w-full overflow-hidden border-t border-sky bg-cream text-black md:h-[80svh]">
+      <FooterGridCells
+        columns={GRID_COLUMNS_MOBILE}
+        holes={mobileHoles}
+        className="md:hidden"
+      />
+      <FooterGridCells
+        columns={GRID_COLUMNS}
+        holes={holes}
+        className="hidden md:grid"
+      />
+
       <GridLines
         ruled
         columns={GRID_COLUMNS_MOBILE}
@@ -42,7 +54,7 @@ export function Footer() {
       />
 
       <div
-        className="absolute inset-0 grid"
+        className="pointer-events-none absolute inset-0 z-10 grid"
         style={{
           gridTemplateColumns: "var(--grid-columns)",
           gridTemplateRows: "var(--grid-rows)",
@@ -53,7 +65,10 @@ export function Footer() {
             share of the cell rather than in px, since the cell is a column
             wide and that changes with the viewport. */}
         <div className="col-start-2 col-end-3 row-start-2 row-end-3 flex items-center justify-center">
-          <Link href={routes.home} className="flex w-full justify-center">
+          <Link
+            href={routes.home}
+            className="pointer-events-auto flex w-full justify-center"
+          >
             <Image
               src="/brand/logonav.svg"
               alt={siteConfig.name}
@@ -84,11 +99,13 @@ export function Footer() {
           </p>
           <ul className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
             <li>
-              <CookiePreferencesButton className={legalLinkClassName} />
+              <CookiePreferencesButton
+                className={`pointer-events-auto ${legalLinkClassName}`}
+              />
             </li>
             {legalNav.map(({ label, href }) => (
               <li key={href}>
-                <Link href={href} className={legalLinkClassName}>
+                <Link href={href} className={`pointer-events-auto ${legalLinkClassName}`}>
                   {label}
                 </Link>
               </li>

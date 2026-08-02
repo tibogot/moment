@@ -321,6 +321,10 @@ html[data-palette="sky"] .bg-sky\/45 {
   transition: background-color 500ms;
 }
 
+.footer-grid-highlight {
+  background-color: var(--palette-reveal);
+}
+
 @media (hover: hover) {
   .collection-card:hover {
     background-color: var(--palette-reveal);
