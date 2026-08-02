@@ -5,7 +5,11 @@ import {
   PRODUCT_BY_HANDLE_QUERY,
   type ProductByHandleQueryResponse,
   type ProductsQueryResponse,
+  type ShopifyMetafield,
   type ShopifyProduct,
+  type ShopifyProductDetailNode,
+  type ShopifyProductDetails,
+  type ShopifyProductImage,
   type ShopifyProductNode,
 } from "./queries";
 
@@ -39,6 +43,56 @@ export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
     tags: node.tags,
     availableForSale: node.availableForSale,
     variantId: node.variants?.edges[0]?.node.id ?? null,
+  };
+}
+
+function mapProductImages(node: ShopifyProductDetailNode): ShopifyProductImage[] {
+  const gallery = (node.images?.edges ?? []).map(({ node: image }) => ({
+    url: image.url,
+    altText: image.altText ?? node.title,
+  }));
+
+  if (gallery.length > 0) return gallery;
+
+  if (node.featuredImage) {
+    return [
+      {
+        url: node.featuredImage.url,
+        altText: node.featuredImage.altText ?? node.title,
+      },
+    ];
+  }
+
+  return [];
+}
+
+function readMetafield(field: ShopifyMetafield | undefined): string | null {
+  const value = field?.value?.trim();
+  return value || null;
+}
+
+function mapProductDetails(
+  node: ShopifyProductDetailNode,
+): ShopifyProductDetails {
+  return {
+    ingredients: readMetafield(node.ingredients),
+    allergens: readMetafield(node.allergens),
+    dietary: readMetafield(node.dietary),
+    servingSize: readMetafield(node.serving_size),
+    storage: readMetafield(node.storage),
+    servingInstructions: readMetafield(node.serving_instructions),
+    traces: readMetafield(node.traces),
+  };
+}
+
+export function mapProductDetailNode(
+  node: ShopifyProductDetailNode,
+): ShopifyProduct {
+  return {
+    ...mapProductNode(node),
+    descriptionHtml: node.descriptionHtml ?? null,
+    images: mapProductImages(node),
+    details: mapProductDetails(node),
   };
 }
 
@@ -92,6 +146,26 @@ export async function getProducts(): Promise<ShopifyProduct[]> {
   }
 }
 
+const SIMILAR_PRODUCTS_LIMIT = 3;
+
+/** Same product type first, then anything else from the catalogue. */
+export function getSimilarProducts(
+  allProducts: ShopifyProduct[],
+  current: ShopifyProduct,
+  limit = SIMILAR_PRODUCTS_LIMIT,
+): ShopifyProduct[] {
+  const others = allProducts.filter(
+    (product) => product.handle !== current.handle,
+  );
+  if (others.length === 0) return [];
+
+  const sameType = current.productType
+    ? others.filter((product) => product.productType === current.productType)
+    : [];
+
+  return (sameType.length > 0 ? sameType : others).slice(0, limit);
+}
+
 async function fetchProductByHandle(
   handle: string,
 ): Promise<ShopifyProduct | null> {
@@ -104,7 +178,7 @@ async function fetchProductByHandle(
     throw new Error(errors.map((error) => error.message).join(", "));
   }
 
-  return data?.product ? mapProductNode(data.product) : null;
+  return data?.product ? mapProductDetailNode(data.product) : null;
 }
 
 export async function getProductByHandle(

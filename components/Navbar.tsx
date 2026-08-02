@@ -762,7 +762,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           aria-hidden={!navExpanded}
         >
           <div ref={menuInnerRef} className="nav:col-span-full">
-            <ShopNavMenu collections={collections} />
+            <ShopNavMenu products={products} collections={collections} />
           </div>
         </div>
       </div>

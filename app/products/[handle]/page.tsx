@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
-import { getProductByHandle, getProducts } from "@/lib/shopify/products";
+import { ProductDetails } from "@/components/ProductDetails";
+import { ProductGallery } from "@/components/ProductGallery";
+import { ProductRowSection } from "@/components/ProductRowSection";
+import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
+import { routes } from "@/lib/routes";
+import {
+  getProductByHandle,
+  getProducts,
+  getSimilarProducts,
+} from "@/lib/shopify/products";
 
 type ProductPageProps = {
   params: Promise<{ handle: string }>;
@@ -31,26 +39,26 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { handle } = await params;
-  const product = await getProductByHandle(handle);
+  const [product, allProducts] = await Promise.all([
+    getProductByHandle(handle),
+    getProducts(),
+  ]);
 
   if (!product) notFound();
+
+  const similarProducts = getSimilarProducts(allProducts, product);
+  const galleryImages =
+    product.images && product.images.length > 0
+      ? product.images
+      : product.imageUrl
+        ? [{ url: product.imageUrl, altText: product.imageAlt }]
+        : [];
 
   return (
     <>
       <GridSection className="pt-[22svh] pb-[12svh]">
         <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-6">
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-sky/20">
-            {product.imageUrl && (
-              <Image
-                src={product.imageUrl}
-                alt={product.imageAlt}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-              />
-            )}
-          </div>
+          <ProductGallery images={galleryImages} title={product.title} />
         </div>
 
         <div className="col-start-2 col-end-5 mt-[5svh] px-(--grid-gutter) md:col-start-6 md:col-end-9 md:mt-0">
@@ -60,19 +68,41 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <p className="font-archivo-light mt-4 text-[16px]">{product.price}</p>
 
-          {product.description && (
-            <p className="font-archivo-light mt-6 text-[15px] leading-[1.6] whitespace-pre-line">
+          {product.descriptionHtml ? (
+            <div
+              className="product-description font-archivo-light mt-6 text-[18px] leading-[1.6] [&_p+p]:mt-4"
+              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+            />
+          ) : product.description ? (
+            <p className="font-archivo-light mt-6 text-[18px] leading-[1.6] whitespace-pre-line">
               {product.description}
             </p>
-          )}
+          ) : null}
+
+          {product.details && <ProductDetails details={product.details} />}
 
           <AddToCartButton
             variantId={product.variantId}
             available={product.availableForSale}
-            className="mt-8 max-w-xs"
+            className="mt-8"
           />
         </div>
       </GridSection>
+
+      {similarProducts.length > 0 && (
+        <ProductRowSection
+          title="Similar products"
+          products={similarProducts}
+          viewAllHref={routes.shop}
+          className="pb-0"
+        />
+      )}
+
+      <RecentlyViewedSection
+        allProducts={allProducts}
+        currentHandle={handle}
+        className={similarProducts.length > 0 ? "pt-[5svh]" : undefined}
+      />
 
       <Footer />
     </>

@@ -16,7 +16,12 @@ const COLLECTION_PRODUCTS_PAGE_SIZE = 100;
 const SHOPIFY_REVALIDATE = 3600;
 
 function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
-  const productImage = node.products?.edges[0]?.node.featuredImage;
+  const products = (node.products?.edges ?? []).map(({ node: productNode }) =>
+    mapProductNode(productNode),
+  );
+  const productImage = products[0]?.imageUrl
+    ? { url: products[0].imageUrl, altText: products[0].imageAlt }
+    : null;
 
   return {
     id: node.id,
@@ -25,6 +30,7 @@ function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
     description: node.description,
     imageUrl: node.image?.url ?? productImage?.url ?? null,
     imageAlt: node.image?.altText ?? productImage?.altText ?? node.title,
+    products,
   };
 }
 
@@ -96,7 +102,7 @@ async function fetchCollectionByHandle(
     imageUrl: collection.image?.url ?? products[0]?.imageUrl ?? null,
     imageAlt: collection.image?.altText ?? collection.title,
     products,
-  };
+  } satisfies CollectionWithProducts;
 }
 
 export async function getCollectionByHandle(

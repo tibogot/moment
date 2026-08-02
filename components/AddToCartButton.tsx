@@ -45,11 +45,23 @@ export function AddToCartButton({
         onClick={handleClick}
         disabled={disabled}
         className={cn(
-          "font-owners-medium w-full border border-black bg-black px-6 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity",
-          disabled ? "opacity-40" : "hover:opacity-80",
+          "group inline-block border border-sky bg-cream px-3 py-2.5 transition-colors duration-500",
+          disabled
+            ? "cursor-not-allowed opacity-40"
+            : "hover:bg-sky",
         )}
       >
-        {!available ? "Sold out" : isPending ? "Adding…" : "Add to cart"}
+        <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+          {!available ? "Sold out" : isPending ? "Adding…" : "Add to cart"}
+          {!disabled && (
+            <span
+              className="transition-transform duration-500 group-hover:translate-x-1.5"
+              aria-hidden
+            >
+              &rarr;
+            </span>
+          )}
+        </span>
       </button>
 
       {error && (
