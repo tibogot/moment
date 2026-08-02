@@ -277,34 +277,34 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
             {/* The three cell treatments read as one scale of "less available"
                 unless they are named. Body copy alone left visitors guessing
                 which blue meant what. */}
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              <li className="flex items-center gap-2">
+            <ul className="flex flex-wrap items-center gap-x-8 gap-y-4">
+              <li className="flex items-center gap-2.5">
                 <span
-                  className="size-3 border border-sky bg-cream"
+                  className="size-4 border border-sky bg-cream"
                   aria-hidden
                 />
-                <span className="font-owners-medium text-[10px] uppercase tracking-wide">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
                   Open
                 </span>
               </li>
-              <li className="flex items-center gap-2">
-                <span className="size-3 border border-sky bg-sky" aria-hidden />
-                <span className="font-owners-medium text-[10px] uppercase tracking-wide">
+              <li className="flex items-center gap-2.5">
+                <span className="size-4 border border-sky bg-sky" aria-hidden />
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
                   Closed or full
                 </span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2.5">
                 <span
-                  className="size-3 border border-sky bg-sky/25"
+                  className="size-4 border border-sky bg-sky/25"
                   aria-hidden
                 />
-                <span className="font-owners-medium text-[10px] uppercase tracking-wide">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
                   Too soon
                 </span>
               </li>
             </ul>
 
-            <p className="font-archivo-light mt-5 text-[15px] leading-normal">
+            <p className="font-archivo-light mt-6 max-w-[44ch] text-[18px] leading-normal md:text-[min(1.35vw,2svh)]">
               Pick any open day to add it to your order — you do not need
               anything in your basket yet. We need {LEAD_TIME_DAYS}{" "}
               days&apos; notice and we do not deliver on Sundays.
