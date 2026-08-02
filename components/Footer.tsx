@@ -22,11 +22,11 @@ const mobileHoles: GridHole[] = [
 ];
 
 const legalLinkClassName =
-  "font-archivo-light text-[11px] transition-opacity hover:opacity-60 md:text-[12px]";
+  "font-archivo-light text-[11px] leading-snug transition-opacity hover:opacity-60 md:text-[12px]";
 
 export function Footer() {
   return (
-    <footer className="relative h-[90svh] w-full overflow-hidden bg-cream text-black md:h-[80svh]">
+    <footer className="site-footer relative h-[90svh] w-full overflow-hidden bg-cream text-black md:h-[80svh]">
       <FooterGridCells
         columns={GRID_COLUMNS_MOBILE}
         holes={mobileHoles}
@@ -93,11 +93,11 @@ export function Footer() {
         </div>
 
         {/* Copyright + Belgian legal links in the bottom band. */}
-        <div className="col-start-2 col-end-5 row-start-5 row-end-6 flex flex-col justify-center gap-3 px-(--grid-gutter) md:col-end-9 md:flex-row md:items-center md:justify-between md:gap-8">
-          <p className="font-archivo-light shrink-0 text-[11px] md:text-[12px]">
+        <div className="col-start-2 col-end-5 row-start-5 row-end-6 flex flex-col justify-center gap-2.5 px-(--grid-gutter) md:col-end-9 md:flex-row md:items-center md:justify-between md:gap-8">
+          <p className="font-archivo-light shrink-0 text-[11px] leading-snug md:text-[12px]">
             © {new Date().getFullYear()} {siteConfig.name}
           </p>
-          <ul className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
+          <ul className="flex flex-wrap gap-x-3 gap-y-1.5 md:justify-end md:gap-x-4 md:gap-y-2">
             <li>
               <CookiePreferencesButton
                 className={`pointer-events-auto ${legalLinkClassName}`}

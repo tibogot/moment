@@ -235,8 +235,14 @@ button:not(:disabled),
     color: #000000 !important;
   }
 
+  /*
+   * !important for the same reason as the link colour above: during hydration
+   * the viewport store still reports desktop, so GSAP briefly tweens the logo
+   * to brightness(1) — white on the cream bar, i.e. invisible — before the
+   * mobile snapshot lands and snaps it back.
+   */
   [data-nav-transparent] [data-nav-logo] {
-    filter: brightness(0);
+    filter: brightness(0) !important;
   }
 }
 
@@ -341,12 +347,15 @@ html[data-palette="sky"] .bg-sky\/45 {
    those stack and the links wrap to two or three lines — more than the shared
    band height holds, so the type ended up crushed against the viewport edge and
    clipped by the footer's overflow. Give the footer its own taller band on
-   mobile. Both the row template and GridLines derive their geometry from this
-   one token, so the rules and the cells stay in sync; the three ruled rows
-   absorb the difference since the footer's height is fixed. */
+   mobile; the three ruled rows absorb it, since the footer's height is fixed.
+   --grid-rows has to be restated here rather than inherited: its var(--grid-band)
+   is substituted where it's declared, so the :root copy still carries the :root
+   band. GridLines reads the token directly, so restating keeps the rules and the
+   cells on the same geometry. */
 @media (width < 48rem) {
   .site-footer {
     --grid-band: max(6rem, 12svh);
+    --grid-rows: var(--grid-band) repeat(3, minmax(0, 1fr)) var(--grid-band);
   }
 }
 
