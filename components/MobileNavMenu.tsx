@@ -21,7 +21,35 @@ import {
 } from "@/lib/cart-store";
 import { mainNav, routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
+import { siteConfig } from "@/lib/site";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
+
+const PLACEHOLDER_PHONE = "+32 2 512 34 56";
+const PLACEHOLDER_PHONE_HREF = PLACEHOLDER_PHONE.replace(/\s+/g, "");
+
+const socialLinks = [
+  {
+    label: "Facebook",
+    href: siteConfig.social.facebook || "#",
+    icon: "/brand/facebook.svg",
+    width: 20,
+    height: 20,
+  },
+  {
+    label: "Instagram",
+    href: siteConfig.social.instagram || "#",
+    icon: "/brand/instagram.svg",
+    width: 20,
+    height: 20,
+  },
+  {
+    label: "Twitter",
+    href: "#",
+    icon: "/brand/twitter.svg",
+    width: 18,
+    height: 17,
+  },
+] as const;
 
 type MobileNavMenuProps = {
   open: boolean;
@@ -211,8 +239,12 @@ export function MobileNavMenu({
           </nav>
         </div>
 
-        <nav className="row-start-2 row-end-5 overflow-y-auto pt-[3svh]">
-          <ul className="border-b border-sky">
+        <nav className="row-start-2 row-end-6 flex min-h-0 flex-col overflow-hidden">
+          <div
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-[3svh]"
+            data-lenis-prevent
+          >
+            <ul className="border-b border-sky">
             <li className="overflow-hidden border-t border-sky">
               <div className="flex items-center justify-between gap-4 px-(--grid-inset) py-4">
                 {collections.length > 0 ? (
@@ -222,7 +254,7 @@ export function MobileNavMenu({
                       data-menu-item
                       onClick={() => setShopOpen((current) => !current)}
                       aria-expanded={shopExpanded}
-                      className="font-owners-narrow-bold block text-left text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                      className="font-owners-narrow-bold block text-left text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                     >
                       {shopNav.label}
                     </button>
@@ -243,7 +275,7 @@ export function MobileNavMenu({
                     href={routes.shop}
                     data-menu-item
                     onClick={handleClose}
-                    className="font-owners-narrow-bold block text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                    className="font-owners-narrow-bold block text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                   >
                     {shopNav.label}
                   </Link>
@@ -296,19 +328,49 @@ export function MobileNavMenu({
                   href={href}
                   data-menu-item
                   onClick={handleClose}
-                  className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[13vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                  className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                 >
                   {label}
                 </Link>
               </li>
             ))}
-          </ul>
-        </nav>
+            </ul>
+          </div>
 
-        <div
-          className="row-start-5 border-t border-sky min-h-(--grid-band)"
-          aria-hidden="true"
-        />
+          <div
+            data-menu-item
+            className="mt-auto shrink-0 border-t border-sky px-(--grid-inset) py-4"
+          >
+            <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-5">
+              {socialLinks.map(({ label, href, icon, width, height }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  target={href === "#" ? undefined : "_blank"}
+                  rel={href === "#" ? undefined : "noopener noreferrer"}
+                  className="transition-opacity hover:opacity-60"
+                >
+                  <Image
+                    src={icon}
+                    alt=""
+                    width={width}
+                    height={height}
+                    aria-hidden
+                  />
+                </a>
+              ))}
+            </div>
+            <a
+              href={`tel:${PLACEHOLDER_PHONE_HREF}`}
+              className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+            >
+              {PLACEHOLDER_PHONE}
+            </a>
+            </div>
+          </div>
+        </nav>
       </div>
     </div>
   );
