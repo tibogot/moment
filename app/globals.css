@@ -42,6 +42,12 @@
   --nav-text: 12px;
   --nav-logo: 92px;
   --nav-icon: 20px;
+
+  /* Product card metrics. Held as lengths rather than utility classes so the
+     shop's grid/index switch can interpolate them — see .product-list. */
+  --card-pad: 4svh;
+  --card-gutter: var(--grid-gutter);
+  --card-type: 12px;
 }
 
 @media (width >= 48rem) {
@@ -59,6 +65,7 @@
     --nav-text: 14px;
     --nav-logo: 106px;
     --nav-icon: 16px;
+    --card-type: 13px;
   }
 }
 
@@ -332,5 +339,55 @@ html[data-palette="sky"] .bg-sky\/45 {
   .product-card:hover {
     background-color: var(--palette-reveal);
     border-color: var(--palette-reveal-on-sky);
+  }
+}
+
+/* Registering these as lengths is what makes the shop's view switch readable:
+   an unregistered custom property flips from one value to the next in a single
+   frame, so the type and the padding would snap while Flip was still carrying
+   the cards across. Registered, they interpolate like any other length. */
+@property --card-pad {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --card-gutter {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --card-type {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 12px;
+}
+
+/* Resting values only. The switch between them is tweened by ProductGrid, not
+   by a CSS transition: Flip has to measure the destination layout with the
+   final lengths already applied, or it animates toward a stale target and the
+   cards resettle when it drops its inline sizes. */
+.product-list {
+  --card-pad: 4svh;
+  --card-gutter: var(--grid-gutter);
+  --card-type: 12px;
+}
+
+/* Index view: the cards drop onto the page's own column lines, so they need
+   the gutter and the padding to come in with them. */
+.product-list[data-view="index"] {
+  --card-pad: 2.4svh;
+  --card-gutter: max(0.5rem, 1.5vw);
+  --card-type: 11px;
+}
+
+@media (width >= 48rem) {
+  .product-list {
+    --card-type: 13px;
+  }
+
+  .product-list[data-view="index"] {
+    --card-type: 11px;
   }
 }

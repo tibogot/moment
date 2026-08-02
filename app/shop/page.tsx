@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { ProductGrid } from "@/components/ProductGrid";
-import { routes } from "@/lib/routes";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
 
@@ -35,24 +33,7 @@ export default async function ShopPage() {
       />
 
       <GridSection className="pb-[14svh]">
-        {visibleCollections.length > 0 && (
-          <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) py-[4svh] md:col-end-9">
-            <ul className="flex flex-wrap gap-x-4 gap-y-2">
-              {visibleCollections.map((collection) => (
-                <li key={collection.id}>
-                  <Link
-                    href={routes.collection(collection.handle)}
-                    className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                  >
-                    {collection.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <ProductGrid products={products} />
+        <ProductGrid products={products} collections={visibleCollections} />
       </GridSection>
 
       <Footer />

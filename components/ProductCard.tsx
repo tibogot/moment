@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -12,6 +13,12 @@ type ProductCardProps = {
   onNavigate?: () => void;
 };
 
+/**
+ * Every metric that changes between the shop's two views — padding, gutter,
+ * type size — is read from a registered custom property rather than a utility
+ * class, so switching view interpolates them instead of snapping. The 4:5
+ * ratio is deliberately constant: the card resizes without re-cropping.
+ */
 export function ProductCard({
   product,
   sizes = "(max-width: 768px) 50vw, 33vw",
@@ -22,11 +29,10 @@ export function ProductCard({
     <Link
       href={routes.product(product.handle)}
       onClick={onNavigate}
-      className={
-        compact ? "group block h-full py-5" : "group block h-full py-[4svh]"
-      }
+      className="group block h-full py-(--card-pad)"
+      style={compact ? ({ "--card-pad": "1.25rem" } as CSSProperties) : undefined}
     >
-      <div className="px-(--grid-gutter)">
+      <div className="px-(--card-gutter)">
         <div className="product-card__image relative aspect-4/5 w-full overflow-hidden">
           {product.imageUrl && (
             <Image
@@ -45,17 +51,14 @@ export function ProductCard({
         </div>
       </div>
 
-      <div
-        className={
-          compact
-            ? "mt-3 flex flex-col gap-1 px-(--grid-gutter)"
-            : "mt-3 flex flex-col gap-1 px-(--grid-gutter) md:flex-row md:items-baseline md:justify-between md:gap-3"
-        }
-      >
-        <h3 className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
+      {/* Wrapping rather than a breakpoint switch: as the card narrows the
+          price drops under the title on its own, mid-flip, instead of the
+          whole row changing direction in a single frame. */}
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-(--card-gutter)">
+        <h3 className="font-owners-medium text-(length:--card-type) uppercase tracking-wide">
           {product.title}
         </h3>
-        <span className="font-archivo-light text-[12px] md:text-[13px]">
+        <span className="font-archivo-light text-(length:--card-type)">
           {product.price}
         </span>
       </div>
