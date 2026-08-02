@@ -203,7 +203,7 @@ export function MobileNavMenu({
                 strokeWidth={1.5}
               />
               {cartCount > 0 && (
-                <span className="font-archivo-light absolute -top-1.5 -right-2 text-[10px] leading-none">
+                <span className="font-archivo-light absolute -top-1.5 right-0 text-[10px] leading-none">
                   {cartCount}
                 </span>
               )}

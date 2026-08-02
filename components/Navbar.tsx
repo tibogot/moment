@@ -779,7 +779,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             >
               <Handbag style={iconStyle} strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="font-archivo-light absolute -top-1.5 -right-2 text-[10px] leading-none">
+                <span className="font-archivo-light absolute -top-1.5 right-0 text-[10px] leading-none nav:-right-2">
                   {cartCount}
                 </span>
               )}

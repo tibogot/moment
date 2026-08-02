@@ -318,6 +318,12 @@ html[data-palette="sky"] .bg-sky\/45 {
   background-color: color-mix(in srgb, var(--palette-line) 45%, transparent);
 }
 
+/* The contact form tints the focused cell. Listed separately from .bg-sky\/20
+   above because Tailwind emits the variant as its own selector. */
+html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
+  background-color: color-mix(in srgb, var(--palette-line) 20%, transparent);
+}
+
 @media (hover: hover) {
   html[data-palette="sky"] .hover\:bg-sky\/30:hover {
     background-color: color-mix(in srgb, var(--palette-line) 30%, transparent);

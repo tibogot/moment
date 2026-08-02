@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
@@ -36,6 +37,9 @@ export default function ContactPage() {
         title="Contact"
         lead="Tell us the date, the number of people and roughly what you have in mind. We will come back with a menu and a price."
       />
+
+      <ContactForm />
+
       <Footer />
     </>
   );
