@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
+import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
 import { ProductGrid } from "@/components/ProductGrid";
+import { routes } from "@/lib/routes";
+import { breadcrumbSchema, collectionSchema, graph } from "@/lib/schema";
+import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
 import {
   getCollectionByHandle,
   getCollections,
@@ -24,12 +28,18 @@ export async function generateMetadata({
   const { handle } = await params;
   const collection = await getCollectionByHandle(handle);
 
-  if (!collection) return { title: "Not found — Moment" };
+  if (!collection) return notFoundMetadata();
 
-  return {
-    title: `${collection.title} — Moment`,
-    description: collection.description.slice(0, 160),
-  };
+  return pageMetadata({
+    title: collection.title,
+    description:
+      toDescription(collection.description) ??
+      `${collection.title} from Moment — cooked each morning in Brussels and delivered across the city.`,
+    path: routes.collection(collection.handle),
+    image: collection.imageUrl
+      ? { url: collection.imageUrl, alt: collection.imageAlt }
+      : null,
+  });
 }
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
@@ -40,6 +50,20 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
   return (
     <>
+      <JsonLd
+        data={graph(
+          collectionSchema(collection),
+          breadcrumbSchema([
+            { name: "Home", path: routes.home },
+            { name: "Collections", path: routes.collections },
+            {
+              name: collection.title,
+              path: routes.collection(collection.handle),
+            },
+          ]),
+        )}
+      />
+
       <PageIntro
         title={collection.title}
         lead={collection.description || undefined}

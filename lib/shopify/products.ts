@@ -39,6 +39,8 @@ export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
     imageUrl: node.featuredImage?.url ?? null,
     imageAlt: node.featuredImage?.altText ?? node.title,
     price: formatPrice(amount, currencyCode),
+    priceAmount: amount,
+    currencyCode,
     productType: node.productType,
     tags: node.tags,
     availableForSale: node.availableForSale,

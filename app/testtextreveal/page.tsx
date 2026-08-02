@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import TextReveal from "@/components/TextReveal";
 import Image from "next/image";
+
+/** Animation scratchpad, not part of the site. Keep it out of the index. */
+export const metadata: Metadata = {
+  title: "Text reveal test",
+  robots: { index: false, follow: false },
+};
 
 export default function TestTextRevealPage() {
   return (

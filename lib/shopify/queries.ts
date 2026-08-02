@@ -25,7 +25,11 @@ export type ShopifyProduct = {
   description: string;
   imageUrl: string | null;
   imageAlt: string;
+  /** Formatted for display, e.g. "€12.00". */
   price: string;
+  /** Raw amount and currency — what Schema.org's Offer wants, unformatted. */
+  priceAmount: string;
+  currencyCode: string;
   productType: string;
   tags: string[];
   availableForSale: boolean;

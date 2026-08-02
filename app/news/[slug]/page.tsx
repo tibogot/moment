@@ -3,13 +3,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
+import { JsonLd } from "@/components/JsonLd";
 import { PortableTextContent } from "@/components/PortableTextContent";
 import { SanityImage } from "@/components/SanityImage";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { routes } from "@/lib/routes";
+import { articleSchema, breadcrumbSchema, graph } from "@/lib/schema";
+import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 import { formatArticleDate } from "@/lib/sanity/format";
+import { urlFor } from "@/lib/sanity/image";
+import type { NewsArticle } from "@/lib/sanity/types";
 import {
   getNewsArticleBySlug,
   getNewsArticleSlugs,
@@ -24,20 +29,34 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
+/** 1200x630 crop of the hero image, for the share card and Article schema. */
+function shareImage(article: NewsArticle) {
+  if (!article.mainImage?.asset) return null;
+
+  return {
+    url: urlFor(article.mainImage).width(1200).height(630).fit("crop").url(),
+    alt: article.mainImage.alt ?? article.title,
+  };
+}
+
 export async function generateMetadata({
   params,
 }: NewsArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const article = await getNewsArticleBySlug(slug);
 
-  if (!article) {
-    return { title: "Article not found — Moment" };
-  }
+  if (!article) return notFoundMetadata("Article not found");
 
-  return {
-    title: `${article.title} — Moment`,
-    description: article.excerpt?.slice(0, 160),
-  };
+  return pageMetadata({
+    title: article.title,
+    description:
+      toDescription(article.excerpt) ??
+      `${article.title} — from the Moment kitchen in Brussels.`,
+    path: routes.newsArticle(slug),
+    image: shareImage(article),
+    type: "article",
+    publishedTime: article.publishedAt,
+  });
 }
 
 export default async function NewsArticlePage({ params }: NewsArticlePageProps) {
@@ -59,6 +78,17 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
 
   return (
     <>
+      <JsonLd
+        data={graph(
+          articleSchema(article, { imageUrl: shareImage(article)?.url }),
+          breadcrumbSchema([
+            { name: "Home", path: routes.home },
+            { name: "News", path: routes.news },
+            { name: article.title, path: routes.newsArticle(slug) },
+          ]),
+        )}
+      />
+
       <GridSection className="pt-[22svh] pb-[8svh]">
         <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
           {metadataLine ? (

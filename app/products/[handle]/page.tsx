@@ -3,11 +3,14 @@ import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
+import { JsonLd } from "@/components/JsonLd";
 import { ProductDetails } from "@/components/ProductDetails";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductRowSection } from "@/components/ProductRowSection";
 import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
 import { routes } from "@/lib/routes";
+import { breadcrumbSchema, graph, productSchema } from "@/lib/schema";
+import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
 import {
   getProductByHandle,
   getProducts,
@@ -29,12 +32,19 @@ export async function generateMetadata({
   const { handle } = await params;
   const product = await getProductByHandle(handle);
 
-  if (!product) return { title: "Not found — Moment" };
+  if (!product) return notFoundMetadata();
 
-  return {
-    title: `${product.title} — Moment`,
-    description: product.description.slice(0, 160),
-  };
+  return pageMetadata({
+    title: product.title,
+    // Shopify descriptions run long; a trimmed sentence beats a hard cut.
+    description:
+      toDescription(product.description) ??
+      `${product.title} from the Moment kitchen in Brussels.`,
+    path: routes.product(product.handle),
+    image: product.imageUrl
+      ? { url: product.imageUrl, alt: product.imageAlt }
+      : null,
+  });
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
@@ -56,6 +66,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <>
+      {/* Price, availability and images — what a rich result needs to show the
+          product in search rather than a plain blue link. */}
+      <JsonLd
+        data={graph(
+          productSchema(product),
+          breadcrumbSchema([
+            { name: "Home", path: routes.home },
+            { name: "Shop", path: routes.shop },
+            { name: product.title, path: routes.product(product.handle) },
+          ]),
+        )}
+      />
+
       <GridSection className="pt-[22svh] pb-[12svh]">
         <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-6">
           <ProductGallery images={galleryImages} title={product.title} />

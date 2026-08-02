@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Shipping & returns — Moment",
-  description: "Delivery, pickup and return information for Moment orders.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Shipping & returns",
+  description:
+    "How delivery, pickup and returns work for Moment orders across Brussels — zones, cut-off times and return rules.",
+  path: routes.shipping,
+});
 
 export default function ShippingPage() {
   return (

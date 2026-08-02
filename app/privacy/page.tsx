@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Privacy — Moment",
-  description: "Privacy policy for Moment — how we handle personal data.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy",
+  description:
+    "Privacy policy for Moment — what personal data we collect, why, and the rights you have over it under the GDPR.",
+  path: routes.privacy,
+});
 
 export default function PrivacyPage() {
   return (

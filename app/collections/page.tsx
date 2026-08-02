@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import { CollectionsSection } from "@/components/CollectionsSection";
 import { Footer } from "@/components/Footer";
 import { PageIntro } from "@/components/PageIntro";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 
-export const metadata: Metadata = {
-  title: "Collections — Moment",
+export const metadata: Metadata = pageMetadata({
+  title: "Collections",
   description:
     "Browse plates, salads and cold-pressed juices by category — prepared each morning and delivered across Brussels.",
-};
+  path: routes.collections,
+});
 
 export default async function CollectionsPage() {
   const collections = await getCollections();

@@ -1,14 +1,36 @@
+import type { Metadata } from "next";
 import { CalendarSection } from "@/components/CalendarSection";
 import { CollectionsSection } from "@/components/CollectionsSection";
 import { Footer } from "@/components/Footer";
 import { FullBleedImageSection } from "@/components/FullBleedImageSection";
 import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
+import { JsonLd } from "@/components/JsonLd";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitImageSection } from "@/components/SplitImageSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
+import { routes } from "@/lib/routes";
+import { siteGraph } from "@/lib/schema";
 import { getCollections } from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import { siteConfig } from "@/lib/site";
+
+/**
+ * The home page keeps an absolute title rather than the "%s — Moment"
+ * template: it's the one page where the brand name leads.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: routes.home },
+  keywords: [
+    "traiteur Brussels",
+    "catering Brussels",
+    "corporate catering Brussels",
+    "event catering Brussels",
+    "lunch delivery Brussels",
+    "cold-pressed juice Brussels",
+  ],
+  description: siteConfig.description,
+};
 
 export default async function Home() {
   const [collections, availability] = await Promise.all([
@@ -24,6 +46,10 @@ export default async function Home() {
 
   return (
     <>
+      {/* Defines the organisation, website and business nodes the rest of the
+          site's structured data refers back to by @id. */}
+      <JsonLd data={siteGraph()} />
+
       <Hero />
       <IntroSection />
 

@@ -8,10 +8,14 @@ import { PageIntro } from "@/components/PageIntro";
 import { getCart } from "@/app/actions/cart";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Cart — Moment",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Cart",
+  description: "Your Moment order.",
+  path: routes.cart,
+  noindex: true,
+});
 
 export default async function CartPage() {
   const [cart, availability] = await Promise.all([

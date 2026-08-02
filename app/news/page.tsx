@@ -4,12 +4,15 @@ import { GridSection } from "@/components/GridSection";
 import { NewsArticleCard } from "@/components/NewsArticleCard";
 import { PageIntro } from "@/components/PageIntro";
 import { getNewsArticles } from "@/lib/sanity/queries";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "News — Moment",
+export const metadata: Metadata = pageMetadata({
+  title: "News",
   description:
-    "News from Moment — updates from our kitchen, events and table in Brussels.",
-};
+    "News from Moment — what we are cooking, the events we are catering, and what is coming out of our Brussels kitchen.",
+  path: routes.news,
+});
 
 export default async function NewsPage() {
   const articles = await getNewsArticles();

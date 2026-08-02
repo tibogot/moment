@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Legal notice — Moment",
-  description: "Legal notice and company information for Moment.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Legal notice",
+  description:
+    "Legal notice and company information for Moment, as required under Belgian law.",
+  path: routes.legal,
+});
 
 export default function LegalPage() {
   return (

@@ -4,12 +4,16 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
 import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 
-export const metadata: Metadata = {
-  title: "Sign in — Moment",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Sign in",
+  description: "Sign in to your Moment account.",
+  path: routes.signIn,
+  noindex: true,
+});
 
 type SignInPageProps = {
   searchParams: Promise<{ error?: string }>;

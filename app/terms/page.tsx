@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Terms of sale — Moment",
-  description: "Terms of sale (CGV) for Moment orders and catering.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of sale",
+  description:
+    "General terms of sale (CGV) for Moment product orders and catering services in Belgium.",
+  path: routes.terms,
+});
 
 export default function TermsPage() {
   return (

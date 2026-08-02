@@ -4,13 +4,17 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { getCustomerProfile } from "@/lib/shopify/customer-account/customer";
 import { getCustomerDisplayName } from "@/lib/shopify/customer-account/display-name";
 import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 
-export const metadata: Metadata = {
-  title: "Account — Moment",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Account",
+  description: "Your Moment account and order history.",
+  path: routes.account,
+  noindex: true,
+});
 
 function formatOrderTotal(amount: string, currencyCode: string) {
   return new Intl.NumberFormat("en-BE", {

@@ -3,14 +3,23 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { ProductGrid } from "@/components/ProductGrid";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
 
-export const metadata: Metadata = {
-  title: "Shop — Moment",
+export const metadata: Metadata = pageMetadata({
+  title: "Shop — Plates, Salads & Cold-Pressed Juices",
   description:
-    "Order plates, salads and cold-pressed juices for delivery across Brussels.",
-};
+    "Order seasonal plates, salads and cold-pressed juices from our Brussels kitchen. Cooked the morning of delivery, ready to serve.",
+  path: routes.shop,
+  keywords: [
+    "lunch delivery Brussels",
+    "office lunch Brussels",
+    "cold-pressed juice Brussels",
+    "salads delivery Brussels",
+  ],
+});
 
 export default async function ShopPage() {
   const [products, collections] = await Promise.all([

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Cookies — Moment",
-  description: "Cookie policy for the Moment website.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Cookies",
+  description:
+    "Cookie policy for the Moment website — which cookies we set, what they do, and how to change your choice.",
+  path: routes.cookies,
+});
 
 export default function CookiesPage() {
   return (

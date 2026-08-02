@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import ScrollToTop from "@/components/ScrollToTop";
 import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -7,6 +7,8 @@ import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import { getProducts } from "@/lib/shopify/products";
 import { getCollections } from "@/lib/shopify/collections";
+import { OG_LOCALE } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 import {
   archivoLight,
   archivoLightItalic,
@@ -18,9 +20,59 @@ import "./globals.css";
 const REVEAL_GUARD = `(function(){try{document.documentElement.classList.add("reveal-js")}catch(e){}})()`;
 const PALETTE_GUARD = `(function(){try{var p=localStorage.getItem("moment-palette");if(p==="sky")document.documentElement.dataset.palette="sky"}catch(e){}})()`;
 
+const HOME_TITLE = `${siteConfig.name} — Traiteur & Catering in Brussels`;
+
+/**
+ * Site-wide defaults. Pages override the parts they care about through
+ * `pageMetadata` in lib/seo.ts; anything they leave alone falls through to
+ * here, so a new route is never shipped without an Open Graph card.
+ */
 export const metadata: Metadata = {
-  title: "Moment",
-  description: "Moment — coffee, events, and more.",
+  // Lets pages declare canonical and Open Graph URLs as plain route paths.
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: HOME_TITLE,
+    template: `%s — ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  creator: siteConfig.name,
+  publisher: siteConfig.legal.companyName || siteConfig.name,
+  category: "food",
+  // Safari turns anything that resembles a phone number into a call link,
+  // which mangles prices and order numbers.
+  formatDetection: { telephone: false },
+  openGraph: {
+    type: "website",
+    title: HOME_TITLE,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: OG_LOCALE,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: siteConfig.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      // Let Google use full-size images and untruncated snippets — the default
+      // caps both, which costs us the visual slot on recipe/menu queries.
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f8f7f2",
+  colorScheme: "light",
 };
 
 export default async function RootLayout({
