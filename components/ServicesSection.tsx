@@ -9,6 +9,7 @@ import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { Flip, gsap } from "@/lib/gsapConfig";
 import { REVEAL_BLOCK } from "@/lib/colors";
+import { GRID_CONTENT_IMAGE_SIZES } from "@/lib/grid";
 import { routes } from "@/lib/routes";
 
 /**
@@ -240,7 +241,7 @@ export function ServicesSection() {
                         src={service.src}
                         alt=""
                         fill
-                        sizes="100vw"
+                        sizes={GRID_CONTENT_IMAGE_SIZES}
                         className="object-cover"
                       />
                     </div>

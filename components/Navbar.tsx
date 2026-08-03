@@ -26,7 +26,7 @@ import {
 } from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { startIntro } from "@/lib/intro";
-import { blurOpenOverlayFocus } from "@/lib/overlayFocus";
+import { blurFocusWithin, blurOpenOverlayFocus } from "@/lib/overlayFocus";
 import { mainNav, routes } from "@/lib/routes";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -108,8 +108,13 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const overlayOpen = cartOpen || searchOpen || menuOpen;
   const navExpanded = shopMenuOpen && !overlayOpen && !isMobileNav;
 
+  const releaseShopMenuFocus = () => {
+    blurFocusWithin(menuRef.current);
+  };
+
   const withOverlayFocusRelease = (update: () => void) => {
     blurOpenOverlayFocus();
+    releaseShopMenuFocus();
     update();
   };
 
@@ -157,6 +162,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const overlayOpenRef = useRef(overlayOpen);
 
   if (pathname !== prevPathname) {
+    releaseShopMenuFocus();
     setPrevPathname(pathname);
     setShopMenuOpen(false);
   }
@@ -564,6 +570,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   };
 
   const closeShopMenu = () => {
+    releaseShopMenuFocus();
     setShopMenuOpen(false);
   };
 
@@ -640,7 +647,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           navHoveredRef.current = false;
           setNavHovered(false);
           if (!cartOpen && !searchOpen) {
-            setShopMenuOpen(false);
+            closeShopMenu();
           }
         }}
       >
@@ -816,7 +823,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           inert={!navExpanded}
         >
           <div ref={menuInnerRef} className="nav:col-span-full">
-            <ShopNavMenu products={products} collections={collections} />
+            <ShopNavMenu
+              products={products}
+              collections={collections}
+              onNavigate={releaseShopMenuFocus}
+            />
           </div>
         </div>
       </div>

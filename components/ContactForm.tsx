@@ -35,7 +35,7 @@ const FORM_COLUMNS = "md:col-span-4";
  */
 const CELL = "bg-cream px-(--grid-gutter) py-[3.2svh] transition-colors duration-300 focus-within:bg-sky/20";
 
-const LABEL = "font-owners-medium block text-[12px] uppercase tracking-wide";
+const LABEL = "font-owners-medium block text-[14px] uppercase tracking-wide";
 
 const CONTROL =
   "font-archivo-light mt-3 block w-full bg-transparent text-[16px] leading-normal text-black outline-none placeholder:text-black/40";
@@ -117,7 +117,7 @@ function TextField({
       <label htmlFor={id} className={LABEL}>
         {label}
         {hint && (
-          <span className="font-archivo-light ml-2 text-[13px] tracking-normal normal-case text-black/55">
+          <span className="font-archivo-light ml-2 text-[14px] tracking-normal normal-case text-black/55">
             {hint}
           </span>
         )}
@@ -287,7 +287,7 @@ export function ContactForm({
               // Kept a plain block: as a flex column it stretched the button to
               // the full width and squeezed the reveal's measured line boxes.
               <div className="border-b border-sky px-(--grid-gutter) py-[9svh] md:h-full">
-                <p className="font-owners-medium text-[12px] uppercase tracking-wide">
+                <p className="font-owners-medium text-[14px] uppercase tracking-wide">
                   Request sent
                 </p>
 
@@ -310,7 +310,7 @@ export function ContactForm({
                   onClick={reopen}
                   className="mt-[5svh] inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
                 >
-                  <span className="font-owners-medium inline-flex items-center text-[12px] uppercase tracking-wide">
+                  <span className="font-owners-medium inline-flex items-center text-[14px] uppercase tracking-wide">
                     Send another request
                   </span>
                 </button>
@@ -398,7 +398,7 @@ export function ContactForm({
                       <label
                         key={occasion}
                         className={cn(
-                          "font-owners-medium border border-sky px-3 py-2.5 text-[12px] uppercase tracking-wide transition-colors duration-300",
+                          "font-owners-medium border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
                           "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
                           "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
                         )}
@@ -486,7 +486,7 @@ export function ContactForm({
                     disabled={pending}
                     className="shrink-0 self-start border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream disabled:opacity-40 md:self-auto"
                   >
-                    <span className="font-owners-medium inline-flex items-center text-[12px] uppercase tracking-wide">
+                    <span className="font-owners-medium inline-flex items-center text-[14px] uppercase tracking-wide">
                       {pending ? "Sending…" : "Send request"}
                     </span>
                   </button>

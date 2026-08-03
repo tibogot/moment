@@ -4,13 +4,19 @@ import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap } from "@/lib/gsapConfig";
+import { GRID_VIEWPORT_IMAGE_SIZES } from "@/lib/grid";
 
 type HeroParallaxImageProps = {
   src: string;
   alt?: string;
+  sizes?: string;
 };
 
-export function HeroParallaxImage({ src, alt = "" }: HeroParallaxImageProps) {
+export function HeroParallaxImage({
+  src,
+  alt = "",
+  sizes = GRID_VIEWPORT_IMAGE_SIZES,
+}: HeroParallaxImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +64,7 @@ export function HeroParallaxImage({ src, alt = "" }: HeroParallaxImageProps) {
           alt={alt}
           fill
           preload
-          sizes="100vw"
+          sizes={sizes}
           className="object-cover"
         />
       </div>

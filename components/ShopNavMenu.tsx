@@ -9,6 +9,7 @@ import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 type ShopNavMenuProps = {
   products: ShopifyProduct[];
   collections: ShopifyCollection[];
+  onNavigate?: () => void;
 };
 
 type HoverKey = "all" | "collections" | string;
@@ -55,15 +56,17 @@ function getPreviewProducts(
 
 type PreviewProductCardProps = {
   product: ShopifyProduct;
+  onNavigate?: () => void;
 };
 
-function PreviewProductCard({ product }: PreviewProductCardProps) {
+function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
   if (!product.imageUrl) return null;
 
   return (
     <Link
       href={routes.product(product.handle)}
       className="group flex w-44 shrink-0 flex-col gap-3 lg:w-52"
+      onClick={onNavigate}
     >
       <div className="relative aspect-4/5 overflow-hidden bg-sky/20">
         <Image
@@ -82,7 +85,11 @@ function PreviewProductCard({ product }: PreviewProductCardProps) {
   );
 }
 
-export function ShopNavMenu({ products, collections }: ShopNavMenuProps) {
+export function ShopNavMenu({
+  products,
+  collections,
+  onNavigate,
+}: ShopNavMenuProps) {
   const [hovered, setHovered] = useState<HoverKey | null>(null);
 
   const previewProducts = useMemo(
@@ -108,6 +115,7 @@ export function ShopNavMenu({ products, collections }: ShopNavMenuProps) {
           className={linkClassName}
           onMouseEnter={setHover("all")}
           onFocus={setHover("all")}
+          onClick={onNavigate}
         >
           All
         </Link>
@@ -116,6 +124,7 @@ export function ShopNavMenu({ products, collections }: ShopNavMenuProps) {
           className={linkClassName}
           onMouseEnter={setHover("collections")}
           onFocus={setHover("collections")}
+          onClick={onNavigate}
         >
           Collections
         </Link>
@@ -126,6 +135,7 @@ export function ShopNavMenu({ products, collections }: ShopNavMenuProps) {
             className={linkClassName}
             onMouseEnter={setHover(collection.handle)}
             onFocus={setHover(collection.handle)}
+            onClick={onNavigate}
           >
             {collection.title}
           </Link>
@@ -145,7 +155,11 @@ export function ShopNavMenu({ products, collections }: ShopNavMenuProps) {
 
           <div className="flex gap-5 px-(--grid-gutter) pt-[4svh] pb-4 lg:gap-8">
             {previewProducts.map((product) => (
-              <PreviewProductCard key={product.id} product={product} />
+              <PreviewProductCard
+                key={product.id}
+                product={product}
+                onNavigate={onNavigate}
+              />
             ))}
           </div>
         </div>

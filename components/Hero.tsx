@@ -15,7 +15,7 @@ export function Hero() {
       className="relative h-svh w-full overflow-hidden"
       data-transparent-nav
     >
-      <HeroParallaxImage src="/images/anita-austvika.jpg" />
+      <HeroParallaxImage src="/images/nicole-herrero.jpg" />
       <div className="absolute inset-0 bg-black/20" aria-hidden />
 
       <GridLines
@@ -64,11 +64,12 @@ export function Hero() {
             duration={0.6}
           >
             <p
-              className="font-archivo-light max-w-full leading-[1.43]"
+              className="font-archivo-light max-w-full text-balance leading-[1.2]"
               style={{ fontSize: "var(--hero-body)" }}
             >
               Moment, c&apos;est un traiteur pour particuliers et entreprises,
-              celles qui veulent projeter leur image auprès de leurs clients.
+              celles qui veulent projeter leur image auprès de leurs clients
+              — plats de saison, préparés chaque matin à Bruxelles.
             </p>
           </TextReveal>
         </div>
