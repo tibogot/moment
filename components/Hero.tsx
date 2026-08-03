@@ -67,9 +67,8 @@ export function Hero() {
               className="font-archivo-light max-w-full text-balance leading-[1.2]"
               style={{ fontSize: "var(--hero-body)" }}
             >
-              Moment, c&apos;est un traiteur pour particuliers et entreprises,
-              celles qui veulent projeter leur image auprès de leurs clients
-              — plats de saison, préparés chaque matin à Bruxelles.
+              Traiteur à Bruxelles pour particuliers et entreprises. Plats
+              de saison, préparés chaque matin et livrés prêts à servir.
             </p>
           </TextReveal>
         </div>

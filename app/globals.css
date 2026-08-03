@@ -383,6 +383,18 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   html[data-palette="sky"] .group:hover .group-hover\:bg-sky {
     background-color: var(--palette-line);
   }
+
+  /* Buttons are bg-sky on a cream page and hover to bg-cream so they sink into
+     the page and only their border stays. Swapped, the button is cream on a sky
+     page — without these the hover would resolve to literal cream and nothing
+     would move. Point them at the page colour so the sink still reads. */
+  html[data-palette="sky"] .hover\:bg-cream:hover {
+    background-color: var(--palette-page);
+  }
+
+  html[data-palette="sky"] .group:hover .group-hover\:bg-cream {
+    background-color: var(--palette-page);
+  }
 }
 
 @media (width >= 48rem) {
