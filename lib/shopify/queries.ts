@@ -171,8 +171,16 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
-/** Products bundled with each collection for nav previews and list fallbacks. */
-export const COLLECTION_NAV_PRODUCTS = 2;
+/** Previews shown per collection in the shop submenu. */
+export const NAV_PREVIEW_COUNT = 3;
+
+/**
+ * Products bundled with each collection for nav previews and list fallbacks.
+ * One over NAV_PREVIEW_COUNT: previews are picked from the products that have
+ * an image, so the query needs a spare to fall back on. Raising the preview
+ * count without raising this leaves the submenu short of images.
+ */
+export const COLLECTION_NAV_PRODUCTS = NAV_PREVIEW_COUNT + 1;
 
 export type ShopifyCollection = {
   id: string;
