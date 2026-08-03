@@ -27,7 +27,6 @@ export default async function CollectionsPage() {
       <PageIntro
         title="Collections"
         lead="Plates, salads and cold-pressed juices — browse by category."
-        leadClassName="text-[18px] md:text-[18px]"
       />
 
       <CollectionsSection

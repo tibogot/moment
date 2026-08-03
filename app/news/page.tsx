@@ -22,7 +22,6 @@ export default async function NewsPage() {
       <PageIntro
         title="News"
         lead="From the kitchen, the counter and the table — what we are cooking, serving and thinking about."
-        leadClassName="text-[18px] md:text-[18px]"
       />
 
       <GridSection className="pb-[14svh]">
@@ -39,7 +38,7 @@ export default async function NewsPage() {
           </ul>
         ) : (
           <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) py-[6svh] md:col-end-8">
-            <p className="font-archivo-light text-[15px] leading-normal text-black/70">
+            <p className="font-archivo-light text-[17px] leading-normal text-black/70">
               No articles yet. Check back soon.
             </p>
           </div>

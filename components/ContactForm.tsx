@@ -224,11 +224,13 @@ export function ContactForm({
                     key={step.index}
                     className="flex gap-5 border-t border-sky py-[2.6svh] last:border-b md:py-[3svh]"
                   >
-                    <span className="font-archivo-light shrink-0 text-[12px] tabular-nums">
+                    <span className="font-archivo-light shrink-0 text-[14px] tabular-nums">
                       {step.index}
                     </span>
                     <div className="min-w-0">
-                      <p className="font-owners-medium text-[11px] uppercase tracking-wide">
+                      {/* Same size as the form's field labels across the rule —
+                          the two columns read as one row of headings. */}
+                      <p className="font-owners-medium text-[14px] uppercase tracking-wide">
                         {step.title}
                       </p>
                       <p className="font-archivo-light mt-2 text-[18px] leading-normal">
@@ -252,7 +254,7 @@ export function ContactForm({
                     <li>
                       <a
                         href={`mailto:${email}`}
-                        className="font-owners-medium animated-underline text-[12px] uppercase tracking-wide"
+                        className="font-owners-medium animated-underline text-[14px] uppercase tracking-wide"
                       >
                         {email}
                       </a>
@@ -262,7 +264,7 @@ export function ContactForm({
                     <li>
                       <a
                         href={`tel:${phone.replace(/\s+/g, "")}`}
-                        className="font-owners-medium animated-underline text-[12px] uppercase tracking-wide"
+                        className="font-owners-medium animated-underline text-[14px] uppercase tracking-wide"
                       >
                         {phone}
                       </a>

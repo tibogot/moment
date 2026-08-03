@@ -58,7 +58,7 @@ export function ProductCard({
         <h3 className="font-owners-medium text-(length:--card-type) uppercase tracking-wide">
           {product.title}
         </h3>
-        <span className="font-archivo-light text-(length:--card-type)">
+        <span className="font-archivo-light text-(length:--card-price)">
           {product.price}
         </span>
       </div>

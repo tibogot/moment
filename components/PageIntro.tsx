@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 type PageIntroProps = {
   title: string;
   lead?: string;
+  /** Escape hatch for a page that needs its lead off the shared size. */
   leadClassName?: string;
 };
 
@@ -34,7 +35,11 @@ export function PageIntro({ title, lead, leadClassName }: PageIntroProps) {
           >
             <p
               className={cn(
-                "font-archivo-light max-w-full text-[15px] leading-normal wrap-break-word text-black md:text-[min(1.35vw,2svh)]",
+                // Flat 18px rather than the vw clamp it used to carry: the
+                // clamp read as 15px on a phone and every page was overriding
+                // it back to this anyway. Archivo Light sets small, so the lead
+                // needs the size to hold its own under the headline.
+                "font-archivo-light max-w-full text-[18px] leading-normal wrap-break-word text-black",
                 leadClassName,
               )}
             >

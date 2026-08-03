@@ -48,6 +48,9 @@
   --card-pad: 4svh;
   --card-gutter: var(--grid-gutter);
   --card-type: 12px;
+  /* Held apart from --card-type on purpose: the title is Owners Medium and the
+     price is Archivo Light, which reads noticeably smaller at the same px. */
+  --card-price: 14px;
 }
 
 @media (width >= 48rem) {
@@ -66,6 +69,7 @@
     --nav-logo: 106px;
     --nav-icon: 16px;
     --card-type: 13px;
+    --card-price: 15px;
   }
 }
 
@@ -462,6 +466,12 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   initial-value: 12px;
 }
 
+@property --card-price {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 14px;
+}
+
 /* Resting values only. The switch between them is tweened by ProductGrid, not
    by a CSS transition: Flip has to measure the destination layout with the
    final lengths already applied, or it animates toward a stale target and the
@@ -470,6 +480,7 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   --card-pad: 4svh;
   --card-gutter: var(--grid-gutter);
   --card-type: 12px;
+  --card-price: 14px;
 }
 
 /* Index view: the cards drop onto the page's own column lines, so they need
@@ -478,14 +489,19 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   --card-pad: 2.4svh;
   --card-gutter: max(0.5rem, 1.5vw);
   --card-type: 11px;
+  /* Barely above the title here — an index cell is a seventh of the page on
+     desktop, and the price has nowhere to wrap to. */
+  --card-price: 12px;
 }
 
 @media (width >= 48rem) {
   .product-list {
     --card-type: 13px;
+    --card-price: 15px;
   }
 
   .product-list[data-view="index"] {
     --card-type: 11px;
+    --card-price: 12px;
   }
 }

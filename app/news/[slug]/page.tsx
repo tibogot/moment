@@ -97,7 +97,7 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
               animateOnScroll={false}
               delay={0.05}
             >
-              <p className="text-[11px] uppercase tracking-wide text-black/50">
+              <p className="text-[13px] uppercase tracking-wide text-black/50">
                 {metadataLine}
               </p>
             </TextReveal>
@@ -124,7 +124,9 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
               animateOnScroll={false}
               delay={0.35}
             >
-              <p className="font-archivo-light mt-[5svh] max-w-[42ch] text-[15px] leading-[1.5] text-black/70 md:text-[min(1.35vw,2svh)]">
+              {/* Flat 18px, matching PageIntro's lead — this is the same
+                  standfirst role under the same headline. */}
+              <p className="font-archivo-light mt-[5svh] max-w-[42ch] text-[18px] leading-[1.5] text-black/70">
                 {article.excerpt}
               </p>
             </TextReveal>

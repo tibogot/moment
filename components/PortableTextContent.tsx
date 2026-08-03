@@ -16,12 +16,14 @@ const components: PortableTextComponents = {
       </h3>
     ),
     normal: ({ children }) => (
-      <p className="font-archivo-light mt-4 text-[15px] leading-normal text-black/80 md:text-[min(1.35vw,2svh)]">
+      // Flat 18px: this is the article's reading text, and the vw clamp it
+      // carried resolved to 15px on a phone — too small for a long read.
+      <p className="font-archivo-light mt-4 text-[18px] leading-normal text-black/80">
         {children}
       </p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="font-archivo-light mt-6 border-l border-sky pl-4 text-[15px] leading-normal text-black/70 italic md:text-[min(1.35vw,2svh)]">
+      <blockquote className="font-archivo-light mt-6 border-l border-sky pl-4 text-[18px] leading-normal text-black/70 italic">
         {children}
       </blockquote>
     ),
@@ -44,12 +46,12 @@ const components: PortableTextComponents = {
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="font-archivo-light mt-4 list-disc space-y-2 pl-5 text-[15px] leading-normal text-black/80 md:text-[min(1.35vw,2svh)]">
+      <ul className="font-archivo-light mt-4 list-disc space-y-2 pl-5 text-[18px] leading-normal text-black/80">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="font-archivo-light mt-4 list-decimal space-y-2 pl-5 text-[15px] leading-normal text-black/80 md:text-[min(1.35vw,2svh)]">
+      <ol className="font-archivo-light mt-4 list-decimal space-y-2 pl-5 text-[18px] leading-normal text-black/80">
         {children}
       </ol>
     ),
@@ -69,7 +71,7 @@ const components: PortableTextComponents = {
             />
           </div>
           {image.caption ? (
-            <figcaption className="font-archivo-light mt-3 text-[13px] text-black/60">
+            <figcaption className="font-archivo-light mt-3 text-[15px] text-black/60">
               {image.caption}
             </figcaption>
           ) : null}

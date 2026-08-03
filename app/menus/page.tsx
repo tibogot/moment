@@ -44,7 +44,6 @@ export default async function MenusPage() {
       <PageIntro
         title="Menus"
         lead="What we cook, by the head. Every format below is a starting point — we change the dishes to the season, the room and whoever is eating."
-        leadClassName="text-[18px] md:text-[18px]"
       />
 
       {isDraft && (

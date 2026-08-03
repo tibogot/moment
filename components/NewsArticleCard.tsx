@@ -29,7 +29,7 @@ export function NewsArticleCard({ article }: NewsArticleCardProps) {
         </div>
 
         <div className="space-y-3 px-(--grid-gutter) py-5 text-left">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-black/50">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] uppercase tracking-wide text-black/50">
             {category ? <span>{category}</span> : null}
             {category && article.publishedAt ? (
               <span aria-hidden="true">·</span>
@@ -46,7 +46,7 @@ export function NewsArticleCard({ article }: NewsArticleCardProps) {
           </h2>
 
           {article.excerpt ? (
-            <p className="font-archivo-light line-clamp-3 text-[15px] leading-normal text-black/70">
+            <p className="font-archivo-light line-clamp-3 text-[17px] leading-normal text-black/70">
               {article.excerpt}
             </p>
           ) : null}

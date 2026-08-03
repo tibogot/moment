@@ -202,7 +202,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         <div className="flex-1 overflow-y-auto" data-lenis-prevent>
           {pickerOpen && availability ? (
             <>
-              <p className="font-archivo-light px-6 pt-5 text-[13px] leading-normal">
+              <p className="font-archivo-light px-6 pt-5 text-[15px] leading-normal">
                 Pick the day you want this delivered. Blue days are closed or
                 already full — we need {LEAD_TIME_DAYS} days&apos; notice and we
                 do not deliver on Sundays.
@@ -211,7 +211,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {error && (
                 <p
                   role="alert"
-                  className="font-archivo-light px-6 pt-3 text-[13px]"
+                  className="font-archivo-light px-6 pt-3 text-[15px]"
                 >
                   {error}
                 </p>
@@ -225,7 +225,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               />
             </>
           ) : isEmpty ? (
-            <p className="font-archivo-light px-6 py-10 text-[15px]">
+            <p className="font-archivo-light px-6 py-10 text-[16px]">
               Your cart is empty.
             </p>
           ) : (
@@ -260,7 +260,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                       {line.title}
                     </Link>
                     {line.variantTitle && (
-                      <span className="font-archivo-light mt-1 text-[13px] opacity-70">
+                      <span className="font-archivo-light mt-1 text-[15px] opacity-70">
                         {line.variantTitle}
                       </span>
                     )}
@@ -276,11 +276,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                               updateCartLine(line.id, line.quantity - 1),
                             )
                           }
-                          className="px-2.5 py-1 text-[13px] transition-opacity hover:opacity-60 disabled:opacity-40"
+                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60 disabled:opacity-40"
                         >
                           −
                         </button>
-                        <span className="font-archivo-light min-w-6 text-center text-[13px]">
+                        <span className="font-archivo-light min-w-6 text-center text-[15px]">
                           {line.quantity}
                         </span>
                         <button
@@ -292,13 +292,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                               updateCartLine(line.id, line.quantity + 1),
                             )
                           }
-                          className="px-2.5 py-1 text-[13px] transition-opacity hover:opacity-60 disabled:opacity-40"
+                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60 disabled:opacity-40"
                         >
                           +
                         </button>
                       </div>
 
-                      <span className="font-archivo-light text-[13px]">
+                      <span className="font-archivo-light text-[15px]">
                         {line.lineTotal}
                       </span>
                     </div>
@@ -307,7 +307,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                       type="button"
                       disabled={isPending}
                       onClick={() => mutate(() => removeFromCart(line.id))}
-                      className="font-archivo-light mt-2 self-start text-[12px] underline underline-offset-2 transition-opacity hover:opacity-60 disabled:opacity-40"
+                      className="font-archivo-light mt-2 self-start text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60 disabled:opacity-40"
                     >
                       Remove
                     </button>
@@ -331,13 +331,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
                 {deliveryDate && !dateIsStale ? (
                   <span className="flex items-baseline gap-3">
-                    <span className="font-archivo-light text-[13px]">
+                    <span className="font-archivo-light text-[15px]">
                       {formatDeliveryDate(deliveryDate)}
                     </span>
                     <button
                       type="button"
                       onClick={() => setPickerOpen(true)}
-                      className="font-archivo-light text-[12px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                      className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
                     >
                       Change
                     </button>
@@ -346,7 +346,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   <button
                     type="button"
                     onClick={() => setPickerOpen(true)}
-                    className="font-archivo-light text-[13px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                    className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
                   >
                     {dateIsStale ? "Pick another day" : "Choose a date"}
                   </button>
@@ -354,7 +354,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               </div>
 
               {dateIsStale && deliveryDate && (
-                <p role="alert" className="font-archivo-light mt-2 text-[12px]">
+                <p role="alert" className="font-archivo-light mt-2 text-[14px]">
                   {formatDeliveryDate(deliveryDate)} is no longer available.
                   Please pick another day.
                 </p>
@@ -363,19 +363,19 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
             <div className="px-6 py-5">
               {error && (
-                <p className="font-archivo-light mb-3 text-[13px]">{error}</p>
+                <p className="font-archivo-light mb-3 text-[15px]">{error}</p>
               )}
 
               <div className="flex items-baseline justify-between">
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide">
                   Total
                 </span>
-                <span className="font-archivo-light text-[15px]">
+                <span className="font-archivo-light text-[17px]">
                   {cart.totalPrice}
                 </span>
               </div>
 
-              <p className="font-archivo-light mt-1 text-[12px] opacity-70">
+              <p className="font-archivo-light mt-1 text-[14px] opacity-70">
                 Taxes and delivery calculated at checkout.
               </p>
 

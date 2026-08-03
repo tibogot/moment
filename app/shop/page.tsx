@@ -38,7 +38,6 @@ export default async function ShopPage() {
       <PageIntro
         title="Shop"
         lead="Plates, salads and cold-pressed juices, prepared each morning and delivered across Brussels."
-        leadClassName="text-[18px] md:text-[18px]"
       />
 
       <GridSection className="pb-[14svh]">

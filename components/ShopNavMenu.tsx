@@ -79,7 +79,12 @@ function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
       </div>
       <div className="flex flex-col gap-0.5">
         <span className={linkClassName}>{product.title}</span>
-        <span className="font-archivo-light text-[11px]">{product.price}</span>
+        {/* Same length as the shop grid's price rather than a local size, so
+            the two stay in step — Archivo Light needs the couple of extra px
+            over the Owners Medium title above it. */}
+        <span className="font-archivo-light text-(length:--card-price)">
+          {product.price}
+        </span>
       </div>
     </Link>
   );

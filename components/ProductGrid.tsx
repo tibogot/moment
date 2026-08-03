@@ -30,7 +30,12 @@ const DURATION = 0.75;
 const EASE = "power3.inOut";
 
 /** The card metrics that differ between the two views — see globals.css. */
-const CARD_VARS = ["--card-pad", "--card-gutter", "--card-type"] as const;
+const CARD_VARS = [
+  "--card-pad",
+  "--card-gutter",
+  "--card-type",
+  "--card-price",
+] as const;
 
 type CardVars = Record<(typeof CARD_VARS)[number], string>;
 

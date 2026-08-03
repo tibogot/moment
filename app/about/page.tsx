@@ -4,6 +4,7 @@ import { AboutFacts } from "@/components/AboutFacts";
 import { AboutHero } from "@/components/AboutHero";
 import { AboutIntro } from "@/components/AboutIntro";
 import { AboutPrinciples } from "@/components/AboutPrinciples";
+import { AboutTeam } from "@/components/AboutTeam";
 import { Footer } from "@/components/Footer";
 import { FullBleedImageSection } from "@/components/FullBleedImageSection";
 import { JsonLd } from "@/components/JsonLd";
@@ -117,6 +118,7 @@ export default function AboutPage() {
       {/* Full-height breath before the practical half of the page. */}
       <FullBleedImageSection src="/images/svitlana.jpg" />
 
+      <AboutTeam />
       <AboutFacts />
       <AboutCta />
       <Footer />
