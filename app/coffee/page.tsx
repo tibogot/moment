@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
+import { IntroSection } from "@/components/IntroSection";
 import { PageIntro } from "@/components/PageIntro";
 import { routes } from "@/lib/routes";
 import { pageMetadata } from "@/lib/seo";
@@ -20,6 +21,12 @@ export default function CoffeePage() {
         lead="A coffee desk for anyone passing by, serving the same pastries and juices we send out to our clients."
         leadClassName="text-[18px] md:text-[18px]"
       />
+
+      {/* Temporary: the home page's intro headline with the first-line indent
+          off, to compare against the indented one on /. Remove both this and
+          the prop once the call is made. */}
+      <IntroSection indentFirstLine={false} />
+
       <Footer />
     </>
   );

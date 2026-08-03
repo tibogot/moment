@@ -3,15 +3,29 @@ import { GridSection } from "@/components/GridSection";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { routes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 
-export function IntroSection() {
+type IntroSectionProps = {
+  /**
+   * Temporary escape hatch so the un-indented headline can be viewed alongside
+   * the indented one — see /coffee. Drop the prop once the call is made.
+   */
+  indentFirstLine?: boolean;
+};
+
+export function IntroSection({ indentFirstLine = true }: IntroSectionProps) {
   return (
     <GridSection className="pt-[10svh] pb-[14svh]">
       {/* Long sky rule setting the section off from the hero. */}
       <div className="col-span-full mb-[6svh] h-px bg-sky" />
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
-          <h2 className="font-owners-narrow-bold max-w-full text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(6vw,9svh)]">
+          <h2
+            className={cn(
+              "font-owners-narrow-bold max-w-full text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(6vw,9svh)]",
+              indentFirstLine && "indent-first-line intro-headline"
+            )}
+          >
             A traiteur in Brussels for people who care how it tastes — and how
             it looks.
           </h2>

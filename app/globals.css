@@ -140,6 +140,45 @@ button:not(:disabled),
   z-index: 1;
 }
 
+/*
+ * Indent the first line of a reveal headline, without the revealer block
+ * sweeping across the empty space in front of it.
+ *
+ * text-indent on the source element is what decides where the first line
+ * breaks, so it has to be there before SplitText measures. But the split then
+ * hoists every line into its own .block-line-wrapper, which is width:
+ * max-content — an inherited indent would widen the first wrapper, and the
+ * block sized to that wrapper would start a column left of the type.
+ *
+ * So: zero the indent on the split lines and re-apply it as a margin on the
+ * first wrapper. Same position, but the wrapper stays the width of the text.
+ * Pre-hydration and with JS off the plain text-indent still holds, so the
+ * indent doesn't pop when the split lands.
+ */
+.indent-first-line {
+  text-indent: var(--first-line-indent, 0px);
+}
+
+.indent-first-line .block-line {
+  text-indent: 0;
+}
+
+/* Outranks `.text-left .block-line-wrapper`, which zeroes the margin. */
+.indent-first-line .block-line-wrapper:first-child {
+  margin-left: var(--first-line-indent, 0px);
+}
+
+@media (width >= 48rem) {
+  /* One grid column. The headline sits in 6 of the 7 columns with a gutter of
+     padding either side, so its content box is 6 columns - 2 gutters, and one
+     column back out of that is (100% + 2 gutters) / 6. Halve the indent by
+     doubling the divisor. Left at 0 below md, where the headline only has
+     three columns to wrap in. */
+  .intro-headline {
+    --first-line-indent: calc((100% + 2 * var(--grid-gutter)) / 6);
+  }
+}
+
 .animated-underline {
   position: relative;
   display: inline-block;
