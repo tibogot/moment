@@ -6,6 +6,7 @@ import { FullBleedImageSection } from "@/components/FullBleedImageSection";
 import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
 import { JsonLd } from "@/components/JsonLd";
+import { PanelPairSection } from "@/components/PanelPairSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitImageSection } from "@/components/SplitImageSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
@@ -53,6 +54,9 @@ export default async function Home() {
 
       <Hero />
       <IntroSection />
+
+      {/* The two rooms of the business, side by side on identical 3 x 3 grids. */}
+      <PanelPairSection />
 
       {/* Image fills the left half — 3 columns x 3 rows — with the right half
           left as bare grid. The second reprises it smaller, on the right.
