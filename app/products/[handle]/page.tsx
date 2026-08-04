@@ -4,6 +4,7 @@ import { AddToCartButton } from "@/components/AddToCartButton";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
+import { OrderPreferencesBar } from "@/components/OrderPreferencesBar";
 import { ProductDetails } from "@/components/ProductDetails";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductRowSection } from "@/components/ProductRowSection";
@@ -80,6 +81,33 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
 
       <GridSection className="pt-[22svh] pb-[12svh]">
+        {/* Cart-level, not product-level: the same three answers apply to the
+            whole order. It sits here because this is where the decision to buy
+            actually gets made.
+
+            Sized deliberately below the product title underneath it — this
+            frames the controls, it is not the headline of the page. */}
+        <section
+          aria-labelledby="order-preferences"
+          className="col-start-2 col-end-5 mb-[6svh] px-(--grid-gutter) md:col-end-9"
+        >
+          <h2
+            id="order-preferences"
+            className="font-owners-narrow-bold text-[7vw] leading-[0.95] uppercase md:text-[min(2.2vw,3.4svh)]"
+          >
+            Order preferences
+          </h2>
+
+          {/* No promise that the catalogue changes with these answers — it does
+              not. What they do buy is not having to work it out at checkout. */}
+          <p className="font-archivo-light mt-3 mb-6 max-w-[80ch] text-[15px] leading-normal">
+            Choose when and how you&apos;d like your order — you can change it
+            before checkout.
+          </p>
+
+          <OrderPreferencesBar />
+        </section>
+
         <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-6">
           <ProductGallery images={galleryImages} title={product.title} />
         </div>

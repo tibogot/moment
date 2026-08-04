@@ -1,4 +1,10 @@
 import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery";
+import {
+  DELIVERY_ADDRESS_ATTRIBUTE,
+  DELIVERY_METHOD_ATTRIBUTE,
+  parseDeliveryMethod,
+  type DeliveryMethod,
+} from "@/lib/order-preferences";
 import { getShopifyClient, isShopifyConfigured } from "./client";
 
 export const CART_COOKIE_NAME = "shopify_cart_id";
@@ -25,6 +31,10 @@ export type Cart = {
   lines: CartLine[];
   /** The day picked on the calendar, `YYYY-MM-DD`, or null if none yet. */
   deliveryDate: string | null;
+  /** Home delivery or click & collect, or null while the customer has not said. */
+  deliveryMethod: DeliveryMethod | null;
+  /** The canonical UrbIS address, only ever set for home delivery. */
+  deliveryAddress: string | null;
 };
 
 type CartResult = { id: string; checkoutUrl: string; totalQuantity: number };
@@ -114,6 +124,21 @@ const CART_ATTRIBUTES_UPDATE_MUTATION = `
   mutation CartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
     cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
       ${CART_RESULT_FIELDS}
+    }
+  }
+`;
+
+/**
+ * Just the attributes, for the read half of the read-merge-write below. The
+ * full cart query drags in every line and its image for no reason here.
+ */
+const CART_ATTRIBUTES_QUERY = `
+  query GetCartAttributes($cartId: ID!) {
+    cart(id: $cartId) {
+      attributes {
+        key
+        value
+      }
     }
   }
 `;
@@ -218,10 +243,8 @@ function mapCartNode(
     })
     .filter((line): line is CartLine => line !== null);
 
-  const deliveryDate =
-    node.attributes?.find(
-      (attribute) => attribute.key === DELIVERY_DATE_ATTRIBUTE,
-    )?.value ?? null;
+  const attribute = (key: string) =>
+    node.attributes?.find((entry) => entry.key === key)?.value ?? null;
 
   return {
     id: node.id,
@@ -229,7 +252,9 @@ function mapCartNode(
     totalQuantity: node.totalQuantity,
     totalPrice: formatPrice(amount, currencyCode),
     lines,
-    deliveryDate,
+    deliveryDate: attribute(DELIVERY_DATE_ATTRIBUTE),
+    deliveryMethod: parseDeliveryMethod(attribute(DELIVERY_METHOD_ATTRIBUTE)),
+    deliveryAddress: attribute(DELIVERY_ADDRESS_ATTRIBUTE),
   };
 }
 
@@ -331,44 +356,93 @@ export async function addVariantToCart(
   );
 }
 
+type AttributeQueryResponse = {
+  data?: { cart: { attributes: { key: string; value: string | null }[] } | null };
+  errors?: { message: string }[];
+};
+
 /**
- * Writes the chosen delivery day onto the cart. Cart attributes survive
- * checkout, so the date lands on the order in the Shopify admin — this is the
- * only thing that actually tells the owners which day a customer picked.
- *
- * Note that `cartAttributesUpdate` replaces the whole attribute set. It is the
- * only attribute we write today; add a read-merge-write step here before
- * introducing a second one.
- *
- * Picking a date is allowed before there is anything in the basket, so with no
- * cart yet this opens an empty one carrying just the attribute.
+ * Whatever is already on the cart. A failure here has to be distinguishable
+ * from "no attributes", because merging into an empty set on a read error would
+ * quietly wipe the customer's other choices — hence null rather than `{}`.
  */
-export async function setCartDeliveryDate(
-  isoDate: string,
+async function readCartAttributes(
+  cartId: string,
+): Promise<Record<string, string> | null> {
+  try {
+    const client = getShopifyClient();
+    const { data, errors } = (await client.request(CART_ATTRIBUTES_QUERY, {
+      variables: { cartId },
+    })) as AttributeQueryResponse;
+
+    if (errors?.length || !data?.cart) return null;
+
+    const entries = data.cart.attributes
+      .filter((attribute): attribute is { key: string; value: string } =>
+        Boolean(attribute.value),
+      )
+      .map(({ key, value }) => [key, value] as const);
+
+    return Object.fromEntries(entries);
+  } catch (error) {
+    console.error("[shopify] readCartAttributes failed", error);
+    return null;
+  }
+}
+
+function toAttributeInput(attributes: Record<string, string | null>) {
+  return Object.entries(attributes)
+    .filter(([, value]) => Boolean(value))
+    .map(([key, value]) => ({ key, value: value as string }));
+}
+
+/**
+ * Writes order preferences onto the cart. Cart attributes survive checkout, so
+ * they land on the order in the Shopify admin — this is the only thing that
+ * actually tells the owners what the customer chose.
+ *
+ * `cartAttributesUpdate` replaces the whole attribute set rather than patching
+ * it, so this reads the current set and merges first. Without that, saving an
+ * address would silently drop the delivery date. A `null` in the patch is how
+ * you delete a key — that is how the address goes away when someone switches to
+ * click & collect.
+ *
+ * Setting a preference is allowed before there is anything in the basket, so
+ * with no cart yet this opens an empty one carrying just the attributes.
+ */
+export async function setCartAttributes(
+  patch: Record<string, string | null>,
   existingCartId?: string,
 ) {
   if (!isShopifyConfigured()) {
     return { ok: false as const, error: "The shop is not configured." };
   }
 
-  const attributes = [{ key: DELIVERY_DATE_ATTRIBUTE, value: isoDate }];
-
   if (existingCartId) {
-    const updated = await runCartMutation(
-      CART_ATTRIBUTES_UPDATE_MUTATION,
-      { cartId: existingCartId, attributes },
-      "cartAttributesUpdate",
-      "Could not save your delivery date.",
-    );
+    const existing = await readCartAttributes(existingCartId);
 
-    if (updated.ok) return updated;
+    // A read failure usually means the cart id is stale, which the caller
+    // recovers from by starting a fresh cart. Merging blindly would be worse.
+    if (existing) {
+      const updated = await runCartMutation(
+        CART_ATTRIBUTES_UPDATE_MUTATION,
+        {
+          cartId: existingCartId,
+          attributes: toAttributeInput({ ...existing, ...patch }),
+        },
+        "cartAttributesUpdate",
+        "Could not save your order preferences.",
+      );
+
+      if (updated.ok) return updated;
+    }
   }
 
   return runCartMutation(
     CART_CREATE_MUTATION,
-    { input: { attributes } },
+    { input: { attributes: toAttributeInput(patch) } },
     "cartCreate",
-    "Could not start a cart for this date.",
+    "Could not start a cart.",
   );
 }
 

@@ -10,11 +10,18 @@ import {
   isBookable,
   type DeliveryAvailability,
 } from "@/lib/delivery";
+import {
+  deliveryMethodLabel,
+  needsAddress,
+  type DeliveryMethod,
+} from "@/lib/order-preferences";
 import { useRouter } from "next/navigation";
 
 type CartDeliverySectionProps = {
   availability: DeliveryAvailability;
   deliveryDate: string | null;
+  deliveryMethod: DeliveryMethod | null;
+  deliveryAddress: string | null;
   totalPrice: string;
   checkoutUrl: string;
 };
@@ -28,6 +35,8 @@ type CartDeliverySectionProps = {
 export function CartDeliverySection({
   availability,
   deliveryDate,
+  deliveryMethod,
+  deliveryAddress,
   totalPrice,
   checkoutUrl,
 }: CartDeliverySectionProps) {
@@ -90,6 +99,32 @@ export function CartDeliverySection({
             </button>
           )}
         </div>
+
+        {/* Read-only: these are chosen on the product page, and repeating the
+            editors here would be a third place to keep in step. Showing them
+            still matters — the customer has to be able to check what they
+            picked before handing over to Shopify's checkout. */}
+        {deliveryMethod && (
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+              Method
+            </span>
+            <span className="font-archivo-light text-[13px]">
+              {deliveryMethodLabel(deliveryMethod)}
+            </span>
+          </div>
+        )}
+
+        {deliveryAddress && needsAddress(deliveryMethod) && (
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+              Address
+            </span>
+            <span className="font-archivo-light text-[13px]">
+              {deliveryAddress}
+            </span>
+          </div>
+        )}
 
         {dateIsStale && deliveryDate && (
           <p role="alert" className="font-archivo-light mt-2 text-[13px]">
