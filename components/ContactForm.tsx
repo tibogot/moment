@@ -275,11 +275,16 @@ export function ContactForm({
             </div>
           </div>
 
-          {/* The rule on the left is the page's column line between 3 and 4. */}
+          {/* The rule on the left is the page's column line between 3 and 4.
+              Both side rules are drawn here rather than left to GridSection:
+              its outer column lines are painted behind the content grid, and
+              the cells' cream fill covers them wherever the form reaches an
+              edge — the right one on desktop, both of them once the form goes
+              full width on mobile. */}
           <div
             className={cn(
               FORM_COLUMNS,
-              "border-t border-sky md:border-t-0 md:border-l",
+              "border-x border-sky border-t md:border-t-0",
             )}
           >
             {sent ? (
