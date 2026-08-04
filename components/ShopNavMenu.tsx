@@ -23,6 +23,11 @@ const PREVIEW_COUNT = NAV_PREVIEW_COUNT;
 const linkClassName =
   "animated-underline font-owners-medium text-[12px] uppercase tracking-wide";
 
+/* The previews are cards, not nav links: they take the shop grid's sky reveal
+   rather than the underline the column on the left uses. */
+const previewTitleClassName =
+  "font-owners-medium text-[12px] uppercase tracking-wide";
+
 /*
  * The previews are cells of the column they sit in rather than cards of a fixed
  * rem width: the column is fluid (5 of 7 tracks) and fixed cards left it 40%
@@ -92,13 +97,19 @@ type PreviewProductCardProps = {
 function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
   if (!product.imageUrl) return null;
 
+  /* The reveal has to fill the ruled cell, like it does in the shop grid, so
+     the card owns the whole cell rather than sitting inside it: horizontally it
+     bleeds one gutter each side and pads one back in — half the gap either way,
+     which lands exactly on the dividers while leaving the image at the cell
+     width — and vertically it takes the row's padding as its own, so it runs
+     the full height the dividers do without the image moving. */
   return (
     <Link
       href={routes.product(product.handle)}
-      className="group flex min-w-0 flex-col gap-3"
+      className="product-card group -mx-(--grid-gutter) flex h-full min-w-0 flex-col gap-3 px-(--grid-gutter) pt-[4svh] pb-4 transition-colors duration-500"
       onClick={onNavigate}
     >
-      <div className="relative aspect-4/5 overflow-hidden bg-sky/20">
+      <div className="product-card__image relative aspect-4/5 overflow-hidden">
         <Image
           src={product.imageUrl}
           alt={product.imageAlt}
@@ -108,7 +119,7 @@ function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
         />
       </div>
       <div className="flex flex-col gap-0.5">
-        <span className={linkClassName}>{product.title}</span>
+        <span className={previewTitleClassName}>{product.title}</span>
         {/* Same length as the shop grid's price rather than a local size, so
             the two stay in step — Archivo Light needs the couple of extra px
             over the Owners Medium title above it. */}
@@ -202,8 +213,10 @@ export function ShopNavMenu({
             />
           ))}
 
+          {/* The vertical padding lives on the cards, not here, so their hover
+              fill reaches the same top and bottom as the rules beside them. */}
           <div
-            className="grid gap-(--preview-gap) px-(--grid-gutter) pt-[4svh] pb-4"
+            className="grid h-full gap-(--preview-gap) px-(--grid-gutter)"
             style={previewRowStyle}
           >
             {previewProducts.map((product) => (
