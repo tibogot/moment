@@ -15,7 +15,7 @@ export function Hero() {
       className="relative h-svh w-full overflow-hidden"
       data-transparent-nav
     >
-      <HeroParallaxImage src="/images/nicole-herrero.jpg" />
+      <HeroParallaxImage src="/images/gemini-moment.png" />
       <div className="absolute inset-0 bg-black/20" aria-hidden />
 
       <GridLines
