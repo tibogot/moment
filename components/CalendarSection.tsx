@@ -31,6 +31,28 @@ const MARGIN_COLUMNS =
 
 const BAR_DURATION = 0.55;
 
+// The site's CTA: a sky fill that swaps to cream on hover, with the arrow
+// sliding out. The secondary is the same shape inverted, so the pair reads as
+// one control group rather than two unrelated buttons.
+const CTA_BASE =
+  "group inline-block border border-sky px-3 py-2.5 transition-colors duration-500";
+const CTA_PRIMARY = cn(CTA_BASE, "bg-sky hover:bg-cream");
+const CTA_SECONDARY = cn(CTA_BASE, "bg-cream hover:bg-sky");
+
+function CtaLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+      {children}
+      <span
+        className="transition-transform duration-500 group-hover:translate-x-1.5"
+        aria-hidden
+      >
+        &rarr;
+      </span>
+    </span>
+  );
+}
+
 type Status =
   | { kind: "idle" }
   | { kind: "saved"; date: string }
@@ -371,17 +393,11 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
           <div className="flex shrink-0 flex-wrap items-center gap-3">
             {isSaved ? (
               <>
-                <Link
-                  href={routes.shop}
-                  className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80"
-                >
-                  Choose your plates
+                <Link href={routes.shop} className={CTA_PRIMARY}>
+                  <CtaLabel>Choose your plates</CtaLabel>
                 </Link>
-                <Link
-                  href={routes.cart}
-                  className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                >
-                  View cart
+                <Link href={routes.cart} className={CTA_SECONDARY}>
+                  <CtaLabel>View cart</CtaLabel>
                 </Link>
               </>
             ) : (
@@ -390,15 +406,14 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                   type="button"
                   onClick={confirmDate}
                   disabled={isPending}
-                  className="font-owners-medium inline-block bg-black px-8 py-4 text-[12px] uppercase tracking-wide text-cream transition-opacity hover:opacity-80 disabled:opacity-40"
+                  className={cn(CTA_PRIMARY, "disabled:opacity-40")}
                 >
-                  {isPending ? "Saving…" : "Save to my order"}
+                  <CtaLabel>
+                    {isPending ? "Saving…" : "Save to my order"}
+                  </CtaLabel>
                 </button>
-                <Link
-                  href={routes.contact}
-                  className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                >
-                  Ask about this date
+                <Link href={routes.contact} className={CTA_SECONDARY}>
+                  <CtaLabel>Ask about this date</CtaLabel>
                 </Link>
               </>
             )}
