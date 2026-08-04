@@ -61,17 +61,17 @@ export function DeliveryDatePicker({
           type="button"
           onClick={() => shiftMonth(-1)}
           disabled={atFirstMonth}
-          className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
+          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
         >
           Prev
         </button>
-        <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+        <span className="font-owners-medium text-[13px] uppercase tracking-wide">
           {label} <span className="font-archivo-light">{year}</span>
         </span>
         <button
           type="button"
           onClick={() => shiftMonth(1)}
-          className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60"
+          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
         >
           Next
         </button>
@@ -82,7 +82,7 @@ export function DeliveryDatePicker({
           {WEEKDAYS.map((weekday) => (
             <div
               key={weekday}
-              className="font-owners-medium pb-2 text-center text-[10px] uppercase tracking-wide opacity-60"
+              className="font-owners-medium pb-2 text-center text-[11px] uppercase tracking-wide opacity-70"
             >
               {weekday.slice(0, 1)}
             </div>
@@ -124,7 +124,7 @@ export function DeliveryDatePicker({
                   className={cn(cellClassName, "bg-sky/25")}
                   aria-hidden
                 >
-                  <span className="font-owners-medium text-[12px]">
+                  <span className="font-owners-medium text-[13px]">
                     {number}
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export function DeliveryDatePicker({
                   isSelected && "bg-black text-cream hover:bg-black",
                 )}
               >
-                <span className="font-owners-medium text-[12px]">{number}</span>
+                <span className="font-owners-medium text-[13px]">{number}</span>
               </button>
             );
           })}

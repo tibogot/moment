@@ -100,7 +100,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           {/* No promise that the catalogue changes with these answers — it does
               not. What they do buy is not having to work it out at checkout. */}
-          <p className="font-archivo-light mt-3 mb-6 max-w-[80ch] text-[15px] leading-normal">
+          {/* 18px, the same as every other lead on the site: Archivo Light
+              sets small and anything under it stops reading as body copy. */}
+          <p className="font-archivo-light mt-3 mb-6 max-w-[80ch] text-[18px] leading-normal">
             Choose when and how you&apos;d like your order — you can change it
             before checkout.
           </p>

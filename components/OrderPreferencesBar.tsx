@@ -193,7 +193,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         >
           {availability ? (
             <>
-              <p className="font-archivo-light px-4 pt-4 text-[13px] leading-normal">
+              <p className="font-archivo-light px-4 pt-4 text-[15px] leading-normal">
                 Blue days are closed or already full — we need {LEAD_TIME_DAYS}{" "}
                 days&apos; notice and we do not deliver on Sundays.
               </p>
@@ -205,7 +205,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
               />
             </>
           ) : (
-            <p className="font-archivo-light p-6 text-[13px]">
+            <p className="font-archivo-light p-4 text-[15px]">
               Loading available days&hellip;
             </p>
           )}
@@ -256,10 +256,10 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
                   deliveryMethod === option.id && "bg-sky/40",
                 )}
               >
-                <span className="font-owners-medium block text-[12px] uppercase tracking-wide">
+                <span className="font-owners-medium block text-[13px] uppercase tracking-wide">
                   {option.label}
                 </span>
-                <span className="font-archivo-light mt-1 block text-[13px] leading-normal">
+                <span className="font-archivo-light mt-1 block text-[15px] leading-normal">
                   {option.description}
                 </span>
               </button>
@@ -269,7 +269,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
       </div>
 
       {error && (
-        <p role="alert" className="font-archivo-light mt-3 text-[13px]">
+        <p role="alert" className="font-archivo-light mt-3 text-[15px]">
           {error}
         </p>
       )}
@@ -328,12 +328,12 @@ function Segment({
           open && "bg-sky/25",
         )}
       >
-        <span className="font-owners-medium text-[10px] uppercase tracking-wide opacity-60">
+        <span className="font-owners-medium text-[11px] uppercase tracking-wide opacity-60">
           {label}
         </span>
         <span
           className={cn(
-            "font-archivo-light mt-1 text-[14px]",
+            "font-archivo-light mt-1 text-[16px]",
             !value && "opacity-50",
           )}
         >
@@ -346,13 +346,13 @@ function Segment({
           role="dialog"
           aria-labelledby={titleId}
           className={cn(
-            "absolute top-full z-40 mt-2 w-[min(88vw,380px)] border border-sky bg-cream",
+            "absolute top-full z-40 mt-2 w-[min(88vw,420px)] border border-sky bg-cream",
             align === "right" ? "right-0" : "left-0",
           )}
         >
           <p
             id={titleId}
-            className="font-owners-medium border-b border-sky px-4 py-3 text-left text-[11px] uppercase tracking-wide"
+            className="font-owners-medium border-b border-sky px-4 py-3.5 text-left text-[12px] uppercase tracking-wide"
           >
             {title}
           </p>
@@ -445,9 +445,9 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Rue de Stalle 77"
-          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[14px] outline-none placeholder:opacity-40"
+          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[16px] outline-none placeholder:opacity-40"
         />
-        <p className="font-archivo-light mt-3 text-[12px] leading-normal opacity-60">
+        <p className="font-archivo-light mt-3 text-[14px] leading-normal opacity-70">
           Pick your address from the list. We deliver across Brussels only, in
           French or Dutch.
         </p>
@@ -459,7 +459,7 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
           className="max-h-60 overflow-y-auto border-t border-sky"
         >
           {searching && (
-            <p className="font-archivo-light px-4 py-3 text-[13px] opacity-60">
+            <p className="font-archivo-light px-4 py-3 text-[15px] opacity-70">
               Checking&hellip;
             </p>
           )}
@@ -470,7 +470,7 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
               type="button"
               disabled={saving}
               onClick={() => onSelect(match.label)}
-              className="font-archivo-light block w-full px-4 py-3 text-left text-[13px] transition-colors hover:bg-sky/30 disabled:opacity-40"
+              className="font-archivo-light block w-full px-4 py-3 text-left text-[15px] transition-colors hover:bg-sky/30 disabled:opacity-40"
             >
               {match.label}
             </button>
@@ -478,11 +478,11 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
 
           {showEmpty && (
             <div className="px-4 py-3">
-              <p className="font-archivo-light text-[13px]">
+              <p className="font-archivo-light text-[15px]">
                 No Brussels address matches that.
               </p>
               {data.streets.length > 0 && (
-                <p className="font-archivo-light mt-2 text-[13px] opacity-60">
+                <p className="font-archivo-light mt-2 text-[15px] opacity-70">
                   Did you mean {data.streets.join(", ")}? Add a house number.
                 </p>
               )}
