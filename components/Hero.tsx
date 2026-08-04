@@ -1,3 +1,4 @@
+import heroImage from "@/public/images/gemini-moment.webp";
 import { GridLines } from "@/components/GridLines";
 import { HeroParallaxImage } from "@/components/HeroParallaxImage";
 import TextReveal from "@/components/TextReveal";
@@ -15,7 +16,7 @@ export function Hero() {
       className="relative h-svh w-full overflow-hidden"
       data-transparent-nav
     >
-      <HeroParallaxImage src="/images/gemini-moment.png" />
+      <HeroParallaxImage src={heroImage} />
       <div className="absolute inset-0 bg-black/20" aria-hidden />
 
       <GridLines

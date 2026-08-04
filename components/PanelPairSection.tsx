@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Each half carries its own 3 x 3 grid, so the two panels are ruled
- * identically. The cells are square, which makes a panel square too.
+ * identically. Panels are portrait (taller than wide) so the cells read
+ * as rectangles rather than squares.
  */
 const PANEL_COLUMNS = 3;
 const PANEL_ROWS = 3;
@@ -64,7 +65,7 @@ function PanelGrid() {
 }
 
 /**
- * Two square photographs side by side, each ruled 3 x 3 with its title lying
+ * Two portrait photographs side by side, each ruled 3 x 3 with its title lying
  * in the cleared pair of cells at the bottom left.
  */
 export function PanelPairSection({ className }: { className?: string }) {
@@ -88,7 +89,8 @@ export function PanelPairSection({ className }: { className?: string }) {
                 key={panel.title}
                 href={panel.href}
                 className={cn(
-                  "group relative block aspect-square overflow-hidden",
+                  // 3/4 keeps cells clearly rectangular without overstretching.
+                  "group relative block aspect-[3/4] overflow-hidden",
                   // Stacked on mobile, so the seam between the two panels turns
                   // from a vertical rule into a horizontal one.
                   index > 0 &&

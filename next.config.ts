@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // AVIF first: roughly 30% smaller than WebP on photographs. Browsers that
+    // don't support it fall back to WebP.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",

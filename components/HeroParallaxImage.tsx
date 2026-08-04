@@ -1,13 +1,17 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useRef } from "react";
 import { gsap } from "@/lib/gsapConfig";
 import { GRID_VIEWPORT_IMAGE_SIZES } from "@/lib/grid";
 
 type HeroParallaxImageProps = {
-  src: string;
+  /**
+   * Statically imported, so Next generates the blur placeholder at build time.
+   * A string path would skip that and leave the hero blank while it loads.
+   */
+  src: StaticImageData;
   alt?: string;
   sizes?: string;
 };
@@ -64,6 +68,7 @@ export function HeroParallaxImage({
           alt={alt}
           fill
           preload
+          placeholder="blur"
           sizes={sizes}
           className="object-cover"
         />

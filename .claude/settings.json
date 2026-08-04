@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"require\\('sharp'\\)\\('public/images/gemini-moment.webp'\\).metadata\\(\\).then\\(m=>console.log\\(m.width+'x'+m.height, m.format, 'alpha:'+m.hasAlpha\\)\\)\")"
+    ]
+  }
+}
