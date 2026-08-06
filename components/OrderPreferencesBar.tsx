@@ -346,7 +346,7 @@ function Segment({
           role="dialog"
           aria-labelledby={titleId}
           className={cn(
-            "absolute top-full z-40 mt-2 w-[min(88vw,420px)] border border-sky bg-cream",
+            "absolute top-full z-10 mt-2 w-[min(88vw,420px)] border border-sky bg-cream",
             align === "right" ? "right-0" : "left-0",
           )}
         >
