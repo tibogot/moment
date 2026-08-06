@@ -5,7 +5,7 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { setDeliveryDate } from "@/app/actions/cart";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
-import { monthCells, WEEKDAYS } from "@/lib/calendar";
+import { monthCells } from "@/lib/calendar";
 import { notifyCartUpdated } from "@/lib/cart-store";
 import { gsap } from "@/lib/gsapConfig";
 import { blurFocusWithin } from "@/lib/overlayFocus";
@@ -20,7 +20,7 @@ import {
 import { routes } from "@/lib/routes";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
-import { formatMonth } from "@/lib/i18n/format";
+import { formatMonth, weekdayNames } from "@/lib/i18n/format";
 
 import { cn } from "@/lib/utils";
 
@@ -76,6 +76,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.home.calendar;
+  const weekdays = useMemo(() => weekdayNames(locale), [locale]);
   const today = useMemo(
     () => parseISODate(availability.today) ?? new Date(),
     [availability.today],
@@ -221,7 +222,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
 
           {/* Day names sit above the rules, as in the reference. */}
           <div className="grid grid-cols-7">
-            {WEEKDAYS.map((weekday) => (
+            {weekdays.map((weekday) => (
               <div
                 key={weekday}
                 className="font-owners-medium pb-2 text-center text-[9px] uppercase tracking-wide md:text-[11px]"

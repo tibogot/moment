@@ -4,15 +4,14 @@
  * whole weeks; only the cell chrome differs, so only the maths lives here.
  */
 
-export const WEEKDAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
+/**
+ * Weekday and month names used to live here as English literals. They are now
+ * generated per locale by `weekdayNames` and `formatMonth` in lib/i18n/format,
+ * because the platform already knows how to say "woensdag" and a hand-written
+ * list of three languages is three chances to misspell it.
+ *
+ * The Monday-first assumption below outlived them, and both sides depend on it.
+ */
 
 /** Monday-first offset for the 1st of the month. */
 export function leadingBlanks(year: number, month: number) {
@@ -37,6 +36,3 @@ export function monthCells(year: number, month: number): (number | null)[] {
   return days;
 }
 
-export function monthName(date: Date) {
-  return date.toLocaleDateString("en-GB", { month: "long" });
-}

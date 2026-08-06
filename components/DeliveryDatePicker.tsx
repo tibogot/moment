@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { monthCells, monthName, WEEKDAYS } from "@/lib/calendar";
+import { monthCells } from "@/lib/calendar";
+import { useLocale } from "@/components/LocaleProvider";
+import { formatMonth, weekdayNames } from "@/lib/i18n/format";
 import {
   dayState,
   parseISODate,
@@ -30,6 +32,8 @@ export function DeliveryDatePicker({
   onSelect,
   disabled = false,
 }: DeliveryDatePickerProps) {
+  const locale = useLocale();
+  const weekdays = useMemo(() => weekdayNames(locale), [locale]);
   const today = useMemo(
     () => parseISODate(availability.today) ?? new Date(),
     [availability.today],
@@ -47,7 +51,7 @@ export function DeliveryDatePicker({
   const month = cursor.getMonth();
 
   const cells = useMemo(() => monthCells(year, month), [year, month]);
-  const label = monthName(cursor);
+  const label = formatMonth(locale, cursor);
   const atFirstMonth =
     year === today.getFullYear() && month === today.getMonth();
 
@@ -79,7 +83,7 @@ export function DeliveryDatePicker({
 
       <div className="px-6 pb-6">
         <div className="grid grid-cols-7">
-          {WEEKDAYS.map((weekday) => (
+          {weekdays.map((weekday) => (
             <div
               key={weekday}
               className="font-owners-medium pb-2 text-center text-[11px] uppercase tracking-wide opacity-70"

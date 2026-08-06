@@ -113,6 +113,10 @@
       "saving": "Enregistrement…",
       "choosePlates": "Choisir vos plats",
       "askAboutDate": "Poser une question sur cette date"
+    },
+    "panels": {
+      "events": "Événements",
+      "coffee": "Comptoir café"
     }
   },
   "footer": {

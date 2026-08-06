@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import ScrollToTop from "@/components/ScrollToTop";
+import { InlineScript } from "@/components/InlineScript";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ConsentScripts } from "@/components/ConsentScripts";
@@ -139,8 +140,8 @@ export default async function RootLayout({
             first paint and before React hydrates — so TextReveal targets are
             hidden without ever flashing. If JS is off or this fails, the class
             is never set and the copy simply stays visible. */}
-        <script dangerouslySetInnerHTML={{ __html: REVEAL_GUARD }} />
-        <script dangerouslySetInnerHTML={{ __html: PALETTE_GUARD }} />
+        <InlineScript html={REVEAL_GUARD} />
+        <InlineScript html={PALETTE_GUARD} />
       </head>
       <body className="min-h-svh flex flex-col">
         <LocaleProvider locale={lang} dictionary={dictionary}>

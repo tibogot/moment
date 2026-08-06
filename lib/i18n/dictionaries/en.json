@@ -113,6 +113,10 @@
       "saving": "Saving…",
       "choosePlates": "Choose your plates",
       "askAboutDate": "Ask about this date"
+    },
+    "panels": {
+      "events": "Events",
+      "coffee": "Coffee desk"
     }
   },
   "footer": {

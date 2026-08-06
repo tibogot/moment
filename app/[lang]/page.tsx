@@ -87,7 +87,7 @@ export default async function Home({
       <IntroSection copy={home.intro} aboutLabel={dict.common.aboutUs} />
 
       {/* The two rooms of the business, side by side on identical 3 x 3 grids. */}
-      <PanelPairSection />
+      <PanelPairSection copy={home.panels} />
 
       {/* Image fills the left half — 3 columns x 3 rows — with the right half
           left as bare grid. The second reprises it smaller, on the right.

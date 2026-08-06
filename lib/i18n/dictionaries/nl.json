@@ -113,6 +113,10 @@
       "saving": "Bewaren…",
       "choosePlates": "Kies uw gerechten",
       "askAboutDate": "Een vraag over deze datum"
+    },
+    "panels": {
+      "events": "Evenementen",
+      "coffee": "Koffiebar"
     }
   },
   "footer": {

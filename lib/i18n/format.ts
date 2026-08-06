@@ -78,3 +78,21 @@ export function formatShortDate(locale: Locale, value: string | Date) {
 export function formatMonth(locale: Locale, date: Date) {
   return date.toLocaleDateString(INTL_LOCALE[locale], { month: "long" });
 }
+
+/**
+ * Monday-first weekday names for the calendar's header row.
+ *
+ * Generated rather than translated: every locale's weekday names already ship
+ * with the platform, and a hand-written list is three more chances to misspell
+ * "woensdag". 2024-01-01 was a Monday, which is where the week starts here —
+ * see `monthCells` in lib/calendar.ts, whose grid assumes the same.
+ */
+export function weekdayNames(locale: Locale) {
+  const monday = new Date(2024, 0, 1);
+
+  return Array.from({ length: 7 }, (_, offset) => {
+    const day = new Date(monday);
+    day.setDate(monday.getDate() + offset);
+    return day.toLocaleDateString(INTL_LOCALE[locale], { weekday: "long" });
+  });
+}

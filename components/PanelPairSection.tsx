@@ -21,16 +21,8 @@ const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 const TITLE_COLUMNS = 2;
 
 const panels = [
-  {
-    title: "Events",
-    href: routes.events,
-    src: "/images/onur-kaya.jpg",
-  },
-  {
-    title: "Coffee desk",
-    href: routes.coffee,
-    src: "/images/oak-bond-coffee.jpg",
-  },
+  { key: "events", href: routes.events, src: "/images/onur-kaya.jpg" },
+  { key: "coffee", href: routes.coffee, src: "/images/oak-bond-coffee.jpg" },
 ] as const;
 
 /**
@@ -68,7 +60,14 @@ function PanelGrid() {
  * Two portrait photographs side by side, each ruled 3 x 3 with its title lying
  * in the cleared pair of cells at the bottom left.
  */
-export function PanelPairSection({ className }: { className?: string }) {
+type PanelPairSectionProps = {
+  /** Panel labels, keyed to match `panels` below. */
+  copy: Record<(typeof panels)[number]["key"], string>;
+  className?: string;
+};
+
+export function PanelPairSection({ copy, className }: PanelPairSectionProps) {
+
   return (
     <section className={cn("relative w-full bg-cream pb-[12svh]", className)}>
       {/* Sky spines for the breathing room below the panels, where there is no
@@ -86,7 +85,7 @@ export function PanelPairSection({ className }: { className?: string }) {
           <div className="col-start-2 grid grid-cols-1 md:grid-cols-2">
             {panels.map((panel, index) => (
               <Link
-                key={panel.title}
+                key={panel.key}
                 href={panel.href}
                 className={cn(
                   // 3/4 keeps cells clearly rectangular without overstretching.
@@ -119,7 +118,7 @@ export function PanelPairSection({ className }: { className?: string }) {
                   {/* Sized so the two lines of "Coffee desk" still clear the
                       rule above the row. */}
                   <h3 className="font-owners-narrow-bold text-cream text-[13vw] leading-[0.9] uppercase md:text-[min(5.6vw,10svh)]">
-                    {panel.title}
+                    {copy[panel.key]}
                   </h3>
                 </div>
               </Link>
