@@ -10,6 +10,8 @@ import {
   isBookable,
   type DeliveryAvailability,
 } from "@/lib/delivery";
+import { checkoutBlocker } from "@/lib/checkout";
+import { formatEuros, zoneById, type ZoneId } from "@/lib/delivery-zones";
 import {
   deliveryMethodLabel,
   needsAddress,
@@ -22,6 +24,8 @@ type CartDeliverySectionProps = {
   deliveryDate: string | null;
   deliveryMethod: DeliveryMethod | null;
   deliveryAddress: string | null;
+  deliveryZone: ZoneId | null;
+  subtotal: number;
   totalPrice: string;
   checkoutUrl: string;
 };
@@ -37,6 +41,8 @@ export function CartDeliverySection({
   deliveryDate,
   deliveryMethod,
   deliveryAddress,
+  deliveryZone,
+  subtotal,
   totalPrice,
   checkoutUrl,
 }: CartDeliverySectionProps) {
@@ -48,7 +54,24 @@ export function CartDeliverySection({
   const dateIsStale = Boolean(
     deliveryDate && !isBookable(deliveryDate, availability),
   );
-  const needsDate = !deliveryDate || dateIsStale;
+
+  const blocker = checkoutBlocker(
+    {
+      deliveryDate,
+      deliveryMethod,
+      deliveryAddress,
+      deliveryZone,
+      subtotal,
+    },
+    availability,
+  );
+
+  // The two date blockers are the ones this section can fix in place, by
+  // opening its own picker. The rest send the customer somewhere else.
+  const needsDate =
+    blocker?.kind === "no-date" || blocker?.kind === "stale-date";
+
+  const zone = deliveryZone ? zoneById(deliveryZone) : null;
 
   const chooseDate = (iso: string) => {
     setError(null);
@@ -126,6 +149,20 @@ export function CartDeliverySection({
           </div>
         )}
 
+        {/* The fee is what Shopify will charge at checkout, shown here so it
+            is not a surprise on the last screen. */}
+        {zone && needsAddress(deliveryMethod) && (
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+              Delivery fee
+            </span>
+            <span className="font-archivo-light text-[13px]">
+              {formatEuros(zone.fee)} &middot; zone {zone.id} &middot; minimum order{" "}
+              {formatEuros(zone.minimumOrder)}
+            </span>
+          </div>
+        )}
+
         {dateIsStale && deliveryDate && (
           <p role="alert" className="font-archivo-light mt-2 text-[13px]">
             {formatDeliveryDate(deliveryDate)} is no longer available. Please
@@ -162,6 +199,24 @@ export function CartDeliverySection({
         <span className="font-archivo-light text-[15px]">{totalPrice}</span>
       </div>
 
+      {/* Why checkout is not available yet, in the customer's terms. Shopify's
+          hosted checkout cannot edit a cart attribute or refuse a basket, so
+          every one of these has to be settled before we hand over. */}
+      {blocker?.kind === "below-minimum" && (
+        <p role="alert" className="font-archivo-light mt-6 text-[13px]">
+          Zone {blocker.zone.id} has a minimum order of{" "}
+          {formatEuros(blocker.zone.minimumOrder)}. Add {formatEuros(blocker.shortfall)} to
+          check out, or collect from the atelier instead.
+        </p>
+      )}
+
+      {blocker?.kind === "no-address" && (
+        <p role="alert" className="font-archivo-light mt-6 text-[13px]">
+          Add a delivery address on any product page to see the fee and the
+          minimum order for your zone.
+        </p>
+      )}
+
       {needsDate ? (
         <button
           type="button"
@@ -178,6 +233,13 @@ export function CartDeliverySection({
             </span>
           </span>
         </button>
+      ) : blocker ? (
+        <span
+          aria-disabled
+          className="font-owners-medium mt-8 inline-block cursor-not-allowed border border-sky px-3 py-2.5 text-[11px] uppercase tracking-wide opacity-40"
+        >
+          Checkout
+        </span>
       ) : (
         <a
           href={checkoutUrl}

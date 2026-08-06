@@ -15,7 +15,7 @@ import {
   setDeliveryMethod,
 } from "@/app/actions/cart";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
-import type { AddressSearch } from "@/lib/address/urbis";
+import type { AddressSearch } from "@/lib/address/provider";
 import {
   getAvailabilitySnapshot,
   getCartSnapshot,
@@ -448,8 +448,8 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
           className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[16px] outline-none placeholder:opacity-40"
         />
         <p className="font-archivo-light mt-3 text-[14px] leading-normal opacity-70">
-          Pick your address from the list. We deliver across Brussels only, in
-          French or Dutch.
+          Pick your address from the list. The delivery fee and the minimum
+          order depend on how far you are from the atelier.
         </p>
       </div>
 

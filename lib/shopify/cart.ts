@@ -1,5 +1,10 @@
 import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery";
 import {
+  DELIVERY_ZONE_ATTRIBUTE,
+  parseZoneAttribute,
+  type ZoneId,
+} from "@/lib/delivery-zones";
+import {
   DELIVERY_ADDRESS_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
   parseDeliveryMethod,
@@ -28,13 +33,29 @@ export type Cart = {
   checkoutUrl: string;
   totalQuantity: number;
   totalPrice: string;
+  /**
+   * The merchandise total as a number, for comparing against a zone's minimum
+   * order. `totalPrice` is already localised into a string by the time anything
+   * sees it, and parsing "€ 127,50" back out to compare it with 125 is not a
+   * thing to do twice.
+   *
+   * Subtotal rather than total on purpose: the minimum is about what was
+   * ordered, so nobody reaches €125 on the strength of the delivery fee.
+   */
+  subtotal: number;
   lines: CartLine[];
   /** The day picked on the calendar, `YYYY-MM-DD`, or null if none yet. */
   deliveryDate: string | null;
   /** Home delivery or click & collect, or null while the customer has not said. */
   deliveryMethod: DeliveryMethod | null;
-  /** The canonical UrbIS address, only ever set for home delivery. */
+  /** The canonical register address, only ever set for home delivery. */
   deliveryAddress: string | null;
+  /**
+   * The zone that address fell in, resolved when it was saved rather than on
+   * every read — recomputing it would mean geocoding the stored label again on
+   * every cart render.
+   */
+  deliveryZone: ZoneId | null;
 };
 
 type RawCart = {
@@ -42,7 +63,10 @@ type RawCart = {
   checkoutUrl: string;
   totalQuantity: number;
   attributes: { key: string; value: string | null }[];
-  cost: { totalAmount: { amount: string; currencyCode: string } };
+  cost: {
+    totalAmount: { amount: string; currencyCode: string };
+    subtotalAmount: { amount: string; currencyCode: string } | null;
+  };
   lines: {
     edges: {
       node: {
@@ -97,6 +121,10 @@ const CART_FIELDS = `
   }
   cost {
     totalAmount {
+      amount
+      currencyCode
+    }
+    subtotalAmount {
       amount
       currencyCode
     }
@@ -243,15 +271,24 @@ function mapCartNode(node: RawCart): Cart {
   const attribute = (key: string) =>
     node.attributes?.find((entry) => entry.key === key)?.value ?? null;
 
+  // `subtotalAmount` is nullable on an empty cart; falling back to the total
+  // keeps the minimum-order comparison working rather than reading as €0.
+  const subtotal = Number(node.cost.subtotalAmount?.amount ?? amount);
+
   return {
     id: node.id,
     checkoutUrl: node.checkoutUrl,
     totalQuantity: node.totalQuantity,
     totalPrice: formatPrice(amount, currencyCode),
+    subtotal: Number.isFinite(subtotal) ? subtotal : 0,
     lines,
     deliveryDate: attribute(DELIVERY_DATE_ATTRIBUTE),
     deliveryMethod: parseDeliveryMethod(attribute(DELIVERY_METHOD_ATTRIBUTE)),
     deliveryAddress: attribute(DELIVERY_ADDRESS_ATTRIBUTE),
+    deliveryZone:
+      (parseZoneAttribute(attribute(DELIVERY_ZONE_ATTRIBUTE))?.id as
+        | ZoneId
+        | undefined) ?? null,
   };
 }
 

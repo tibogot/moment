@@ -12,8 +12,14 @@ import {
 } from "@/lib/shopify/cart";
 import { isShopifyConfigured } from "@/lib/shopify/client";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
-import { resolveAddress } from "@/lib/address/urbis";
+import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
+import {
+  DELIVERY_ZONE_ATTRIBUTE,
+  formatZoneAttribute,
+  MAX_DELIVERY_DISTANCE_KM,
+  resolveDeliveryZone,
+} from "@/lib/delivery-zones";
 import {
   DELIVERY_ADDRESS_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
@@ -138,8 +144,11 @@ export async function setDeliveryMethod(method: DeliveryMethod) {
   const saved = await saveOrderPreferences({
     [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodLabel(method),
     // Click & collect leaves nothing to deliver to, so a previously saved
-    // address is cleared rather than left on the order contradicting it.
-    ...(method === "pickup" ? { [DELIVERY_ADDRESS_ATTRIBUTE]: null } : {}),
+    // address is cleared rather than left on the order contradicting it — and
+    // the zone with it, since a zone without an address prices nothing.
+    ...(method === "pickup"
+      ? { [DELIVERY_ADDRESS_ATTRIBUTE]: null, [DELIVERY_ZONE_ATTRIBUTE]: null }
+      : {}),
   });
   if (!saved.ok) return saved;
 
@@ -147,10 +156,10 @@ export async function setDeliveryMethod(method: DeliveryMethod) {
 }
 
 /**
- * Checked against the Brussels address register again here, for the same reason
- * the date is: the value arriving from the client is just a string, whether or
- * not it came from a suggestion the visitor clicked. The register's own
- * spelling is what gets stored.
+ * Checked against the address register again here, for the same reason the date
+ * is: the value arriving from the client is just a string, whether or not it
+ * came from a suggestion the visitor clicked. The register's own spelling is
+ * what gets stored.
  */
 export async function setDeliveryAddress(value: string) {
   if (!isShopifyConfigured()) {
@@ -162,7 +171,29 @@ export async function setDeliveryAddress(value: string) {
     return {
       ok: false as const,
       error:
-        "We could not find that address in Brussels. Check the street name and house number.",
+        "We could not find that address in Belgium. Check the street name and house number.",
+    };
+  }
+
+  // Where it falls decides the fee and the minimum order, so it is resolved
+  // once here and stored — the alternative is geocoding the label again on
+  // every cart render just to know which zone it was.
+  const zone = resolveDeliveryZone({
+    postCode: resolved.postCode,
+    coordinates: resolved.coordinates,
+  });
+
+  // Past the last band the client quotes by hand. Not a rejection: the address
+  // is fine and the sale is real, it just cannot be priced on the site, so the
+  // caller sends them to the quote form instead of saving a cart that can never
+  // reach checkout.
+  if (zone.kind === "quote") {
+    return {
+      ok: false as const,
+      needsQuote: true as const,
+      address: resolved.label,
+      distanceKm: zone.distanceKm,
+      error: `${resolved.label} is ${zone.distanceKm.toFixed(0)} km from the atelier, past the ${MAX_DELIVERY_DISTANCE_KM} km we deliver to directly. We will quote this one by hand.`,
     };
   }
 
@@ -171,10 +202,16 @@ export async function setDeliveryAddress(value: string) {
     // An address only makes sense for delivery, so choosing one settles the
     // method too — otherwise the order carries a destination and no way to it.
     [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodLabel("delivery"),
+    [DELIVERY_ZONE_ATTRIBUTE]: formatZoneAttribute(zone.zone, zone.distanceKm),
   });
   if (!saved.ok) return saved;
 
-  return { ok: true as const, address: resolved.label };
+  return {
+    ok: true as const,
+    address: resolved.label,
+    zone: zone.zone,
+    distanceKm: zone.distanceKm,
+  };
 }
 
 /**

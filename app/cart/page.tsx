@@ -90,6 +90,8 @@ export default async function CartPage() {
                 deliveryDate={cart.deliveryDate}
                 deliveryMethod={cart.deliveryMethod}
                 deliveryAddress={cart.deliveryAddress}
+                deliveryZone={cart.deliveryZone}
+                subtotal={cart.subtotal}
                 totalPrice={cart.totalPrice}
                 checkoutUrl={cart.checkoutUrl}
               />

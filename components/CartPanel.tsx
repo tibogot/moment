@@ -28,6 +28,8 @@ import {
 } from "@/lib/cart-store";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { formatDeliveryDate, isBookable, LEAD_TIME_DAYS } from "@/lib/delivery";
+import { checkoutBlocker } from "@/lib/checkout";
+import { formatEuros } from "@/lib/delivery-zones";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -239,7 +241,25 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const dateIsStale = Boolean(
     deliveryDate && availability && !isBookable(deliveryDate, availability),
   );
-  const needsDate = !deliveryDate || dateIsStale;
+
+  // Same gate as the cart page, from the same function. Two checkout buttons
+  // with two opinions about whether a basket is allowed through is how a €40
+  // order reaches a €125 zone.
+  const blocker = cart
+    ? checkoutBlocker(
+        {
+          deliveryDate,
+          deliveryMethod: cart.deliveryMethod,
+          deliveryAddress: cart.deliveryAddress,
+          deliveryZone: cart.deliveryZone,
+          subtotal: cart.subtotal,
+        },
+        availability,
+      )
+    : { kind: "no-date" as const };
+
+  const needsDate =
+    blocker?.kind === "no-date" || blocker?.kind === "stale-date";
 
   const chooseDate = (iso: string) => {
     setError(null);
@@ -470,6 +490,21 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {/* Without a day there is nothing to check out to, so the picker
                   takes the primary slot rather than disabling the button and
                   leaving the customer to work out why. */}
+              {blocker?.kind === "below-minimum" && (
+                <p role="alert" className="font-archivo-light mt-3 text-[14px]">
+                  Zone {blocker.zone.id} has a minimum order of{" "}
+                  {formatEuros(blocker.zone.minimumOrder)}. Add{" "}
+                  {formatEuros(blocker.shortfall)} to check out.
+                </p>
+              )}
+
+              {blocker?.kind === "no-address" && (
+                <p role="alert" className="font-archivo-light mt-3 text-[14px]">
+                  Add a delivery address to see your zone&apos;s fee and
+                  minimum order.
+                </p>
+              )}
+
               {needsDate ? (
                 <button
                   type="button"
@@ -486,6 +521,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     </span>
                   </span>
                 </button>
+              ) : blocker ? (
+                <span
+                  aria-disabled
+                  className="font-owners-medium mt-4 block w-full cursor-not-allowed border border-sky px-3 py-2.5 text-center text-[11px] uppercase tracking-wide opacity-40"
+                >
+                  Checkout
+                </span>
               ) : (
                 <a
                   href={cart.checkoutUrl}
