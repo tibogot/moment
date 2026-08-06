@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { usePathname } from "next/navigation";
 import {
   useEffect,
@@ -789,6 +790,8 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             >
               <CircleUserRound style={iconStyle} strokeWidth={1.5} />
             </Link>
+
+            <LanguageSwitcher className="hidden nav:flex" />
 
             <button
               type="button"

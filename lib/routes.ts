@@ -1,3 +1,19 @@
+import { withLocale, type Locale } from "@/lib/i18n/config";
+
+/**
+ * The routes below are language-agnostic: `/shop`, not `/fr/shop`. They are the
+ * shape the sitemap, the metadata and the hreflang alternates all want, because
+ * each of those has to talk about the same page in three languages.
+ *
+ * Anything rendered into an `href` has to go through `href()` instead. A bare
+ * `/shop` still resolves — the proxy prefixes it — but at the cost of a
+ * redirect on every single navigation, which is a real tax on a site whose
+ * whole feel is quick transitions.
+ */
+export function href(locale: Locale, path: string) {
+  return withLocale(path, locale);
+}
+
 export const routes = {
   home: "/",
   shop: "/shop",

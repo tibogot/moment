@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridSection } from "@/components/GridSection";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";

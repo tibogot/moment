@@ -1,11 +1,44 @@
 import type { MetadataRoute } from "next";
 import { getMenus, getNewsArticles } from "@/lib/sanity/queries";
+import {
+  DEFAULT_LOCALE,
+  INTL_LOCALE,
+  LOCALES,
+  withLocale,
+} from "@/lib/i18n/config";
 import { routes } from "@/lib/routes";
 import { absoluteUrl } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
 
 type Entry = MetadataRoute.Sitemap[number];
+
+/**
+ * One page, three languages.
+ *
+ * The entry is listed under its French URL and carries the other two as
+ * alternates, rather than being listed three times over. Both are valid to
+ * Google; this keeps the file a third of the size and, more usefully, makes it
+ * impossible to list a translation without also declaring what it is a
+ * translation of.
+ */
+function localized(
+  path: string,
+  rest: Omit<Entry, "url" | "alternates">,
+): Entry {
+  return {
+    url: absoluteUrl(withLocale(path, DEFAULT_LOCALE)),
+    ...rest,
+    alternates: {
+      languages: Object.fromEntries(
+        LOCALES.map((locale) => [
+          INTL_LOCALE[locale],
+          absoluteUrl(withLocale(path, locale)),
+        ]),
+      ),
+    },
+  };
+}
 
 /**
  * Hand-ranked rather than left at the default 0.5 — priority is only a hint,
@@ -53,39 +86,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   return [
-    ...staticRoutes.map(({ path, changeFrequency, priority }) => ({
-      url: absoluteUrl(path),
-      lastModified: now,
-      changeFrequency,
-      priority,
-    })),
+    ...staticRoutes.map(({ path, changeFrequency, priority }) =>
+      localized(path, { lastModified: now, changeFrequency, priority }),
+    ),
     ...collections
       // Shopify seeds every store with a "frontpage" collection; it has no page
       // of its own worth surfacing.
       .filter((collection) => collection.handle !== "frontpage")
-      .map((collection) => ({
-        url: absoluteUrl(routes.collection(collection.handle)),
+      .map((collection) =>
+        localized(routes.collection(collection.handle), {
+          lastModified: now,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        }),
+      ),
+    ...products.map((product) =>
+      localized(routes.product(product.handle), {
         lastModified: now,
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      })),
-    ...products.map((product) => ({
-      url: absoluteUrl(routes.product(product.handle)),
-      lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    })),
-    ...menus.map((menu) => ({
-      url: absoluteUrl(routes.menu(menu.slug.current)),
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    ...articles.map((article) => ({
-      url: absoluteUrl(routes.newsArticle(article.slug.current)),
-      lastModified: article.publishedAt ? new Date(article.publishedAt) : now,
-      changeFrequency: "yearly" as const,
-      priority: 0.5,
-    })),
+        changeFrequency: "weekly",
+        priority: 0.8,
+      }),
+    ),
+    ...menus.map((menu) =>
+      localized(routes.menu(menu.slug.current), {
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.8,
+      }),
+    ),
+    ...articles.map((article) =>
+      localized(routes.newsArticle(article.slug.current), {
+        lastModified: article.publishedAt
+          ? new Date(article.publishedAt)
+          : now,
+        changeFrequency: "yearly",
+        priority: 0.5,
+      }),
+    ),
   ];
 }

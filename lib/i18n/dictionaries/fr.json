@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "shop": "Boutique",
+    "menus": "Menus",
+    "events": "Événements",
+    "coffee": "Café",
+    "news": "Actualités",
+    "about": "À propos",
+    "contact": "Contact",
+    "cart": "Panier",
+    "account": "Compte",
+    "search": "Rechercher",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter"
+  },
+  "legalNav": {
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "cookies": "Cookies",
+    "terms": "Conditions de vente",
+    "shipping": "Livraison et retours"
+  },
+  "language": {
+    "label": "Langue",
+    "switchTo": "Passer en {language}"
+  },
+  "common": {
+    "close": "Fermer",
+    "loading": "Chargement…"
+  }
+}

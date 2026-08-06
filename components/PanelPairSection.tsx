@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridLines } from "@/components/GridLines";
 import { ParallaxImage } from "@/components/ParallaxImage";
 import { routes } from "@/lib/routes";

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import type { CSSProperties } from "react";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";

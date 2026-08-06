@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { ProductCard } from "@/components/ProductCard";

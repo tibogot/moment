@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { OPTIONAL_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import {

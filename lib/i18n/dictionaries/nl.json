@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "shop": "Winkel",
+    "menus": "Menu's",
+    "events": "Evenementen",
+    "coffee": "Koffie",
+    "news": "Nieuws",
+    "about": "Over ons",
+    "contact": "Contact",
+    "cart": "Winkelmand",
+    "account": "Account",
+    "search": "Zoeken",
+    "signIn": "Aanmelden",
+    "signOut": "Afmelden"
+  },
+  "legalNav": {
+    "legal": "Wettelijke vermeldingen",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "terms": "Verkoopvoorwaarden",
+    "shipping": "Levering en retouren"
+  },
+  "language": {
+    "label": "Taal",
+    "switchTo": "Overschakelen naar {language}"
+  },
+  "common": {
+    "close": "Sluiten",
+    "loading": "Laden…"
+  }
+}

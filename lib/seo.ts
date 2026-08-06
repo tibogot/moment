@@ -1,4 +1,14 @@
 import type { Metadata } from "next";
+import {
+  DEFAULT_LOCALE,
+  INTL_LOCALE,
+  isLocale,
+  LOCALES,
+  OG_LOCALE,
+  stripLocale,
+  withLocale,
+  type Locale,
+} from "./i18n/config";
 import { siteConfig } from "./site";
 
 /**
@@ -11,12 +21,31 @@ export function absoluteUrl(path: string) {
 }
 
 /**
- * Belgian English. The site ships single-locale; once the fr/nl copy exists
- * this becomes a per-route value and `alternates.languages` gets filled in.
- * Pointing hreflang at translations that don't exist yet is worse than having
- * none, so nothing is emitted until the copy lands. See siteConfig.locales.
+ * Every route exists in three languages, so each one has to say so — otherwise
+ * the French and Dutch versions of the same page read as duplicates competing
+ * for the same query.
+ *
+ * `x-default` points at French: it is what a search engine shows when it has no
+ * better signal, and it is the language the business actually operates in.
+ *
+ * Takes the route *without* a locale prefix ("/shop", not "/fr/shop"), because
+ * the caller has one page and this is the thing that knows there are three of
+ * it. `canonical` is the current language's own URL — a page is never the
+ * canonical of its translation.
  */
-export const OG_LOCALE = "en_BE";
+export function languageAlternates(path: string, locale: Locale) {
+  const bare = stripLocale(path);
+
+  return {
+    canonical: withLocale(bare, locale),
+    languages: {
+      ...Object.fromEntries(
+        LOCALES.map((other) => [INTL_LOCALE[other], withLocale(bare, other)]),
+      ),
+      "x-default": withLocale(bare, DEFAULT_LOCALE),
+    },
+  };
+}
 
 /** The `<title>` the root layout's template would produce for a bare title. */
 export function fullTitle(title: string) {
@@ -62,6 +91,13 @@ type PageSeo = {
   noindex?: boolean;
   publishedTime?: string;
   modifiedTime?: string;
+  /**
+   * The language this page is being rendered in. Optional only so the routes
+   * that have not been converted to `generateMetadata` yet still compile —
+   * every page should pass it, because without it the canonical and the
+   * og:locale both claim the page is French.
+   */
+  locale?: Locale;
 };
 
 /**
@@ -78,9 +114,10 @@ export function pageMetadata({
   noindex = false,
   publishedTime,
   modifiedTime,
+  locale = DEFAULT_LOCALE,
 }: PageSeo): Metadata {
   const heading = fullTitle(title);
-  const url = absoluteUrl(path);
+  const url = absoluteUrl(withLocale(stripLocale(path), locale));
 
   const ogImage = image
     ? { url: image.url, alt: image.alt }
@@ -93,7 +130,7 @@ export function pageMetadata({
     title,
     description,
     ...(keywords ? { keywords: [...keywords] } : {}),
-    alternates: { canonical: path },
+    alternates: languageAlternates(path, locale),
     // Crawlers still follow the links out of a noindex page — that's how they
     // reach the catalogue from a shared cart URL.
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
@@ -103,7 +140,7 @@ export function pageMetadata({
       description,
       url,
       siteName: siteConfig.name,
-      locale: OG_LOCALE,
+      locale: OG_LOCALE[locale],
       images: [ogImage],
       ...(type === "article" ? { publishedTime, modifiedTime } : {}),
     },
@@ -113,6 +150,34 @@ export function pageMetadata({
       description,
       images: [ogImage],
     },
+  };
+}
+
+/**
+ * A page's SEO, as the `generateMetadata` export it has to be now that every
+ * route exists in three languages.
+ *
+ * Static `metadata` cannot see the route params, so a page declaring it that
+ * way has no idea which language it is being rendered in — it would canonical
+ * every translation back to the French URL and tell search engines the Dutch
+ * and English pages are duplicates not worth indexing. That is a worse outcome
+ * than never having translated them.
+ *
+ * Wrapping it keeps the call sites a single line, which is the only reason
+ * eighteen of them were willing to change.
+ */
+export function localizedMetadata(seo: Omit<PageSeo, "locale">) {
+  return async function generateMetadata({
+    params,
+  }: {
+    params: Promise<{ lang: string }>;
+  }): Promise<Metadata> {
+    const { lang } = await params;
+
+    return pageMetadata({
+      ...seo,
+      locale: isLocale(lang) ? lang : DEFAULT_LOCALE,
+    });
   };
 }
 

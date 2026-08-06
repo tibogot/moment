@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { setDeliveryDate } from "@/app/actions/cart";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";

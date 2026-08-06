@@ -1,7 +1,6 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridSection } from "@/components/GridSection";
 import { ProductCard } from "@/components/ProductCard";
-import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { cn } from "@/lib/utils";
 

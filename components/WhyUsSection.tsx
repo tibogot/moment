@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridSection } from "@/components/GridSection";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { CookiePreferencesButton } from "@/components/CookieConsent";
 import { FooterGridCells } from "@/components/FooterGridCells";
 import { GridLines } from "@/components/GridLines";

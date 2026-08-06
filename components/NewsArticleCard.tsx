@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/LocaleLink";
 import { SanityImage } from "@/components/SanityImage";
 import { formatArticleDate } from "@/lib/sanity/format";
 import { routes } from "@/lib/routes";
