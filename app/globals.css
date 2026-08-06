@@ -517,3 +517,19 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
     --card-price: 12px;
   }
 }
+
+/* Replace the browser’s chunky blue clear control with a thin black X. */
+.search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0.55em;
+  height: 0.55em;
+  margin-left: 0.4em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.5 1.5L14.5 14.5M14.5 1.5L1.5 14.5' stroke='%23000' stroke-width='1' stroke-linecap='square'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  cursor: pointer;
+}

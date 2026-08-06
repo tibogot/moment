@@ -215,7 +215,7 @@ export function SearchPanel({
               placeholder="What are you looking for?"
               autoComplete="off"
               enterKeyHint="search"
-              className="font-owners-narrow-bold w-full border-b border-sky bg-transparent pb-4 text-[9vw] leading-[1.05] text-black uppercase outline-none placeholder:text-black/25 md:text-[min(4.5vw,4.5rem)]"
+              className="search-input font-owners-narrow-bold w-full border-b border-sky bg-transparent pb-4 text-[9vw] leading-[1.05] text-black uppercase outline-none placeholder:text-black/25 md:text-[min(4.5vw,4.5rem)]"
             />
           </form>
 
