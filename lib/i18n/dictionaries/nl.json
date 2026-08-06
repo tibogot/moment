@@ -12,7 +12,9 @@
     "search": "Zoeken",
     "signIn": "Aanmelden",
     "signOut": "Afmelden",
-    "collections": "Collecties"
+    "collections": "Collecties",
+    "showLinks": "{label}-links tonen",
+    "hideLinks": "{label}-links verbergen"
   },
   "legalNav": {
     "legal": "Wettelijke vermeldingen",
@@ -121,5 +123,9 @@
   },
   "footer": {
     "headline": "Un moment,\nsimplement."
+  },
+  "aboutNav": {
+    "story": "Ons verhaal",
+    "news": "Nieuws"
   }
 }

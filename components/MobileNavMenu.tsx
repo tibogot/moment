@@ -19,8 +19,9 @@ import {
   getServerCartSnapshot,
   subscribeCart,
 } from "@/lib/cart-store";
-import { mainNav, routes } from "@/lib/routes";
+import { aboutNav, mainNav, routes, type NavMenuKey } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { siteConfig } from "@/lib/site";
 import { blurFocusWithin } from "@/lib/overlayFocus";
@@ -76,8 +77,9 @@ export function MobileNavMenu({
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);
   const hasOpenedRef = useRef(false);
-  const [shopOpen, setShopOpen] = useState(false);
-  const shopExpanded = open && shopOpen;
+  // Which nav section is expanded, if any. One at a time: two open accordions
+  // in a full-height panel push the rest of the links off the screen.
+  const [expandedMenu, setExpandedMenu] = useState<NavMenuKey | null>(null);
   const cart = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
@@ -87,7 +89,7 @@ export function MobileNavMenu({
 
   const handleClose = useCallback(() => {
     blurFocusWithin(panelRef.current);
-    setShopOpen(false);
+    setExpandedMenu(null);
     onClose();
   }, [onClose]);
 
@@ -164,7 +166,7 @@ export function MobileNavMenu({
         yPercent: -100,
         duration: ANIM_DURATION,
         ease: CLOSE_EASE,
-        onComplete: () => setShopOpen(false),
+        onComplete: () => setExpandedMenu(null),
       });
     }
 
@@ -174,7 +176,27 @@ export function MobileNavMenu({
   }, [open]);
 
   const dict = useDictionary();
-  const [shopNav, ...otherNav] = mainNav;
+
+  // The same two panels the desktop nav opens, flattened to label + href.
+  // Shop's children come from Shopify and About's are fixed, which is the only
+  // reason they are built here rather than shared with the desktop menus.
+  const menuChildren: Record<
+    NavMenuKey,
+    { href: string; label: string }[]
+  > = {
+    shop: [
+      { href: routes.shop, label: "All" },
+      { href: routes.collections, label: dict.nav.collections },
+      ...collections.map((collection) => ({
+        href: routes.collection(collection.handle),
+        label: collection.title,
+      })),
+    ],
+    about: aboutNav.map(({ key, href }) => ({
+      href,
+      label: dict.aboutNav[key],
+    })),
+  };
 
   return (
     <div
@@ -249,95 +271,106 @@ export function MobileNavMenu({
             data-lenis-prevent
           >
             <ul className="border-b border-sky">
-            <li className="overflow-hidden border-t border-sky">
-              <div className="px-(--grid-inset) py-4">
-                {collections.length > 0 ? (
-                  <button
-                    type="button"
-                    data-menu-item
-                    onClick={() => setShopOpen((current) => !current)}
-                    aria-expanded={shopExpanded}
-                    aria-label={
-                      shopExpanded
-                        ? `Hide ${dict.nav[shopNav.key]} links`
-                        : `Show ${dict.nav[shopNav.key]} links`
-                    }
-                    className="flex w-full items-center justify-between gap-4 text-left transition-opacity hover:opacity-60"
-                  >
-                    <span className="font-owners-narrow-bold text-[10vw] leading-[1.05] uppercase">
-                      {dict.nav[shopNav.key]}
-                    </span>
-                    <span
-                      className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide"
-                      aria-hidden
+              {mainNav.map((item) => {
+                // A plain destination.
+                if (!("menu" in item)) {
+                  return (
+                    <li
+                      key={item.key}
+                      className="overflow-hidden border-t border-sky"
                     >
-                      {shopExpanded ? "−" : "+"}
-                    </span>
-                  </button>
-                ) : (
-                  <Link
-                    href={routes.shop}
-                    data-menu-item
-                    onClick={handleClose}
-                    className="font-owners-narrow-bold block text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                      <Link
+                        href={item.href}
+                        data-menu-item
+                        onClick={handleClose}
+                        className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                      >
+                        {dict.nav[item.key]}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                const children = menuChildren[item.menu];
+                const label = dict.nav[item.key];
+
+                // Shop with no collections loaded has nothing to expand into,
+                // so it falls back to being an ordinary link rather than a
+                // toggle that opens onto nothing.
+                if (children.length === 0) {
+                  return (
+                    <li
+                      key={item.key}
+                      className="overflow-hidden border-t border-sky"
+                    >
+                      <Link
+                        href={item.menu === "shop" ? routes.shop : routes.about}
+                        data-menu-item
+                        onClick={handleClose}
+                        className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                const expanded = open && expandedMenu === item.menu;
+
+                return (
+                  <li
+                    key={item.key}
+                    className="overflow-hidden border-t border-sky"
                   >
-                    {dict.nav[shopNav.key]}
-                  </Link>
-                )}
-              </div>
-
-              {collections.length > 0 && (
-                <div
-                  className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                  style={{ maxHeight: shopExpanded ? "24rem" : "0" }}
-                >
-                  <ul className="flex flex-col gap-2 border-t border-sky px-(--grid-inset) py-4">
-                    <li>
-                      <Link
-                        href={routes.shop}
-                        onClick={handleClose}
-                        className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                    <div className="px-(--grid-inset) py-4">
+                      <button
+                        type="button"
+                        data-menu-item
+                        onClick={() =>
+                          setExpandedMenu((current) =>
+                            current === item.menu ? null : item.menu,
+                          )
+                        }
+                        aria-expanded={expanded}
+                        aria-label={interpolate(
+                          expanded ? dict.nav.hideLinks : dict.nav.showLinks,
+                          { label },
+                        )}
+                        className="flex w-full items-center justify-between gap-4 text-left transition-opacity hover:opacity-60"
                       >
-                        All
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href={routes.collections}
-                        onClick={handleClose}
-                        className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-                      >
-                        {dict.nav.collections}
-                      </Link>
-                    </li>
-                    {collections.map((collection) => (
-                      <li key={collection.id}>
-                        <Link
-                          href={routes.collection(collection.handle)}
-                          onClick={handleClose}
-                          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                        <span className="font-owners-narrow-bold text-[10vw] leading-[1.05] uppercase">
+                          {label}
+                        </span>
+                        <span
+                          className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide"
+                          aria-hidden
                         >
-                          {collection.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </li>
+                          {expanded ? "−" : "+"}
+                        </span>
+                      </button>
+                    </div>
 
-            {otherNav.map(({ key, href }) => (
-              <li key={href} className="overflow-hidden border-t border-sky">
-                <Link
-                  href={href}
-                  data-menu-item
-                  onClick={handleClose}
-                  className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
-                >
-                  {dict.nav[key]}
-                </Link>
-              </li>
-            ))}
+                    <div
+                      className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                      style={{ maxHeight: expanded ? "24rem" : "0" }}
+                    >
+                      <ul className="flex flex-col gap-2 border-t border-sky px-(--grid-inset) py-4">
+                        {children.map((child) => (
+                          <li key={child.href}>
+                            <Link
+                              href={child.href}
+                              onClick={handleClose}
+                              className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

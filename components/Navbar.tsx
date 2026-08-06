@@ -19,6 +19,7 @@ import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 import { CartPanel } from "@/components/CartPanel";
 import { GridLines } from "@/components/GridLines";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
+import { AboutNavMenu } from "@/components/AboutNavMenu";
 import { ShopNavMenu } from "@/components/ShopNavMenu";
 import { SearchPanel } from "@/components/SearchPanel";
 import {
@@ -29,7 +30,7 @@ import {
 import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { startIntro } from "@/lib/intro";
 import { blurFocusWithin, blurOpenOverlayFocus } from "@/lib/overlayFocus";
-import { mainNav, routes } from "@/lib/routes";
+import { mainNav, routes, type NavMenuKey } from "@/lib/routes";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
 const DURATION = 0.48;
@@ -40,7 +41,8 @@ const CONTENT_REVEAL_AT = 0.22;
 
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
 const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
-const NAV_MOBILE_MQ = "(width < 75rem)";
+/** Must match --breakpoint-nav in app/globals.css. */
+const NAV_MOBILE_MQ = "(width < 79.375rem)";
 
 function subscribeMobileNav(onStoreChange: () => void) {
   const mq = window.matchMedia(NAV_MOBILE_MQ);
@@ -105,13 +107,15 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [shopMenuOpen, setShopMenuOpen] = useState(false);
+  // Which nav panel is open, if any. Was a shop-only boolean until "About"
+  // grew children too.
+  const [openNavMenu, setOpenNavMenu] = useState<NavMenuKey | null>(null);
   const [navHovered, setNavHovered] = useState(false);
   const [navSolid, setNavSolid] = useState(!allowsTransparentNav);
   const [prevPathname, setPrevPathname] = useState(pathname);
 
   const overlayOpen = cartOpen || searchOpen || menuOpen;
-  const navExpanded = shopMenuOpen && !overlayOpen && !isMobileNav;
+  const navExpanded = openNavMenu !== null && !overlayOpen && !isMobileNav;
 
   const releaseShopMenuFocus = () => {
     blurFocusWithin(menuRef.current);
@@ -142,7 +146,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
       withOverlayFocusRelease(() => {
         setMenuOpen(false);
         setSearchOpen(false);
-        setShopMenuOpen(false);
+        setOpenNavMenu(null);
         setCartOpen(true);
       });
     };
@@ -169,7 +173,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   if (pathname !== prevPathname) {
     releaseShopMenuFocus();
     setPrevPathname(pathname);
-    setShopMenuOpen(false);
+    setOpenNavMenu(null);
   }
 
   const isNavSolid = allowsTransparentNav
@@ -568,16 +572,15 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     "animated-underline font-owners-medium uppercase tracking-wide";
 
   const dict = useDictionary();
-  const [shopNav, ...otherNav] = mainNav;
 
-  const openShopMenu = () => {
+  const openNavMenuFor = (key: NavMenuKey) => () => {
     if (cartOpen || searchOpen || menuOpen || isMobileNav) return;
-    setShopMenuOpen(true);
+    setOpenNavMenu(key);
   };
 
-  const closeShopMenu = () => {
+  const closeNavMenu = () => {
     releaseShopMenuFocus();
-    setShopMenuOpen(false);
+    setOpenNavMenu(null);
   };
 
   const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -588,7 +591,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
       setMenuOpen(false);
       setCartOpen(false);
       setSearchOpen(false);
-      setShopMenuOpen(false);
+      setOpenNavMenu(null);
     });
 
     if (lenis) {
@@ -653,7 +656,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           navHoveredRef.current = false;
           setNavHovered(false);
           if (!cartOpen && !searchOpen) {
-            closeShopMenu();
+            closeNavMenu();
           }
         }}
       >
@@ -680,7 +683,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           {/* Mobile: menu + search sit together on the left. */}
           <div
             className="flex items-center gap-3.5 justify-self-start nav:hidden"
-            onMouseEnter={closeShopMenu}
+            onMouseEnter={closeNavMenu}
           >
             <button
               type="button"
@@ -690,7 +693,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
                 withOverlayFocusRelease(() => {
                   setSearchOpen(false);
                   setCartOpen(false);
-                  setShopMenuOpen(false);
+                  setOpenNavMenu(null);
                   setMenuOpen(true);
                 })
               }
@@ -705,7 +708,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
                 withOverlayFocusRelease(() => {
                   setMenuOpen(false);
                   setCartOpen(false);
-                  setShopMenuOpen(false);
+                  setOpenNavMenu(null);
                   setSearchOpen(true);
                 })
               }
@@ -715,46 +718,56 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           </div>
 
           <ul
-            className="hidden min-w-0 whitespace-nowrap nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:pl-(--grid-gutter)"
-            style={{
-              fontSize: "var(--nav-link-text)",
-              gap: "var(--nav-link-gap)",
-              letterSpacing: "var(--nav-link-tracking)",
-            }}
+            // nowrap stays: without it a label that outgrows the row folds
+            // onto two lines inside a box that still measures as fitting,
+            // which hides the problem instead of showing it.
+            className="hidden min-w-0 whitespace-nowrap nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-3 nav:pl-(--grid-gutter)"
+            style={{ fontSize: "var(--nav-text)" }}
           >
-            <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
-              <button
-                type="button"
-                className={navLinkClassName}
-                data-nav-link
-                aria-expanded={shopMenuOpen}
-                aria-haspopup="true"
-                onClick={() =>
-                  withOverlayFocusRelease(() => {
-                    setMenuOpen(false);
-                    setCartOpen(false);
-                    setSearchOpen(false);
-                    setShopMenuOpen(true);
-                  })
-                }
-              >
-                {dict.nav[shopNav.key]}
-              </button>
-            </li>
-            {otherNav.map(({ key, href }) => (
-              <li key={href} onMouseEnter={closeShopMenu}>
-                <Link href={href} className={navLinkClassName} data-nav-link>
-                  {dict.nav[key]}
-                </Link>
-              </li>
-            ))}
+            {mainNav.map((item) =>
+              "menu" in item ? (
+                <li
+                  key={item.key}
+                  onMouseEnter={openNavMenuFor(item.menu)}
+                  onFocus={openNavMenuFor(item.menu)}
+                >
+                  <button
+                    type="button"
+                    className={navLinkClassName}
+                    data-nav-link
+                    aria-expanded={openNavMenu === item.menu}
+                    aria-haspopup="true"
+                    onClick={() =>
+                      withOverlayFocusRelease(() => {
+                        setMenuOpen(false);
+                        setCartOpen(false);
+                        setSearchOpen(false);
+                        setOpenNavMenu(item.menu);
+                      })
+                    }
+                  >
+                    {dict.nav[item.key]}
+                  </button>
+                </li>
+              ) : (
+                <li key={item.key} onMouseEnter={closeNavMenu}>
+                  <Link
+                    href={item.href}
+                    className={navLinkClassName}
+                    data-nav-link
+                  >
+                    {dict.nav[item.key]}
+                  </Link>
+                </li>
+              ),
+            )}
           </ul>
 
           <Link
             href={routes.home}
             aria-label="Moment home"
             className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6"
-            onMouseEnter={closeShopMenu}
+            onMouseEnter={closeNavMenu}
             onClick={handleLogoClick}
           >
             <span ref={logoRef} data-nav-logo className="inline-flex">
@@ -772,7 +785,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
 
           <div
             className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--grid-gutter)"
-            onMouseEnter={closeShopMenu}
+            onMouseEnter={closeNavMenu}
           >
             <button
               type="button"
@@ -783,7 +796,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
                 withOverlayFocusRelease(() => {
                   setMenuOpen(false);
                   setCartOpen(false);
-                  setShopMenuOpen(false);
+                  setOpenNavMenu(null);
                   setSearchOpen(true);
                 })
               }
@@ -810,7 +823,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
                 withOverlayFocusRelease(() => {
                   setMenuOpen(false);
                   setSearchOpen(false);
-                  setShopMenuOpen(false);
+                  setOpenNavMenu(null);
                   setCartOpen(true);
                 })
               }
@@ -835,11 +848,15 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           inert={!navExpanded}
         >
           <div ref={menuInnerRef} className="nav:col-span-full">
-            <ShopNavMenu
-              products={products}
-              collections={collections}
-              onNavigate={releaseShopMenuFocus}
-            />
+            {openNavMenu === "about" ? (
+              <AboutNavMenu onNavigate={releaseShopMenuFocus} />
+            ) : (
+              <ShopNavMenu
+                products={products}
+                collections={collections}
+                onNavigate={releaseShopMenuFocus}
+              />
+            )}
           </div>
         </div>
       </div>

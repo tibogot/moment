@@ -10,8 +10,11 @@
   --font-archivo-light: var(--font-face-archivo-light);
   --font-archivo-light-italic: var(--font-face-archivo-light-italic);
 
-  /* Navbar switches from mobile menu to inline links at this width. */
-  --breakpoint-nav: 75rem;
+  /* Navbar switches from mobile menu to inline links at this width.
+     Kept in sync by hand with NAV_MOBILE_MQ in components/Navbar.tsx — the
+     media query there cannot read a Tailwind theme variable, and if the two
+     disagree the nav renders inline links in a space built for a burger. */
+  --breakpoint-nav: 79.375rem; /* 1270px */
 }
 
 :root {
@@ -43,23 +46,13 @@
   --nav-logo: 92px;
   --nav-icon: 20px;
 
-  /* The horizontal nav links, sized apart from --nav-text because they are the
-     one piece of chrome whose width is set by the language rather than by us.
-     "Événements" and "Actualités" are half again as long as "Events" and
-     "News", and the links only own three of the seven content columns — the
-     logo sits in the fifth — so at the nav breakpoint the French and Dutch sets
-     ran straight into it.
-     Both terms are fluid from the breakpoint (75rem) up to 100rem, where they
-     reach the sizes the English nav always had. Below 75rem none of this
-     applies: the links are hidden and the burger takes over. */
-  --nav-link-text: clamp(11px, calc(2px + 0.75vw), 14px);
-  --nav-link-gap: clamp(8px, calc(-16px + 2vw), 16px);
-  /* The links carry tracking-wide, which across seven items adds most of a
-     word's worth of width. Tightened at the bottom of the range and handed
-     back by 100rem, where there is room for it again.
-     In px, not em: em would compound with --nav-link-text, which is itself
-     fluid, and the two together are impossible to reason about. */
-  --nav-link-tracking: clamp(0.11px, calc(-0.61px + 0.06vw), 0.35px);
+  /* The nav links previously needed their own fluid type scale: seven
+     top-level items in French did not fit the three columns they sit in, and
+     shrinking them to 11px was the only way to avoid the logo. Grouping News
+     under About took it to six, and raising the breakpoint to 1270px gave the
+     row the rest — the design's own 14px now fits Dutch, the widest set, with
+     30px to spare. If a seventh item ever returns, this is the tradeoff that
+     comes back with it. */
 
   /* Product card metrics. Held as lengths rather than utility classes so the
      shop's grid/index switch can interpolate them — see .product-list. */

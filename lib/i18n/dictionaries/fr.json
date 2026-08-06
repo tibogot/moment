@@ -12,7 +12,9 @@
     "search": "Rechercher",
     "signIn": "Se connecter",
     "signOut": "Se déconnecter",
-    "collections": "Collections"
+    "collections": "Collections",
+    "showLinks": "Afficher les liens {label}",
+    "hideLinks": "Masquer les liens {label}"
   },
   "legalNav": {
     "legal": "Mentions légales",
@@ -121,5 +123,9 @@
   },
   "footer": {
     "headline": "Un moment,\nsimplement."
+  },
+  "aboutNav": {
+    "story": "Notre histoire",
+    "news": "Actualités"
   }
 }

@@ -51,13 +51,33 @@ export const routes = {
  * page.
  */
 export const mainNav = [
-  { key: "shop", opensShopMenu: true as const },
+  { key: "shop", menu: "shop" as const },
   { key: "menus", href: routes.menus },
   { key: "events", href: routes.events },
   { key: "coffee", href: routes.coffee },
-  { key: "news", href: routes.news },
-  { key: "about", href: routes.about },
+  { key: "about", menu: "about" as const },
   { key: "contact", href: routes.contact },
+] as const;
+
+/** The two nav entries that open a panel instead of going somewhere. */
+export type NavMenuKey = "shop" | "about";
+
+/**
+ * What sits behind "About".
+ *
+ * News moved in here and Contact deliberately did not. Seven top-level links
+ * did not fit once the labels were French — "Événements" and "Actualités" are
+ * half again as long as their English counterparts — and something had to give.
+ * News is low-traffic editorial and groups naturally with the story; Contact is
+ * where every quote, event and sur-devis delivery starts, and burying the
+ * enquiry link to save fifty pixels would be a poor trade for a business that
+ * sells by conversation.
+ *
+ * FAQ belongs here too once the page exists.
+ */
+export const aboutNav = [
+  { key: "story", href: routes.about },
+  { key: "news", href: routes.news },
 ] as const;
 
 /** Footer legal strip — required for a Belgian ecommerce site. */
