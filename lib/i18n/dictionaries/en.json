@@ -11,7 +11,8 @@
     "account": "Account",
     "search": "Search",
     "signIn": "Sign in",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "collections": "Collections"
   },
   "legalNav": {
     "legal": "Legal notice",
@@ -26,6 +27,95 @@
   },
   "common": {
     "close": "Close",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "aboutUs": "About us",
+    "talkToUs": "Talk to us",
+    "seeEverything": "See everything",
+    "viewCart": "View cart"
+  },
+  "home": {
+    "hero": {
+      "headline": "A moment\nworth\ntasting.",
+      "lead": "A traiteur in Brussels for private hosts and companies. Seasonal plates, cooked each morning and delivered ready to serve."
+    },
+    "intro": {
+      "headline": "A traiteur in Brussels for people who care how it tastes — and how it looks.",
+      "body": "We cook for private hosts and companies across the city. Seasonal plates, salads and cold-pressed juices, prepared each morning and delivered ready to serve. We run events end to end, and keep a coffee desk open for anyone passing by."
+    },
+    "kitchen": {
+      "label": "The kitchen",
+      "title": "Cooked the morning it is eaten.",
+      "body": "We start before dawn, when the city is still quiet. Plates, salads and cold-pressed juices are made from scratch that same morning — seasonal produce, sauces reduced overnight, dressings mixed at the last minute. Nothing reheated, nothing left over from the day before."
+    },
+    "delivery": {
+      "label": "Delivery",
+      "title": "Prepared at dawn, served by lunch.",
+      "body": "We pack and send across Brussels in the early hours, so lunch arrives as the kitchen intended. Insulated boxes, portions already set, garnishes kept separate — ready to unwrap and serve at your desk, in a meeting room, or at home before your guests walk in."
+    },
+    "collections": {
+      "label": "Our collections"
+    },
+    "services": {
+      "label": "What we do",
+      "items": [
+        {
+          "title": "Delivery",
+          "cta": "Order delivery",
+          "body": "Plates, salads and juices prepared each morning and delivered ready to serve — to a desk, a boardroom or a kitchen table."
+        },
+        {
+          "title": "Events",
+          "cta": "Plan an event",
+          "body": "From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open."
+        },
+        {
+          "title": "Coffee",
+          "cta": "Find the coffee desk",
+          "body": "A coffee desk for anyone passing by, and the same pastries and juices we send out to our clients."
+        }
+      ]
+    },
+    "whyUs": {
+      "label": "Why choose us",
+      "headline": "Good food is the easy part. This is the rest of it.",
+      "reasons": [
+        {
+          "title": "One number to call",
+          "body": "The person who answers writes the menu, and is still the person answering the week of the delivery. Nothing is subcontracted, so nothing is lost between two companies."
+        },
+        {
+          "title": "Quoted per head, all in",
+          "body": "Delivery, service, equipment and collection are in the figure we send you. No line items appearing three days before the event."
+        },
+        {
+          "title": "Diets planned, not patched",
+          "body": "Vegetarian, vegan and gluten-free versions of the same dish, labelled and boxed separately. Nobody is handed a plate of side dishes."
+        },
+        {
+          "title": "A window we keep",
+          "body": "Brussels traffic is a known quantity, so we leave early and we call before you have to. If something moves, you hear it at six in the morning, not at noon."
+        }
+      ]
+    },
+    "calendar": {
+      "label": "Book for delivery",
+      "legendOpen": "Open",
+      "legendClosed": "Closed or full",
+      "legendTooSoon": "Too soon",
+      "note": "Pick any open day to add it to your order — you do not need anything in your basket yet. We need {days} days' notice and we do not deliver on Sundays.",
+      "prev": "Prev",
+      "next": "Next",
+      "dismiss": "Close",
+      "deliveryOn": "Delivery on",
+      "savedPrefix": "Delivery set for",
+      "savedSuffix": ". It travels with your order — change it any time before checkout.",
+      "save": "Save to my order",
+      "saving": "Saving…",
+      "choosePlates": "Choose your plates",
+      "askAboutDate": "Ask about this date"
+    }
+  },
+  "footer": {
+    "headline": "Un moment,\nsimplement."
   }
 }

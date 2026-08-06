@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import ScrollToTop from "@/components/ScrollToTop";
 import { LocaleProvider } from "@/components/LocaleProvider";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
 import { PaletteToggle } from "@/components/PaletteToggle";
@@ -118,9 +119,10 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [products, collections] = await Promise.all([
+  const [products, collections, dictionary] = await Promise.all([
     getProducts(),
     getCollections(),
+    getDictionary(lang),
   ]);
   const navCollections = collections.filter(
     (collection) => collection.handle !== "frontpage",
@@ -141,7 +143,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: PALETTE_GUARD }} />
       </head>
       <body className="min-h-svh flex flex-col">
-        <LocaleProvider locale={lang}>
+        <LocaleProvider locale={lang} dictionary={dictionary}>
           <SmoothScroll>
             <ScrollToTop />
             <Navbar products={products} collections={navCollections} />

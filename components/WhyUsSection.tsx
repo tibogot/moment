@@ -12,56 +12,46 @@ import { cn } from "@/lib/utils";
  * from reading as a card grid.
  */
 const reasons = [
-  {
-    index: "01",
-    title: "One number to call",
-    body: "The person who answers writes the menu, and is still the person answering the week of the delivery. Nothing is subcontracted, so nothing is lost between two companies.",
-    span: "wide",
-  },
-  {
-    index: "02",
-    title: "Quoted per head, all in",
-    body: "Delivery, service, equipment and collection are in the figure we send you. No line items appearing three days before the event.",
-    span: "narrow",
-  },
-  {
-    index: "03",
-    title: "Diets planned, not patched",
-    body: "Vegetarian, vegan and gluten-free versions of the same dish, labelled and boxed separately. Nobody is handed a plate of side dishes.",
-    span: "wide",
-  },
-  {
-    index: "04",
-    title: "A window we keep",
-    body: "Brussels traffic is a known quantity, so we leave early and we call before you have to. If something moves, you hear it at six in the morning, not at noon.",
-    span: "narrow",
-  },
+  { index: "01", span: "wide" },
+  { index: "02", span: "narrow" },
+  { index: "03", span: "wide" },
+  { index: "04", span: "narrow" },
 ] as const;
+
+type WhyUsSectionProps = {
+  copy: {
+    label: string;
+    headline: string;
+    /** Paired with `reasons` by position — both are fixed literals of four. */
+    reasons: readonly { title: string; body: string }[];
+  };
+  ctaLabel: string;
+};
 
 /**
  * The reasons index, sitting between the services block and the calendar —
  * after the visitor knows what we do, before they are asked to pick a date.
  */
-export function WhyUsSection() {
+export function WhyUsSection({ copy, ctaLabel }: WhyUsSectionProps) {
   return (
     <GridSection className="pt-[12svh] pb-[14svh]">
       <div className="col-start-2 col-end-5 px-(--grid-gutter) pb-[5svh] md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-          Why choose us
+          {copy.label}
         </h2>
       </div>
 
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) pb-[6svh] text-left md:col-end-8">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
           <p className="font-owners-narrow-bold max-w-full text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(4.4vw,7svh)]">
-            Good food is the easy part. This is the rest of it.
+            {copy.headline}
           </p>
         </TextReveal>
       </div>
 
       <div className="col-span-full border-t border-sky px-(--grid-margin)">
         <ol className="md:grid md:grid-cols-7">
-          {reasons.map((reason) => (
+          {reasons.map((reason, index) => (
             <li
               key={reason.index}
               className={cn(
@@ -82,7 +72,7 @@ export function WhyUsSection() {
               <div className="mt-[3svh] text-left">
                 <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                   <h3 className="font-owners-narrow-bold max-w-full text-[8.5vw] leading-[0.95] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(2.8vw,4.4svh)]">
-                    {reason.title}
+                    {copy.reasons[index].title}
                   </h3>
                 </TextReveal>
               </div>
@@ -94,7 +84,7 @@ export function WhyUsSection() {
                   duration={0.6}
                 >
                   <p className="font-archivo-light max-w-full text-[18px] leading-normal md:max-w-[42ch]">
-                    {reason.body}
+                    {copy.reasons[index].body}
                   </p>
                 </TextReveal>
               </div>
@@ -110,7 +100,7 @@ export function WhyUsSection() {
             className="group inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
           >
             <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-              Talk to us
+              {ctaLabel}
               <span
                 className="transition-transform duration-500 group-hover:translate-x-1.5"
                 aria-hidden

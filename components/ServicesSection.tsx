@@ -11,6 +11,7 @@ import { Flip, gsap } from "@/lib/gsapConfig";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { GRID_CONTENT_IMAGE_SIZES } from "@/lib/grid";
 import { routes } from "@/lib/routes";
+import { useDictionary } from "@/components/LocaleProvider";
 
 /**
  * The rows run on the page's 7 columns — the same ones the hero and the
@@ -34,29 +35,20 @@ const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 const services = [
   {
     index: "01",
-    title: "Delivery",
     href: routes.shop,
-    cta: "Order delivery",
-    body: "Plates, salads and juices prepared each morning and delivered ready to serve — to a desk, a boardroom or a kitchen table.",
     src: "/images/william-king.jpg",
     /** 1-based placement in the row's 7 columns x FRAME_ROWS bands. */
     frame: { colStart: 5, colSpan: 3, rowStart: 1, rowSpan: 2 },
   },
   {
     index: "02",
-    title: "Events",
     href: routes.events,
-    cta: "Plan an event",
-    body: "From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open.",
     src: "/images/nicole-herrero.jpg",
     frame: { colStart: 4, colSpan: 2, rowStart: 1, rowSpan: 2 },
   },
   {
     index: "03",
-    title: "Coffee",
     href: routes.coffee,
-    cta: "Find the coffee desk",
-    body: "A coffee desk for anyone passing by, and the same pastries and juices we send out to our clients.",
     // Placeholder until the coffee desk is shot — swap for a /public image.
     src: "https://picsum.photos/seed/moment-coffee/1200/1600",
     frame: { colStart: 6, colSpan: 2, rowStart: 1, rowSpan: 2 },
@@ -66,6 +58,10 @@ const services = [
 const isDesktop = () => window.matchMedia("(width >= 48rem)").matches;
 
 export function ServicesSection() {
+  const dict = useDictionary();
+  // Structural rows and translated wording are paired by position: both are
+  // fixed literals of three, ordered delivery / events / coffee.
+  const copy = dict.home.services.items;
   const rowsRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -168,7 +164,7 @@ export function ServicesSection() {
         <div className="col-start-2">
           <div className="px-(--grid-gutter) pb-[5svh]">
             <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-              What we do
+              {dict.home.services.label}
             </h2>
           </div>
 
@@ -230,7 +226,7 @@ export function ServicesSection() {
 
                     <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                       <h3 className="font-owners-narrow-bold text-[13vw] leading-[0.9] wrap-break-word uppercase md:text-[min(5.6vw,9svh)]">
-                        {service.title}
+                        {copy[index].title}
                       </h3>
                     </TextReveal>
 
@@ -249,13 +245,13 @@ export function ServicesSection() {
                     <div>
                       <TextReveal blockColor={REVEAL_BLOCK} stagger={0.08} duration={0.6}>
                         <p className="font-archivo-light max-w-[36ch] text-[18px] leading-normal">
-                          {service.body}
+                          {copy[index].body}
                         </p>
                       </TextReveal>
 
                       <div className="mt-5 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 group-hover:bg-cream">
                         <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-                          {service.cta}
+                          {copy[index].cta}
                           <span
                             className="transition-transform duration-500 group-hover:translate-x-1.5"
                             aria-hidden

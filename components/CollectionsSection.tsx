@@ -9,12 +9,17 @@ type CollectionsSectionProps = {
   collections: ShopifyCollection[];
   /** When false, skip the section title and "View all" link (e.g. on /collections). */
   showHeader?: boolean;
+  /** Required whenever the header shows; the page supplies it from the dictionary. */
+  heading?: string;
+  viewAllLabel?: string;
   className?: string;
 };
 
 export function CollectionsSection({
   collections,
   showHeader = true,
+  heading,
+  viewAllLabel,
   className,
 }: CollectionsSectionProps) {
   if (collections.length === 0) return null;
@@ -26,10 +31,10 @@ export function CollectionsSection({
         className,
       )}
     >
-      {showHeader && (
+      {showHeader && heading && (
         <div className="col-start-2 col-end-5 flex flex-col items-start gap-4 px-(--grid-gutter) pb-[5svh] md:col-end-9 md:flex-row md:items-end md:justify-between">
           <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-            Collections
+            {heading}
           </h2>
 
           <Link
@@ -37,7 +42,7 @@ export function CollectionsSection({
             className="group inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
           >
             <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-              View all
+              {viewAllLabel}
               <span
                 className="transition-transform duration-500 group-hover:translate-x-1.5"
                 aria-hidden

@@ -20,6 +20,7 @@ import {
   subscribeCart,
 } from "@/lib/cart-store";
 import { mainNav, routes } from "@/lib/routes";
+import { useDictionary } from "@/components/LocaleProvider";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { siteConfig } from "@/lib/site";
 import { blurFocusWithin } from "@/lib/overlayFocus";
@@ -172,6 +173,7 @@ export function MobileNavMenu({
     };
   }, [open]);
 
+  const dict = useDictionary();
   const [shopNav, ...otherNav] = mainNav;
 
   return (
@@ -257,13 +259,13 @@ export function MobileNavMenu({
                     aria-expanded={shopExpanded}
                     aria-label={
                       shopExpanded
-                        ? `Hide ${shopNav.label} links`
-                        : `Show ${shopNav.label} links`
+                        ? `Hide ${dict.nav[shopNav.key]} links`
+                        : `Show ${dict.nav[shopNav.key]} links`
                     }
                     className="flex w-full items-center justify-between gap-4 text-left transition-opacity hover:opacity-60"
                   >
                     <span className="font-owners-narrow-bold text-[10vw] leading-[1.05] uppercase">
-                      {shopNav.label}
+                      {dict.nav[shopNav.key]}
                     </span>
                     <span
                       className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide"
@@ -279,7 +281,7 @@ export function MobileNavMenu({
                     onClick={handleClose}
                     className="font-owners-narrow-bold block text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                   >
-                    {shopNav.label}
+                    {dict.nav[shopNav.key]}
                   </Link>
                 )}
               </div>
@@ -305,7 +307,7 @@ export function MobileNavMenu({
                         onClick={handleClose}
                         className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
                       >
-                        Collections
+                        {dict.nav.collections}
                       </Link>
                     </li>
                     {collections.map((collection) => (
@@ -324,7 +326,7 @@ export function MobileNavMenu({
               )}
             </li>
 
-            {otherNav.map(({ label, href }) => (
+            {otherNav.map(({ key, href }) => (
               <li key={href} className="overflow-hidden border-t border-sky">
                 <Link
                   href={href}
@@ -332,7 +334,7 @@ export function MobileNavMenu({
                   onClick={handleClose}
                   className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
                 >
-                  {label}
+                  {dict.nav[key]}
                 </Link>
               </li>
             ))}

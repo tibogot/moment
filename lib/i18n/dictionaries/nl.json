@@ -11,7 +11,8 @@
     "account": "Account",
     "search": "Zoeken",
     "signIn": "Aanmelden",
-    "signOut": "Afmelden"
+    "signOut": "Afmelden",
+    "collections": "Collecties"
   },
   "legalNav": {
     "legal": "Wettelijke vermeldingen",
@@ -26,6 +27,95 @@
   },
   "common": {
     "close": "Sluiten",
-    "loading": "Laden…"
+    "loading": "Laden…",
+    "aboutUs": "Over ons",
+    "talkToUs": "Praat met ons",
+    "seeEverything": "Alles bekijken",
+    "viewCart": "Winkelmand bekijken"
+  },
+  "home": {
+    "hero": {
+      "headline": "Een moment\nom van te\ngenieten.",
+      "lead": "Traiteur in Brussel voor particulieren en bedrijven. Seizoensgerechten, elke ochtend bereid en klaar om te serveren geleverd."
+    },
+    "intro": {
+      "headline": "Een Brusselse traiteur voor wie geeft om smaak — en om presentatie.",
+      "body": "Wij koken voor particulieren en bedrijven in heel de stad. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd. Wij verzorgen evenementen van begin tot eind, en houden een koffiebar open voor wie langskomt."
+    },
+    "kitchen": {
+      "label": "De keuken",
+      "title": "Gekookt op de ochtend zelf.",
+      "body": "Wij beginnen voor zonsopgang, als de stad nog stil is. Gerechten, salades en koudgeperste sappen worden diezelfde ochtend vers gemaakt — seizoensproducten, sauzen die 's nachts inkoken, dressings op het laatste moment aangemaakt. Niets opgewarmd, niets van gisteren."
+    },
+    "delivery": {
+      "label": "Levering",
+      "title": "Bereid bij dageraad, geserveerd bij de lunch.",
+      "body": "Wij pakken in en rijden 's ochtends vroeg door Brussel, zodat de lunch aankomt zoals de keuken het bedoelde. Isothermische dozen, porties al opgemaakt, garnituur apart — klaar om uit te pakken en te serveren aan uw bureau, in een vergaderzaal of thuis voor uw gasten binnenkomen."
+    },
+    "collections": {
+      "label": "Onze collecties"
+    },
+    "services": {
+      "label": "Wat wij doen",
+      "items": [
+        {
+          "title": "Levering",
+          "cta": "Levering bestellen",
+          "body": "Gerechten, salades en sappen elke ochtend bereid en klaar om te serveren geleverd — aan een bureau, in een vergaderzaal of op de keukentafel."
+        },
+        {
+          "title": "Evenementen",
+          "cta": "Een evenement plannen",
+          "body": "Van een lancering voor twintig personen tot een zittend diner. Wij verzorgen het menu, de bediening en alles wat moet gebeuren voor de deuren opengaan."
+        },
+        {
+          "title": "Koffie",
+          "cta": "Vind de koffiebar",
+          "body": "Een koffiebar voor wie langskomt, met hetzelfde gebak en dezelfde sappen die wij naar onze klanten sturen."
+        }
+      ]
+    },
+    "whyUs": {
+      "label": "Waarom wij",
+      "headline": "Lekker koken is het makkelijke deel. Dit is de rest.",
+      "reasons": [
+        {
+          "title": "Eén aanspreekpunt",
+          "body": "Wie u aan de lijn krijgt, schrijft het menu — en is nog steeds degene die opneemt in de week van de levering. Niets wordt uitbesteed, dus niets gaat verloren tussen twee bedrijven."
+        },
+        {
+          "title": "Prijs per persoon, alles inbegrepen",
+          "body": "Levering, bediening, materiaal en ophaling zitten in het bedrag dat wij u sturen. Geen posten die drie dagen voor het evenement opduiken."
+        },
+        {
+          "title": "Diëten gepland, niet opgelapt",
+          "body": "Vegetarische, veganistische en glutenvrije versies van hetzelfde gerecht, apart geëtiketteerd en verpakt. Niemand krijgt een bord met alleen bijgerechten."
+        },
+        {
+          "title": "Een tijdvenster dat wij nakomen",
+          "body": "Brussels verkeer is een bekend gegeven: wij vertrekken vroeg en bellen voor u het moet doen. Verschuift er iets, dan hoort u het om zes uur 's ochtends, niet om twaalf uur."
+        }
+      ]
+    },
+    "calendar": {
+      "label": "Levering reserveren",
+      "legendOpen": "Beschikbaar",
+      "legendClosed": "Gesloten of volzet",
+      "legendTooSoon": "Te vroeg",
+      "note": "Kies een beschikbare dag om die aan uw bestelling toe te voegen — u hoeft nog niets in uw winkelmand te hebben. Wij hebben {days} dagen op voorhand nodig en wij leveren niet op zondag.",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "dismiss": "Sluiten",
+      "deliveryOn": "Levering op",
+      "savedPrefix": "Levering vastgelegd op",
+      "savedSuffix": ". Deze datum volgt uw bestelling — tot het afrekenen aanpasbaar.",
+      "save": "Bewaren",
+      "saving": "Bewaren…",
+      "choosePlates": "Kies uw gerechten",
+      "askAboutDate": "Een vraag over deze datum"
+    }
+  },
+  "footer": {
+    "headline": "Un moment,\nsimplement."
   }
 }

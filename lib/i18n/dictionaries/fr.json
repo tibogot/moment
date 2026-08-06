@@ -11,7 +11,8 @@
     "account": "Compte",
     "search": "Rechercher",
     "signIn": "Se connecter",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "collections": "Collections"
   },
   "legalNav": {
     "legal": "Mentions légales",
@@ -26,6 +27,95 @@
   },
   "common": {
     "close": "Fermer",
-    "loading": "Chargement…"
+    "loading": "Chargement…",
+    "aboutUs": "À propos",
+    "talkToUs": "Parlons-en",
+    "seeEverything": "Voir tout",
+    "viewCart": "Voir le panier"
+  },
+  "home": {
+    "hero": {
+      "headline": "Un moment\ngourmand,\nsimplement.",
+      "lead": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, préparés chaque matin et livrés prêts à servir."
+    },
+    "intro": {
+      "headline": "Un traiteur bruxellois pour ceux qui soignent le goût — et l'allure.",
+      "body": "Nous cuisinons pour les particuliers et les entreprises de toute la ville. Plats de saison, salades et jus pressés à froid, préparés chaque matin et livrés prêts à servir. Nous orchestrons vos événements de bout en bout, et gardons un comptoir café ouvert à qui passe."
+    },
+    "kitchen": {
+      "label": "La cuisine",
+      "title": "Cuisiné le matin même.",
+      "body": "Nous commençons avant l'aube, quand la ville est encore calme. Plats, salades et jus pressés à froid sont préparés le matin même — produits de saison, sauces réduites la nuit, vinaigrettes montées à la dernière minute. Rien de réchauffé, rien de la veille."
+    },
+    "delivery": {
+      "label": "Livraison",
+      "title": "Préparé à l'aube, servi à midi.",
+      "body": "Nous emballons et partons dans Bruxelles aux premières heures, pour que le déjeuner arrive tel que la cuisine l'a voulu. Boîtes isothermes, portions déjà dressées, garnitures à part — prêt à ouvrir et à servir, à votre bureau, en salle de réunion ou chez vous avant l'arrivée de vos invités."
+    },
+    "collections": {
+      "label": "Nos collections"
+    },
+    "services": {
+      "label": "Ce que nous faisons",
+      "items": [
+        {
+          "title": "Livraison",
+          "cta": "Commander une livraison",
+          "body": "Plats, salades et jus préparés chaque matin et livrés prêts à servir — à un bureau, en salle de réunion ou sur une table de cuisine."
+        },
+        {
+          "title": "Événements",
+          "cta": "Organiser un événement",
+          "body": "D'un lancement à vingt personnes à un dîner assis. Nous prenons en charge le menu, le service et tout ce qui doit se passer avant l'ouverture des portes."
+        },
+        {
+          "title": "Café",
+          "cta": "Trouver le comptoir café",
+          "body": "Un comptoir café ouvert à qui passe, et les mêmes pâtisseries et jus que nous livrons à nos clients."
+        }
+      ]
+    },
+    "whyUs": {
+      "label": "Pourquoi nous",
+      "headline": "Bien cuisiner est la partie facile. Voici le reste.",
+      "reasons": [
+        {
+          "title": "Un seul interlocuteur",
+          "body": "La personne qui vous répond écrit le menu, et c'est encore elle qui répond la semaine de la livraison. Rien n'est sous-traité, donc rien ne se perd entre deux sociétés."
+        },
+        {
+          "title": "Un prix par personne, tout compris",
+          "body": "Livraison, service, matériel et reprise sont dans le chiffre que nous vous envoyons. Pas de lignes qui apparaissent trois jours avant l'événement."
+        },
+        {
+          "title": "Les régimes prévus, pas rafistolés",
+          "body": "Versions végétariennes, véganes et sans gluten du même plat, étiquetées et emballées séparément. Personne ne reçoit une assiette d'accompagnements."
+        },
+        {
+          "title": "Un créneau que nous tenons",
+          "body": "Le trafic bruxellois est une donnée connue : nous partons tôt et nous appelons avant que vous ayez à le faire. Si quelque chose bouge, vous l'apprenez à six heures du matin, pas à midi."
+        }
+      ]
+    },
+    "calendar": {
+      "label": "Réserver une livraison",
+      "legendOpen": "Disponible",
+      "legendClosed": "Fermé ou complet",
+      "legendTooSoon": "Trop tôt",
+      "note": "Choisissez un jour disponible pour l'ajouter à votre commande — inutile d'avoir déjà quelque chose dans le panier. Il nous faut {days} jours de préavis et nous ne livrons pas le dimanche.",
+      "prev": "Préc.",
+      "next": "Suiv.",
+      "dismiss": "Fermer",
+      "deliveryOn": "Livraison le",
+      "savedPrefix": "Livraison prévue le",
+      "savedSuffix": ". Cette date suit votre commande — modifiable à tout moment avant le paiement.",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "choosePlates": "Choisir vos plats",
+      "askAboutDate": "Poser une question sur cette date"
+    }
+  },
+  "footer": {
+    "headline": "Un moment,\nsimplement."
   }
 }

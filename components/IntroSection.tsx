@@ -6,6 +6,8 @@ import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type IntroSectionProps = {
+  copy: { headline: string; body: string };
+  aboutLabel: string;
   /**
    * Temporary escape hatch so the un-indented headline can be viewed alongside
    * the indented one — see /coffee. Drop the prop once the call is made.
@@ -13,7 +15,11 @@ type IntroSectionProps = {
   indentFirstLine?: boolean;
 };
 
-export function IntroSection({ indentFirstLine = true }: IntroSectionProps) {
+export function IntroSection({
+  copy,
+  aboutLabel,
+  indentFirstLine = true,
+}: IntroSectionProps) {
   return (
     <GridSection className="pt-[10svh] pb-[14svh]">
       {/* Long sky rule setting the section off from the hero. */}
@@ -26,8 +32,7 @@ export function IntroSection({ indentFirstLine = true }: IntroSectionProps) {
               indentFirstLine && "indent-first-line intro-headline"
             )}
           >
-            A traiteur in Brussels for people who care how it tastes — and how
-            it looks.
+            {copy.headline}
           </h2>
         </TextReveal>
       </div>
@@ -35,10 +40,7 @@ export function IntroSection({ indentFirstLine = true }: IntroSectionProps) {
       <div className="col-start-2 col-end-5 mt-[6svh] min-w-0 px-(--grid-gutter) text-left md:col-start-5 md:col-end-8 md:mt-[10svh]">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.08} duration={0.6}>
           <p className="font-archivo-light max-w-full text-[18px] leading-normal wrap-break-word text-black md:text-[min(1.35vw,2svh)]">
-            We cook for private hosts and companies across the city. Seasonal
-            plates, salads and cold-pressed juices, prepared each morning and
-            delivered ready to serve. We run events end to end, and keep a
-            coffee desk open for anyone passing by.
+            {copy.body}
           </p>
 
           <Link
@@ -46,7 +48,7 @@ export function IntroSection({ indentFirstLine = true }: IntroSectionProps) {
             className="group mt-5 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
           >
             <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-              About us
+              {aboutLabel}
               <span
                 className="transition-transform duration-500 group-hover:translate-x-1.5"
                 aria-hidden

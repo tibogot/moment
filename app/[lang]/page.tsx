@@ -15,10 +15,12 @@ import {
   DEFAULT_LOCALE,
   isLocale,
   OG_LOCALE,
+  toLocale,
 } from "@/lib/i18n/config";
 import { routes } from "@/lib/routes";
 import { siteGraph } from "@/lib/schema";
 import { languageAlternates } from "@/lib/seo";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getCollections } from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { siteConfig } from "@/lib/site";
@@ -56,11 +58,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function Home() {
-  const [collections, availability] = await Promise.all([
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const [collections, availability, dict] = await Promise.all([
     getCollections(),
     getDeliveryAvailability(),
+    getDictionary(toLocale(lang)),
   ]);
+  const home = dict.home;
 
   // Shopify seeds every store with a "frontpage" collection; skip it and show
   // the first three real ones.
@@ -74,8 +83,8 @@ export default async function Home() {
           site's structured data refers back to by @id. */}
       <JsonLd data={siteGraph()} />
 
-      <Hero />
-      <IntroSection />
+      <Hero copy={home.hero} />
+      <IntroSection copy={home.intro} aboutLabel={dict.common.aboutUs} />
 
       {/* The two rooms of the business, side by side on identical 3 x 3 grids. */}
       <PanelPairSection />
@@ -114,28 +123,32 @@ export default async function Home() {
         fullBleedBottom
       />
 
-      <CollectionsSection collections={featured} />
+      <CollectionsSection
+        collections={featured}
+        heading={home.collections.label}
+        viewAllLabel={dict.common.seeEverything}
+      />
 
       <StickyTitleSection
-        label="The kitchen"
-        title="Cooked the morning it is eaten."
-        body="We start before dawn, when the city is still quiet. Plates, salads and cold-pressed juices are made from scratch that same morning — seasonal produce, sauces reduced overnight, dressings mixed at the last minute. Nothing reheated, nothing left over from the day before."
+        label={home.kitchen.label}
+        title={home.kitchen.title}
+        body={home.kitchen.body}
         src="/images/dan-smedley.jpg"
       />
 
       <StickyTitleSection
         theme="sky"
         imagePosition="left"
-        label="Delivery"
-        title="Prepared at dawn, served by lunch."
-        body="We pack and send across Brussels in the early hours, so lunch arrives as the kitchen intended. Insulated boxes, portions already set, garnishes kept separate — ready to unwrap and serve at your desk, in a meeting room, or at home before your guests walk in."
+        label={home.delivery.label}
+        title={home.delivery.title}
+        body={home.delivery.body}
         src="/images/william-king.jpg"
       />
 
       <ServicesSection />
 
       {/* The reasons, once the visitor knows what we actually do. */}
-      <WhyUsSection />
+      <WhyUsSection copy={home.whyUs} ctaLabel={dict.common.talkToUs} />
 
       {/* Full-height breath between the reasons and the calendar. */}
       <FullBleedImageSection src="/images/svitlana.jpg" />

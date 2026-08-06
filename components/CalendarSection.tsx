@@ -5,7 +5,7 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { setDeliveryDate } from "@/app/actions/cart";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
-import { monthCells, monthName, WEEKDAYS } from "@/lib/calendar";
+import { monthCells, WEEKDAYS } from "@/lib/calendar";
 import { notifyCartUpdated } from "@/lib/cart-store";
 import { gsap } from "@/lib/gsapConfig";
 import { blurFocusWithin } from "@/lib/overlayFocus";
@@ -18,6 +18,10 @@ import {
   type DeliveryAvailability,
 } from "@/lib/delivery";
 import { routes } from "@/lib/routes";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
+import { formatMonth } from "@/lib/i18n/format";
+
 import { cn } from "@/lib/utils";
 
 import { REVEAL_BLOCK } from "@/lib/colors";
@@ -69,6 +73,9 @@ type CalendarSectionProps = {
 };
 
 export function CalendarSection({ availability }: CalendarSectionProps) {
+  const dict = useDictionary();
+  const locale = useLocale();
+  const t = dict.home.calendar;
   const today = useMemo(
     () => parseISODate(availability.today) ?? new Date(),
     [availability.today],
@@ -89,7 +96,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
 
   const isoFor = (day: number) => toISODate(new Date(year, month, day));
 
-  const monthLabel = monthName(cursor);
+  const monthLabel = formatMonth(locale, cursor);
   const atFirstMonth =
     year === today.getFullYear() && month === today.getMonth();
 
@@ -166,7 +173,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
         <div className="col-start-2">
           <div className="px-(--grid-gutter) pb-[5svh]">
             <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-              Book for delivery
+              {t.label}
             </h2>
             <div
               className="mt-4 h-px bg-sky"
@@ -199,7 +206,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                 disabled={atFirstMonth}
                 className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
               >
-                Prev
+                {t.prev}
               </button>
               <span className="font-archivo-light text-[13px]">{year}</span>
               <button
@@ -207,7 +214,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                 onClick={() => shiftMonth(1)}
                 className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
               >
-                Next
+                {t.next}
               </button>
             </div>
           </div>
@@ -308,13 +315,13 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                   aria-hidden
                 />
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
-                  Open
+                  {t.legendOpen}
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="size-4 border border-sky bg-sky" aria-hidden />
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
-                  Closed or full
+                  {t.legendClosed}
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
@@ -323,15 +330,13 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                   aria-hidden
                 />
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide md:text-[13px]">
-                  Too soon
+                  {t.legendTooSoon}
                 </span>
               </li>
             </ul>
 
             <p className="font-archivo-light mt-6 max-w-[44ch] text-[18px] leading-normal md:text-[min(1.35vw,2svh)]">
-              Pick any open day to add it to your order — you do not need
-              anything in your basket yet. We need {LEAD_TIME_DAYS}{" "}
-              days&apos; notice and we do not deliver on Sundays.
+              {interpolate(t.note, { days: LEAD_TIME_DAYS })}
             </p>
           </div>
         </div>
@@ -359,23 +364,22 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               aria-label="Dismiss"
               className="font-owners-medium shrink-0 text-[12px] uppercase tracking-wide opacity-60 transition-opacity hover:opacity-100 md:text-(length:--nav-text)"
             >
-              Close
+              {t.dismiss}
             </button>
 
             <div className="min-w-0">
             {isSaved ? (
               <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
-                Delivery set for{" "}
+                {t.savedPrefix}{" "}
                 <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
                   {formatDeliveryDate(status.date)}
                 </span>
-                . It travels with your order — change it any time before
-                checkout.
+                {t.savedSuffix}
               </p>
             ) : (
               <>
                 <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
-                  Delivery on{" "}
+                  {t.deliveryOn}{" "}
                   <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
                     {selected ? formatDeliveryDate(selected) : ""}
                   </span>
@@ -394,10 +398,10 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
             {isSaved ? (
               <>
                 <Link href={routes.shop} className={CTA_PRIMARY}>
-                  <CtaLabel>Choose your plates</CtaLabel>
+                  <CtaLabel>{t.choosePlates}</CtaLabel>
                 </Link>
                 <Link href={routes.cart} className={CTA_SECONDARY}>
-                  <CtaLabel>View cart</CtaLabel>
+                  <CtaLabel>{dict.common.viewCart}</CtaLabel>
                 </Link>
               </>
             ) : (
@@ -409,11 +413,11 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                   className={cn(CTA_PRIMARY, "disabled:opacity-40")}
                 >
                   <CtaLabel>
-                    {isPending ? "Saving…" : "Save to my order"}
+                    {isPending ? t.saving : t.save}
                   </CtaLabel>
                 </button>
                 <Link href={routes.contact} className={CTA_SECONDARY}>
-                  <CtaLabel>Ask about this date</CtaLabel>
+                  <CtaLabel>{t.askAboutDate}</CtaLabel>
                 </Link>
               </>
             )}

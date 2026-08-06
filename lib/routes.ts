@@ -42,22 +42,29 @@ export const routes = {
   newsArticle: (slug: string) => `/news/${slug}`,
 } as const;
 
-/** The links that appear in the navbar and the mobile menu, in order. */
+/**
+ * The links that appear in the navbar and the mobile menu, in order.
+ *
+ * `key` rather than a label: the wording now lives in the dictionaries under
+ * `nav`, and the type ties the two together, so adding an entry here without
+ * translating it is a compile error rather than an English word on a Dutch
+ * page.
+ */
 export const mainNav = [
-  { label: "Shop", opensShopMenu: true as const },
-  { label: "Menus", href: routes.menus },
-  { label: "Events", href: routes.events },
-  { label: "Coffee", href: routes.coffee },
-  { label: "News", href: routes.news },
-  { label: "About", href: routes.about },
-  { label: "Contact", href: routes.contact },
+  { key: "shop", opensShopMenu: true as const },
+  { key: "menus", href: routes.menus },
+  { key: "events", href: routes.events },
+  { key: "coffee", href: routes.coffee },
+  { key: "news", href: routes.news },
+  { key: "about", href: routes.about },
+  { key: "contact", href: routes.contact },
 ] as const;
 
 /** Footer legal strip — required for a Belgian ecommerce site. */
 export const legalNav = [
-  { label: "Legal notice", href: routes.legal },
-  { label: "Privacy", href: routes.privacy },
-  { label: "Cookies", href: routes.cookies },
-  { label: "Terms of sale", href: routes.terms },
-  { label: "Shipping & returns", href: routes.shipping },
+  { key: "legal", href: routes.legal },
+  { key: "privacy", href: routes.privacy },
+  { key: "cookies", href: routes.cookies },
+  { key: "terms", href: routes.terms },
+  { key: "shipping", href: routes.shipping },
 ] as const;

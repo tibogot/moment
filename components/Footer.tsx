@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { Lines } from "@/components/Lines";
+import { useDictionary } from "@/components/LocaleProvider";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { CookiePreferencesButton } from "@/components/CookieConsent";
 import { FooterGridCells } from "@/components/FooterGridCells";
@@ -23,6 +27,8 @@ const legalLinkClassName =
   "font-archivo-light text-[11px] leading-snug transition-opacity hover:opacity-60 md:text-[12px]";
 
 export function Footer() {
+  const dict = useDictionary();
+
   return (
     <footer className="site-footer relative h-[90svh] w-full overflow-hidden bg-cream text-black md:h-[80svh]">
       <FooterGridCells
@@ -81,9 +87,7 @@ export function Footer() {
         {/* Headline — open across the left; the rest of the field stays squared. */}
         <div className="col-start-2 col-end-5 row-start-3 row-end-5 min-w-0 self-end pb-5 pl-(--grid-gutter) text-left md:col-end-6 md:pb-[4svh]">
           <p className="font-owners-narrow-bold max-w-full text-[13vw] leading-[0.88] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(7vw,12svh)]">
-            Un moment,
-            <br />
-            simplement.
+            <Lines text={dict.footer.headline} />
           </p>
         </div>
 
@@ -98,10 +102,10 @@ export function Footer() {
                 className={`pointer-events-auto ${legalLinkClassName}`}
               />
             </li>
-            {legalNav.map(({ label, href }) => (
+            {legalNav.map(({ key, href }) => (
               <li key={href}>
                 <Link href={href} className={`pointer-events-auto ${legalLinkClassName}`}>
-                  {label}
+                  {dict.legalNav[key]}
                 </Link>
               </li>
             ))}

@@ -1,5 +1,6 @@
 import heroImage from "@/public/images/gemini-moment.webp";
 import { GridLines } from "@/components/GridLines";
+import { Lines } from "@/components/Lines";
 import { HeroParallaxImage } from "@/components/HeroParallaxImage";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_HERO } from "@/lib/colors";
@@ -10,7 +11,11 @@ import {
   HERO_GRID_HOLES_MOBILE,
 } from "@/lib/grid";
 
-export function Hero() {
+type HeroProps = {
+  copy: { headline: string; lead: string };
+};
+
+export function Hero({ copy }: HeroProps) {
   return (
     <section
       className="relative h-svh w-full overflow-hidden"
@@ -47,11 +52,7 @@ export function Hero() {
               className="font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] uppercase"
               style={{ fontSize: "var(--hero-headline)" }}
             >
-              Un moment
-              <br />
-              gourmand,
-              <br />
-              simplement.
+              <Lines text={copy.headline} />
             </h1>
           </TextReveal>
         </div>
@@ -68,8 +69,7 @@ export function Hero() {
               className="font-archivo-light max-w-full text-balance leading-[1.2]"
               style={{ fontSize: "var(--hero-body)" }}
             >
-              Traiteur à Bruxelles pour particuliers et entreprises. Plats
-              de saison, préparés chaque matin et livrés prêts à servir.
+              {copy.lead}
             </p>
           </TextReveal>
         </div>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useMemo, useState } from "react";
 import { routes } from "@/lib/routes";
+import { useDictionary } from "@/components/LocaleProvider";
 import { NAV_PREVIEW_COUNT } from "@/lib/shopify/queries";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -136,6 +137,7 @@ export function ShopNavMenu({
   collections,
   onNavigate,
 }: ShopNavMenuProps) {
+  const dict = useDictionary();
   const [hovered, setHovered] = useState<HoverKey | null>(null);
 
   const previewProducts = useMemo(
@@ -172,7 +174,7 @@ export function ShopNavMenu({
           onFocus={setHover("collections")}
           onClick={onNavigate}
         >
-          Collections
+          {dict.nav.collections}
         </Link>
         {collections.map((collection) => (
           <Link

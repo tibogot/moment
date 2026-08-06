@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useDictionary } from "@/components/LocaleProvider";
 import { usePathname } from "next/navigation";
 import {
   useEffect,
@@ -563,6 +564,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const navLinkClassName =
     "animated-underline font-owners-medium uppercase tracking-wide";
 
+  const dict = useDictionary();
   const [shopNav, ...otherNav] = mainNav;
 
   const openShopMenu = () => {
@@ -729,13 +731,13 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
                   })
                 }
               >
-                {shopNav.label}
+                {dict.nav[shopNav.key]}
               </button>
             </li>
-            {otherNav.map(({ label, href }) => (
+            {otherNav.map(({ key, href }) => (
               <li key={href} onMouseEnter={closeShopMenu}>
                 <Link href={href} className={navLinkClassName} data-nav-link>
-                  {label}
+                  {dict.nav[key]}
                 </Link>
               </li>
             ))}
