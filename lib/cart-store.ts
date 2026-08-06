@@ -9,6 +9,7 @@ let cart: Cart | null = null;
 let availability: DeliveryAvailability | null = null;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
+let refetchQueued = false;
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -16,7 +17,14 @@ function emit() {
 }
 
 function fetchCart(): Promise<void> {
-  if (inFlight) return inFlight;
+  // A request asked for while one is already running has to be honoured after
+  // it settles, not folded into it: the in-flight response was sent before the
+  // mutation that prompted this call, so reusing it would leave the panel a
+  // change behind until something else happened to refresh it.
+  if (inFlight) {
+    refetchQueued = true;
+    return inFlight;
+  }
 
   inFlight = (async () => {
     try {
@@ -38,6 +46,11 @@ function fetchCart(): Promise<void> {
       hasFetched = true;
       inFlight = null;
       emit();
+
+      if (refetchQueued) {
+        refetchQueued = false;
+        void fetchCart();
+      }
     }
   })();
 
@@ -73,6 +86,17 @@ export function getServerAvailabilitySnapshot(): DeliveryAvailability | null {
 
 export function refreshCart(): Promise<void> {
   return fetchCart();
+}
+
+/**
+ * Publishes a cart a mutation just handed back, skipping the round trip that
+ * `notifyCartUpdated` would cost. `hasFetched` is deliberately left alone: it
+ * gates the first `/api/cart` call, which is also the only thing that loads
+ * availability, and the panel's date picker needs that.
+ */
+export function setCart(next: Cart | null) {
+  cart = next;
+  emit();
 }
 
 /** Fire after any mutation so the badge and panel re-read the cart. */

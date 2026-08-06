@@ -37,10 +37,32 @@ export type Cart = {
   deliveryAddress: string | null;
 };
 
-type CartResult = { id: string; checkoutUrl: string; totalQuantity: number };
+type RawCart = {
+  id: string;
+  checkoutUrl: string;
+  totalQuantity: number;
+  attributes: { key: string; value: string | null }[];
+  cost: { totalAmount: { amount: string; currencyCode: string } };
+  lines: {
+    edges: {
+      node: {
+        id: string;
+        quantity: number;
+        cost: { totalAmount: { amount: string; currencyCode: string } };
+        merchandise: {
+          id: string;
+          title: string;
+          image: { url: string; altText: string | null } | null;
+          price: { amount: string; currencyCode: string };
+          product: { title: string; handle: string };
+        };
+      };
+    }[];
+  };
+};
 
 type MutationPayload = {
-  cart: CartResult | null;
+  cart: RawCart | null;
   userErrors: { field: string[] | null; message: string }[];
 };
 
@@ -56,40 +78,65 @@ type CartMutationResponse = {
 };
 
 type CartQueryResponse = {
-  data?: {
-    cart: {
-      id: string;
-      checkoutUrl: string;
-      totalQuantity: number;
-      attributes: { key: string; value: string | null }[];
-      cost: { totalAmount: { amount: string; currencyCode: string } };
-      lines: {
-        edges: {
-          node: {
-            id: string;
-            quantity: number;
-            cost: { totalAmount: { amount: string; currencyCode: string } };
-            merchandise: {
-              id: string;
-              title: string;
-              image: { url: string; altText: string | null } | null;
-              price: { amount: string; currencyCode: string };
-              product: { title: string; handle: string };
-            };
-          };
-        }[];
-      };
-    } | null;
-  };
+  data?: { cart: RawCart | null };
   errors?: { message: string }[];
 };
 
-const CART_RESULT_FIELDS = `
-  cart {
-    id
-    checkoutUrl
-    totalQuantity
+/**
+ * Everything the UI needs to paint a cart. Mutations select the same set as the
+ * query does, so a write hands back the new cart in one round trip — the panel
+ * never has to follow a `+` with a second fetch just to learn the new quantity.
+ */
+const CART_FIELDS = `
+  id
+  checkoutUrl
+  totalQuantity
+  attributes {
+    key
+    value
   }
+  cost {
+    totalAmount {
+      amount
+      currencyCode
+    }
+  }
+  lines(first: 50) {
+    edges {
+      node {
+        id
+        quantity
+        cost {
+          totalAmount {
+            amount
+            currencyCode
+          }
+        }
+        merchandise {
+          ... on ProductVariant {
+            id
+            title
+            image {
+              url
+              altText
+            }
+            price {
+              amount
+              currencyCode
+            }
+            product {
+              title
+              handle
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+const CART_RESULT_FIELDS = `
+  cart { ${CART_FIELDS} }
   userErrors {
     field
     message
@@ -145,53 +192,7 @@ const CART_ATTRIBUTES_QUERY = `
 
 const CART_QUERY = `
   query GetCart($cartId: ID!) {
-    cart(id: $cartId) {
-      id
-      checkoutUrl
-      totalQuantity
-      attributes {
-        key
-        value
-      }
-      cost {
-        totalAmount {
-          amount
-          currencyCode
-        }
-      }
-      lines(first: 50) {
-        edges {
-          node {
-            id
-            quantity
-            cost {
-              totalAmount {
-                amount
-                currencyCode
-              }
-            }
-            merchandise {
-              ... on ProductVariant {
-                id
-                title
-                image {
-                  url
-                  altText
-                }
-                price {
-                  amount
-                  currencyCode
-                }
-                product {
-                  title
-                  handle
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    cart(id: $cartId) { ${CART_FIELDS} }
   }
 `;
 
@@ -210,11 +211,7 @@ function formatUserErrors(
   return userErrors.map((error) => error.message).join(" ");
 }
 
-function mapCartNode(
-  node: NonNullable<CartQueryResponse["data"]>["cart"],
-): Cart | null {
-  if (!node) return null;
-
+function mapCartNode(node: RawCart): Cart {
   const { amount, currencyCode } = node.cost.totalAmount;
 
   const lines = node.lines.edges
@@ -304,6 +301,7 @@ async function runCartMutation(
     cartId: payload.cart.id,
     checkoutUrl: payload.cart.checkoutUrl,
     totalQuantity: payload.cart.totalQuantity,
+    cart: mapCartNode(payload.cart),
   };
 }
 
@@ -321,7 +319,7 @@ export async function getCartById(cartId: string): Promise<Cart | null> {
       return null;
     }
 
-    return mapCartNode(data?.cart ?? null);
+    return data?.cart ? mapCartNode(data.cart) : null;
   } catch (error) {
     console.error("[shopify] getCartById failed", error);
     return null;

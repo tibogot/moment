@@ -22,7 +22,8 @@ import {
   getCartSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
-  notifyCartUpdated,
+  refreshCart,
+  setCart,
   subscribeCart,
 } from "@/lib/cart-store";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
@@ -40,6 +41,14 @@ const ANIM_DURATION = 0.75;
 const OPEN_EASE = "power3.out";
 const CLOSE_EASE = "power3.inOut";
 
+/**
+ * Long enough that tapping `+` four times sends one write carrying the final
+ * number instead of four, short enough that a single tap does not feel parked.
+ * `cartLinesUpdate` takes an absolute quantity, so collapsing the taps is only
+ * ever a matter of sending the last one.
+ */
+const QUANTITY_DEBOUNCE_MS = 300;
+
 export function CartPanel({ open, onClose }: CartPanelProps) {
   const cart = useSyncExternalStore(
     subscribeCart,
@@ -56,6 +65,16 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+
+  // Quantities the customer has asked for but Shopify has not confirmed yet,
+  // keyed by line id — 0 means the line is on its way out. These are what the
+  // list renders, so a tap lands on screen immediately and the network happens
+  // behind it. A ref mirrors the state because the debounced writes below read
+  // the latest target from outside the render.
+  const [pending, setPending] = useState<Record<string, number>>({});
+  const pendingRef = useRef(pending);
+  const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  const queue = useRef<Promise<void>>(Promise.resolve());
 
   useOverlayScrollLock(open);
 
@@ -123,19 +142,95 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     };
   }, [open]);
 
-  const mutate = (action: () => Promise<{ ok: boolean; error?: string }>) => {
-    setError(null);
-    startTransition(async () => {
-      const result = await action();
-      if (!result.ok) {
-        setError(result.error ?? "Something went wrong.");
-        return;
-      }
-      notifyCartUpdated();
-    });
+  const writePending = (next: Record<string, number>) => {
+    pendingRef.current = next;
+    setPending(next);
   };
 
-  const isEmpty = !cart || cart.lines.length === 0;
+  const clearPending = (lineId: string) => {
+    if (!(lineId in pendingRef.current)) return;
+    const next = { ...pendingRef.current };
+    delete next[lineId];
+    writePending(next);
+  };
+
+  // One write at a time. Shopify does not merge concurrent cart mutations, and
+  // two responses landing out of order would put an older cart back on screen.
+  const enqueue = (lineId: string) => {
+    const run = async () => {
+      const target = pendingRef.current[lineId];
+      if (target === undefined) return;
+
+      try {
+        const result =
+          target === 0
+            ? await removeFromCart(lineId)
+            : await updateCartLine(lineId, target);
+
+        if (!result.ok) {
+          setError(result.error ?? "Something went wrong.");
+          clearPending(lineId);
+          void refreshCart();
+          return;
+        }
+
+        // The mutation already returned the new cart, so there is nothing left
+        // to fetch. Hold the optimistic value if a newer tap is still queued
+        // behind this one, or the number would flick back for a moment.
+        setCart(result.cart);
+        if (pendingRef.current[lineId] === target && !timers.current.has(lineId)) {
+          clearPending(lineId);
+        }
+      } catch {
+        setError("Something went wrong.");
+        clearPending(lineId);
+        void refreshCart();
+      }
+    };
+
+    queue.current = queue.current.then(run);
+  };
+
+  const setLineQuantity = (lineId: string, quantity: number) => {
+    setError(null);
+    writePending({ ...pendingRef.current, [lineId]: Math.max(0, quantity) });
+
+    const existing = timers.current.get(lineId);
+    if (existing) clearTimeout(existing);
+    timers.current.set(
+      lineId,
+      setTimeout(() => {
+        timers.current.delete(lineId);
+        enqueue(lineId);
+      }, QUANTITY_DEBOUNCE_MS),
+    );
+  };
+
+  /**
+   * Steps off the ref rather than the rendered quantity: taps landing in the
+   * same frame all read the same render, so `line.quantity + 1` three times over
+   * asks for 2 rather than 4. The ref always holds the latest target.
+   */
+  const stepLineQuantity = (lineId: string, rendered: number, delta: number) => {
+    setLineQuantity(lineId, (pendingRef.current[lineId] ?? rendered) + delta);
+  };
+
+  useEffect(() => {
+    const scheduled = timers.current;
+    return () => {
+      for (const timer of scheduled.values()) clearTimeout(timer);
+    };
+  }, []);
+
+  // Line totals stay on Shopify's numbers rather than being guessed from a unit
+  // price: discounts live on the server, and a total that flickers to a wrong
+  // figure is worse than one that lands a moment late.
+  const lines = (cart?.lines ?? [])
+    .map((line) => ({ ...line, quantity: pending[line.id] ?? line.quantity }))
+    .filter((line) => line.quantity > 0);
+
+  const isEmpty = !cart || lines.length === 0;
+  const totalQuantity = lines.reduce((sum, line) => sum + line.quantity, 0);
   const deliveryDate = cart?.deliveryDate ?? null;
 
   // A date saved days ago can go stale while the cart sits — the owners may
@@ -154,7 +249,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         setError(result.error);
         return;
       }
-      notifyCartUpdated();
+      setCart(result.cart);
       setPickerOpen(false);
     });
   };
@@ -186,7 +281,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
               {pickerOpen
                 ? "Delivery date"
-                : `Cart${cart?.totalQuantity ? ` (${cart.totalQuantity})` : ""}`}
+                : `Cart${totalQuantity ? ` (${totalQuantity})` : ""}`}
             </p>
             <button
               type="button"
@@ -230,7 +325,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             </p>
           ) : (
             <ul>
-              {cart.lines.map((line) => (
+              {lines.map((line) => (
                 <li
                   key={line.id}
                   className="flex gap-4 border-b border-sky px-6 py-5"
@@ -270,13 +365,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                         <button
                           type="button"
                           aria-label="Decrease quantity"
-                          disabled={isPending}
                           onClick={() =>
-                            mutate(() =>
-                              updateCartLine(line.id, line.quantity - 1),
-                            )
+                            stepLineQuantity(line.id, line.quantity, -1)
                           }
-                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60 disabled:opacity-40"
+                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60"
                         >
                           −
                         </button>
@@ -286,13 +378,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                         <button
                           type="button"
                           aria-label="Increase quantity"
-                          disabled={isPending}
                           onClick={() =>
-                            mutate(() =>
-                              updateCartLine(line.id, line.quantity + 1),
-                            )
+                            stepLineQuantity(line.id, line.quantity, 1)
                           }
-                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60 disabled:opacity-40"
+                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60"
                         >
                           +
                         </button>
@@ -305,9 +394,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
                     <button
                       type="button"
-                      disabled={isPending}
-                      onClick={() => mutate(() => removeFromCart(line.id))}
-                      className="font-archivo-light mt-2 self-start text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60 disabled:opacity-40"
+                      onClick={() => setLineQuantity(line.id, 0)}
+                      className="font-archivo-light mt-2 self-start text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
                     >
                       Remove
                     </button>

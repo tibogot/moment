@@ -74,7 +74,7 @@ export async function addToCart(variantId: string, quantity = 1) {
   await setCartCookie(result.cartId);
   revalidatePath(routes.cart);
 
-  return { ok: true as const, totalQuantity: result.totalQuantity };
+  return { ok: true as const, totalQuantity: result.totalQuantity, cart: result.cart };
 }
 
 /**
@@ -96,7 +96,7 @@ async function saveOrderPreferences(patch: Record<string, string | null>) {
   await setCartCookie(result.cartId);
   revalidatePath(routes.cart);
 
-  return { ok: true as const };
+  return { ok: true as const, cart: result.cart };
 }
 
 /**
@@ -123,7 +123,7 @@ export async function setDeliveryDate(isoDate: string) {
   });
   if (!saved.ok) return saved;
 
-  return { ok: true as const, date: isoDate };
+  return { ok: true as const, date: isoDate, cart: saved.cart };
 }
 
 export async function setDeliveryMethod(method: DeliveryMethod) {
@@ -177,6 +177,14 @@ export async function setDeliveryAddress(value: string) {
   return { ok: true as const, address: resolved.label };
 }
 
+/**
+ * The updated cart travels back with the result so the caller can paint it
+ * straight away. No `revalidatePath` here on purpose: the cart page re-reads the
+ * cart on its own (it is dynamic, and `CartDeliverySection` calls
+ * `router.refresh()` after its own writes), while revalidating from a Server
+ * Function makes every previously visited page refetch on the next navigation —
+ * a lot of work to hang off a quantity stepper.
+ */
 export async function updateCartLine(lineId: string, quantity: number) {
   const cartId = await getCartIdFromCookies();
   if (!cartId) return { ok: false as const, error: "No cart found." };
@@ -184,8 +192,7 @@ export async function updateCartLine(lineId: string, quantity: number) {
   const result = await updateCartLineQuantity(cartId, lineId, quantity);
   if (!result.ok) return result;
 
-  revalidatePath(routes.cart);
-  return { ok: true as const, totalQuantity: result.totalQuantity };
+  return { ok: true as const, cart: result.cart };
 }
 
 export async function removeFromCart(lineId: string) {
@@ -195,6 +202,5 @@ export async function removeFromCart(lineId: string) {
   const result = await removeCartLines(cartId, [lineId]);
   if (!result.ok) return result;
 
-  revalidatePath(routes.cart);
-  return { ok: true as const, totalQuantity: result.totalQuantity };
+  return { ok: true as const, cart: result.cart };
 }

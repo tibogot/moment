@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { addToCart } from "@/app/actions/cart";
-import { notifyCartUpdated } from "@/lib/cart-store";
+import { setCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
 
 type AddToCartButtonProps = {
@@ -35,7 +35,9 @@ export function AddToCartButton({
       }
 
       setQuantity(1);
-      notifyCartUpdated();
+      // The mutation handed the new cart back, so the panel it is about to open
+      // is already filled in — no refetch to wait on behind the slide-in.
+      setCart(result.cart);
       window.dispatchEvent(new Event("cart-open"));
     });
   };
