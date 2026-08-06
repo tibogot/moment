@@ -43,6 +43,18 @@
   --nav-logo: 92px;
   --nav-icon: 20px;
 
+  /* The horizontal nav links, sized apart from --nav-text because they are the
+     one piece of chrome whose width is set by the language rather than by us.
+     "Événements" and "Actualités" are half again as long as "Events" and
+     "News", and the links only own three of the seven content columns — the
+     logo sits in the fifth — so at the nav breakpoint the French and Dutch sets
+     ran straight into it.
+     Both terms are fluid from the breakpoint (75rem) up to 100rem, where they
+     reach the sizes the English nav always had. Below 75rem none of this
+     applies: the links are hidden and the burger takes over. */
+  --nav-link-text: clamp(11.5px, calc(4px + 0.625vw), 14px);
+  --nav-link-gap: clamp(10px, calc(-8px + 1.5vw), 16px);
+
   /* Product card metrics. Held as lengths rather than utility classes so the
      shop's grid/index switch can interpolate them — see .product-list. */
   --card-pad: 4svh;

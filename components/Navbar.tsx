@@ -712,8 +712,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           </div>
 
           <ul
-            className="hidden nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-4 nav:pl-(--grid-gutter)"
-            style={{ fontSize: "var(--nav-text)" }}
+            className="hidden min-w-0 nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:pl-(--grid-gutter)"
+            style={{
+              fontSize: "var(--nav-link-text)",
+              gap: "var(--nav-link-gap)",
+            }}
           >
             <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
               <button

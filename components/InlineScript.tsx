@@ -1,5 +1,14 @@
+"use client";
+
 /**
  * An inline script that runs on a hard load and is inert on a soft one.
+ *
+ * The `"use client"` above is the whole trick, and it is not optional. As a
+ * Server Component this renders on the server even during a client-side
+ * navigation — `typeof window` is undefined every time, the type is always
+ * `text/javascript`, and React still finds a script tag while rendering on the
+ * client. Only a Client Component actually executes in the browser and can
+ * report that it is there.
  *
  * The guards in the root layout have to execute while the browser parses the
  * HTML — before the first paint — which is the one thing `next/script` cannot
