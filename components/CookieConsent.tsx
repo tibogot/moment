@@ -18,6 +18,7 @@ import type { ConsentChoices } from "@/lib/consent/types";
 import { routes } from "@/lib/routes";
 import { useIsClient } from "@/lib/useIsClient";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
+import { cn } from "@/lib/utils";
 
 function CookieCtaButton({
   children,
@@ -119,17 +120,26 @@ function CookiePreferencesPanel({
                     {description}
                   </span>
                 </span>
-                <input
-                  type="checkbox"
-                  checked={draft[id]}
-                  onChange={(event) =>
-                    setDraft((current) => ({
-                      ...current,
-                      [id]: event.target.checked,
-                    }))
-                  }
-                  className="mt-1 size-4 shrink-0 accent-black"
-                />
+                <span
+                  className={cn(
+                    "font-owners-medium shrink-0 border border-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-300",
+                    "has-checked:border-black has-checked:bg-black has-checked:text-cream",
+                    "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    checked={draft[id]}
+                    onChange={(event) =>
+                      setDraft((current) => ({
+                        ...current,
+                        [id]: event.target.checked,
+                      }))
+                    }
+                    className="sr-only"
+                  />
+                  {draft[id] ? "On" : "Off"}
+                </span>
               </label>
             </li>
           ))}
