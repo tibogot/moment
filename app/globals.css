@@ -52,8 +52,14 @@
      Both terms are fluid from the breakpoint (75rem) up to 100rem, where they
      reach the sizes the English nav always had. Below 75rem none of this
      applies: the links are hidden and the burger takes over. */
-  --nav-link-text: clamp(11.5px, calc(4px + 0.625vw), 14px);
-  --nav-link-gap: clamp(10px, calc(-8px + 1.5vw), 16px);
+  --nav-link-text: clamp(11px, calc(2px + 0.75vw), 14px);
+  --nav-link-gap: clamp(8px, calc(-16px + 2vw), 16px);
+  /* The links carry tracking-wide, which across seven items adds most of a
+     word's worth of width. Tightened at the bottom of the range and handed
+     back by 100rem, where there is room for it again.
+     In px, not em: em would compound with --nav-link-text, which is itself
+     fluid, and the two together are impossible to reason about. */
+  --nav-link-tracking: clamp(0.11px, calc(-0.61px + 0.06vw), 0.35px);
 
   /* Product card metrics. Held as lengths rather than utility classes so the
      shop's grid/index switch can interpolate them — see .product-list. */

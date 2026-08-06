@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { usePathname } from "next/navigation";
+import { DEFAULT_LOCALE, stripLocale, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 /**
@@ -47,6 +48,19 @@ export function LocaleProvider({
 
 export function useLocale() {
   return useContext(LocaleContext)?.locale ?? DEFAULT_LOCALE;
+}
+
+/**
+ * The current route without its language, for comparing against `routes`.
+ *
+ * `usePathname()` returns "/fr", never "/", so every `pathname === routes.home`
+ * in the codebase silently became false the day the routes moved under
+ * `[lang]`. That is what turned off the transparent nav over the hero and the
+ * logo's scroll-to-top: no error, no warning, just a feature quietly gone.
+ * Compare against this instead.
+ */
+export function useBarePathname() {
+  return stripLocale(usePathname());
 }
 
 /**

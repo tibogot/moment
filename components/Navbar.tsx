@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { useDictionary } from "@/components/LocaleProvider";
+import { useBarePathname, useDictionary } from "@/components/LocaleProvider";
 import { usePathname } from "next/navigation";
 import {
   useEffect,
@@ -90,8 +90,11 @@ type NavAppearance = {
 
 export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const pathname = usePathname();
+  // Compared without the language segment: usePathname returns "/fr", and the
+  // routes these are checked against have no locale on them.
+  const barePathname = useBarePathname();
   const lenis = useLenis();
-  const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
+  const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(barePathname);
   const isMobileNav = useSyncExternalStore(
     subscribeMobileNav,
     getMobileNavSnapshot,
@@ -578,7 +581,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   };
 
   const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname !== routes.home) return;
+    if (barePathname !== routes.home) return;
 
     event.preventDefault();
     withOverlayFocusRelease(() => {
@@ -712,10 +715,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           </div>
 
           <ul
-            className="hidden min-w-0 nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:pl-(--grid-gutter)"
+            className="hidden min-w-0 whitespace-nowrap nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:pl-(--grid-gutter)"
             style={{
               fontSize: "var(--nav-link-text)",
               gap: "var(--nav-link-gap)",
+              letterSpacing: "var(--nav-link-tracking)",
             }}
           >
             <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
