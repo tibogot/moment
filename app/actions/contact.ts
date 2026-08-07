@@ -11,12 +11,6 @@ import { siteConfig } from "@/lib/site";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
-const SUCCESS =
-  "Thank you — the kitchen has it. We reply within one working day, usually sooner.";
-
-const FAILED =
-  "We could not send your request just now. Please try again in a moment.";
-
 function readField(formData: FormData, name: string) {
   const value = formData.get(name);
   return typeof value === "string" ? value.trim() : "";
@@ -29,6 +23,8 @@ function composeBody(values: ContactValues) {
     `Email:    ${values.email}`,
     `Phone:    ${values.phone || "—"}`,
     `Company:  ${values.company || "—"}`,
+    `VAT:      ${values.vat || "—"}`,
+    `Address:  ${values.address || "—"}`,
     `For:      ${values.occasion}`,
     `Date:     ${values.date || "—"}`,
     `People:   ${values.guests || "—"}`,
@@ -49,7 +45,7 @@ export async function sendContactRequest(
   // Answer a bot as though it worked. Telling it the submission failed only
   // buys another attempt.
   if (readField(formData, HONEYPOT_FIELD)) {
-    return { status: "success", message: SUCCESS, errors: {} };
+    return { status: "success", errors: {} };
   }
 
   const values = Object.fromEntries(
@@ -59,11 +55,7 @@ export async function sendContactRequest(
   const errors = validateContact(values);
 
   if (Object.keys(errors).length > 0) {
-    return {
-      status: "invalid",
-      message: "Some details still need a look.",
-      errors,
-    };
+    return { status: "invalid", errors };
   }
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -78,7 +70,7 @@ export async function sendContactRequest(
         "missing — request was not delivered:\n" +
         composeBody(values),
     );
-    return { status: "error", message: FAILED, errors: {} };
+    return { status: "error", errors: {} };
   }
 
   try {
@@ -102,12 +94,12 @@ export async function sendContactRequest(
       console.error(
         `[contact] Resend returned ${response.status}: ${await response.text()}`,
       );
-      return { status: "error", message: FAILED, errors: {} };
+      return { status: "error", errors: {} };
     }
   } catch (error) {
     console.error("[contact] could not reach Resend", error);
-    return { status: "error", message: FAILED, errors: {} };
+    return { status: "error", errors: {} };
   }
 
-  return { status: "success", message: SUCCESS, errors: {} };
+  return { status: "success", errors: {} };
 }

@@ -260,5 +260,87 @@
     "body": "{address} is about {km} km from the atelier, past the {max} km we deliver to directly. We quote that distance by hand.",
     "cta": "Request a quote",
     "message": "Hello, I would like a delivery to {address}, about {km} km from your atelier. Could you send me a quote?"
+  },
+  "contact": {
+    "title": "Request a quote",
+    "intro": "Tell us the shape of it.",
+    "steps": [
+      {
+        "title": "The basics",
+        "body": "The date, roughly how many people, and where it has to land."
+      },
+      {
+        "title": "A menu and a price",
+        "body": "We come back with a proposal you can change as often as you like."
+      },
+      {
+        "title": "Confirmed",
+        "body": "You approve it, we cook it. Invoice or checkout, whichever suits."
+      }
+    ],
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "phone": "Phone",
+    "company": "Company",
+    "companyPlaceholder": "If this is for work",
+    "occasion": "What for",
+    "date": "Date",
+    "guests": "People",
+    "message": "What you have in mind",
+    "occasions": {
+      "Delivery": "Delivery",
+      "Event": "Event",
+      "Coffee": "Coffee",
+      "Something else": "Something else"
+    },
+    "submit": "Request a quote",
+    "sending": "Sending…",
+    "sentTitle": "Request sent",
+    "thankYou": "Thank you — we have it.",
+    "success": "The kitchen has it. We reply within one working day, usually sooner.",
+    "sendAnother": "Send another request",
+    "replyNote": "We reply within one working day. Your details stay with the kitchen — no mailing list.",
+    "invalidSummary": "Some details still need a look.",
+    "failed": "We could not send your request just now. Please try again in a moment.",
+    "errors": {
+      "name_required": "We need a name to address the reply to.",
+      "email_required": "We reply by email, so we need an address.",
+      "email_invalid": "That address looks incomplete.",
+      "occasion_required": "Pick the one that fits closest.",
+      "message_required": "Tell us a little about what you have in mind.",
+      "message_too_long": "Please keep this under 1200 characters.",
+      "too_long": "That is longer than we can store.",
+      "company_required": "We need the company name.",
+      "vat_required": "We need your VAT number to invoice you.",
+      "vat_invalid": "A Belgian VAT number is BE followed by ten digits."
+    }
+  },
+  "proAccount": {
+    "title": "Professional account",
+    "lead": "For companies ordering regularly: VAT invoices, saved delivery addresses and one-click reordering.",
+    "intro": "Open a professional account",
+    "body": "Fill this in and we activate your account, usually within one working day.",
+    "vat": "VAT number",
+    "vatPlaceholder": "BE 0123 456 789",
+    "address": "Main delivery address",
+    "addressPlaceholder": "Street, number, postcode",
+    "message": "What you need",
+    "messagePlaceholder": "Usual headcount, how often, dietary requirements…",
+    "submit": "Request a professional account"
+  },
+  "signIn": {
+    "title": "Sign in",
+    "personalTitle": "Personal account",
+    "personalBody": "For ordering privately. Find your past orders and addresses.",
+    "personalCta": "Sign in",
+    "proTitle": "Professional account",
+    "proBody": "For companies: VAT invoices, several delivery addresses, one-click reordering.",
+    "proCta": "Sign in",
+    "proNew": "No professional account yet?",
+    "proNewCta": "Open a professional account",
+    "notConfigured": "Customer accounts are not configured yet.",
+    "failed": "Sign in failed. Please try again."
   }
 }

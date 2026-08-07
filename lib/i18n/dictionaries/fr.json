@@ -260,5 +260,87 @@
     "body": "{address} se trouve à environ {km} km de l'atelier, au-delà des {max} km que nous livrons directement. Nous établissons un devis sur mesure pour cette distance.",
     "cta": "Demander un devis",
     "message": "Bonjour, je souhaiterais une livraison à {address}, à environ {km} km de votre atelier. Pouvez-vous me faire un devis ?"
+  },
+  "contact": {
+    "title": "Demander un devis",
+    "intro": "Dites-nous ce que vous imaginez.",
+    "steps": [
+      {
+        "title": "L'essentiel",
+        "body": "La date, le nombre de personnes environ, et le lieu de livraison."
+      },
+      {
+        "title": "Un menu et un prix",
+        "body": "Nous revenons avec une proposition, modifiable autant de fois que vous voulez."
+      },
+      {
+        "title": "Confirme",
+        "body": "Vous validez, nous cuisinons. Facture ou paiement en ligne, comme vous préférez."
+      }
+    ],
+    "name": "Nom",
+    "namePlaceholder": "Votre nom",
+    "email": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "phone": "Téléphone",
+    "company": "Société",
+    "companyPlaceholder": "Si c'est pour le travail",
+    "occasion": "Pour quoi",
+    "date": "Date",
+    "guests": "Personnes",
+    "message": "Ce que vous avez en tête",
+    "occasions": {
+      "Delivery": "Livraison",
+      "Event": "Événement",
+      "Coffee": "Cafe",
+      "Something else": "Autre chose"
+    },
+    "submit": "Demander un devis",
+    "sending": "Envoi…",
+    "sentTitle": "Demande envoyée",
+    "thankYou": "Merci — c'est bien reçu.",
+    "success": "La cuisine a votre demande. Nous répondons sous un jour ouvrable, souvent plus vite.",
+    "sendAnother": "Envoyer une autre demande",
+    "replyNote": "Nous répondons sous un jour ouvrable. Vos coordonnées restent chez nous — aucune newsletter.",
+    "invalidSummary": "Quelques détails demandent encore un coup d’œil.",
+    "failed": "Nous n'avons pas pu envoyer votre demande. Merci de réessayer dans un instant.",
+    "errors": {
+      "name_required": "Il nous faut un nom pour vous répondre.",
+      "email_required": "Nous répondons par e-mail, il nous faut donc une adresse.",
+      "email_invalid": "Cette adresse semble incomplète.",
+      "occasion_required": "Choisissez ce qui s'en rapproche le plus.",
+      "message_required": "Dites-nous en un peu plus sur votre projet.",
+      "message_too_long": "Merci de rester sous 1200 caractères.",
+      "too_long": "C'est plus long que ce que nous pouvons enregistrer.",
+      "company_required": "Il nous faut le nom de la société.",
+      "vat_required": "Il nous faut votre numéro de TVA pour facturer.",
+      "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres."
+    }
+  },
+  "proAccount": {
+    "title": "Compte professionnel",
+    "lead": "Pour les entreprises qui commandent régulièrement : facture avec TVA, adresses de livraison enregistrées et commande en un clic.",
+    "intro": "Ouvrez un compte professionnel",
+    "body": "Remplissez ce formulaire et nous activons votre compte, en général sous un jour ouvrable.",
+    "vat": "Numéro de TVA",
+    "vatPlaceholder": "BE 0123 456 789",
+    "address": "Adresse de livraison principale",
+    "addressPlaceholder": "Rue, numéro, code postal",
+    "message": "Vos besoins",
+    "messagePlaceholder": "Nombre de personnes habituel, fréquence, contraintes alimentaires…",
+    "submit": "Demander un compte pro"
+  },
+  "signIn": {
+    "title": "Se connecter",
+    "personalTitle": "Compte personnel",
+    "personalBody": "Pour les commandes à titre privé. Retrouvez vos commandes et vos adresses.",
+    "personalCta": "Se connecter",
+    "proTitle": "Compte professionnel",
+    "proBody": "Pour les entreprises : facture avec TVA, plusieurs adresses de livraison, commande en un clic.",
+    "proCta": "Se connecter",
+    "proNew": "Pas encore de compte pro ?",
+    "proNewCta": "Ouvrir un compte professionnel",
+    "notConfigured": "Les comptes clients ne sont pas encore configurés.",
+    "failed": "La connexion a échoué. Merci de réessayer."
   }
 }

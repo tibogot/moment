@@ -23,6 +23,7 @@ export const routes = {
   coffee: "/coffee",
   about: "/about",
   faq: "/faq",
+  proAccount: "/pro",
   contact: "/contact",
   news: "/news",
   cart: "/cart",

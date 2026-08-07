@@ -260,5 +260,87 @@
     "body": "{address} ligt op ongeveer {km} km van het atelier, voorbij de {max} km die wij rechtstreeks leveren. Voor die afstand maken wij een offerte op maat.",
     "cta": "Een offerte aanvragen",
     "message": "Hallo, ik zou graag een levering op {address}, ongeveer {km} km van uw atelier. Kunt u mij een offerte bezorgen?"
+  },
+  "contact": {
+    "title": "Offerte aanvragen",
+    "intro": "Vertel ons wat u voor ogen heeft.",
+    "steps": [
+      {
+        "title": "Het basiswerk",
+        "body": "De datum, ongeveer hoeveel personen, en waar het moet aankomen."
+      },
+      {
+        "title": "Een menu en een prijs",
+        "body": "Wij komen terug met een voorstel dat u zo vaak mag aanpassen als u wilt."
+      },
+      {
+        "title": "Bevestigd",
+        "body": "U keurt goed, wij koken. Factuur of online betalen, wat u verkiest."
+      }
+    ],
+    "name": "Naam",
+    "namePlaceholder": "Uw naam",
+    "email": "E-mail",
+    "emailPlaceholder": "u@voorbeeld.com",
+    "phone": "Telefoon",
+    "company": "Bedrijf",
+    "companyPlaceholder": "Als het voor het werk is",
+    "occasion": "Waarvoor",
+    "date": "Datum",
+    "guests": "Personen",
+    "message": "Wat u in gedachten heeft",
+    "occasions": {
+      "Delivery": "Levering",
+      "Event": "Evenement",
+      "Coffee": "Koffie",
+      "Something else": "Iets anders"
+    },
+    "submit": "Offerte aanvragen",
+    "sending": "Versturen…",
+    "sentTitle": "Aanvraag verstuurd",
+    "thankYou": "Dank u — wij hebben het.",
+    "success": "De keuken heeft uw aanvraag. Wij antwoorden binnen één werkdag, meestal sneller.",
+    "sendAnother": "Nog een aanvraag versturen",
+    "replyNote": "Wij antwoorden binnen één werkdag. Uw gegevens blijven bij ons — geen nieuwsbrief.",
+    "invalidSummary": "Een paar gegevens vragen nog aandacht.",
+    "failed": "Wij konden uw aanvraag niet versturen. Probeer het zo dadelijk opnieuw.",
+    "errors": {
+      "name_required": "Wij hebben een naam nodig om op te antwoorden.",
+      "email_required": "Wij antwoorden per e-mail, dus wij hebben een adres nodig.",
+      "email_invalid": "Dat adres lijkt onvolledig.",
+      "occasion_required": "Kies wat er het dichtst bij komt.",
+      "message_required": "Vertel ons iets meer over uw plannen.",
+      "message_too_long": "Houd het onder 1200 tekens.",
+      "too_long": "Dat is langer dan wij kunnen bewaren.",
+      "company_required": "Wij hebben de bedrijfsnaam nodig.",
+      "vat_required": "Wij hebben uw btw-nummer nodig om te factureren.",
+      "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers."
+    }
+  },
+  "proAccount": {
+    "title": "Zakelijk account",
+    "lead": "Voor bedrijven die regelmatig bestellen: factuur met btw, bewaarde leveradressen en bestellen met één klik.",
+    "intro": "Open een zakelijk account",
+    "body": "Vul dit formulier in en wij activeren uw account, meestal binnen één werkdag.",
+    "vat": "Btw-nummer",
+    "vatPlaceholder": "BE 0123 456 789",
+    "address": "Belangrijkste leveradres",
+    "addressPlaceholder": "Straat, nummer, postcode",
+    "message": "Uw behoeften",
+    "messagePlaceholder": "Gebruikelijk aantal personen, frequentie, dieetwensen…",
+    "submit": "Zakelijk account aanvragen"
+  },
+  "signIn": {
+    "title": "Aanmelden",
+    "personalTitle": "Persoonlijk account",
+    "personalBody": "Voor privébestellingen. Vind uw bestellingen en adressen terug.",
+    "personalCta": "Aanmelden",
+    "proTitle": "Zakelijk account",
+    "proBody": "Voor bedrijven: factuur met btw, meerdere leveradressen, bestellen met één klik.",
+    "proCta": "Aanmelden",
+    "proNew": "Nog geen zakelijk account?",
+    "proNewCta": "Een zakelijk account openen",
+    "notConfigured": "Klantaccounts zijn nog niet geconfigureerd.",
+    "failed": "Aanmelden is mislukt. Probeer het opnieuw."
   }
 }

@@ -17,6 +17,8 @@ import {
 } from "@/lib/contact";
 import { LEAD_TIME_DAYS } from "@/lib/delivery";
 import { siteConfig } from "@/lib/site";
+import { useDictionary } from "@/components/LocaleProvider";
+import { PRO_OCCASION, type ContactErrorCode } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
 /**
@@ -42,23 +44,8 @@ const CONTROL =
 
 const ERROR = "font-archivo-light mt-2.5 text-[18px] leading-normal";
 
-const STEPS = [
-  {
-    index: "01",
-    title: "The basics",
-    body: "The date, roughly how many people, and where it has to land.",
-  },
-  {
-    index: "02",
-    title: "A menu and a price",
-    body: "We come back with a proposal you can change as often as you like.",
-  },
-  {
-    index: "03",
-    title: "Confirmed",
-    body: "You approve it, we cook it. Invoice or checkout, whichever suits.",
-  },
-] as const;
+/** Paired by position with `contact.steps` in the dictionaries. */
+const STEP_INDICES = ["01", "02", "03"] as const;
 
 type TextFieldProps = {
   name: ContactField;
@@ -145,6 +132,16 @@ type ContactFormProps = {
    * the message. Defaults to an empty form.
    */
   initialValues?: ContactValues;
+  /**
+   * `pro` is the professional account application: same pipeline, different
+   * questions. It drops the occasion radios (the occasion is fixed), the date
+   * and the headcount, and adds the VAT number and a delivery address.
+   *
+   * One component rather than two because the plumbing — controlled values, the
+   * error map, the sent panel, the honeypot — is the whole of the work and none
+   * of it differs.
+   */
+  variant?: "enquiry" | "pro";
 };
 
 /**
@@ -154,12 +151,18 @@ type ContactFormProps = {
  */
 export function ContactForm({
   initialValues = EMPTY_CONTACT_VALUES,
+  variant = "enquiry",
 }: ContactFormProps = {}) {
+  const dict = useDictionary();
+  const t = dict.contact;
+  const pro = variant === "pro";
   const [state, formAction, pending] = useActionState(
     sendContactRequest,
     INITIAL_CONTACT_STATE,
   );
-  const [values, setValues] = useState<ContactValues>(initialValues);
+  const [values, setValues] = useState<ContactValues>(
+    pro ? { ...initialValues, occasion: PRO_OCCASION } : initialValues,
+  );
 
   /**
    * The confirmation the visitor has clicked past. Held as the state object
@@ -176,6 +179,13 @@ export function ContactForm({
     setValues(initialValues);
   };
 
+  /**
+   * Validation crosses the server boundary as a code — see lib/contact.ts.
+   * This is the only place that turns one back into a sentence.
+   */
+  const errorText = (code?: ContactErrorCode) =>
+    code ? t.errors[code] : undefined;
+
   const update = (field: ContactField) => (value: string) =>
     setValues((current) => ({ ...current, [field]: value }));
 
@@ -190,7 +200,7 @@ export function ContactForm({
           ruled field below it. */}
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-          Request a quote
+          {pro ? dict.proAccount.intro : t.title}
         </h2>
         <div
           className="mt-4 h-px bg-sky"
@@ -213,28 +223,28 @@ export function ContactForm({
               <div className="min-w-0 text-left">
                 <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                   <p className="font-owners-narrow-bold max-w-full text-[10vw] leading-[0.92] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(3.1vw,5svh)]">
-                    Tell us the shape of it.
+                    {pro ? dict.proAccount.body : t.intro}
                   </p>
                 </TextReveal>
               </div>
 
               <ol className="mt-[4svh]">
-                {STEPS.map((step) => (
+                {STEP_INDICES.map((index, position) => (
                   <li
-                    key={step.index}
+                    key={index}
                     className="flex gap-5 border-t border-sky py-[2.6svh] last:border-b md:py-[3svh]"
                   >
                     <span className="font-archivo-light shrink-0 text-[14px] tabular-nums">
-                      {step.index}
+                      {index}
                     </span>
                     <div className="min-w-0">
                       {/* Same size as the form's field labels across the rule —
                           the two columns read as one row of headings. */}
                       <p className="font-owners-medium text-[14px] uppercase tracking-wide">
-                        {step.title}
+                        {t.steps[position].title}
                       </p>
                       <p className="font-archivo-light mt-2 text-[18px] leading-normal">
-                        {step.body}
+                        {t.steps[position].body}
                       </p>
                     </div>
                   </li>
@@ -295,7 +305,7 @@ export function ContactForm({
               // the full width and squeezed the reveal's measured line boxes.
               <div className="border-b border-sky px-(--grid-gutter) py-[9svh] md:h-full">
                 <p className="font-owners-medium text-[14px] uppercase tracking-wide">
-                  Request sent
+                  {t.sentTitle}
                 </p>
 
                 <div className="mt-4 mb-[4svh] h-px bg-sky" aria-hidden />
@@ -303,13 +313,13 @@ export function ContactForm({
                 <div className="min-w-0 text-left">
                   <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                     <p className="font-owners-narrow-bold max-w-full text-[9vw] leading-[0.92] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(3.4vw,5.4svh)]">
-                      Thank you — we have it.
+                      {t.thankYou}
                     </p>
                   </TextReveal>
                 </div>
 
                 <p className="font-archivo-light mt-[4svh] max-w-[44ch] text-[18px] leading-normal">
-                  {state.message}
+                  {t.success}
                 </p>
 
                 <button
@@ -318,7 +328,7 @@ export function ContactForm({
                   className="mt-[5svh] inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center text-[14px] uppercase tracking-wide">
-                    Send another request
+                    {t.sendAnother}
                   </span>
                 </button>
               </div>
@@ -341,131 +351,165 @@ export function ContactForm({
 
                 <TextField
                   name="name"
-                  label="Name"
+                  label={t.name}
                   value={values.name}
                   onChange={update("name")}
-                  error={state.errors.name}
-                  placeholder="Your name"
+                  error={errorText(state.errors.name)}
+                  placeholder={t.namePlaceholder}
                   autoComplete="name"
                   required
                 />
 
                 <TextField
                   name="email"
-                  label="Email"
+                  label={t.email}
                   type="email"
                   value={values.email}
                   onChange={update("email")}
-                  error={state.errors.email}
-                  placeholder="you@example.com"
+                  error={errorText(state.errors.email)}
+                  placeholder={t.emailPlaceholder}
                   autoComplete="email"
                   required
                 />
 
                 <TextField
                   name="phone"
-                  label="Phone"
+                  label={t.phone}
                   hint="optional"
                   type="tel"
                   value={values.phone}
                   onChange={update("phone")}
-                  error={state.errors.phone}
+                  error={errorText(state.errors.phone)}
                   placeholder="+32"
                   autoComplete="tel"
                 />
 
                 <TextField
                   name="company"
-                  label="Company"
+                  label={t.company}
                   hint="optional"
                   value={values.company}
                   onChange={update("company")}
-                  error={state.errors.company}
-                  placeholder="If this is for work"
+                  error={errorText(state.errors.company)}
+                  placeholder={t.companyPlaceholder}
                   autoComplete="organization"
                 />
 
-                {/* Radios rather than a select: the native dropdown is the one
-                    control we cannot dress in the site's type.
+                {/* A professional application answers different questions: its occasion
+                    is fixed, and a company account is not booked for a date or a
+                    headcount the way a one-off event is. */}
+                {pro ? (
+                  <input type="hidden" name="occasion" value={PRO_OCCASION} />
+                ) : (
+                  <>
+                  {/* Radios rather than a select: the native dropdown is the one
+                      control we cannot dress in the site's type.
 
-                    role=group rather than fieldset/legend — a legend is laid
-                    out against the fieldset's border edge, so it ignored the
-                    cell's padding and printed on top of the rule above it. */}
-                <div
-                  role="group"
-                  aria-labelledby="contact-occasion-label"
-                  className={cn(CELL, "md:col-span-2")}
-                >
-                  <p id="contact-occasion-label" className={LABEL}>
-                    What for
-                  </p>
+                      role=group rather than fieldset/legend — a legend is laid
+                      out against the fieldset's border edge, so it ignored the
+                      cell's padding and printed on top of the rule above it. */}
+                  <div
+                    role="group"
+                    aria-labelledby="contact-occasion-label"
+                    className={cn(CELL, "md:col-span-2")}
+                  >
+                    <p id="contact-occasion-label" className={LABEL}>
+                      {t.occasion}
+                    </p>
 
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {OCCASIONS.map((occasion) => (
-                      <label
-                        key={occasion}
-                        className={cn(
-                          "font-owners-medium border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
-                          "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
-                          "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
-                        )}
-                      >
-                        <input
-                          type="radio"
-                          name="occasion"
-                          value={occasion}
-                          checked={values.occasion === occasion}
-                          onChange={(event) =>
-                            update("occasion")(event.target.value)
-                          }
-                          aria-describedby={
-                            state.errors.occasion
-                              ? "contact-occasion-error"
-                              : undefined
-                          }
-                          className="sr-only"
-                        />
-                        {occasion}
-                      </label>
-                    ))}
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {OCCASIONS.map((occasion) => (
+                        <label
+                          key={occasion}
+                          className={cn(
+                            "font-owners-medium border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
+                            "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
+                            "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name="occasion"
+                            value={occasion}
+                            checked={values.occasion === occasion}
+                            onChange={(event) =>
+                              update("occasion")(event.target.value)
+                            }
+                            aria-describedby={
+                              state.errors.occasion
+                                ? "contact-occasion-error"
+                                : undefined
+                            }
+                            className="sr-only"
+                          />
+                          {occasion}
+                        </label>
+                      ))}
+                    </div>
+
+                    {state.errors.occasion && (
+                      <p id="contact-occasion-error" className={ERROR}>
+                        {errorText(state.errors.occasion)}
+                      </p>
+                    )}
                   </div>
 
-                  {state.errors.occasion && (
-                    <p id="contact-occasion-error" className={ERROR}>
-                      {state.errors.occasion}
-                    </p>
-                  )}
-                </div>
+                  {/* Free text, not a date input: at quote stage the day is
+                      usually still approximate, and "a week in March" is a more
+                      useful answer than a picker will accept. */}
+                  <TextField
+                    name="date"
+                    label={t.date}
+                    hint="or roughly when"
+                    value={values.date}
+                    onChange={update("date")}
+                    error={errorText(state.errors.date)}
+                    placeholder="14 March"
+                  />
 
-                {/* Free text, not a date input: at quote stage the day is
-                    usually still approximate, and "a week in March" is a more
-                    useful answer than a picker will accept. */}
-                <TextField
-                  name="date"
-                  label="Date"
-                  hint="or roughly when"
-                  value={values.date}
-                  onChange={update("date")}
-                  error={state.errors.date}
-                  placeholder="14 March"
-                />
+                  <TextField
+                    name="guests"
+                    label={t.guests}
+                    hint="optional"
+                    value={values.guests}
+                    onChange={update("guests")}
+                    error={errorText(state.errors.guests)}
+                    placeholder="25, or 20–30"
+                  />
+                  </>
+                )}
 
-                <TextField
-                  name="guests"
-                  label="People"
-                  hint="optional"
-                  value={values.guests}
-                  onChange={update("guests")}
-                  error={state.errors.guests}
-                  placeholder="25, or 20–30"
-                />
+                {pro && (
+                  <TextField
+                    name="vat"
+                    label={dict.proAccount.vat}
+                    value={values.vat}
+                    onChange={update("vat")}
+                    error={errorText(state.errors.vat)}
+                    placeholder={dict.proAccount.vatPlaceholder}
+                    required
+                  />
+                )}
+
+                {pro && (
+                  <TextField
+                    name="address"
+                    label={dict.proAccount.address}
+                    value={values.address}
+                    onChange={update("address")}
+                    error={errorText(state.errors.address)}
+                    placeholder={dict.proAccount.addressPlaceholder}
+                    className="md:col-span-2"
+                  />
+                )}
+
 
                 <TextField
                   name="message"
-                  label="What you have in mind"
+                  label={pro ? dict.proAccount.message : t.message}
                   value={values.message}
                   onChange={update("message")}
-                  error={state.errors.message}
+                  error={errorText(state.errors.message)}
                   placeholder="Lunch for a board meeting, dietary requirements, a budget to work to — whatever you already know."
                   rows={6}
                   maxLength={MESSAGE_MAX}
@@ -483,9 +527,11 @@ export function ContactForm({
                     aria-live="polite"
                     className="font-archivo-light max-w-[38ch] text-[18px] leading-normal"
                   >
-                    {state.status === "invalid" || state.status === "error"
-                      ? state.message
-                      : "We reply within one working day. Your details stay with the kitchen — no mailing list."}
+                    {state.status === "invalid"
+                      ? t.invalidSummary
+                      : state.status === "error"
+                        ? t.failed
+                        : t.replyNote}
                   </p>
 
                   <button
