@@ -342,5 +342,37 @@
     "proNewCta": "Open a professional account",
     "notConfigured": "Customer accounts are not configured yet.",
     "failed": "Sign in failed. Please try again."
+  },
+  "cookies": {
+    "bannerLabel": "Cookie consent",
+    "title": "Cookies",
+    "body": "We use strictly necessary cookies for cart, checkout and account features. Analytics and marketing cookies are optional — choose what you are comfortable with.",
+    "policy": "Cookie policy",
+    "privacy": "Privacy",
+    "manage": "Manage",
+    "reject": "Reject",
+    "acceptAll": "Accept all",
+    "prefsLabel": "Cookie preferences",
+    "prefsTitle": "Cookie preferences",
+    "prefsBody": "Strictly necessary cookies are always active. You can enable or disable the categories below at any time.",
+    "necessaryTitle": "Strictly necessary",
+    "necessaryBody": "Required for cart, checkout, sign-in and site security.",
+    "alwaysOn": "Always on",
+    "on": "On",
+    "off": "Off",
+    "cancel": "Cancel",
+    "save": "Save preferences",
+    "closeLabel": "Close cookie preferences",
+    "footerButton": "Cookie preferences",
+    "categories": {
+      "analytics": {
+        "title": "Analytics",
+        "description": "Helps us understand how the site is used so we can improve it."
+      },
+      "marketing": {
+        "title": "Marketing",
+        "description": "Allows personalised offers and measuring campaigns on other platforms."
+      }
+    }
   }
 }

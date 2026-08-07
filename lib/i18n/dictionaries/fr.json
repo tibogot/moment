@@ -342,5 +342,37 @@
     "proNewCta": "Ouvrir un compte professionnel",
     "notConfigured": "Les comptes clients ne sont pas encore configurés.",
     "failed": "La connexion a échoué. Merci de réessayer."
+  },
+  "cookies": {
+    "bannerLabel": "Consentement aux cookies",
+    "title": "Cookies",
+    "body": "Nous utilisons des cookies strictement nécessaires au panier, au paiement et à votre compte. Les cookies de mesure d’audience et de marketing sont facultatifs — choisissez ce qui vous convient.",
+    "policy": "Politique cookies",
+    "privacy": "Confidentialité",
+    "manage": "Gérer",
+    "reject": "Refuser",
+    "acceptAll": "Tout accepter",
+    "prefsLabel": "Préférences cookies",
+    "prefsTitle": "Préférences cookies",
+    "prefsBody": "Les cookies strictement nécessaires sont toujours actifs. Vous pouvez activer ou désactiver les catégories ci-dessous à tout moment.",
+    "necessaryTitle": "Strictement nécessaires",
+    "necessaryBody": "Indispensables au panier, au paiement, à la connexion et à la sécurité du site.",
+    "alwaysOn": "Toujours actifs",
+    "on": "Activé",
+    "off": "Désactivé",
+    "cancel": "Annuler",
+    "save": "Enregistrer mes préférences",
+    "closeLabel": "Fermer les préférences cookies",
+    "footerButton": "Préférences cookies",
+    "categories": {
+      "analytics": {
+        "title": "Mesure d’audience",
+        "description": "Nous aide à comprendre comment le site est utilisé afin de l’améliorer."
+      },
+      "marketing": {
+        "title": "Marketing",
+        "description": "Permet des offres personnalisées et la mesure de campagnes sur d’autres plateformes."
+      }
+    }
   }
 }

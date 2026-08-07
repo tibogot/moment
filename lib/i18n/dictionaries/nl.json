@@ -342,5 +342,37 @@
     "proNewCta": "Een zakelijk account openen",
     "notConfigured": "Klantaccounts zijn nog niet geconfigureerd.",
     "failed": "Aanmelden is mislukt. Probeer het opnieuw."
+  },
+  "cookies": {
+    "bannerLabel": "Cookietoestemming",
+    "title": "Cookies",
+    "body": "Wij gebruiken strikt noodzakelijke cookies voor de winkelmand, het afrekenen en uw account. Cookies voor statistieken en marketing zijn optioneel — kies waar u zich goed bij voelt.",
+    "policy": "Cookiebeleid",
+    "privacy": "Privacy",
+    "manage": "Beheren",
+    "reject": "Weigeren",
+    "acceptAll": "Alles aanvaarden",
+    "prefsLabel": "Cookievoorkeuren",
+    "prefsTitle": "Cookievoorkeuren",
+    "prefsBody": "Strikt noodzakelijke cookies staan altijd aan. U kunt de onderstaande categorieën op elk moment in- of uitschakelen.",
+    "necessaryTitle": "Strikt noodzakelijk",
+    "necessaryBody": "Nodig voor de winkelmand, het afrekenen, het aanmelden en de beveiliging van de site.",
+    "alwaysOn": "Altijd aan",
+    "on": "Aan",
+    "off": "Uit",
+    "cancel": "Annuleren",
+    "save": "Voorkeuren bewaren",
+    "closeLabel": "Cookievoorkeuren sluiten",
+    "footerButton": "Cookievoorkeuren",
+    "categories": {
+      "analytics": {
+        "title": "Statistieken",
+        "description": "Helpt ons begrijpen hoe de site gebruikt wordt, zodat wij hem kunnen verbeteren."
+      },
+      "marketing": {
+        "title": "Marketing",
+        "description": "Maakt gepersonaliseerde aanbiedingen en het meten van campagnes op andere platformen mogelijk."
+      }
+    }
   }
 }

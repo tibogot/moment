@@ -3,6 +3,7 @@
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { OPTIONAL_CONSENT_CATEGORIES } from "@/lib/consent/categories";
+import { useDictionary } from "@/components/LocaleProvider";
 import {
   acceptAllConsent,
   getConsentSnapshot,
@@ -64,6 +65,7 @@ function CookiePreferencesPanel({
   consent: ReturnType<typeof getConsentSnapshot>;
   onClose: () => void;
 }) {
+  const t = useDictionary().cookies;
   const [draft, setDraft] = useState(() => choicesFromConsent(consent));
 
   return (
@@ -79,16 +81,15 @@ function CookiePreferencesPanel({
         className="relative max-h-[90svh] w-full overflow-y-auto border-t border-sky bg-cream md:max-w-lg md:border"
         role="dialog"
         aria-modal="true"
-        aria-label="Cookie preferences"
+        aria-label={t.prefsLabel}
         data-lenis-prevent
       >
         <div className="border-b border-sky px-(--grid-gutter) py-5">
           <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-            Cookie preferences
+            {t.prefsTitle}
           </h2>
           <p className="font-archivo-light mt-2 text-[14px] leading-normal">
-            Strictly necessary cookies are always active. You can enable or
-            disable the categories below at any time.
+            {t.prefsBody}
           </p>
         </div>
 
@@ -97,27 +98,27 @@ function CookiePreferencesPanel({
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  Strictly necessary
+                  {t.necessaryTitle}
                 </p>
                 <p className="font-archivo-light mt-2 text-[14px] leading-normal">
-                  Required for cart, checkout, sign-in and site security.
+                  {t.necessaryBody}
                 </p>
               </div>
               <span className="font-archivo-light shrink-0 text-[12px] text-black/50">
-                Always on
+                {t.alwaysOn}
               </span>
             </div>
           </li>
 
-          {OPTIONAL_CONSENT_CATEGORIES.map(({ id, title, description }) => (
+          {OPTIONAL_CONSENT_CATEGORIES.map((id) => (
             <li key={id} className="px-(--grid-gutter) py-5">
               <label className="flex cursor-pointer items-start justify-between gap-4">
                 <span>
                   <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                    {title}
+                    {t.categories[id].title}
                   </span>
                   <span className="font-archivo-light mt-2 block text-[14px] leading-normal">
-                    {description}
+                    {t.categories[id].description}
                   </span>
                 </span>
                 <span
@@ -138,7 +139,7 @@ function CookiePreferencesPanel({
                     }
                     className="sr-only"
                   />
-                  {draft[id] ? "On" : "Off"}
+                  {draft[id] ? t.on : t.off}
                 </span>
               </label>
             </li>
@@ -146,9 +147,9 @@ function CookiePreferencesPanel({
         </ul>
 
         <div className="flex flex-wrap gap-2 border-t border-sky px-(--grid-gutter) py-5">
-          <CookieCtaButton onClick={onClose}>Cancel</CookieCtaButton>
+          <CookieCtaButton onClick={onClose}>{t.cancel}</CookieCtaButton>
           <CookieCtaButton onClick={() => saveConsent(draft)}>
-            Save preferences
+            {t.save}
           </CookieCtaButton>
         </div>
       </div>
@@ -157,6 +158,7 @@ function CookiePreferencesPanel({
 }
 
 export function CookieConsent() {
+  const t = useDictionary().cookies;
   const isClient = useIsClient();
   const consent = useSyncExternalStore(
     subscribeConsent,
@@ -181,42 +183,40 @@ export function CookieConsent() {
         <div
           className="fixed inset-x-0 bottom-0 z-90 border-t border-sky bg-cream"
           role="dialog"
-          aria-label="Cookie consent"
+          aria-label={t.bannerLabel}
         >
           <div className="mx-auto flex max-w-6xl flex-col gap-5 px-(--grid-inset) py-5 md:flex-row md:items-end md:justify-between md:gap-8 md:py-6">
             <div className="max-w-xl">
               <p className="font-owners-medium text-[12px] uppercase tracking-wide">
-                Cookies
+                {t.title}
               </p>
               <p className="font-archivo-light mt-2 text-[14px] leading-normal md:text-[15px]">
-                We use strictly necessary cookies for cart, checkout and account
-                features. Analytics and marketing cookies are optional — choose
-                what you are comfortable with.{" "}
+                {t.body}{" "}
                 <Link
                   href={routes.cookies}
                   className="underline underline-offset-2 transition-opacity hover:opacity-60"
                 >
-                  Cookie policy
+                  {t.policy}
                 </Link>
                 {" · "}
                 <Link
                   href={routes.privacy}
                   className="underline underline-offset-2 transition-opacity hover:opacity-60"
                 >
-                  Privacy
+                  {t.privacy}
                 </Link>
               </p>
             </div>
 
             <div className="flex flex-wrap gap-2 md:shrink-0 md:justify-end">
               <CookieCtaButton onClick={() => setPreferencesOpen(true)}>
-                Manage
+                {t.manage}
               </CookieCtaButton>
               <CookieCtaButton onClick={rejectAllConsent}>
-                Reject
+                {t.reject}
               </CookieCtaButton>
               <CookieCtaButton onClick={acceptAllConsent}>
-                Accept all
+                {t.acceptAll}
               </CookieCtaButton>
             </div>
           </div>
@@ -235,13 +235,15 @@ export function CookieConsent() {
 
 /** Footer control — reopens the preferences panel at any time. */
 export function CookiePreferencesButton({ className }: { className?: string }) {
+  const t = useDictionary().cookies;
+
   return (
     <button
       type="button"
       onClick={() => window.dispatchEvent(new Event("cookie-preferences-open"))}
       className={className}
     >
-      Cookie preferences
+      {t.footerButton}
     </button>
   );
 }
