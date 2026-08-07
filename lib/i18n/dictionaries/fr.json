@@ -126,6 +126,39 @@
   },
   "aboutNav": {
     "story": "Notre histoire",
-    "news": "Actualités"
+    "news": "Actualités",
+    "faq": "FAQ"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "lead": "Les questions qu'on nous pose le plus souvent. Vous ne trouvez pas la vôtre ? Écrivez-nous.",
+    "zoneBrussels": "Bruxelles",
+    "zoneMinimum": "minimum {amount}",
+    "items": [
+      {
+        "q": "Où livrez-vous ?",
+        "a": "Nous livrons à Bruxelles et jusqu'à {max} km de notre atelier. Les frais et le minimum de commande dépendent de la distance : {zones}. Au-delà de {max} km, nous établissons un devis sur mesure."
+      },
+      {
+        "q": "Combien de temps à l'avance faut-il commander ?",
+        "a": "Il nous faut {days} jours de préavis pour une livraison, et nous ne livrons pas le dimanche. Le calendrier du site n'affiche que les jours encore disponibles. Pour un événement, contactez-nous le plus tôt possible : les grandes dates partent vite."
+      },
+      {
+        "q": "Puis-je venir chercher ma commande ?",
+        "a": "Oui. Le retrait à l'atelier (1190 Forest) est proposé au moment de la commande, sans frais de livraison ni minimum. Choisissez « Click & collect » lors du choix de votre date."
+      },
+      {
+        "q": "Proposez-vous des options végétariennes, véganes ou sans gluten ?",
+        "a": "Oui. Nous préparons des versions végétariennes, véganes et sans gluten du même plat, étiquetées et emballées séparément. Indiquez-nous les régimes et les allergies au moment de la commande."
+      },
+      {
+        "q": "Comment se passe un devis pour un événement ?",
+        "a": "Les menus événementiels sont chiffrés, pas commandés en ligne. Dites-nous la date, le nombre de personnes et le lieu, et nous revenons vers vous avec le menu costé, service et matériel compris."
+      },
+      {
+        "q": "Travaillez-vous avec les entreprises ?",
+        "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA et pouvons enregistrer plusieurs adresses de livraison."
+      }
+    ]
   }
 }

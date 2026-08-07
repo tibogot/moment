@@ -301,6 +301,26 @@ export function menuListSchema(menus: Menu[]) {
   };
 }
 
+/**
+ * FAQPage, which is the one piece of structured data on this site that can
+ * change what a search result looks like: Google renders the questions as
+ * expandable rows under the listing.
+ *
+ * Answers must be plain text — the spec allows limited HTML, but anything that
+ * needs markup to make sense reads badly in a SERP, and a question that cannot
+ * be answered in a sentence or two probably belongs on its own page.
+ */
+export function faqSchema(entries: { question: string; answer: string }[]) {
+  return {
+    "@type": "FAQPage",
+    mainEntity: entries.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    })),
+  };
+}
+
 /** Wraps one or more nodes in the `@context` the parser expects. */
 export function graph(...nodes: object[]) {
   return {

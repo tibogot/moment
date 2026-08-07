@@ -22,6 +22,7 @@ export const routes = {
   events: "/events",
   coffee: "/coffee",
   about: "/about",
+  faq: "/faq",
   contact: "/contact",
   news: "/news",
   cart: "/cart",
@@ -72,12 +73,11 @@ export type NavMenuKey = "shop" | "about";
  * where every quote, event and sur-devis delivery starts, and burying the
  * enquiry link to save fifty pixels would be a poor trade for a business that
  * sells by conversation.
- *
- * FAQ belongs here too once the page exists.
  */
 export const aboutNav = [
   { key: "story", href: routes.about },
   { key: "news", href: routes.news },
+  { key: "faq", href: routes.faq },
 ] as const;
 
 /** Footer legal strip — required for a Belgian ecommerce site. */

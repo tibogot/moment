@@ -126,6 +126,39 @@
   },
   "aboutNav": {
     "story": "Ons verhaal",
-    "news": "Nieuws"
+    "news": "Nieuws",
+    "faq": "FAQ"
+  },
+  "faq": {
+    "title": "Veelgestelde vragen",
+    "lead": "De vragen die ons het vaakst gesteld worden. Staat die van u er niet bij? Schrijf ons gerust.",
+    "zoneBrussels": "Brussel",
+    "zoneMinimum": "minimum {amount}",
+    "items": [
+      {
+        "q": "Waar leveren jullie?",
+        "a": "Wij leveren in Brussel en tot {max} km van ons atelier. De kosten en het minimumbedrag hangen af van de afstand: {zones}. Voorbij {max} km maken wij een offerte op maat."
+      },
+      {
+        "q": "Hoe lang op voorhand moet ik bestellen?",
+        "a": "Wij hebben {days} dagen op voorhand nodig voor een levering, en wij leveren niet op zondag. De kalender op de site toont enkel de dagen die nog vrij zijn. Voor een evenement neemt u het best zo vroeg mogelijk contact op: drukke data zijn snel weg."
+      },
+      {
+        "q": "Kan ik mijn bestelling zelf ophalen?",
+        "a": "Ja. Afhalen in het atelier (1190 Vorst) kan bij het bestellen, zonder leveringskosten en zonder minimumbedrag. Kies « Click & collect » wanneer u uw datum selecteert."
+      },
+      {
+        "q": "Hebben jullie vegetarische, veganistische of glutenvrije opties?",
+        "a": "Ja. Wij maken vegetarische, veganistische en glutenvrije versies van hetzelfde gerecht, apart geëtiketteerd en verpakt. Geef diëten en allergieën door bij uw bestelling."
+      },
+      {
+        "q": "Hoe verloopt een offerte voor een evenement?",
+        "a": "Evenementmenu's worden geoffreerd, niet online besteld. Laat ons de datum, het aantal personen en de locatie weten, en wij komen terug met het menu volledig gecalculeerd, bediening en materiaal inbegrepen."
+      },
+      {
+        "q": "Werken jullie met bedrijven?",
+        "a": "Ja, een groot deel van onze activiteit. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. Wij factureren met uw btw-nummer en kunnen meerdere leveradressen bewaren."
+      }
+    ]
   }
 }

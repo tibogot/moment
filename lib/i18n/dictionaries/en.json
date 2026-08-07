@@ -126,6 +126,39 @@
   },
   "aboutNav": {
     "story": "Our story",
-    "news": "News"
+    "news": "News",
+    "faq": "FAQ"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "lead": "The questions we are asked most. Yours not here? Write to us.",
+    "zoneBrussels": "Brussels",
+    "zoneMinimum": "minimum {amount}",
+    "items": [
+      {
+        "q": "Where do you deliver?",
+        "a": "We deliver across Brussels and up to {max} km from our kitchen. The fee and the minimum order depend on the distance: {zones}. Beyond {max} km we quote by hand."
+      },
+      {
+        "q": "How far in advance should I order?",
+        "a": "We need {days} days' notice for a delivery, and we do not deliver on Sundays. The calendar on the site only shows days that are still open. For an event, get in touch as early as you can — busy dates go quickly."
+      },
+      {
+        "q": "Can I collect my order?",
+        "a": "Yes. Collection from the kitchen (1190 Forest) is offered when you order, with no delivery fee and no minimum. Choose “Click & collect” when you pick your date."
+      },
+      {
+        "q": "Do you cater for vegetarian, vegan or gluten-free diets?",
+        "a": "Yes. We prepare vegetarian, vegan and gluten-free versions of the same dish, labelled and boxed separately. Tell us about diets and allergies when you order."
+      },
+      {
+        "q": "How does a quote for an event work?",
+        "a": "Event menus are quoted rather than ordered online. Tell us the date, the headcount and the venue, and we come back with the menu costed, service and equipment included."
+      },
+      {
+        "q": "Do you work with companies?",
+        "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number and can keep more than one delivery address on file."
+      }
+    ]
   }
 }
