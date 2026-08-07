@@ -7,16 +7,8 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Professional account",
-  description:
-    "Open a professional account with Moment: VAT invoices, saved delivery addresses and one-click reordering for companies in and around Brussels.",
+export const generateMetadata = localizedMetadata("pro", {
   path: routes.proAccount,
-  keywords: [
-    "corporate catering Brussels",
-    "office lunch account Brussels",
-    "B2B traiteur Brussels",
-  ],
 });
 
 /**

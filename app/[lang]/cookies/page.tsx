@@ -2,10 +2,7 @@ import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Cookies",
-  description:
-    "Cookie policy for the Moment website — which cookies we set, what they do, and how to change your choice.",
+export const generateMetadata = localizedMetadata("cookies", {
   path: routes.cookies,
 });
 

@@ -374,5 +374,143 @@
         "description": "Permet des offres personnalisées et la mesure de campagnes sur d’autres plateformes."
       }
     }
+  },
+  "meta": {
+    "home": {
+      "title": "Moment — Traiteur & catering à Bruxelles",
+      "description": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, salades et jus pressés à froid, préparés chaque matin et livrés prêts à servir.",
+      "keywords": [
+        "traiteur Bruxelles",
+        "catering Bruxelles",
+        "traiteur entreprise Bruxelles",
+        "traiteur événement Bruxelles",
+        "livraison repas Bruxelles",
+        "jus pressé à froid Bruxelles"
+      ]
+    },
+    "about": {
+      "title": "À propos — Traiteur et cuisine de catering à Bruxelles",
+      "description": "Moment est un traiteur bruxellois qui cuisine chaque matin des plats de saison, des salades et des jus pressés à froid pour les particuliers, les bureaux et les événements — livrés dans toute la ville, prêts à servir.",
+      "keywords": [
+        "traiteur Bruxelles",
+        "catering Bruxelles",
+        "traiteur entreprise Bruxelles",
+        "traiteur événement Bruxelles",
+        "livraison repas Bruxelles",
+        "jus pressé à froid Bruxelles"
+      ]
+    },
+    "shop": {
+      "title": "Boutique — Plats, salades et jus pressés à froid",
+      "description": "Commandez des plats de saison, des salades et des jus pressés à froid depuis notre cuisine bruxelloise. Cuisinés le matin même, prêts à servir.",
+      "keywords": [
+        "livraison lunch Bruxelles",
+        "lunch bureau Bruxelles",
+        "jus pressé à froid Bruxelles",
+        "livraison salades Bruxelles"
+      ]
+    },
+    "collections": {
+      "title": "Collections",
+      "description": "Parcourez nos plats, salades et jus pressés à froid par catégorie — préparés chaque matin et livrés dans tout Bruxelles."
+    },
+    "menus": {
+      "title": "Menus traiteur et tarifs",
+      "description": "Menus traiteur au prix par personne depuis notre cuisine bruxelloise — petit-déjeuner, lunch de bureau, apéro, buffet et dîner assis, avec les prix, les minimums et le délai pour chacun.",
+      "keywords": [
+        "menu traiteur Bruxelles",
+        "prix traiteur Bruxelles",
+        "tarifs catering Bruxelles",
+        "apéro dînatoire Bruxelles",
+        "buffet traiteur Bruxelles"
+      ]
+    },
+    "events": {
+      "title": "Traiteur événementiel à Bruxelles",
+      "description": "Traiteur complet pour lancements, réceptions et dîners assis à Bruxelles — menu, personnel et service pris en charge du premier appel à la dernière assiette.",
+      "keywords": [
+        "traiteur événement Bruxelles",
+        "traiteur réception Bruxelles",
+        "traiteur entreprise Bruxelles",
+        "traiteur mariage Bruxelles"
+      ]
+    },
+    "coffee": {
+      "title": "Comptoir café",
+      "description": "Le comptoir café de Moment à Bruxelles — filtre et espresso, pâtisseries de notre cuisine et jus pressés à froid à emporter.",
+      "keywords": [
+        "café Bruxelles",
+        "comptoir café Bruxelles",
+        "pâtisseries Bruxelles"
+      ]
+    },
+    "news": {
+      "title": "Actualités",
+      "description": "Les actualités de Moment — ce que nous cuisinons, les événements dont nous nous occupons et ce qui sort de notre cuisine bruxelloise."
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Zones et frais de livraison, délais, retrait à l'atelier, régimes alimentaires et fonctionnement des devis événementiels chez Moment, traiteur à Bruxelles.",
+      "keywords": [
+        "traiteur Bruxelles FAQ",
+        "livraison traiteur Bruxelles",
+        "traiteur entreprise Bruxelles"
+      ]
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Demandez un devis à Moment, traiteur à Bruxelles. Dites-nous la date, le nombre de personnes et ce que vous imaginez — nous revenons avec un menu et un prix.",
+      "keywords": [
+        "traiteur Bruxelles contact",
+        "devis traiteur Bruxelles"
+      ]
+    },
+    "pro": {
+      "title": "Compte professionnel",
+      "description": "Ouvrez un compte professionnel chez Moment : factures avec TVA, adresses de livraison enregistrées et commande en un clic pour les entreprises à Bruxelles et alentours.",
+      "keywords": [
+        "traiteur entreprise Bruxelles",
+        "compte lunch bureau Bruxelles",
+        "traiteur B2B Bruxelles"
+      ]
+    },
+    "cart": {
+      "title": "Panier",
+      "description": "Votre commande Moment."
+    },
+    "account": {
+      "title": "Compte",
+      "description": "Votre compte Moment et l'historique de vos commandes."
+    },
+    "signin": {
+      "title": "Se connecter",
+      "description": "Connectez-vous à votre compte Moment."
+    },
+    "legal": {
+      "title": "Mentions légales",
+      "description": "Mentions légales et informations sur la société Moment, conformément au droit belge."
+    },
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Politique de confidentialité de Moment — quelles données personnelles nous collectons, pourquoi, et les droits dont vous disposez au titre du RGPD."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Politique cookies du site Moment — quels cookies nous déposons, à quoi ils servent et comment modifier votre choix."
+    },
+    "terms": {
+      "title": "Conditions de vente",
+      "description": "Conditions générales de vente (CGV) pour les commandes de produits et les prestations traiteur de Moment en Belgique."
+    },
+    "shipping": {
+      "title": "Livraison et retours",
+      "description": "Comment fonctionnent la livraison, le retrait et les retours pour les commandes Moment — zones, délais et règles de retour."
+    },
+    "fallback": {
+      "product": "{title} depuis la cuisine de Moment à Bruxelles.",
+      "collection": "{title} chez Moment — cuisiné chaque matin à Bruxelles et livré dans toute la ville.",
+      "article": "{title} — depuis la cuisine de Moment à Bruxelles.",
+      "menu": "Menu traiteur"
+    }
   }
 }

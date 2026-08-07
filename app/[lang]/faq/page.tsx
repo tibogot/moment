@@ -18,16 +18,8 @@ import { routes } from "@/lib/routes";
 import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "FAQ",
-  description:
-    "Delivery areas and fees, lead times, collection, dietary options and how event quotes work at Moment, traiteur in Brussels.",
+export const generateMetadata = localizedMetadata("faq", {
   path: routes.faq,
-  keywords: [
-    "traiteur Brussels FAQ",
-    "catering delivery Brussels",
-    "corporate catering Brussels",
-  ],
 });
 
 /**

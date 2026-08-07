@@ -2,10 +2,7 @@ import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Shipping & returns",
-  description:
-    "How delivery, pickup and returns work for Moment orders across Brussels — zones, cut-off times and return rules.",
+export const generateMetadata = localizedMetadata("shipping", {
   path: routes.shipping,
 });
 

@@ -374,5 +374,142 @@
         "description": "Allows personalised offers and measuring campaigns on other platforms."
       }
     }
+  },
+  "meta": {
+    "home": {
+      "title": "Moment — Traiteur & Catering in Brussels",
+      "description": "A traiteur in Brussels for private hosts and companies. Seasonal plates, salads and cold-pressed juices, cooked each morning and delivered ready to serve.",
+      "keywords": [
+        "traiteur Brussels",
+        "catering Brussels",
+        "corporate catering Brussels",
+        "event catering Brussels",
+        "lunch delivery Brussels",
+        "cold-pressed juice Brussels"
+      ]
+    },
+    "about": {
+      "title": "About — Traiteur & Catering Kitchen in Brussels",
+      "description": "Moment is a traiteur in Brussels cooking seasonal plates, salads and cold-pressed juices every morning for private hosts, offices and events — delivered across the city, ready to serve.",
+      "keywords": [
+        "traiteur Brussels",
+        "catering Brussels",
+        "corporate catering Brussels",
+        "event catering Brussels",
+        "lunch delivery Brussels",
+        "cold-pressed juice Brussels"
+      ]
+    },
+    "shop": {
+      "title": "Shop — Plates, Salads & Cold-Pressed Juices",
+      "description": "Order seasonal plates, salads and cold-pressed juices from our Brussels kitchen. Cooked the morning of delivery, ready to serve.",
+      "keywords": [
+        "lunch delivery Brussels",
+        "office lunch Brussels",
+        "cold-pressed juice Brussels",
+        "salads delivery Brussels"
+      ]
+    },
+    "collections": {
+      "title": "Collections",
+      "description": "Browse plates, salads and cold-pressed juices by category — prepared each morning and delivered across Brussels."
+    },
+    "menus": {
+      "title": "Catering Menus & Prices",
+      "description": "Per-person catering menus from our Brussels kitchen — breakfast, office lunch, apéro, buffet and seated dinner, with prices, minimums and notice for each.",
+      "keywords": [
+        "catering menu Brussels",
+        "catering prices Brussels",
+        "apéro dînatoire Brussels",
+        "buffet catering Brussels"
+      ]
+    },
+    "events": {
+      "title": "Event Catering in Brussels",
+      "description": "Full-service catering for launches, receptions and seated dinners in Brussels — menu, staff and service handled from first call to last plate.",
+      "keywords": [
+        "event catering Brussels",
+        "reception catering Brussels",
+        "corporate event catering Brussels",
+        "wedding catering Brussels"
+      ]
+    },
+    "coffee": {
+      "title": "Coffee Desk",
+      "description": "The Moment coffee desk in Brussels — filter and espresso, pastries out of our own kitchen, and cold-pressed juices to take away.",
+      "keywords": [
+        "coffee Brussels",
+        "coffee desk Brussels",
+        "pastries Brussels"
+      ]
+    },
+    "news": {
+      "title": "News",
+      "description": "News from Moment — what we are cooking, the events we are catering, and what is coming out of our Brussels kitchen."
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Delivery areas and fees, lead times, collection, dietary options and how event quotes work at Moment, traiteur in Brussels.",
+      "keywords": [
+        "traiteur Brussels FAQ",
+        "catering delivery Brussels",
+        "corporate catering Brussels"
+      ]
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Request a quote from Moment, traiteur in Brussels. Tell us the date, the number of people and what you have in mind — we come back with a menu and a price.",
+      "keywords": [
+        "traiteur Brussels contact",
+        "catering quote Brussels"
+      ]
+    },
+    "pro": {
+      "title": "Professional account",
+      "description": "Open a professional account with Moment: VAT invoices, saved delivery addresses and one-click reordering for companies in and around Brussels.",
+      "keywords": [
+        "corporate catering Brussels",
+        "office lunch account Brussels",
+        "B2B traiteur Brussels"
+      ]
+    },
+    "cart": {
+      "title": "Cart",
+      "description": "Your Moment order."
+    },
+    "account": {
+      "title": "Account",
+      "description": "Your Moment account and order history."
+    },
+    "signin": {
+      "title": "Sign in",
+      "description": "Sign in to your Moment account."
+    },
+    "legal": {
+      "title": "Legal notice",
+      "description": "Legal notice and company information for Moment, as required under Belgian law."
+    },
+    "privacy": {
+      "title": "Privacy",
+      "description": "Privacy policy for Moment — what personal data we collect, why, and the rights you have over it under the GDPR."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Cookie policy for the Moment website — which cookies we set, what they do, and how to change your choice."
+    },
+    "terms": {
+      "title": "Terms of sale",
+      "description": "General terms of sale for Moment product orders and catering services in Belgium."
+    },
+    "shipping": {
+      "title": "Shipping & returns",
+      "description": "How delivery, pickup and returns work for Moment orders across Brussels — zones, cut-off times and return rules."
+    },
+    "fallback": {
+      "product": "{title} from the Moment kitchen in Brussels.",
+      "collection": "{title} from Moment — cooked each morning in Brussels and delivered across the city.",
+      "article": "{title} — from the Moment kitchen in Brussels.",
+      "menu": "Catering menu"
+    }
   }
 }

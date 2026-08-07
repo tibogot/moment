@@ -3,10 +3,7 @@ import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const generateMetadata = localizedMetadata({
-  title: "Terms of sale",
-  description:
-    "General terms of sale (CGV) for Moment product orders and catering services in Belgium.",
+export const generateMetadata = localizedMetadata("terms", {
   path: routes.terms,
 });
 

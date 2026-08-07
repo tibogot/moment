@@ -3,17 +3,8 @@ import { PageIntro } from "@/components/PageIntro";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Event Catering in Brussels",
-  description:
-    "Full-service catering for launches, receptions and seated dinners in Brussels — menu, staff and service handled from first call to last plate.",
+export const generateMetadata = localizedMetadata("events", {
   path: routes.events,
-  keywords: [
-    "event catering Brussels",
-    "reception catering Brussels",
-    "corporate event catering Brussels",
-    "wedding catering Brussels",
-  ],
 });
 
 export default function EventsPage() {

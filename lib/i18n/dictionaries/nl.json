@@ -374,5 +374,143 @@
         "description": "Maakt gepersonaliseerde aanbiedingen en het meten van campagnes op andere platformen mogelijk."
       }
     }
+  },
+  "meta": {
+    "home": {
+      "title": "Moment — Traiteur & catering in Brussel",
+      "description": "Traiteur in Brussel voor particulieren en bedrijven. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd.",
+      "keywords": [
+        "traiteur Brussel",
+        "catering Brussel",
+        "bedrijfscatering Brussel",
+        "eventcatering Brussel",
+        "maaltijdlevering Brussel",
+        "koudgeperst sap Brussel"
+      ]
+    },
+    "about": {
+      "title": "Over ons — Traiteur en cateringkeuken in Brussel",
+      "description": "Moment is een Brusselse traiteur die elke ochtend seizoensgerechten, salades en koudgeperste sappen bereidt voor particulieren, kantoren en evenementen — in heel de stad geleverd, klaar om te serveren.",
+      "keywords": [
+        "traiteur Brussel",
+        "catering Brussel",
+        "bedrijfscatering Brussel",
+        "eventcatering Brussel",
+        "maaltijdlevering Brussel",
+        "koudgeperst sap Brussel"
+      ]
+    },
+    "shop": {
+      "title": "Winkel — Gerechten, salades en koudgeperste sappen",
+      "description": "Bestel seizoensgerechten, salades en koudgeperste sappen uit onze Brusselse keuken. Bereid op de ochtend zelf, klaar om te serveren.",
+      "keywords": [
+        "lunchlevering Brussel",
+        "kantoorlunch Brussel",
+        "koudgeperst sap Brussel",
+        "saladelevering Brussel"
+      ]
+    },
+    "collections": {
+      "title": "Collecties",
+      "description": "Blader door onze gerechten, salades en koudgeperste sappen per categorie — elke ochtend bereid en in heel Brussel geleverd."
+    },
+    "menus": {
+      "title": "Cateringmenu's en prijzen",
+      "description": "Cateringmenu's per persoon uit onze Brusselse keuken — ontbijt, kantoorlunch, apéro, buffet en zittend diner, met prijs, minimum en termijn voor elk.",
+      "keywords": [
+        "cateringmenu Brussel",
+        "traiteur prijzen Brussel",
+        "cateringprijzen Brussel",
+        "walking dinner Brussel",
+        "buffet traiteur Brussel"
+      ]
+    },
+    "events": {
+      "title": "Eventcatering in Brussel",
+      "description": "Volledige catering voor lanceringen, recepties en zittende diners in Brussel — menu, personeel en bediening verzorgd van het eerste gesprek tot het laatste bord.",
+      "keywords": [
+        "eventcatering Brussel",
+        "receptiecatering Brussel",
+        "bedrijfscatering Brussel",
+        "huwelijkscatering Brussel"
+      ]
+    },
+    "coffee": {
+      "title": "Koffiebar",
+      "description": "De koffiebar van Moment in Brussel — filter en espresso, gebak uit onze eigen keuken en koudgeperste sappen om mee te nemen.",
+      "keywords": [
+        "koffie Brussel",
+        "koffiebar Brussel",
+        "gebak Brussel"
+      ]
+    },
+    "news": {
+      "title": "Nieuws",
+      "description": "Nieuws van Moment — wat wij koken, welke evenementen wij verzorgen en wat er uit onze Brusselse keuken komt."
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Leveringszones en -kosten, termijnen, afhalen in het atelier, dieetwensen en hoe offertes voor evenementen werken bij Moment, traiteur in Brussel.",
+      "keywords": [
+        "traiteur Brussel FAQ",
+        "cateringlevering Brussel",
+        "bedrijfscatering Brussel"
+      ]
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Vraag een offerte aan bij Moment, traiteur in Brussel. Laat ons de datum, het aantal personen en uw plannen weten — wij komen terug met een menu en een prijs.",
+      "keywords": [
+        "traiteur Brussel contact",
+        "catering offerte Brussel"
+      ]
+    },
+    "pro": {
+      "title": "Zakelijk account",
+      "description": "Open een zakelijk account bij Moment: facturen met btw, bewaarde leveradressen en bestellen met één klik voor bedrijven in en rond Brussel.",
+      "keywords": [
+        "bedrijfscatering Brussel",
+        "kantoorlunch account Brussel",
+        "B2B traiteur Brussel"
+      ]
+    },
+    "cart": {
+      "title": "Winkelmand",
+      "description": "Uw bestelling bij Moment."
+    },
+    "account": {
+      "title": "Account",
+      "description": "Uw Moment-account en uw bestelgeschiedenis."
+    },
+    "signin": {
+      "title": "Aanmelden",
+      "description": "Meld u aan bij uw Moment-account."
+    },
+    "legal": {
+      "title": "Wettelijke vermeldingen",
+      "description": "Wettelijke vermeldingen en bedrijfsgegevens van Moment, zoals vereist door het Belgisch recht."
+    },
+    "privacy": {
+      "title": "Privacy",
+      "description": "Privacybeleid van Moment — welke persoonsgegevens wij verzamelen, waarom, en welke rechten u daarover heeft onder de AVG."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Cookiebeleid van de website van Moment — welke cookies wij plaatsen, wat ze doen en hoe u uw keuze wijzigt."
+    },
+    "terms": {
+      "title": "Verkoopvoorwaarden",
+      "description": "Algemene verkoopvoorwaarden voor productbestellingen en cateringdiensten van Moment in België."
+    },
+    "shipping": {
+      "title": "Levering en retouren",
+      "description": "Hoe levering, afhalen en retouren werken voor bestellingen bij Moment — zones, uiterste tijdstippen en retourregels."
+    },
+    "fallback": {
+      "product": "{title} uit de keuken van Moment in Brussel.",
+      "collection": "{title} bij Moment — elke ochtend bereid in Brussel en in heel de stad geleverd.",
+      "article": "{title} — uit de keuken van Moment in Brussel.",
+      "menu": "Cateringmenu"
+    }
   }
 }

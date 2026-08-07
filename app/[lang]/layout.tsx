@@ -30,8 +30,6 @@ import "../globals.css";
 const REVEAL_GUARD = `(function(){try{document.documentElement.classList.add("reveal-js")}catch(e){}})()`;
 const PALETTE_GUARD = `(function(){try{var p=localStorage.getItem("moment-palette");if(p==="sky")document.documentElement.dataset.palette="sky"}catch(e){}})()`;
 
-const HOME_TITLE = `${siteConfig.name} — Traiteur & Catering in Brussels`;
-
 /**
  * Every route is now three routes. This is what tells Next to build all of
  * them, and — because it sits on the root layout — what supplies the `lang`
@@ -53,15 +51,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : "fr";
+  const { meta } = await getDictionary(locale);
 
   return {
   // Lets pages declare canonical and Open Graph URLs as plain route paths.
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: HOME_TITLE,
+    default: meta.home.title,
     template: `%s — ${siteConfig.name}`,
   },
-  description: siteConfig.description,
+  description: meta.home.description,
   applicationName: siteConfig.name,
   creator: siteConfig.name,
   publisher: siteConfig.legal.companyName || siteConfig.name,
@@ -74,16 +73,16 @@ export async function generateMetadata({
   alternates: languageAlternates("/", locale),
   openGraph: {
     type: "website",
-    title: HOME_TITLE,
-    description: siteConfig.description,
+    title: meta.home.title,
+    description: meta.home.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: OG_LOCALE[locale],
   },
   twitter: {
     card: "summary_large_image",
-    title: HOME_TITLE,
-    description: siteConfig.description,
+    title: meta.home.title,
+    description: meta.home.description,
   },
   robots: {
     index: true,

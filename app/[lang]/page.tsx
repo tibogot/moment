@@ -42,18 +42,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const { meta } = await getDictionary(locale);
 
+  // Keywords and description come from the dictionary like every other page.
+  // They were literals here, and because this block overrides the layout's,
+  // all three languages were served the English ones.
   return {
     alternates: languageAlternates(routes.home, locale),
-    keywords: [
-      "traiteur Brussels",
-      "catering Brussels",
-      "corporate catering Brussels",
-      "event catering Brussels",
-      "lunch delivery Brussels",
-      "cold-pressed juice Brussels",
-    ],
-    description: siteConfig.description,
+    description: meta.home.description,
+    keywords: [...meta.home.keywords],
     openGraph: { locale: OG_LOCALE[locale] },
   };
 }

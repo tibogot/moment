@@ -6,12 +6,8 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Coffee Desk",
-  description:
-    "The Moment coffee desk in Brussels — filter and espresso, pastries out of our own kitchen, and cold-pressed juices to take away.",
+export const generateMetadata = localizedMetadata("coffee", {
   path: routes.coffee,
-  keywords: ["coffee Brussels", "coffee desk Brussels", "pastries Brussels"],
 });
 
 export default async function CoffeePage({

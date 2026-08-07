@@ -5,10 +5,7 @@ import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 
-export const generateMetadata = localizedMetadata({
-  title: "Collections",
-  description:
-    "Browse plates, salads and cold-pressed juices by category — prepared each morning and delivered across Brussels.",
+export const generateMetadata = localizedMetadata("collections", {
   path: routes.collections,
 });
 

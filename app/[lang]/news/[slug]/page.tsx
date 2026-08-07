@@ -9,6 +9,7 @@ import { SanityImage } from "@/components/SanityImage";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { toLocale } from "@/lib/i18n/config";
+import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { articleSchema, breadcrumbSchema, graph } from "@/lib/schema";
 import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
@@ -44,16 +45,20 @@ export async function generateMetadata({
   params,
 }: NewsArticlePageProps): Promise<Metadata> {
   const { lang, slug } = await params;
-  const article = await getNewsArticleBySlug(slug);
+  const locale = toLocale(lang);
+  const [article, dict] = await Promise.all([
+    getNewsArticleBySlug(slug),
+    getDictionary(locale),
+  ]);
 
-  if (!article) return notFoundMetadata("Article not found");
+  if (!article) return notFoundMetadata();
 
   return pageMetadata({
-    locale: toLocale(lang),
+    locale,
     title: article.title,
     description:
       toDescription(article.excerpt) ??
-      `${article.title} — from the Moment kitchen in Brussels.`,
+      interpolate(dict.meta.fallback.article, { title: article.title }),
     path: routes.newsArticle(slug),
     image: shareImage(article),
     type: "article",

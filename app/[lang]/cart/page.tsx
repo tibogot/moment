@@ -11,9 +11,7 @@ import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Cart",
-  description: "Your Moment order.",
+export const generateMetadata = localizedMetadata("cart", {
   path: routes.cart,
   noindex: true,
 });

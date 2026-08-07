@@ -17,6 +17,7 @@ import {
   type Menu,
 } from "@/lib/menus";
 import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { getMenuBySlug, getMenuSlugs } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
@@ -45,17 +46,21 @@ export async function generateMetadata({
   params,
 }: MenuPageProps): Promise<Metadata> {
   const { lang, slug } = await params;
-  const menu = await getMenuBySlug(slug);
+  const locale = toLocale(lang);
+  const [menu, dict] = await Promise.all([
+    getMenuBySlug(slug),
+    getDictionary(locale),
+  ]);
 
-  if (!menu) return notFoundMetadata("Menu not found");
+  if (!menu) return notFoundMetadata();
 
   // The price belongs in the snippet: "from €32 per person" is the line that
   // decides whether the result is worth a click for a catering search.
   const price = `From ${formatMenuPrice(menu.pricePerPerson)} per person, ${formatMenuTerms(menu).toLowerCase()}.`;
 
   return pageMetadata({
-    locale: toLocale(lang),
-    title: `${menu.title} — ${MENU_FORMAT_LABELS[menu.format] ?? "Catering menu"}`,
+    locale,
+    title: `${menu.title} — ${MENU_FORMAT_LABELS[menu.format] ?? dict.meta.fallback.menu}`,
     description: toDescription(
       menu.summary ? `${menu.summary} ${price}` : price,
     ),

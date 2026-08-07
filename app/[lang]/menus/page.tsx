@@ -10,18 +10,8 @@ import { getMenus } from "@/lib/sanity/queries";
 import { breadcrumbSchema, graph, menuListSchema } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Catering Menus & Prices",
-  description:
-    "Per-person catering menus from our Brussels kitchen — breakfast, office lunch, apéro, buffet and seated dinner, with prices, minimums and notice for each.",
+export const generateMetadata = localizedMetadata("menus", {
   path: routes.menus,
-  keywords: [
-    "catering menu Brussels",
-    "traiteur prix Brussels",
-    "catering prices Brussels",
-    "apéro dînatoire Brussels",
-    "buffet traiteur Brussels",
-  ],
 });
 
 export default async function MenusPage() {

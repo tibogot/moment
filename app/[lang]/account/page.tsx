@@ -8,9 +8,7 @@ import { getCustomerProfile } from "@/lib/shopify/customer-account/customer";
 import { getCustomerDisplayName } from "@/lib/shopify/customer-account/display-name";
 import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 
-export const generateMetadata = localizedMetadata({
-  title: "Account",
-  description: "Your Moment account and order history.",
+export const generateMetadata = localizedMetadata("account", {
   path: routes.account,
   noindex: true,
 });

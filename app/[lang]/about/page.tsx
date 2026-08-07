@@ -9,6 +9,8 @@ import { FullBleedImageSection } from "@/components/FullBleedImageSection";
 import { JsonLd } from "@/components/JsonLd";
 import { SplitImageSection } from "@/components/SplitImageSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
+import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import {
   breadcrumbSchema,
@@ -17,22 +19,9 @@ import {
 } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
 
-const title = "About — Traiteur & Catering Kitchen in Brussels";
-const description =
-  "Moment is a traiteur in Brussels cooking seasonal plates, salads and cold-pressed juices every morning for private hosts, offices and events — delivered across the city, ready to serve.";
 
-export const generateMetadata = localizedMetadata({
-  title,
-  description,
+export const generateMetadata = localizedMetadata("about", {
   path: routes.about,
-  keywords: [
-    "traiteur Brussels",
-    "catering Brussels",
-    "corporate catering Brussels",
-    "event catering Brussels",
-    "lunch delivery Brussels",
-    "cold-pressed juice Brussels",
-  ],
 });
 
 /**
@@ -41,21 +30,30 @@ export const generateMetadata = localizedMetadata({
  * the same things to human readers. The business node itself lives in
  * lib/schema.ts, shared with the home page.
  */
-const jsonLd = graph(
-  {
-    "@type": "AboutPage",
-    name: fullTitle(title),
-    description,
-    url: absoluteUrl(routes.about),
-    mainEntity: cateringBusinessSchema(),
-  },
-  breadcrumbSchema([
-    { name: "Home", path: routes.home },
-    { name: "About", path: routes.about },
-  ]),
-);
+function aboutJsonLd(meta: { title: string; description: string }) {
+  return graph(
+    {
+      "@type": "AboutPage",
+      name: fullTitle(meta.title),
+      description: meta.description,
+      url: absoluteUrl(routes.about),
+      mainEntity: cateringBusinessSchema(),
+    },
+    breadcrumbSchema([
+      { name: "Home", path: routes.home },
+      { name: "About", path: routes.about },
+    ]),
+  );
+}
 
-export default function AboutPage() {
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(toLocale(lang));
+  const jsonLd = aboutJsonLd(dict.meta.about);
   return (
     <>
       <JsonLd data={jsonLd} />

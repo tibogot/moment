@@ -10,7 +10,7 @@ import { ProductGallery } from "@/components/ProductGallery";
 import { ProductRowSection } from "@/components/ProductRowSection";
 import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
 import { toLocale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, graph, productSchema } from "@/lib/schema";
 import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
@@ -33,17 +33,21 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { lang, handle } = await params;
-  const product = await getProductByHandle(handle);
+  const locale = toLocale(lang);
+  const [product, dict] = await Promise.all([
+    getProductByHandle(handle),
+    getDictionary(locale),
+  ]);
 
   if (!product) return notFoundMetadata();
 
   return pageMetadata({
-    locale: toLocale(lang),
+    locale,
     title: product.title,
     // Shopify descriptions run long; a trimmed sentence beats a hard cut.
     description:
       toDescription(product.description) ??
-      `${product.title} from the Moment kitchen in Brussels.`,
+      interpolate(dict.meta.fallback.product, { title: product.title }),
     path: routes.product(product.handle),
     image: product.imageUrl
       ? { url: product.imageUrl, alt: product.imageAlt }

@@ -3,10 +3,7 @@ import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const generateMetadata = localizedMetadata({
-  title: "Privacy",
-  description:
-    "Privacy policy for Moment — what personal data we collect, why, and the rights you have over it under the GDPR.",
+export const generateMetadata = localizedMetadata("privacy", {
   path: routes.privacy,
 });
 

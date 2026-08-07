@@ -9,17 +9,8 @@ import { localizedMetadata } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
 
-export const generateMetadata = localizedMetadata({
-  title: "Shop — Plates, Salads & Cold-Pressed Juices",
-  description:
-    "Order seasonal plates, salads and cold-pressed juices from our Brussels kitchen. Cooked the morning of delivery, ready to serve.",
+export const generateMetadata = localizedMetadata("shop", {
   path: routes.shop,
-  keywords: [
-    "lunch delivery Brussels",
-    "office lunch Brussels",
-    "cold-pressed juice Brussels",
-    "salads delivery Brussels",
-  ],
 });
 
 export default async function ShopPage({

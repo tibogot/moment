@@ -10,9 +10,7 @@ import { localizedMetadata } from "@/lib/seo";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
 import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 
-export const generateMetadata = localizedMetadata({
-  title: "Sign in",
-  description: "Sign in to your Moment account.",
+export const generateMetadata = localizedMetadata("signin", {
   path: routes.signIn,
   noindex: true,
 });

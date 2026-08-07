@@ -3,10 +3,7 @@ import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const generateMetadata = localizedMetadata({
-  title: "Legal notice",
-  description:
-    "Legal notice and company information for Moment, as required under Belgian law.",
+export const generateMetadata = localizedMetadata("legal", {
   path: routes.legal,
 });
 

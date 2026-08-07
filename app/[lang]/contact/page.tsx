@@ -20,12 +20,8 @@ import { getMenuBySlug } from "@/lib/sanity/queries";
 import { breadcrumbSchema, graph, organizationSchema } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "Contact",
-  description:
-    "Request a quote from Moment, traiteur in Brussels. Tell us the date, the number of people and what you have in mind — we come back with a menu and a price.",
+export const generateMetadata = localizedMetadata("contact", {
   path: routes.contact,
-  keywords: ["traiteur Brussels contact", "catering quote Brussels"],
 });
 
 type ContactPageProps = {

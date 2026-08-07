@@ -6,10 +6,7 @@ import { getNewsArticles } from "@/lib/sanity/queries";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
-export const generateMetadata = localizedMetadata({
-  title: "News",
-  description:
-    "News from Moment — what we are cooking, the events we are catering, and what is coming out of our Brussels kitchen.",
+export const generateMetadata = localizedMetadata("news", {
   path: routes.news,
 });
 

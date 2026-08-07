@@ -9,6 +9,7 @@ import {
   withLocale,
   type Locale,
 } from "./i18n/config";
+import { getDictionary, type Dictionary } from "./i18n/dictionaries";
 import { siteConfig } from "./site";
 
 /**
@@ -51,6 +52,15 @@ export function languageAlternates(path: string, locale: Locale) {
 export function fullTitle(title: string) {
   return `${title} — ${siteConfig.name}`;
 }
+
+/**
+ * The pages that have their own entry in the dictionaries under `meta`.
+ *
+ * `fallback` lives in the same section but is not a page — it holds the
+ * sentences the content-driven routes use when Shopify or Sanity gives them
+ * nothing to describe.
+ */
+export type MetaKey = Exclude<keyof Dictionary["meta"], "fallback">;
 
 export type SeoImage = {
   url: string;
@@ -160,23 +170,39 @@ export function pageMetadata({
  * Static `metadata` cannot see the route params, so a page declaring it that
  * way has no idea which language it is being rendered in — it would canonical
  * every translation back to the French URL and tell search engines the Dutch
- * and English pages are duplicates not worth indexing. That is a worse outcome
- * than never having translated them.
+ * and English pages are duplicates not worth indexing.
  *
- * Wrapping it keeps the call sites a single line, which is the only reason
- * eighteen of them were willing to change.
+ * The title, description and keywords come from the dictionary under `key`
+ * rather than being passed in. They were literals until every page shipped in
+ * three languages and all three kept serving the English ones — which is the
+ * text Google actually prints in a result, so it was the least visible and
+ * most expensive thing left untranslated.
+ *
+ * Keywords are translated rather than shared. A French page ranking on
+ * "catering Brussels" instead of "traiteur Bruxelles" is the whole multilingual
+ * exercise wasted.
  */
-export function localizedMetadata(seo: Omit<PageSeo, "locale">) {
+export function localizedMetadata(
+  key: MetaKey,
+  options: Pick<PageSeo, "path"> &
+    Partial<Pick<PageSeo, "noindex" | "image" | "type">>,
+) {
   return async function generateMetadata({
     params,
   }: {
     params: Promise<{ lang: string }>;
   }): Promise<Metadata> {
     const { lang } = await params;
+    const locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+    const dict = await getDictionary(locale);
+    const meta = dict.meta[key];
 
     return pageMetadata({
-      ...seo,
-      locale: isLocale(lang) ? lang : DEFAULT_LOCALE,
+      ...options,
+      locale,
+      title: meta.title,
+      description: meta.description,
+      keywords: "keywords" in meta ? meta.keywords : undefined,
     });
   };
 }
