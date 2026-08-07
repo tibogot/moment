@@ -53,7 +53,7 @@ cette forme.
 
 ### Site en trois langues — français, néerlandais, anglais
 
-- 165 pages générées, une version par langue
+- Chaque page existe en français, néerlandais et anglais
 - URLs, balises hreflang et plan de site par langue, pour le référencement
 - Dates, prix et formats adaptés à chaque langue
 - Sélecteur de langue, mémorisation du choix
@@ -68,6 +68,34 @@ cette forme.
 - CMS (Sanity) pour les menus et les actualités
 - Référencement : données structurées, page FAQ enrichie, plan de site
 - Bandeau cookies conforme, pages légales belges
+
+### Ce que cela représente en pages
+
+Le devis initial portait sur 6 pages. Le site en publie aujourd'hui **141,
+toutes indexables par Google** — chacune dans sa langue, avec son URL
+canonique, ses liens vers les deux autres versions et ses données structurées.
+
+| | Pages uniques | × 3 langues |
+|---|---|---|
+| Accueil | 1 | 3 |
+| Pages fixes (boutique, à propos, FAQ, événements, légales…) | 15 | 45 |
+| Fiches produits | 16 | 48 |
+| Collections | 7 | 21 |
+| Menus | 5 | 15 |
+| Actualités | 3 | 9 |
+| **Total** | **47** | **141** |
+
+S'y ajoutent le panier, le compte, la connexion et le contact, générés à la
+demande plutôt que d'avance.
+
+Ces 141 pages ne sont pas 141 pages dessinées une par une : elles sortent d'une
+vingtaine de gabarits. C'est là qu'est le travail — et c'est aussi ce qui fait
+que le site continuera d'en produire sans intervention. Un produit ajouté dans
+Shopify demain matin devient trois pages, dans les trois langues, avec le
+référencement correct et les liens entre versions.
+
+Un site vitrine ne fait pas cela : chaque nouvelle page y est une intervention
+payante.
 
 ---
 
