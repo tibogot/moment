@@ -1,6 +1,8 @@
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
+import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ProductGrid } from "@/components/ProductGrid";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
@@ -20,7 +22,13 @@ export const generateMetadata = localizedMetadata({
   ],
 });
 
-export default async function ShopPage() {
+export default async function ShopPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(toLocale(lang));
   const [products, collections] = await Promise.all([
     getProducts(),
     getCollections(),
@@ -35,8 +43,8 @@ export default async function ShopPage() {
   return (
     <>
       <PageIntro
-        title="Shop"
-        lead="Plates, salads and cold-pressed juices, prepared each morning and delivered across Brussels."
+        title={dict.shop.title}
+        lead={dict.shop.lead}
       />
 
       <GridSection className="pb-[14svh]">

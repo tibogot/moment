@@ -4,6 +4,8 @@ import { CartDeliverySection } from "@/components/CartDeliverySection";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
+import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getCart } from "@/app/actions/cart";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { routes } from "@/lib/routes";
@@ -16,29 +18,35 @@ export const generateMetadata = localizedMetadata({
   noindex: true,
 });
 
-export default async function CartPage() {
-  const [cart, availability] = await Promise.all([
+export default async function CartPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const [cart, availability, dict] = await Promise.all([
     getCart(),
     getDeliveryAvailability(),
+    getDictionary(toLocale(lang)),
   ]);
   const isEmpty = !cart || cart.lines.length === 0;
 
   return (
     <>
-      <PageIntro title="Cart" />
+      <PageIntro title={dict.cart.title} />
 
       <GridSection className="pb-[14svh]">
         <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-9">
           {isEmpty ? (
             <>
               <p className="font-archivo-light text-[15px]">
-                Your cart is empty.
+                {dict.cart.empty}
               </p>
               <Link
                 href={routes.shop}
                 className="font-owners-medium mt-6 inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
               >
-                Browse the shop
+                {dict.cart.browseShop}
               </Link>
             </>
           ) : (
@@ -73,7 +81,7 @@ export default async function CartPage() {
                           {line.title}
                         </Link>
                         <p className="font-archivo-light mt-1 text-[13px]">
-                          Quantity {line.quantity}
+                          {dict.cart.quantity} {line.quantity}
                         </p>
                       </div>
                       <span className="font-archivo-light text-[13px]">

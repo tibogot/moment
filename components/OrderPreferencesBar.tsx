@@ -24,11 +24,13 @@ import {
   notifyCartUpdated,
   subscribeCart,
 } from "@/lib/cart-store";
-import { LEAD_TIME_DAYS, formatDeliveryDate } from "@/lib/delivery";
+import { LEAD_TIME_DAYS } from "@/lib/delivery";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
+import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
+import { formatLongDate } from "@/lib/i18n/format";
 import {
   DELIVERY_METHODS,
   MIN_ADDRESS_QUERY_LENGTH,
-  deliveryMethodLabel,
   needsAddress,
   type DeliveryMethod,
 } from "@/lib/order-preferences";
@@ -56,6 +58,9 @@ const SEARCH_DEBOUNCE_MS = 250;
  * checkout, which is enforced in the cart.
  */
 export function OrderPreferencesBar({ className }: { className?: string }) {
+  const dict = useDictionary();
+  const locale = useLocale();
+  const t = dict.orderBar;
   const cart = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
@@ -184,18 +189,19 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     <div ref={containerRef} className={cn("relative", className)}>
       <div className="flex flex-col border border-sky md:flex-row md:items-stretch">
         <Segment
-          label="Date"
-          title="Choose a delivery date"
-          value={deliveryDate ? formatDeliveryDate(deliveryDate) : null}
-          placeholder="Select a date"
+          label={t.date}
+          title={t.chooseDateTitle}
+          value={deliveryDate ? formatLongDate(locale, deliveryDate) : null}
+          placeholder={t.selectDate}
           open={panel === "date"}
           onToggle={() => togglePanel("date")}
         >
           {availability ? (
             <>
               <p className="font-archivo-light px-4 pt-4 text-[15px] leading-normal">
-                Blue days are closed or already full — we need {LEAD_TIME_DAYS}{" "}
-                days&apos; notice and we do not deliver on Sundays.
+                {interpolate(dict.delivery.calendarNote, {
+                  days: LEAD_TIME_DAYS,
+                })}
               </p>
               <DeliveryDatePicker
                 availability={availability}
@@ -206,7 +212,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
             </>
           ) : (
             <p className="font-archivo-light p-4 text-[15px]">
-              Loading available days&hellip;
+              {t.loadingDays}
             </p>
           )}
         </Segment>
@@ -214,29 +220,32 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         <Divider />
 
         <Segment
-          label="Address"
-          title="Where should we deliver?"
-          value={addressDisabled ? "Not needed" : deliveryAddress}
-          placeholder="Add an address"
+          label={t.address}
+          title={t.whereDeliver}
+          value={addressDisabled ? t.notNeeded : deliveryAddress}
+          placeholder={t.addAddress}
           open={panel === "address"}
           onToggle={() => togglePanel("address")}
           disabled={addressDisabled}
-          disabledHint="You chose click & collect"
+          disabledHint={t.collectHint}
         >
           <AddressPanel
             current={deliveryAddress}
             onSelect={chooseAddress}
             saving={isPending}
+            t={t}
           />
         </Segment>
 
         <Divider />
 
         <Segment
-          label="Delivery"
-          title="How would you like it?"
-          value={deliveryMethod ? deliveryMethodLabel(deliveryMethod) : null}
-          placeholder="Delivery type"
+          label={t.deliveryLabel}
+          title={t.howLike}
+          value={
+            deliveryMethod ? dict.deliveryMethods[deliveryMethod].label : null
+          }
+          placeholder={t.deliveryType}
           open={panel === "delivery"}
           onToggle={() => togglePanel("delivery")}
           align="right"
@@ -246,21 +255,21 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
           <div className="py-2">
             {DELIVERY_METHODS.map((option) => (
               <button
-                key={option.id}
+                key={option}
                 type="button"
                 disabled={isPending}
-                aria-pressed={deliveryMethod === option.id}
-                onClick={() => chooseMethod(option.id)}
+                aria-pressed={deliveryMethod === option}
+                onClick={() => chooseMethod(option)}
                 className={cn(
                   "block w-full px-4 py-3 text-left transition-colors hover:bg-sky/30 disabled:opacity-40",
-                  deliveryMethod === option.id && "bg-sky/40",
+                  deliveryMethod === option && "bg-sky/40",
                 )}
               >
                 <span className="font-owners-medium block text-[13px] uppercase tracking-wide">
-                  {option.label}
+                  {dict.deliveryMethods[option].label}
                 </span>
                 <span className="font-archivo-light mt-1 block text-[15px] leading-normal">
-                  {option.description}
+                  {dict.deliveryMethods[option].description}
                 </span>
               </button>
             ))}
@@ -368,11 +377,12 @@ type AddressPanelProps = {
   current: string | null;
   onSelect: (value: string) => void;
   saving: boolean;
+  t: Dictionary["orderBar"];
 };
 
 const NO_RESULTS: AddressSearch = { matches: [], streets: [] };
 
-function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
+function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
   const [query, setQuery] = useState(current ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -441,15 +451,14 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
           id="delivery-address"
           type="text"
           autoComplete="off"
-          aria-label="Street and number"
+          aria-label={t.streetAndNumber}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Rue de Stalle 77"
+          placeholder={t.addressPlaceholder}
           className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[16px] outline-none placeholder:opacity-40"
         />
         <p className="font-archivo-light mt-3 text-[14px] leading-normal opacity-70">
-          Pick your address from the list. The delivery fee and the minimum
-          order depend on how far you are from the atelier.
+          {t.addressHint}
         </p>
       </div>
 
@@ -460,7 +469,7 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
         >
           {searching && (
             <p className="font-archivo-light px-4 py-3 text-[15px] opacity-70">
-              Checking&hellip;
+              {t.checking}
             </p>
           )}
 
@@ -479,11 +488,13 @@ function AddressPanel({ current, onSelect, saving }: AddressPanelProps) {
           {showEmpty && (
             <div className="px-4 py-3">
               <p className="font-archivo-light text-[15px]">
-                No Brussels address matches that.
+                {t.noMatch}
               </p>
               {data.streets.length > 0 && (
                 <p className="font-archivo-light mt-2 text-[15px] opacity-70">
-                  Did you mean {data.streets.join(", ")}? Add a house number.
+                  {interpolate(t.didYouMean, {
+                    streets: data.streets.join(", "),
+                  })}
                 </p>
               )}
             </div>

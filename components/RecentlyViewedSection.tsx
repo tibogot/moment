@@ -1,5 +1,7 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
+
 import { useEffect, useState } from "react";
 import { ProductRowSection } from "@/components/ProductRowSection";
 import {
@@ -21,6 +23,7 @@ export function RecentlyViewedSection({
   currentHandle,
   className,
 }: RecentlyViewedSectionProps) {
+  const dict = useDictionary();
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
 
   useEffect(() => {
@@ -40,7 +43,7 @@ export function RecentlyViewedSection({
 
   return (
     <ProductRowSection
-      title="Recently viewed"
+      title={dict.shop.recentlyViewed}
       products={products}
       className={cn("pt-[10svh] pb-[14svh]", className)}
     />

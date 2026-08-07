@@ -1,5 +1,7 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
+
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
@@ -77,9 +79,13 @@ type ProductGridProps = {
  */
 export function ProductGrid({
   products,
-  emptyMessage = "The catalogue is not available right now. Please try again later.",
+  emptyMessage,
   collections = [],
 }: ProductGridProps) {
+  const dict = useDictionary();
+  // Falls back to the dictionary rather than defaulting in the signature: a
+  // default parameter cannot read a hook.
+  const emptyText = emptyMessage ?? dict.shop.unavailable;
   const [view, setView] = useState<View>("grid");
   const listRef = useRef<HTMLUListElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -173,7 +179,7 @@ export function ProductGrid({
   if (products.length === 0) {
     return (
       <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) py-[6svh] md:col-end-9">
-        <p className="font-archivo-light text-[15px]">{emptyMessage}</p>
+        <p className="font-archivo-light text-[15px]">{emptyText}</p>
       </div>
     );
   }
@@ -197,7 +203,7 @@ export function ProductGrid({
 
         <div
           role="group"
-          aria-label="Product layout"
+          aria-label={dict.shop.layout}
           className="flex shrink-0 border border-sky bg-cream"
         >
           {views.map(({ id, label, cells }) => (

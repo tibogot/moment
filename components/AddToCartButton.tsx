@@ -1,5 +1,7 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
+
 import { useState, useTransition } from "react";
 import { addToCart } from "@/app/actions/cart";
 import { setCart } from "@/lib/cart-store";
@@ -16,6 +18,7 @@ export function AddToCartButton({
   available,
   className,
 }: AddToCartButtonProps) {
+  const dict = useDictionary();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -53,7 +56,7 @@ export function AddToCartButton({
         <div className={cn("flex shrink-0 items-stretch", controlClass)}>
           <button
             type="button"
-            aria-label="Decrease quantity"
+            aria-label={dict.cart.decrease}
             disabled={disabled || quantity <= 1}
             onClick={() => setQuantity((current) => Math.max(1, current - 1))}
             className="px-3 py-2.5 text-[13px] transition-opacity hover:opacity-60 disabled:cursor-not-allowed"
@@ -65,7 +68,7 @@ export function AddToCartButton({
           </span>
           <button
             type="button"
-            aria-label="Increase quantity"
+            aria-label={dict.cart.increase}
             disabled={disabled}
             onClick={() => setQuantity((current) => current + 1)}
             className="px-3 py-2.5 text-[13px] transition-opacity hover:opacity-60 disabled:cursor-not-allowed"
@@ -85,7 +88,7 @@ export function AddToCartButton({
           )}
         >
           <span className="font-owners-medium inline-flex w-full items-center justify-center text-[11px] uppercase tracking-wide">
-            {!available ? "Sold out" : isPending ? "Adding…" : "Add to cart"}
+            {!available ? dict.product.soldOut : isPending ? dict.product.adding : dict.product.addToCart}
           </span>
         </button>
       </div>

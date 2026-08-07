@@ -11,12 +11,11 @@ import {
   type DeliveryAvailability,
 } from "@/lib/delivery";
 import { checkoutBlocker } from "@/lib/checkout";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
+import { formatLongDate } from "@/lib/i18n/format";
 import { formatEuros, zoneById, type ZoneId } from "@/lib/delivery-zones";
-import {
-  deliveryMethodLabel,
-  needsAddress,
-  type DeliveryMethod,
-} from "@/lib/order-preferences";
+import { needsAddress, type DeliveryMethod } from "@/lib/order-preferences";
 import { useRouter } from "next/navigation";
 
 type CartDeliverySectionProps = {
@@ -46,6 +45,9 @@ export function CartDeliverySection({
   totalPrice,
   checkoutUrl,
 }: CartDeliverySectionProps) {
+  const dict = useDictionary();
+  const locale = useLocale();
+  const t = dict.cart;
   const router = useRouter();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -96,20 +98,20 @@ export function CartDeliverySection({
       <div className="border-t border-sky py-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-            Delivery
+            {t.delivery}
           </span>
 
           {deliveryDate && !dateIsStale ? (
             <span className="flex items-baseline gap-4">
               <span className="font-archivo-light text-[13px]">
-                {formatDeliveryDate(deliveryDate)}
+                {formatLongDate(locale, deliveryDate)}
               </span>
               <button
                 type="button"
                 onClick={() => setPickerOpen((open) => !open)}
                 className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
               >
-                {pickerOpen ? "Done" : "Change"}
+                {pickerOpen ? t.done : t.change}
               </button>
             </span>
           ) : (
@@ -118,7 +120,7 @@ export function CartDeliverySection({
               onClick={() => setPickerOpen((open) => !open)}
               className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
             >
-              {dateIsStale ? "Pick another day" : "Pick a date"}
+              {dateIsStale ? t.pickAnother : t.pick}
             </button>
           )}
         </div>
@@ -130,10 +132,10 @@ export function CartDeliverySection({
         {deliveryMethod && (
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
             <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              Method
+              {t.method}
             </span>
             <span className="font-archivo-light text-[13px]">
-              {deliveryMethodLabel(deliveryMethod)}
+              {dict.deliveryMethods[deliveryMethod].label}
             </span>
           </div>
         )}
@@ -141,7 +143,7 @@ export function CartDeliverySection({
         {deliveryAddress && needsAddress(deliveryMethod) && (
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
             <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              Address
+              {t.address}
             </span>
             <span className="font-archivo-light text-[13px]">
               {deliveryAddress}
@@ -154,19 +156,23 @@ export function CartDeliverySection({
         {zone && needsAddress(deliveryMethod) && (
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
             <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              Delivery fee
+              {t.deliveryFee}
             </span>
             <span className="font-archivo-light text-[13px]">
-              {formatEuros(zone.fee)} &middot; zone {zone.id} &middot; minimum order{" "}
-              {formatEuros(zone.minimumOrder)}
+              {interpolate(t.zoneLine, {
+                fee: formatEuros(zone.fee),
+                zone: zone.id,
+                minimum: formatEuros(zone.minimumOrder),
+              })}
             </span>
           </div>
         )}
 
         {dateIsStale && deliveryDate && (
           <p role="alert" className="font-archivo-light mt-2 text-[13px]">
-            {formatDeliveryDate(deliveryDate)} is no longer available. Please
-            pick another day.
+            {interpolate(t.staleDate, {
+              date: formatLongDate(locale, deliveryDate),
+            })}
           </p>
         )}
 
@@ -179,8 +185,9 @@ export function CartDeliverySection({
         {pickerOpen && (
           <div className="mt-5 max-w-[420px] border border-sky">
             <p className="font-archivo-light px-6 pt-5 text-[13px] leading-normal">
-              Blue days are closed or already full — we need {LEAD_TIME_DAYS}{" "}
-              days&apos; notice and we do not deliver on Sundays.
+              {interpolate(dict.delivery.calendarNote, {
+                days: LEAD_TIME_DAYS,
+              })}
             </p>
             <DeliveryDatePicker
               availability={availability}
@@ -194,7 +201,7 @@ export function CartDeliverySection({
 
       <div className="flex items-baseline justify-between border-t border-sky pt-6">
         <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-          Total
+          {t.total}
         </span>
         <span className="font-archivo-light text-[15px]">{totalPrice}</span>
       </div>
@@ -204,16 +211,17 @@ export function CartDeliverySection({
           every one of these has to be settled before we hand over. */}
       {blocker?.kind === "below-minimum" && (
         <p role="alert" className="font-archivo-light mt-6 text-[13px]">
-          Zone {blocker.zone.id} has a minimum order of{" "}
-          {formatEuros(blocker.zone.minimumOrder)}. Add {formatEuros(blocker.shortfall)} to
-          check out, or collect from the atelier instead.
+          {interpolate(t.belowMinimum, {
+            zone: blocker.zone.id,
+            minimum: formatEuros(blocker.zone.minimumOrder),
+            shortfall: formatEuros(blocker.shortfall),
+          })}
         </p>
       )}
 
       {blocker?.kind === "no-address" && (
         <p role="alert" className="font-archivo-light mt-6 text-[13px]">
-          Add a delivery address on any product page to see the fee and the
-          minimum order for your zone.
+          {t.noAddress}
         </p>
       )}
 
@@ -224,7 +232,7 @@ export function CartDeliverySection({
           className="group mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
         >
           <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-            Choose a delivery date
+            {t.chooseDate}
             <span
               className="transition-transform duration-500 group-hover:translate-x-1.5"
               aria-hidden
@@ -238,7 +246,7 @@ export function CartDeliverySection({
           aria-disabled
           className="font-owners-medium mt-8 inline-block cursor-not-allowed border border-sky px-3 py-2.5 text-[11px] uppercase tracking-wide opacity-40"
         >
-          Checkout
+          {t.checkout}
         </span>
       ) : (
         <a
@@ -246,7 +254,7 @@ export function CartDeliverySection({
           className="group mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
         >
           <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-            Checkout
+            {t.checkout}
             <span
               className="transition-transform duration-500 group-hover:translate-x-1.5"
               aria-hidden

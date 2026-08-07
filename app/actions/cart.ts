@@ -23,7 +23,7 @@ import {
 import {
   DELIVERY_ADDRESS_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
-  deliveryMethodLabel,
+  deliveryMethodAttributeValue,
   isDeliveryMethod,
   type DeliveryMethod,
 } from "@/lib/order-preferences";
@@ -142,7 +142,7 @@ export async function setDeliveryMethod(method: DeliveryMethod) {
   }
 
   const saved = await saveOrderPreferences({
-    [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodLabel(method),
+    [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodAttributeValue(method),
     // Click & collect leaves nothing to deliver to, so a previously saved
     // address is cleared rather than left on the order contradicting it — and
     // the zone with it, since a zone without an address prices nothing.
@@ -201,7 +201,7 @@ export async function setDeliveryAddress(value: string) {
     [DELIVERY_ADDRESS_ATTRIBUTE]: resolved.label,
     // An address only makes sense for delivery, so choosing one settles the
     // method too — otherwise the order carries a destination and no way to it.
-    [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodLabel("delivery"),
+    [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodAttributeValue("delivery"),
     [DELIVERY_ZONE_ATTRIBUTE]: formatZoneAttribute(zone.zone, zone.distanceKm),
   });
   if (!saved.ok) return saved;

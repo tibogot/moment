@@ -23,48 +23,58 @@ export const MIN_ADDRESS_QUERY_LENGTH = 3;
 
 export type DeliveryMethod = "delivery" | "pickup";
 
-export type DeliveryMethodOption = {
-  id: DeliveryMethod;
-  label: string;
-  description: string;
-};
-
-export const DELIVERY_METHODS: DeliveryMethodOption[] = [
-  {
-    id: "delivery",
-    label: "Home delivery",
-    description: "We bring your order to your door, anywhere in Brussels.",
-  },
-  {
-    id: "pickup",
-    label: "Click & collect",
-    description: "Collect it from the kitchen yourself. No address needed.",
-  },
+/** Render order for the picker. What each is *called* lives in the dictionaries. */
+export const DELIVERY_METHODS: readonly DeliveryMethod[] = [
+  "delivery",
+  "pickup",
 ];
 
-const METHOD_BY_ID = new Map(DELIVERY_METHODS.map((option) => [option.id, option]));
-const METHOD_BY_LABEL = new Map(
-  DELIVERY_METHODS.map((option) => [option.label, option.id]),
+/**
+ * What actually gets written onto the cart — and deliberately not the same
+ * string the customer sees.
+ *
+ * These two were one value until the site went trilingual, and they could not
+ * stay that way. The attribute follows the order into the Shopify admin, so if
+ * it were the display label the kitchen would find "Click & collect" on one
+ * order and "Afhalen" on the next depending on which language the customer
+ * happened to be reading. Worse, `parseDeliveryMethod` matches on it, so a cart
+ * started in French and reopened in Dutch would come back with no method at
+ * all.
+ *
+ * So: one canonical value per method, stable across languages and never shown
+ * to anyone. Changing a string here is a data migration — every cart in flight
+ * (the cookie lasts a fortnight) stops resolving.
+ */
+const METHOD_ATTRIBUTE_VALUE: Record<DeliveryMethod, string> = {
+  delivery: "Home delivery",
+  pickup: "Click & collect",
+};
+
+const METHOD_BY_ATTRIBUTE_VALUE = new Map(
+  (Object.entries(METHOD_ATTRIBUTE_VALUE) as [DeliveryMethod, string][]).map(
+    ([method, value]) => [value, method],
+  ),
 );
 
 export function isDeliveryMethod(value: unknown): value is DeliveryMethod {
-  return typeof value === "string" && METHOD_BY_ID.has(value as DeliveryMethod);
+  return value === "delivery" || value === "pickup";
 }
 
-export function deliveryMethodLabel(method: DeliveryMethod) {
-  return METHOD_BY_ID.get(method)?.label ?? method;
+/** The canonical value for the cart attribute. Never render this. */
+export function deliveryMethodAttributeValue(method: DeliveryMethod) {
+  return METHOD_ATTRIBUTE_VALUE[method];
 }
 
 /**
- * Back from the stored label to the id. Returns null for anything unrecognised
- * — including a label an owner edited by hand in the admin, which must not
- * resolve to a half-valid method.
+ * Back from the stored value to the id. Returns null for anything
+ * unrecognised — including a value an owner edited by hand in the admin, which
+ * must not resolve to a half-valid method.
  */
 export function parseDeliveryMethod(
   value: string | null | undefined,
 ): DeliveryMethod | null {
   if (!value) return null;
-  return METHOD_BY_LABEL.get(value) ?? null;
+  return METHOD_BY_ATTRIBUTE_VALUE.get(value) ?? null;
 }
 
 /**

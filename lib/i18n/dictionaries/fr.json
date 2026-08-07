@@ -160,5 +160,90 @@
         "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA et pouvons enregistrer plusieurs adresses de livraison."
       }
     ]
+  },
+  "delivery": {
+    "calendarNote": "Les jours en bleu sont fermés ou complets — il nous faut {days} jours de préavis et nous ne livrons pas le dimanche.",
+    "unavailable": "Non disponible à la livraison"
+  },
+  "deliveryMethods": {
+    "delivery": {
+      "label": "Livraison à domicile",
+      "description": "Nous apportons votre commande à votre porte, partout à Bruxelles."
+    },
+    "pickup": {
+      "label": "Click & collect",
+      "description": "Vous venez chercher votre commande à l'atelier. Aucune adresse nécessaire."
+    }
+  },
+  "orderBar": {
+    "date": "Date",
+    "selectDate": "Choisir une date",
+    "chooseDateTitle": "Choisissez une date de livraison",
+    "address": "Adresse",
+    "addAddress": "Ajouter une adresse",
+    "notNeeded": "Pas nécessaire",
+    "collectHint": "Vous avez choisi le click & collect",
+    "whereDeliver": "Où devons-nous livrer ?",
+    "deliveryLabel": "Livraison",
+    "deliveryType": "Type de livraison",
+    "howLike": "Comment souhaitez-vous être servi ?",
+    "streetAndNumber": "Rue et numéro",
+    "addressPlaceholder": "Rue de Stalle 77",
+    "addressHint": "Choisissez votre adresse dans la liste. Les frais de livraison et le minimum de commande dépendent de la distance depuis l'atelier.",
+    "checking": "Recherche…",
+    "noMatch": "Aucune adresse belge ne correspond.",
+    "didYouMean": "Vouliez-vous dire {streets} ? Ajoutez un numéro.",
+    "loadingDays": "Chargement des jours disponibles…"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide.",
+    "browseShop": "Voir la boutique",
+    "total": "Total",
+    "checkout": "Commander",
+    "change": "Modifier",
+    "pick": "Choisir une date",
+    "pickAnother": "Choisir un autre jour",
+    "done": "Terminé",
+    "remove": "Retirer",
+    "quantity": "Quantité",
+    "decrease": "Diminuer la quantité",
+    "increase": "Augmenter la quantité",
+    "taxesNote": "Taxes et livraison calculées lors du paiement.",
+    "delivery": "Livraison",
+    "method": "Mode",
+    "address": "Adresse",
+    "deliveryFee": "Frais de livraison",
+    "zoneLine": "{fee} · zone {zone} · minimum {minimum}",
+    "chooseDate": "Choisir une date de livraison",
+    "staleDate": "{date} n'est plus disponible. Merci de choisir un autre jour.",
+    "belowMinimum": "La zone {zone} a un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander, ou venez chercher à l'atelier.",
+    "belowMinimumShort": "La zone {zone} a un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander.",
+    "noAddress": "Ajoutez une adresse de livraison sur une page produit pour voir les frais et le minimum de votre zone.",
+    "noAddressShort": "Ajoutez une adresse de livraison pour voir les frais et le minimum de votre zone.",
+    "deliveryDateTitle": "Date de livraison",
+    "pickDayIntro": "Choisissez le jour de livraison."
+  },
+  "shop": {
+    "title": "Boutique",
+    "index": "Index",
+    "layout": "Affichage",
+    "unavailable": "Le catalogue n'est pas disponible pour le moment. Merci de réessayer plus tard.",
+    "recentlyViewed": "Vus récemment",
+    "lead": "Plats, salades et jus pressés à froid, préparés chaque matin et livrés partout à Bruxelles."
+  },
+  "product": {
+    "orderPreferences": "Préférences de commande",
+    "similar": "Produits similaires",
+    "addToCart": "Ajouter au panier",
+    "adding": "Ajout…",
+    "soldOut": "Épuisé",
+    "servingSize": "Portion",
+    "ingredients": "Ingrédients",
+    "allergens": "Allergènes",
+    "traces": "Peut contenir des traces de",
+    "dietary": "Régimes",
+    "servingInstructions": "Conseils de service",
+    "storage": "Conservation"
   }
 }

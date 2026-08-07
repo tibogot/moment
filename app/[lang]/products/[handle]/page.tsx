@@ -10,6 +10,7 @@ import { ProductGallery } from "@/components/ProductGallery";
 import { ProductRowSection } from "@/components/ProductRowSection";
 import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
 import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, graph, productSchema } from "@/lib/schema";
 import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
@@ -51,7 +52,8 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { handle } = await params;
+  const { lang, handle } = await params;
+  const dict = await getDictionary(toLocale(lang));
   const [product, allProducts] = await Promise.all([
     getProductByHandle(handle),
     getProducts(),
@@ -97,7 +99,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             id="order-preferences"
             className="font-owners-narrow-bold text-[7vw] leading-[0.95] uppercase md:text-[min(2.2vw,3.4svh)]"
           >
-            Order preferences
+            {dict.product.orderPreferences}
           </h2>
 
           {/* No promise that the catalogue changes with these answers — it does
@@ -140,13 +142,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             className="mt-8"
           />
 
-          {product.details && <ProductDetails details={product.details} />}
+          {product.details && <ProductDetails details={product.details} copy={dict.product} />}
         </div>
       </GridSection>
 
       {similarProducts.length > 0 && (
         <ProductRowSection
-          title="Similar products"
+          title={dict.product.similar}
           products={similarProducts}
           viewAllHref={routes.shop}
           className="pb-0"

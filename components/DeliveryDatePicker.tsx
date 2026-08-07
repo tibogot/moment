@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { monthCells } from "@/lib/calendar";
-import { useLocale } from "@/components/LocaleProvider";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { formatMonth, weekdayNames } from "@/lib/i18n/format";
 import {
   dayState,
@@ -33,6 +33,7 @@ export function DeliveryDatePicker({
   disabled = false,
 }: DeliveryDatePickerProps) {
   const locale = useLocale();
+  const dict = useDictionary();
   const weekdays = useMemo(() => weekdayNames(locale), [locale]);
   const today = useMemo(
     () => parseISODate(availability.today) ?? new Date(),
@@ -67,7 +68,7 @@ export function DeliveryDatePicker({
           disabled={atFirstMonth}
           className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
         >
-          Prev
+          {dict.home.calendar.prev}
         </button>
         <span className="font-owners-medium text-[13px] uppercase tracking-wide">
           {label} <span className="font-archivo-light">{year}</span>
@@ -77,7 +78,7 @@ export function DeliveryDatePicker({
           onClick={() => shiftMonth(1)}
           className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
         >
-          Next
+          {dict.home.calendar.next}
         </button>
       </div>
 
@@ -113,7 +114,7 @@ export function DeliveryDatePicker({
                 <div
                   key={day}
                   className={cn(cellClassName, "bg-sky")}
-                  title="Not available for delivery"
+                  title={dict.delivery.unavailable}
                   aria-hidden
                 />
               );

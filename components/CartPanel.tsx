@@ -27,8 +27,11 @@ import {
   subscribeCart,
 } from "@/lib/cart-store";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
-import { formatDeliveryDate, isBookable, LEAD_TIME_DAYS } from "@/lib/delivery";
+import { isBookable, LEAD_TIME_DAYS } from "@/lib/delivery";
 import { checkoutBlocker } from "@/lib/checkout";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
+import { formatLongDate } from "@/lib/i18n/format";
 import { formatEuros } from "@/lib/delivery-zones";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
@@ -52,6 +55,9 @@ const CLOSE_EASE = "power3.inOut";
 const QUANTITY_DEBOUNCE_MS = 300;
 
 export function CartPanel({ open, onClose }: CartPanelProps) {
+  const dict = useDictionary();
+  const locale = useLocale();
+  const t = dict.cart;
   const cart = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
@@ -291,7 +297,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         className="fixed inset-y-0 right-0 z-50 flex w-full max-w-110 flex-col bg-cream text-black"
         role="dialog"
         aria-modal="true"
-        aria-label="Cart"
+        aria-label={t.title}
         aria-hidden={!open}
         inert={!open}
       >
@@ -300,8 +306,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           <div className="flex min-h-(--grid-band) items-center justify-between px-6">
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
               {pickerOpen
-                ? "Delivery date"
-                : `Cart${totalQuantity ? ` (${totalQuantity})` : ""}`}
+                ? t.deliveryDateTitle
+                : `${t.title}${totalQuantity ? ` (${totalQuantity})` : ""}`}
             </p>
             <button
               type="button"
@@ -318,9 +324,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           {pickerOpen && availability ? (
             <>
               <p className="font-archivo-light px-6 pt-5 text-[15px] leading-normal">
-                Pick the day you want this delivered. Blue days are closed or
-                already full — we need {LEAD_TIME_DAYS} days&apos; notice and we
-                do not deliver on Sundays.
+                {t.pickDayIntro}{" "}
+                {interpolate(dict.delivery.calendarNote, {
+                  days: LEAD_TIME_DAYS,
+                })}
               </p>
 
               {error && (
@@ -341,7 +348,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             </>
           ) : isEmpty ? (
             <p className="font-archivo-light px-6 py-10 text-[16px]">
-              Your cart is empty.
+              {t.empty}
             </p>
           ) : (
             <ul>
@@ -384,7 +391,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                       <div className="flex items-center border border-sky">
                         <button
                           type="button"
-                          aria-label="Decrease quantity"
+                          aria-label={t.decrease}
                           onClick={() =>
                             stepLineQuantity(line.id, line.quantity, -1)
                           }
@@ -397,7 +404,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                         </span>
                         <button
                           type="button"
-                          aria-label="Increase quantity"
+                          aria-label={t.increase}
                           onClick={() =>
                             stepLineQuantity(line.id, line.quantity, 1)
                           }
@@ -417,7 +424,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                       onClick={() => setLineQuantity(line.id, 0)}
                       className="font-archivo-light mt-2 self-start text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
                     >
-                      Remove
+                      {t.remove}
                     </button>
                   </div>
                 </li>
@@ -434,20 +441,20 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             <div className="border-b border-sky px-6 py-4">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  Delivery
+                  {t.delivery}
                 </span>
 
                 {deliveryDate && !dateIsStale ? (
                   <span className="flex items-baseline gap-3">
                     <span className="font-archivo-light text-[15px]">
-                      {formatDeliveryDate(deliveryDate)}
+                      {formatLongDate(locale, deliveryDate)}
                     </span>
                     <button
                       type="button"
                       onClick={() => setPickerOpen(true)}
                       className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
                     >
-                      Change
+                      {t.change}
                     </button>
                   </span>
                 ) : (
@@ -463,8 +470,9 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
               {dateIsStale && deliveryDate && (
                 <p role="alert" className="font-archivo-light mt-2 text-[14px]">
-                  {formatDeliveryDate(deliveryDate)} is no longer available.
-                  Please pick another day.
+                  {interpolate(t.staleDate, {
+                    date: formatLongDate(locale, deliveryDate),
+                  })}
                 </p>
               )}
             </div>
@@ -476,7 +484,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
               <div className="flex items-baseline justify-between">
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  Total
+                  {t.total}
                 </span>
                 <span className="font-archivo-light text-[17px]">
                   {cart.totalPrice}
@@ -484,7 +492,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               </div>
 
               <p className="font-archivo-light mt-1 text-[14px] opacity-70">
-                Taxes and delivery calculated at checkout.
+                {t.taxesNote}
               </p>
 
               {/* Without a day there is nothing to check out to, so the picker
@@ -492,16 +500,17 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   leaving the customer to work out why. */}
               {blocker?.kind === "below-minimum" && (
                 <p role="alert" className="font-archivo-light mt-3 text-[14px]">
-                  Zone {blocker.zone.id} has a minimum order of{" "}
-                  {formatEuros(blocker.zone.minimumOrder)}. Add{" "}
-                  {formatEuros(blocker.shortfall)} to check out.
+                  {interpolate(t.belowMinimumShort, {
+                    zone: blocker.zone.id,
+                    minimum: formatEuros(blocker.zone.minimumOrder),
+                    shortfall: formatEuros(blocker.shortfall),
+                  })}
                 </p>
               )}
 
               {blocker?.kind === "no-address" && (
                 <p role="alert" className="font-archivo-light mt-3 text-[14px]">
-                  Add a delivery address to see your zone&apos;s fee and
-                  minimum order.
+                  {t.noAddressShort}
                 </p>
               )}
 
@@ -512,7 +521,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
-                    Choose a delivery date
+                    {t.chooseDate}
                     <span
                       className="transition-transform duration-500 group-hover:translate-x-1.5"
                       aria-hidden
@@ -526,7 +535,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   aria-disabled
                   className="font-owners-medium mt-4 block w-full cursor-not-allowed border border-sky px-3 py-2.5 text-center text-[11px] uppercase tracking-wide opacity-40"
                 >
-                  Checkout
+                  {t.checkout}
                 </span>
               ) : (
                 <a
@@ -534,7 +543,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
-                    Checkout
+                    {t.checkout}
                     <span
                       className="transition-transform duration-500 group-hover:translate-x-1.5"
                       aria-hidden

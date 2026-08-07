@@ -160,5 +160,90 @@
         "a": "Ja, een groot deel van onze activiteit. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. Wij factureren met uw btw-nummer en kunnen meerdere leveradressen bewaren."
       }
     ]
+  },
+  "delivery": {
+    "calendarNote": "Blauwe dagen zijn gesloten of volzet — wij hebben {days} dagen op voorhand nodig en wij leveren niet op zondag.",
+    "unavailable": "Niet beschikbaar voor levering"
+  },
+  "deliveryMethods": {
+    "delivery": {
+      "label": "Levering aan huis",
+      "description": "Wij brengen uw bestelling tot aan de deur, overal in Brussel."
+    },
+    "pickup": {
+      "label": "Click & collect",
+      "description": "U haalt uw bestelling zelf op in het atelier. Geen adres nodig."
+    }
+  },
+  "orderBar": {
+    "date": "Datum",
+    "selectDate": "Kies een datum",
+    "chooseDateTitle": "Kies een leverdatum",
+    "address": "Adres",
+    "addAddress": "Adres toevoegen",
+    "notNeeded": "Niet nodig",
+    "collectHint": "U koos voor click & collect",
+    "whereDeliver": "Waar moeten wij leveren?",
+    "deliveryLabel": "Levering",
+    "deliveryType": "Type levering",
+    "howLike": "Hoe wilt u het ontvangen?",
+    "streetAndNumber": "Straat en nummer",
+    "addressPlaceholder": "Stallestraat 77",
+    "addressHint": "Kies uw adres uit de lijst. De leveringskosten en het minimumbedrag hangen af van de afstand tot het atelier.",
+    "checking": "Zoeken…",
+    "noMatch": "Geen Belgisch adres komt overeen.",
+    "didYouMean": "Bedoelde u {streets}? Voeg een huisnummer toe.",
+    "loadingDays": "Beschikbare dagen laden…"
+  },
+  "cart": {
+    "title": "Winkelmand",
+    "empty": "Uw winkelmand is leeg.",
+    "browseShop": "Naar de winkel",
+    "total": "Totaal",
+    "checkout": "Afrekenen",
+    "change": "Wijzigen",
+    "pick": "Kies een datum",
+    "pickAnother": "Kies een andere dag",
+    "done": "Klaar",
+    "remove": "Verwijderen",
+    "quantity": "Aantal",
+    "decrease": "Aantal verlagen",
+    "increase": "Aantal verhogen",
+    "taxesNote": "Btw en levering worden bij het afrekenen berekend.",
+    "delivery": "Levering",
+    "method": "Wijze",
+    "address": "Adres",
+    "deliveryFee": "Leveringskosten",
+    "zoneLine": "{fee} · zone {zone} · minimum {minimum}",
+    "chooseDate": "Kies een leverdatum",
+    "staleDate": "{date} is niet meer beschikbaar. Kies een andere dag.",
+    "belowMinimum": "Zone {zone} heeft een minimumbedrag van {minimum}. Voeg {shortfall} toe om af te rekenen, of haal zelf op in het atelier.",
+    "belowMinimumShort": "Zone {zone} heeft een minimumbedrag van {minimum}. Voeg {shortfall} toe om af te rekenen.",
+    "noAddress": "Voeg een leveradres toe op een productpagina om de kosten en het minimum van uw zone te zien.",
+    "noAddressShort": "Voeg een leveradres toe om de kosten en het minimum van uw zone te zien.",
+    "deliveryDateTitle": "Leverdatum",
+    "pickDayIntro": "Kies de dag van levering."
+  },
+  "shop": {
+    "title": "Winkel",
+    "index": "Index",
+    "layout": "Weergave",
+    "unavailable": "De catalogus is momenteel niet beschikbaar. Probeer het later opnieuw.",
+    "recentlyViewed": "Recent bekeken",
+    "lead": "Gerechten, salades en koudgeperste sappen, elke ochtend bereid en in heel Brussel geleverd."
+  },
+  "product": {
+    "orderPreferences": "Bestelvoorkeuren",
+    "similar": "Vergelijkbare producten",
+    "addToCart": "In winkelmand",
+    "adding": "Toevoegen…",
+    "soldOut": "Uitverkocht",
+    "servingSize": "Portie",
+    "ingredients": "Ingrediënten",
+    "allergens": "Allergenen",
+    "traces": "Kan sporen bevatten van",
+    "dietary": "Dieet",
+    "servingInstructions": "Serveertips",
+    "storage": "Bewaren"
   }
 }

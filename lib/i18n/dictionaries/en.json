@@ -160,5 +160,90 @@
         "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number and can keep more than one delivery address on file."
       }
     ]
+  },
+  "delivery": {
+    "calendarNote": "Blue days are closed or already full — we need {days} days’ notice and we do not deliver on Sundays.",
+    "unavailable": "Not available for delivery"
+  },
+  "deliveryMethods": {
+    "delivery": {
+      "label": "Home delivery",
+      "description": "We bring your order to your door, anywhere in Brussels."
+    },
+    "pickup": {
+      "label": "Click & collect",
+      "description": "Collect it from the kitchen yourself. No address needed."
+    }
+  },
+  "orderBar": {
+    "date": "Date",
+    "selectDate": "Select a date",
+    "chooseDateTitle": "Choose a delivery date",
+    "address": "Address",
+    "addAddress": "Add an address",
+    "notNeeded": "Not needed",
+    "collectHint": "You chose click & collect",
+    "whereDeliver": "Where should we deliver?",
+    "deliveryLabel": "Delivery",
+    "deliveryType": "Delivery type",
+    "howLike": "How would you like it?",
+    "streetAndNumber": "Street and number",
+    "addressPlaceholder": "Rue de Stalle 77",
+    "addressHint": "Pick your address from the list. The delivery fee and the minimum order depend on how far you are from the atelier.",
+    "checking": "Checking…",
+    "noMatch": "No Belgian address matches that.",
+    "didYouMean": "Did you mean {streets}? Add a house number.",
+    "loadingDays": "Loading available days…"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "browseShop": "Browse the shop",
+    "total": "Total",
+    "checkout": "Checkout",
+    "change": "Change",
+    "pick": "Pick a date",
+    "pickAnother": "Pick another day",
+    "done": "Done",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "taxesNote": "Taxes and delivery calculated at checkout.",
+    "delivery": "Delivery",
+    "method": "Method",
+    "address": "Address",
+    "deliveryFee": "Delivery fee",
+    "zoneLine": "{fee} · zone {zone} · minimum order {minimum}",
+    "chooseDate": "Choose a delivery date",
+    "staleDate": "{date} is no longer available. Please pick another day.",
+    "belowMinimum": "Zone {zone} has a minimum order of {minimum}. Add {shortfall} to check out, or collect from the atelier instead.",
+    "belowMinimumShort": "Zone {zone} has a minimum order of {minimum}. Add {shortfall} to check out.",
+    "noAddress": "Add a delivery address on any product page to see the fee and the minimum order for your zone.",
+    "noAddressShort": "Add a delivery address to see your zone’s fee and minimum order.",
+    "deliveryDateTitle": "Delivery date",
+    "pickDayIntro": "Pick the day you want this delivered."
+  },
+  "shop": {
+    "title": "Shop",
+    "index": "Index",
+    "layout": "Product layout",
+    "unavailable": "The catalogue is not available right now. Please try again later.",
+    "recentlyViewed": "Recently viewed",
+    "lead": "Plates, salads and cold-pressed juices, prepared each morning and delivered across Brussels."
+  },
+  "product": {
+    "orderPreferences": "Order preferences",
+    "similar": "Similar products",
+    "addToCart": "Add to cart",
+    "adding": "Adding…",
+    "soldOut": "Sold out",
+    "servingSize": "Serving size",
+    "ingredients": "Ingredients",
+    "allergens": "Allergens",
+    "traces": "May contain traces of",
+    "dietary": "Dietary",
+    "servingInstructions": "Serving instructions",
+    "storage": "Storage"
   }
 }
