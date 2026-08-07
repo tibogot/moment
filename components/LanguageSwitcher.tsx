@@ -36,6 +36,11 @@ export function LanguageSwitcher({ className }: { className?: string }) {
             onClick={() => rememberLocale(locale)}
             aria-current={current ? "true" : undefined}
             title={LOCALE_NAME[locale]}
+            // The navbar scrubs every [data-nav-link] from cream to black as
+            // the hero scrolls past. Without it these keep the cream they
+            // inherit over the hero and stay cream on the cream nav, which is
+            // to say invisible.
+            data-nav-link
             className={cn(
               "font-owners-medium text-[11px] uppercase tracking-wide transition-opacity",
               current ? "opacity-100" : "opacity-50 hover:opacity-100",
