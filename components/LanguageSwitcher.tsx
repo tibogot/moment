@@ -43,7 +43,10 @@ export function LanguageSwitcher({ className }: { className?: string }) {
             data-nav-link
             className={cn(
               "font-owners-medium text-[11px] uppercase tracking-wide transition-opacity",
-              current ? "opacity-100" : "opacity-50 hover:opacity-100",
+              // 70 rather than 50: at 11px on the cream nav, half-opacity
+              // black reads as disabled rather than as the language you are
+              // not currently in.
+              current ? "opacity-100" : "opacity-70 hover:opacity-100",
             )}
           >
             {locale}
