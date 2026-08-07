@@ -80,7 +80,7 @@ export function CartDeliverySection({
     startTransition(async () => {
       const result = await setDeliveryDate(iso);
       if (!result.ok) {
-        setError(result.error);
+        setError(dict.errors[result.code]);
         return;
       }
       notifyCartUpdated();

@@ -33,7 +33,7 @@ export function AddToCartButton({
       const result = await addToCart(variantId, quantity);
 
       if (!result.ok) {
-        setError(result.error);
+        setError(dict.errors[result.code]);
         return;
       }
 

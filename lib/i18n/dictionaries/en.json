@@ -245,5 +245,20 @@
     "dietary": "Dietary",
     "servingInstructions": "Serving instructions",
     "storage": "Storage"
+  },
+  "errors": {
+    "not_configured": "The shop is not configured yet. Please try again later.",
+    "date_unavailable": "That day is no longer available. Please pick another.",
+    "address_not_found": "We could not find that address in Belgium. Check the street name and house number.",
+    "unknown_method": "Unknown delivery option.",
+    "no_cart": "No cart found.",
+    "cart_failed": "We could not update your cart. Please try again.",
+    "generic": "Something went wrong."
+  },
+  "quote": {
+    "heading": "Beyond our delivery area",
+    "body": "{address} is about {km} km from the atelier, past the {max} km we deliver to directly. We quote that distance by hand.",
+    "cta": "Request a quote",
+    "message": "Hello, I would like a delivery to {address}, about {km} km from your atelier. Could you send me a quote?"
   }
 }

@@ -245,5 +245,20 @@
     "dietary": "Régimes",
     "servingInstructions": "Conseils de service",
     "storage": "Conservation"
+  },
+  "errors": {
+    "not_configured": "La boutique n'est pas encore configurée. Merci de réessayer plus tard.",
+    "date_unavailable": "Ce jour n'est plus disponible. Merci d'en choisir un autre.",
+    "address_not_found": "Nous n'avons pas trouvé cette adresse en Belgique. Vérifiez le nom de rue et le numéro.",
+    "unknown_method": "Option de livraison inconnue.",
+    "no_cart": "Panier introuvable.",
+    "cart_failed": "Nous n'avons pas pu mettre votre panier à jour. Merci de réessayer.",
+    "generic": "Une erreur est survenue."
+  },
+  "quote": {
+    "heading": "Au-delà de notre zone de livraison",
+    "body": "{address} se trouve à environ {km} km de l'atelier, au-delà des {max} km que nous livrons directement. Nous établissons un devis sur mesure pour cette distance.",
+    "cta": "Demander un devis",
+    "message": "Bonjour, je souhaiterais une livraison à {address}, à environ {km} km de votre atelier. Pouvez-vous me faire un devis ?"
   }
 }

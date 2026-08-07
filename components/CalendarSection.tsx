@@ -121,7 +121,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
       const result = await setDeliveryDate(selected);
 
       if (!result.ok) {
-        setStatus({ kind: "error", message: result.error });
+        setStatus({ kind: "error", message: dict.errors[result.code] });
         return;
       }
 

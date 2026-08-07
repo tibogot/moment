@@ -34,6 +34,9 @@ import {
   needsAddress,
   type DeliveryMethod,
 } from "@/lib/order-preferences";
+import { LocaleLink as Link } from "@/components/LocaleLink";
+import { MAX_DELIVERY_DISTANCE_KM } from "@/lib/delivery-zones";
+import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type Panel = "date" | "address" | "delivery";
@@ -74,6 +77,14 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
 
   const [panel, setPanel] = useState<Panel | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /**
+   * An address we can reach but cannot price. Held apart from `error` because
+   * it is not a mistake to correct — the sale is real, it just leaves the site
+   * and becomes an enquiry.
+   */
+  const [quote, setQuote] = useState<{ address: string; km: number } | null>(
+    null,
+  );
   const [isPending, startTransition] = useTransition();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -134,7 +145,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
       const result = await setDeliveryDate(iso);
       if (!result.ok) {
         setDraft((current) => ({ ...current, date: undefined }));
-        setError(result.error);
+        setError(dict.errors[result.code]);
         return;
       }
       notifyCartUpdated();
@@ -156,7 +167,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
       const result = await setDeliveryMethod(method);
       if (!result.ok) {
         setDraft((current) => ({ ...current, method: undefined }));
-        setError(result.error);
+        setError(dict.errors[result.code]);
         return;
       }
       notifyCartUpdated();
@@ -166,11 +177,19 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
 
   const chooseAddress = (value: string) => {
     setError(null);
+    setQuote(null);
 
     startTransition(async () => {
       const result = await setDeliveryAddress(value);
+
       if (!result.ok) {
-        setError(result.error);
+        // Too far to price, not wrong. The panel swaps to an enquiry rather
+        // than telling the customer their address is a problem.
+        if ("needsQuote" in result) {
+          setQuote({ address: result.address, km: result.distanceKm });
+          return;
+        }
+        setError(dict.errors[result.code]);
         return;
       }
       setDraft((current) => ({
@@ -281,6 +300,35 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         <p role="alert" className="font-archivo-light mt-3 text-[15px]">
           {error}
         </p>
+      )}
+
+      {quote && (
+        <div role="alert" className="mt-3 border border-sky p-4">
+          <p className="font-owners-medium text-[12px] uppercase tracking-wide">
+            {dict.quote.heading}
+          </p>
+          <p className="font-archivo-light mt-2 text-[15px] leading-normal">
+            {interpolate(dict.quote.body, {
+              address: quote.address,
+              km: quote.km,
+              max: MAX_DELIVERY_DISTANCE_KM,
+            })}
+          </p>
+          <Link
+            href={`${routes.contact}?occasion=Delivery&address=${encodeURIComponent(quote.address)}&km=${quote.km}`}
+            className="group mt-4 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+          >
+            <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+              {dict.quote.cta}
+              <span
+                className="transition-transform duration-500 group-hover:translate-x-1.5"
+                aria-hidden
+              >
+                &rarr;
+              </span>
+            </span>
+          </Link>
+        </div>
       )}
     </div>
   );

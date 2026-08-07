@@ -245,5 +245,20 @@
     "dietary": "Dieet",
     "servingInstructions": "Serveertips",
     "storage": "Bewaren"
+  },
+  "errors": {
+    "not_configured": "De winkel is nog niet geconfigureerd. Probeer het later opnieuw.",
+    "date_unavailable": "Die dag is niet meer beschikbaar. Kies een andere.",
+    "address_not_found": "Wij vonden dat adres niet in België. Controleer de straatnaam en het huisnummer.",
+    "unknown_method": "Onbekende leveringsoptie.",
+    "no_cart": "Winkelmand niet gevonden.",
+    "cart_failed": "Wij konden uw winkelmand niet bijwerken. Probeer het opnieuw.",
+    "generic": "Er is iets misgegaan."
+  },
+  "quote": {
+    "heading": "Buiten ons leveringsgebied",
+    "body": "{address} ligt op ongeveer {km} km van het atelier, voorbij de {max} km die wij rechtstreeks leveren. Voor die afstand maken wij een offerte op maat.",
+    "cta": "Een offerte aanvragen",
+    "message": "Hallo, ik zou graag een levering op {address}, ongeveer {km} km van uw atelier. Kunt u mij een offerte bezorgen?"
   }
 }

@@ -176,7 +176,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             : await updateCartLine(lineId, target);
 
         if (!result.ok) {
-          setError(result.error ?? "Something went wrong.");
+          setError(dict.errors[result.code] ?? dict.errors.generic);
           clearPending(lineId);
           void refreshCart();
           return;
@@ -190,7 +190,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           clearPending(lineId);
         }
       } catch {
-        setError("Something went wrong.");
+        setError(dict.errors.generic);
         clearPending(lineId);
         void refreshCart();
       }
@@ -272,7 +272,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     startTransition(async () => {
       const result = await setDeliveryDate(iso);
       if (!result.ok) {
-        setError(result.error);
+        setError(dict.errors[result.code]);
         return;
       }
       setCart(result.cart);

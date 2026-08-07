@@ -8,6 +8,12 @@ import {
   type ContactValues,
   type Occasion,
 } from "@/lib/contact";
+import { toLocale } from "@/lib/i18n/config";
+import {
+  getDictionary,
+  interpolate,
+  type Dictionary,
+} from "@/lib/i18n/dictionaries";
 import { menuEnquiryMessage } from "@/lib/menus";
 import { routes } from "@/lib/routes";
 import { getMenuBySlug } from "@/lib/sanity/queries";
@@ -23,7 +29,13 @@ export const generateMetadata = localizedMetadata({
 });
 
 type ContactPageProps = {
-  searchParams: Promise<{ menu?: string; occasion?: string }>;
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{
+    menu?: string;
+    occasion?: string;
+    address?: string;
+    km?: string;
+  }>;
 };
 
 /**
@@ -38,10 +50,23 @@ type ContactPageProps = {
  */
 async function resolvePrefill(
   searchParams: ContactPageProps["searchParams"],
+  dict: Dictionary,
 ): Promise<ContactValues> {
-  const { menu: menuSlug, occasion } = await searchParams;
+  const { menu: menuSlug, occasion, address, km } = await searchParams;
 
   const values: ContactValues = { ...EMPTY_CONTACT_VALUES };
+
+  // Sent here by the address panel when a delivery falls outside the zones it
+  // can price. The distance is re-parsed rather than trusted: it arrives in a
+  // URL the customer can edit, and it is about to be written into an email.
+  if (address) {
+    const distance = Number(km);
+    values.occasion = "Delivery";
+    values.message = interpolate(dict.quote.message, {
+      address,
+      km: Number.isFinite(distance) ? Math.round(distance) : "?",
+    });
+  }
 
   if (menuSlug) {
     const menu = await getMenuBySlug(menuSlug);
@@ -60,8 +85,13 @@ async function resolvePrefill(
   return values;
 }
 
-export default async function ContactPage({ searchParams }: ContactPageProps) {
-  const initialValues = await resolvePrefill(searchParams);
+export default async function ContactPage({
+  params,
+  searchParams,
+}: ContactPageProps) {
+  const { lang } = await params;
+  const dict = await getDictionary(toLocale(lang));
+  const initialValues = await resolvePrefill(searchParams, dict);
 
   return (
     <>

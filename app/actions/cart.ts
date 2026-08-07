@@ -27,6 +27,7 @@ import {
   isDeliveryMethod,
   type DeliveryMethod,
 } from "@/lib/order-preferences";
+import { orderFailure } from "@/lib/order-errors";
 import { routes } from "@/lib/routes";
 
 async function getCartIdFromCookies() {
@@ -61,9 +62,7 @@ export async function getCart() {
 }
 
 export async function addToCart(variantId: string, quantity = 1) {
-  if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "The shop is not configured." };
-  }
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const existingCartId = await getCartIdFromCookies();
   let result = await addVariantToCart(variantId, quantity, existingCartId);
@@ -75,7 +74,7 @@ export async function addToCart(variantId: string, quantity = 1) {
     result = await addVariantToCart(variantId, quantity);
   }
 
-  if (!result.ok) return result;
+  if (!result.ok) return orderFailure("cart_failed");
 
   await setCartCookie(result.cartId);
   revalidatePath(routes.cart);
@@ -97,7 +96,7 @@ async function saveOrderPreferences(patch: Record<string, string | null>) {
     result = await setCartAttributes(patch);
   }
 
-  if (!result.ok) return result;
+  if (!result.ok) return orderFailure("cart_failed");
 
   await setCartCookie(result.cartId);
   revalidatePath(routes.cart);
@@ -112,16 +111,11 @@ async function saveOrderPreferences(patch: Record<string, string | null>) {
  * the owners have since closed.
  */
 export async function setDeliveryDate(isoDate: string) {
-  if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "The shop is not configured." };
-  }
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const availability = await getDeliveryAvailability();
   if (!isBookable(isoDate, availability)) {
-    return {
-      ok: false as const,
-      error: "That day is no longer available. Please pick another.",
-    };
+    return orderFailure("date_unavailable");
   }
 
   const saved = await saveOrderPreferences({
@@ -133,13 +127,8 @@ export async function setDeliveryDate(isoDate: string) {
 }
 
 export async function setDeliveryMethod(method: DeliveryMethod) {
-  if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "The shop is not configured." };
-  }
-
-  if (!isDeliveryMethod(method)) {
-    return { ok: false as const, error: "Unknown delivery option." };
-  }
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
+  if (!isDeliveryMethod(method)) return orderFailure("unknown_method");
 
   const saved = await saveOrderPreferences({
     [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodAttributeValue(method),
@@ -162,18 +151,10 @@ export async function setDeliveryMethod(method: DeliveryMethod) {
  * what gets stored.
  */
 export async function setDeliveryAddress(value: string) {
-  if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "The shop is not configured." };
-  }
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const resolved = await resolveAddress(value);
-  if (!resolved) {
-    return {
-      ok: false as const,
-      error:
-        "We could not find that address in Belgium. Check the street name and house number.",
-    };
-  }
+  if (!resolved) return orderFailure("address_not_found");
 
   // Where it falls decides the fee and the minimum order, so it is resolved
   // once here and stored — the alternative is geocoding the label again on
@@ -192,8 +173,7 @@ export async function setDeliveryAddress(value: string) {
       ok: false as const,
       needsQuote: true as const,
       address: resolved.label,
-      distanceKm: zone.distanceKm,
-      error: `${resolved.label} is ${zone.distanceKm.toFixed(0)} km from the atelier, past the ${MAX_DELIVERY_DISTANCE_KM} km we deliver to directly. We will quote this one by hand.`,
+      distanceKm: Math.round(zone.distanceKm),
     };
   }
 
@@ -224,20 +204,20 @@ export async function setDeliveryAddress(value: string) {
  */
 export async function updateCartLine(lineId: string, quantity: number) {
   const cartId = await getCartIdFromCookies();
-  if (!cartId) return { ok: false as const, error: "No cart found." };
+  if (!cartId) return orderFailure("no_cart");
 
   const result = await updateCartLineQuantity(cartId, lineId, quantity);
-  if (!result.ok) return result;
+  if (!result.ok) return orderFailure("cart_failed");
 
   return { ok: true as const, cart: result.cart };
 }
 
 export async function removeFromCart(lineId: string) {
   const cartId = await getCartIdFromCookies();
-  if (!cartId) return { ok: false as const, error: "No cart found." };
+  if (!cartId) return orderFailure("no_cart");
 
   const result = await removeCartLines(cartId, [lineId]);
-  if (!result.ok) return result;
+  if (!result.ok) return orderFailure("cart_failed");
 
   return { ok: true as const, cart: result.cart };
 }
