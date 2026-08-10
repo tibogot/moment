@@ -68,17 +68,33 @@ out on Monday.
 
 Be clear-eyed about this, because it drives the rest of the conversation.
 
-**Today, editable by you:** the catering menus, through the Sanity Studio. That
-is the schema that exists.
+This list moved a long way in your favour since the first version of this
+document. Most of what was "call the developer" is now something you do
+yourself, in one of two places.
 
-**Today, not editable by you** — every one of these is a code change and a
-deployment:
+**In the Sanity Studio** — `/studio` on the site, in French:
 
-- All page text — the About page, the homepage, the service descriptions
-- All photography and images
-- Opening hours, closing days, the address, the phone number
-- Delivery zones, fees, minimums and lead times
-- Anything on the legal pages
+- The catering menus, and the news articles
+- Your company details: address, phone, email, VAT and BCE numbers, social
+  accounts. These feed the legal page, the contact page and what Google is told
+  about the business — one place, everywhere at once
+- The home page's opening photograph and the two panels beneath it
+
+**In the Shopify admin:**
+
+- Products, prices, stock, and the orders themselves
+- Delivery notice period, the weekdays you do not deliver, and closure periods —
+  a whole fortnight shut is one entry, not fourteen
+- The delivery zones: fees, minimum orders, distance bands, and the address
+  everything is measured from
+
+**Still a code change and a deployment:**
+
+- Most page text — the About page, the home page sections, the service
+  descriptions. All of it exists in three languages, which is the reason
+- The other six photographs on the home page
+- The legal pages
+- Layout, design, and anything structural
 
 This is a deliberate design, not an oversight: a hand-built site is faster,
 better looking and better ranked than a page-builder, and the price of that is
@@ -116,17 +132,29 @@ driver of ongoing effort on this project, and it is invisible from the outside.
 
 | | You | Us | Currently nobody |
 |---|---|---|---|
-| Menus in Sanity | ✓ | | |
-| Products, prices, stock in Shopify | ✓ | | |
+| Menus and news articles | ✓ | | |
+| Products, prices, stock | ✓ | | |
 | Approving professional accounts | ✓ | | |
-| Closing delivery days | ✓ | | |
-| Page text, images, hours | | | ✓ |
-| Zones, fees, lead times | | | ✓ |
+| Closed days and closure periods | ✓ | | |
+| Delivery notice period | ✓ | | |
+| Zones, fees, minimum orders | ✓ | | |
+| Company details, VAT, social accounts | ✓ | | |
+| Three photographs on the home page | ✓ | | |
+| Keeping the site's zone fees and Shopify's shipping rates in step | ✓ | | |
+| The rest of the page text and photography | | | ✓ |
+| Legal page copy, and its translation | | | ✓ |
 | Shopify API version upgrades | | | ✓ |
 | Security updates | | | ✓ |
 | Uptime and checkout monitoring | | | ✓ |
 | API keys and quotas | | | ✓ |
 | Translating anything new | | | ✓ |
+
+The first column has grown a great deal, and one line in it deserves reading
+twice: **the delivery fee is configured in two places.** The site quotes it, and
+Shopify charges it at checkout, and they are set separately. Both are in the
+Shopify admin, a few clicks apart, and changing one without the other means a
+customer sees one figure on the site and a different one on the payment screen.
+Change it twice, in the same sitting.
 
 Every ✓ in the third column is a thing that will eventually need doing, by
 someone, at a moment you did not choose.

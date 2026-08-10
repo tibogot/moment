@@ -4,6 +4,11 @@ Decisions we need before the remaining work can be finished. Grouped by what
 they block. Anything marked **BLOCKING** stops a feature being built at all;
 the rest are choices already made on your behalf that need confirming.
 
+Two things have changed since the first version. **Much of what this document
+asked you to send us is now something you enter yourself** — see section 7 for
+where. And the questions that remain are mostly about how your kitchen actually
+works, which is the part we cannot guess.
+
 ---
 
 ## 1. Delivery zones
@@ -36,6 +41,17 @@ the centroid of 1190 Forest, which is the right commune and the wrong building.
 Being off by a kilometre moves customers near a band edge into the wrong zone.
 The FAQ also says "1190 Forest" as the collection point and should name a street.
 
+This one is now two entries you can make yourselves, and they are not the same
+thing: the **postal address** goes in the Studio under Coordonnées de
+l'entreprise, and the **map coordinates** the pricing measures from go in
+Shopify under `delivery_settings`. Right-click the front door in Google Maps and
+the first item in the menu is the pair of numbers. Set both or neither.
+
+**The fees and minimums are yours too now.** They are entries in the Shopify
+admin rather than something we deploy. One thing to hold on to: the site quotes
+the fee and Shopify charges it, and those are two separate settings that have to
+agree. Change one, change the other, same sitting.
+
 ---
 
 ## 2. Time slots — **BLOCKING**
@@ -45,10 +61,30 @@ started without these.
 
 - Delivery hours, per weekday.
 - Collection hours at the atelier — the same as delivery, or different?
-- How many orders can you handle per slot? This is what makes a slot "full".
 - Do large or corporate orders need more notice than the standard two days?
 - Should slots close automatically once capacity is reached, or do you prefer to
   close them by hand, the way you already close whole days?
+
+**"Capacity" is probably two numbers, not one.** This is the question we most
+need you to think about before we build it:
+
+- **The kitchen** has a ceiling — how many covers can come out of it in a day,
+  whether they are delivered or collected. That is one shared limit.
+- **The van** has a different one — how many drops fit in a morning. That
+  constrains delivery only.
+
+A Saturday where you could happily prepare thirty orders but only drive eight is
+completely normal, and one number cannot describe it. Tell us both, or tell us
+we are overcomplicating it and one is enough.
+
+**Note on what this costs.** Counting how many orders already exist for a given
+day means reading them back out of Shopify, which is a different and larger
+piece of work than the settings you can already change yourself. Worth knowing
+before it is quoted.
+
+**The rest of the calendar is already yours.** Notice period, the weekdays you
+never deliver, whole closure periods and how far ahead the calendar goes are all
+settings in the Shopify admin now — see SEO-CLIENT-CHECKLIST.md §3.
 
 ---
 
@@ -120,3 +156,57 @@ Written from how the code behaves, now publicly visible on the FAQ:
   the intent; saved addresses are not built yet.)*
 - Vegetarian, vegan and gluten-free versions are labelled and boxed separately.
 - Event menus are quoted, never ordered online.
+
+---
+
+## 7. What you can now change yourself
+
+The site has an editing interface at `/studio`, in French. You sign in with the
+email address we invite, and what you can see there is decided by that
+invitation — the address is public, the contents are not.
+
+**In the Studio:**
+
+| | Where |
+|---|---|
+| Catering menus | Menus traiteur |
+| News articles | Actualités |
+| Address, phone, email, VAT and BCE numbers, social accounts | Coordonnées de l'entreprise |
+| The opening photograph and the two panels on the home page | Page d'accueil |
+
+**In the Shopify admin**, under Custom data → Metaobjects:
+
+| | Where |
+|---|---|
+| Notice period, weekdays you never deliver, how far ahead bookings open | `delivery_settings` |
+| Days and whole periods you are closed | `delivery_closure` |
+| Zone fees, minimum orders, distance bands | `delivery_zone` |
+| The kitchen's map coordinates | `delivery_settings` |
+
+Everything else — the page text, the remaining photographs, the legal pages,
+the layout — is still a code change on our side. That is a deliberate line, not
+an oversight, and AFTER-LAUNCH.md explains where we drew it and why.
+
+**Ask for the walkthrough.** Twenty minutes on a shared screen, and it is
+included in the build rather than billed. Reading a table is not the same as
+having clicked the buttons once.
+
+---
+
+## 8. The domain — **BLOCKING for search**
+
+`moment.be` is not registered. Until it is, the site is deliberately not indexed
+by Google: letting search engines list the temporary address would leave results
+pointing at somewhere you are about to leave, and a duplicate-content problem on
+the domain you actually want to rank on.
+
+The site is online and can be shown to anyone. It is simply not competing in
+search yet, and "online" and "findable" are not the same thing.
+
+- Register `moment.be`, and check `.brussels` while you are there.
+- Tell us which form you want, `www.moment.be` or `moment.be`. We redirect the
+  other; running both halves your ranking.
+
+Opening the site to Google afterwards takes minutes on our side. Search Console,
+the Google Business Profile and analytics should all wait until then, so nothing
+has to be set up twice.

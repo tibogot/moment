@@ -10,7 +10,12 @@ say "placeholder", and a few of them are legally required in Belgium. Every item
 below has a note on why it matters — the ones marked **BLOCKER** should be
 settled before the site goes live.
 
-You can reply to this document inline. Nothing here needs technical knowledge.
+**Most of this you can now fill in yourself.** The site has an editing interface
+at `/studio`, in French, and sections 1, 2, 3 and 5 are fields waiting there
+rather than things to send us. Where that is the case it says so, with the path
+to the screen. Nothing below needs technical knowledge.
+
+You can reply to this document inline.
 
 ---
 
@@ -32,9 +37,21 @@ and waiting for these values.
 > If the registered (company) address is different from the kitchen or the
 > coffee desk, we need **both**, and a note on which one the public should visit.
 
+**Where to put them:** `/studio` → **Coordonnées de l'entreprise** → the
+*Mentions légales* and *Contact* tabs. They appear on the site within a minute,
+with no deployment. Until they are filled in, the legal notice page prints
+"[to be completed]" where the numbers should be.
+
 **Why it matters:** without a verifiable address, Google will not rank you for
 "traiteur Brussels" or any other local search — location is the single strongest
 signal for that kind of query. This is the highest-value item on the list.
+
+**One address, two places, and they are not the same thing.** The postal address
+above is what gets printed. Separately, the delivery pricing measures distance
+from the kitchen's map coordinates, set in Shopify → Custom data → Metaobjects →
+`delivery_settings`. They are currently the centre of 1190 Forest, which is the
+right commune and the wrong building — so anyone near the edge of a delivery band
+is being quoted the wrong fee. Moving premises means changing both.
 
 ---
 
@@ -46,9 +63,14 @@ signal for that kind of query. This is the highest-value item on the list.
 | General email address | The one clients should write to for orders and quotes |
 | Separate catering/events email? | Only if you want enquiries split |
 
+**Where to put them:** `/studio` → **Coordonnées de l'entreprise** → *Contact*.
+
 **Why it matters:** these are shown to Google as your official contact points and
 appear directly in search results and on Google Maps. A phone number that
 matches everywhere (site, Google, Instagram) measurably improves local ranking.
+
+Until you do, the site shows no phone number at all — which is the right
+behaviour, and the reason it is worth doing this week.
 
 ---
 
@@ -60,6 +82,17 @@ particular.
 - Days and hours you are open
 - Any days you are closed (public holidays, annual closure)
 - Is the kitchen open to the public at all, or is it order-only?
+
+**What you can already set yourself**, in Shopify → Custom data → Metaobjects:
+
+- `delivery_settings` — how many days' notice you need, which weekdays you never
+  deliver, how far ahead the calendar takes bookings
+- `delivery_closure` — days and whole periods you are shut. One entry covers a
+  fortnight; there is deliberately no built-in list of public holidays, because
+  a caterer's best days are the ones everyone else takes off
+
+**What we still need from you** is the coffee desk's opening hours, which are a
+different thing from delivery availability and are not yet anywhere on the site.
 
 **Why it matters:** Google shows "Open now / Closes at 17:00" directly in search
 results for businesses that publish hours. Without them, that slot stays empty.
@@ -89,31 +122,37 @@ replace it.
 | LinkedIn (if you target companies) | |
 | Any others | |
 
+**Where to put them:** `/studio` → **Coordonnées de l'entreprise** → *Réseaux
+sociaux*. Full addresses, not handles. An account with no address is simply not
+shown, rather than linked to a dead page.
+
 **Why it matters:** these are declared to Google as officially yours, which links
 the accounts and the website into one recognised business entity.
 
 ---
 
-## 6. Language — **decision needed**
+## 6. Language — **decided and built**
 
-The site currently mixes English and French. This needs a decision before
-translation work starts, because it changes how the site is structured.
+This section used to ask you to choose. The choice was made and the work is
+done: the site runs in **French, Dutch and English**, French first, with real
+addresses per language (`/fr/menus`, `/nl/menus`, `/en/menus`) rather than a
+translation widget. Google can now tell what language each page is in, which it
+could not before.
 
-Please pick one:
+Two things this leaves on your side.
 
-- **A — One language only.** Which one? (Most Brussels traiteurs pick French.)
-- **B — French + English.** Two full versions, visitor picks.
-- **C — French + Dutch + English.** Full trilingual, correct for Brussels but the
-  largest content job.
+**The French and Dutch copy is a first draft and needs your eye.** It was
+written to carry the tone, not only the meaning. Read it and correct it — nobody
+knows how you talk about your own food better than you.
 
-**What we need from you either way:** who writes the translations? Professional
-translation, or your own team? Machine translation is not viable — Google treats
-it as low-quality content and it will hurt rather than help.
+**Every change from now on is three changes.** A new page is three pages. A new
+product description in Shopify is three descriptions. This is the permanent cost
+of a trilingual site and it is invisible from the outside, so it is worth saying
+plainly: the largest ongoing effort on this project is keeping three languages
+in step, and one of them needs somebody who writes correct Dutch.
 
-**Why it matters:** right now some pages are English and some product
-descriptions are French. Google cannot tell which language the site is in, so it
-struggles to rank it in either. This is the second-biggest issue after the
-address.
+The legal pages (§7) are deliberately still English-only. They are binding text
+and they want a professional translator, not us.
 
 ---
 
@@ -175,8 +214,12 @@ into them, e.g.
 > `Brunch Delivery in Brussels: A Fresh and Delicious Moment at Home | ( moment )`
 
 The site adds the brand name automatically, so this ends up doubled. **Please put
-only the headline in the title field.** We can add a separate "SEO title" field if
-you want to control both independently — just say the word.
+only the headline in the title field.**
+
+The separate field we offered now exists: `/studio` → **Actualités** → an
+article → the *Référencement* tab, where "Titre pour Google" overrides the
+headline in search results and nowhere else. Leave it empty and the headline is
+used, which is usually what you want.
 
 ---
 
@@ -196,17 +239,38 @@ we can see exactly which pages and search terms perform, and improve from there.
 
 ---
 
-## 11. Domain confirmation
+## 11. The domain — **BLOCKER, and the one holding up Google**
 
-The site is currently configured for **`www.moment.be`**.
+The site is live and working, at a temporary Vercel address. **`moment.be` is
+not registered.** Until it is, three things are true and worth understanding
+together:
 
-- Is this the final domain?
-- Do you own it already?
-- Any other domains that should redirect to it (`moment.brussels`, `.com`, old
-  domains from a previous site)?
+**The site is deliberately invisible to Google.** Not broken — closed on
+purpose. Every page tells search engines not to index it. If you search for
+"Moment traiteur" you will not find the site, and that is correct behaviour, not
+a fault.
 
-**Why it matters:** every SEO signal is tied to the domain. Changing it after
-launch means starting over, so this must be right before we go live.
+**This is protecting you, not delaying you.** Letting Google index the temporary
+address would mean a pile of results pointing at somewhere you are about to
+leave, and a duplicate-content problem on the domain you actually want to rank
+on. Every search engine signal is tied to a domain; starting on the wrong one
+and moving costs months.
+
+**"Online" and "findable" are different things.** The site can be shown to
+anyone you send the link to, today. It simply is not competing in search yet.
+
+What we need:
+
+- **Register the domain.** `moment.be` if it is free. Check `.brussels` too, and
+  any variant a competitor could take.
+- **Tell us the exact form you want** — `www.moment.be` or `moment.be`. Pick one
+  and we make the other redirect; running both splits your ranking in half.
+- **Any old domains** from a previous site that should redirect here.
+
+Once it exists, opening the site to Google is a single setting on our side and
+takes minutes. Everything else — Search Console, the Google Business Profile
+(§4), the analytics in §10 — should be set up **after** that, on the real
+domain, so nothing has to be redone.
 
 ---
 
@@ -225,23 +289,33 @@ performs better than a text card.
 
 If you can only deal with part of this now, do it in this order:
 
-1. **Company identity + address** (§1) — blocks the legal page and local ranking
-2. **Contact details** (§2)
-3. **Legal pages** (§7) — blocks launch
-4. **Language decision** (§6) — blocks all translation work
-5. **Google Business Profile** (§4) — biggest quick win for local search
+1. **Register the domain** (§11) — nothing about search can start without it,
+   and it takes ten minutes
+2. **Company identity + address** (§1) — legally required, and the strongest
+   single signal for local ranking. You can type these in yourself today
+3. **Contact details** (§2) — same screen, two minutes
+4. **Legal pages** (§7) — blocks launch
+5. **Google Business Profile** (§4) — biggest quick win for local search, but
+   only after the domain exists
 6. Everything else
 
 ---
 
 ## What happens once you send this
 
-Sections 1, 2, 3, 5 and 11 are configuration values — they drop into one file and
-propagate across the whole site automatically: the legal page, the contact
-details, and the structured data Google reads. That is a same-day change.
+**Sections 1, 2, 3 and 5 are yours now.** They are fields in `/studio` and in
+the Shopify admin, and the site picks them up within a minute — no deployment,
+no waiting on us. That is the change since the last version of this document:
+the things you will want to correct most often are the ones you can reach.
 
-Sections 8 and 9 you can do yourselves in Shopify and Sanity at any time; the
-site picks up the changes without a deployment.
+**Sections 8 and 9** you have always been able to do yourselves, in Shopify and
+in the Studio.
 
-Sections 6 and 7 are the larger pieces of work and need a decision before they
-can start.
+**Section 11 needs a purchase**, and it gates §4 and §10.
+
+**Sections 6 and 7** are the remaining work on our side. The language build is
+done; what is left there is your read-through of the French and Dutch, and a
+professional translation of the legal pages.
+
+**Ask us for a walkthrough of the Studio.** Twenty minutes on a shared screen is
+worth more than this document, and it is included — not extra.
