@@ -6,6 +6,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useBarePathname, useDictionary } from "@/components/LocaleProvider";
 import { usePathname } from "next/navigation";
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -117,15 +118,21 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const overlayOpen = cartOpen || searchOpen || menuOpen;
   const navExpanded = openNavMenu !== null && !overlayOpen && !isMobileNav;
 
-  const releaseShopMenuFocus = () => {
+  // Both only ever touch refs and setState, so neither has anything to depend
+  // on. Stable identities are what let the effects below list them honestly
+  // instead of silencing the exhaustive-deps rule.
+  const releaseShopMenuFocus = useCallback(() => {
     blurFocusWithin(menuRef.current);
-  };
+  }, []);
 
-  const withOverlayFocusRelease = (update: () => void) => {
-    blurOpenOverlayFocus();
-    releaseShopMenuFocus();
-    update();
-  };
+  const withOverlayFocusRelease = useCallback(
+    (update: () => void) => {
+      blurOpenOverlayFocus();
+      releaseShopMenuFocus();
+      update();
+    },
+    [releaseShopMenuFocus],
+  );
 
   const cart = useSyncExternalStore(
     subscribeCart,
@@ -153,7 +160,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
 
     window.addEventListener("cart-open", openCart);
     return () => window.removeEventListener("cart-open", openCart);
-  }, []);
+  }, [withOverlayFocusRelease]);
 
   const headerRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -170,11 +177,20 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   const navExpandedRef = useRef(navExpanded);
   const overlayOpenRef = useRef(overlayOpen);
 
+  // Closing the panel as the route changes is state, and adjusting state during
+  // render is the point of this branch — it lands before paint, so the old menu
+  // never flashes over the new page.
   if (pathname !== prevPathname) {
-    releaseShopMenuFocus();
     setPrevPathname(pathname);
     setOpenNavMenu(null);
   }
+
+  // Releasing the focus it held is *not* state: it reaches into the DOM, which
+  // render must not do. It waits for the commit instead, which is soon enough —
+  // the panel it blurs is on its way out either way.
+  useEffect(() => {
+    releaseShopMenuFocus();
+  }, [pathname, releaseShopMenuFocus]);
 
   const isNavSolid = allowsTransparentNav
     ? navSolid || navHovered || overlayOpen || navExpanded

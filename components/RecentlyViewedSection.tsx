@@ -2,7 +2,7 @@
 
 import { useDictionary } from "@/components/LocaleProvider";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { ProductRowSection } from "@/components/ProductRowSection";
 import {
   RECENTLY_VIEWED_DISPLAY,
@@ -10,6 +10,7 @@ import {
   recordRecentlyViewed,
 } from "@/lib/recently-viewed";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
+import { useIsClient } from "@/lib/useIsClient";
 import { cn } from "@/lib/utils";
 
 type RecentlyViewedSectionProps = {
@@ -24,20 +25,32 @@ export function RecentlyViewedSection({
   className,
 }: RecentlyViewedSectionProps) {
   const dict = useDictionary();
-  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  // The history lives in localStorage, so the server has nothing to render and
+  // the first client pass must agree with it. This flips true after hydration.
+  const isClient = useIsClient();
 
+  // Recording is the side effect; it belongs in an effect. Reading is not — it
+  // is derived state, and putting it through `setState` here would render the
+  // row empty and then again with its contents on every product page.
   useEffect(() => {
     recordRecentlyViewed(currentHandle);
+  }, [currentHandle]);
 
-    const byHandle = new Map(allProducts.map((product) => [product.handle, product]));
-    const viewed = readRecentlyViewedHandles()
+  const products = useMemo(() => {
+    if (!isClient) return [];
+
+    const byHandle = new Map(
+      allProducts.map((product) => [product.handle, product]),
+    );
+
+    // The current product is in the history by now — it is the page we are on,
+    // not something to send the visitor back to.
+    return readRecentlyViewedHandles()
       .filter((handle) => handle !== currentHandle)
       .map((handle) => byHandle.get(handle))
       .filter((product): product is ShopifyProduct => product != null)
       .slice(0, RECENTLY_VIEWED_DISPLAY);
-
-    setProducts(viewed);
-  }, [allProducts, currentHandle]);
+  }, [isClient, allProducts, currentHandle]);
 
   if (products.length === 0) return null;
 
