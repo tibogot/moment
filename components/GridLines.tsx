@@ -17,6 +17,13 @@ type GridLinesProps = {
   lineClassName?: string;
 };
 
+/**
+ * The one weight, shared with every `border-sky` on the site through
+ * --default-border-width. Changing it here changes nothing; change --grid-line
+ * in globals.css.
+ */
+const LINE = "var(--grid-line)";
+
 const track = (offset: string, index: number, total: number) =>
   `calc(${offset} + (100% - 2 * ${offset}) * ${index} / ${total})`;
 
@@ -63,12 +70,16 @@ export function GridLines({
           right spine would paint it in the margin, so an image flush to the
           edge reads as a double line (photo edge + rule). */}
       <span
-        className={cn("absolute inset-y-0 w-px", lineClassName)}
-        style={{ left: x(0, columns) }}
+        className={cn("absolute inset-y-0", lineClassName)}
+        style={{ width: LINE, left: x(0, columns) }}
       />
       <span
-        className={cn("absolute inset-y-0 w-px", lineClassName)}
-        style={{ left: x(columns, columns), transform: "translateX(-100%)" }}
+        className={cn("absolute inset-y-0", lineClassName)}
+        style={{
+          width: LINE,
+          left: x(columns, columns),
+          transform: "translateX(-100%)",
+        }}
       />
 
       {ruled && (
@@ -82,8 +93,9 @@ export function GridLines({
                 .map((row) => (
                   <span
                     key={`column-${boundary}-${row}`}
-                    className={cn("absolute w-px", lineClassName)}
+                    className={cn("absolute", lineClassName)}
                     style={{
+                      width: LINE,
                       left: x(boundary, columns),
                       top: y(row - 1, rows),
                       bottom: y(rows - row, rows),
@@ -97,8 +109,8 @@ export function GridLines({
           {[0, rows].map((rule) => (
             <span
               key={`bleed-${rule}`}
-              className={cn("absolute inset-x-0 h-px", lineClassName)}
-              style={{ top: y(rule, rows) }}
+              className={cn("absolute inset-x-0", lineClassName)}
+              style={{ height: LINE, top: y(rule, rows) }}
             />
           ))}
 
@@ -109,8 +121,9 @@ export function GridLines({
                 .map((column) => (
                   <span
                     key={`rule-${rule}-${column}`}
-                    className={cn("absolute h-px", lineClassName)}
+                    className={cn("absolute", lineClassName)}
                     style={{
+                      height: LINE,
                       top: y(rule, rows),
                       left: x(column - 1, columns),
                       right: x(columns - column, columns),

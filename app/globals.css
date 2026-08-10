@@ -5,6 +5,9 @@
   --color-cream: #f8f7f2;
   --color-sky: #a7c5ee;
 
+  /* Every `border`, `border-t`, `border-l`… on the site. See --grid-line. */
+  --default-border-width: var(--grid-line);
+
   --font-owners-medium: var(--font-face-owners-medium);
   --font-owners-narrow-bold: var(--font-face-owners-narrow-bold);
   --font-archivo-light: var(--font-face-archivo-light);
@@ -22,6 +25,27 @@
   --palette-line: #a7c5ee;
   --palette-reveal: #a7c5ee;
   --palette-reveal-on-sky: #f8f7f2;
+
+  /**
+   * The weight of every rule on the site.
+   *
+   * There are two mechanisms drawing this grid and they have to agree: the
+   * absolutely-positioned spans in GridLines, and the 117 `border-sky`
+   * utilities spread across 39 components. `--default-border-width` in the
+   * @theme block below points the second at this value, so both move together
+   * and this is the only number to change.
+   *
+   * 2px, and not 1.5, because **fractional borders do not exist**. Chrome
+   * rounds `border-width` to whole CSS pixels — measured, and at both 1x and 2x
+   * — so a 1.5px value renders the GridLines spans at 1.5 (they use `width`,
+   * which is not rounded) and all 117 borders at 1. That is not a subtle
+   * difference on a grid where the two meet at every corner.
+   *
+   * So the only step up from 1px is 2px. If it reads heavy, the honest fix is
+   * to go back to 1px and get the extra presence from contrast instead — a
+   * darker rule colour — rather than a width the browser will not honour.
+   */
+  --grid-line: 2px;
 
   /* Viewport edge -> first/last column line. */
   --grid-margin: max(1.25rem, 4.9vw);
