@@ -15,7 +15,7 @@ import { getProducts } from "@/lib/shopify/products";
 import { getCollections } from "@/lib/shopify/collections";
 import { languageAlternates } from "@/lib/seo";
 import { isLocale, LOCALES, OG_LOCALE, type Locale } from "@/lib/i18n/config";
-import { siteConfig } from "@/lib/site";
+import { siteConfig, siteIsIndexable } from "@/lib/site";
 import {
   archivoLight,
   archivoLightItalic,
@@ -84,19 +84,25 @@ export async function generateMetadata({
       title: meta.home.title,
       description: meta.home.description,
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        // Let Google use full-size images and untruncated snippets — the default
-        // caps both, which costs us the visual slot on recipe/menu queries.
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
-    },
+    // The meta tag rather than robots.txt is what actually keeps a page out of
+    // the index — a disallowed URL that something links to can still be listed,
+    // title and all. Until the real domain exists this closes that door too.
+    robots: siteIsIndexable
+      ? {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            // Let Google use full-size images and untruncated snippets — the
+            // default caps both, which costs us the visual slot on recipe and
+            // menu queries.
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        }
+      : { index: false, follow: false },
   };
 }
 

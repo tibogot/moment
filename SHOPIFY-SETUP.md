@@ -165,7 +165,20 @@ Whoever approves an application sets it. Nothing else marks a customer as B2B.
 
 ## Environment variables
 
-`.env.example` lists them all. Two notes:
+`.env.example` lists them all. Three notes:
+
+- `NEXT_PUBLIC_SITE_URL` — the address this deployment answers on, with the
+  protocol and no trailing slash. Every canonical URL, the sitemap, robots.txt,
+  the Open Graph image and every `@id` in the structured data are built from it.
+  Unset, it falls back to Vercel's own production URL, then to localhost.
+
+  **It also decides whether the site is indexed at all.** A `.vercel.app` or
+  localhost address serves `Disallow: /` and `noindex` on every page; a real
+  domain serves the normal rules. That is deliberate — indexing the temporary
+  address would leave results pointing at somewhere the business is about to
+  leave, and a duplicate-content problem on the domain it actually wants to rank
+  on. Setting this to `https://www.moment.be` is what opens the site to Google,
+  and it is the only change needed to do it.
 
 - `GEOAPIFY_API_KEY` — without it the address lookup silently falls back to the
   Brussels-only register and no address outside the Region resolves.
