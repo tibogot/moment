@@ -52,8 +52,12 @@ export const config = {
    * lookahead is doing the real work: without it the redirect would also catch
    * /api/cart, every image, and the metadata routes that must stay unprefixed
    * because search engines and browsers look for them at fixed paths.
+   *
+   * `studio` is in there for the same reason: the Sanity Studio has its own
+   * routing and its own language handling, and a /fr prefix in front of it
+   * means it never mounts at all.
    */
   matcher: [
-    "/((?!_next|api|.*\\..*|opengraph-image|icon|robots\\.txt|sitemap\\.xml).*)",
+    "/((?!_next|api|studio|.*\\..*|opengraph-image|icon|robots\\.txt|sitemap\\.xml).*)",
   ],
 };

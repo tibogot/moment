@@ -17,6 +17,10 @@ export default function robots(): MetadataRoute.Robots {
         routes.cart,
         routes.account,
         routes.signIn,
+        // Not for secrecy — the Studio asks for a Sanity login on its own. This
+        // is so a CMS sign-in screen never turns up in the results for the
+        // client's own name.
+        "/studio",
         "/testtextreveal",
       ],
     },
