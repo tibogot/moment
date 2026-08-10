@@ -93,7 +93,7 @@ function SplitGrid({
               // square this used to be. The cells here are the only ones on the
               // site whose proportion was declared outright, so they were also
               // the only ones that stayed square at every width.
-              "aspect-[3/4] border-sky",
+              "aspect-3/4 border-sky",
               !(fullBleedBottom && isLastRow) && "border-b",
               index % SPLIT_COLUMNS !== 0 && "border-l",
             )}
