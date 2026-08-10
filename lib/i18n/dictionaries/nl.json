@@ -104,7 +104,7 @@
       "legendOpen": "Beschikbaar",
       "legendClosed": "Gesloten of volzet",
       "legendTooSoon": "Te vroeg",
-      "note": "Kies een beschikbare dag om die aan uw bestelling toe te voegen — u hoeft nog niets in uw winkelmand te hebben. Wij hebben {days} dagen op voorhand nodig en wij leveren niet op zondag.",
+      "note": "Kies een beschikbare dag om die aan uw bestelling toe te voegen — u hoeft nog niets in uw winkelmand te hebben. Wij hebben {days} dagen op voorhand nodig.",
       "prev": "Vorige",
       "next": "Volgende",
       "dismiss": "Sluiten",
@@ -141,7 +141,7 @@
       },
       {
         "q": "Hoe lang op voorhand moet ik bestellen?",
-        "a": "Wij hebben {days} dagen op voorhand nodig voor een levering, en wij leveren niet op zondag. De kalender op de site toont enkel de dagen die nog vrij zijn. Voor een evenement neemt u het best zo vroeg mogelijk contact op: drukke data zijn snel weg."
+        "a": "Wij hebben {days} dagen op voorhand nodig voor een levering.{closedDays} De kalender op de site toont enkel de dagen die nog vrij zijn. Voor een evenement neemt u het best zo vroeg mogelijk contact op: drukke data zijn snel weg."
       },
       {
         "q": "Kan ik mijn bestelling zelf ophalen?",
@@ -162,7 +162,9 @@
     ]
   },
   "delivery": {
-    "calendarNote": "Blauwe dagen zijn gesloten of volzet — wij hebben {days} dagen op voorhand nodig en wij leveren niet op zondag.",
+    "calendarNote": "Blauwe dagen zijn gesloten of volzet — wij hebben {days} dagen op voorhand nodig.",
+    "closedDays": "Wij leveren niet op {closedDays}.",
+    "dayArticle": "",
     "unavailable": "Niet beschikbaar voor levering"
   },
   "deliveryMethods": {
@@ -263,7 +265,9 @@
   },
   "contact": {
     "title": "Offerte aanvragen",
+    "lead": "Vertel ons de datum, het aantal personen en ongeveer wat u voor ogen heeft. Wij komen terug met een menu en een prijs.",
     "intro": "Vertel ons wat u voor ogen heeft.",
+    "notice": "We hebben {days} dagen op voorhand nodig voor een levering, en ongeveer twee weken voor een evenement. Is het korter, zeg het gerust — we laten meteen weten of het lukt.",
     "steps": [
       {
         "title": "Het basiswerk",
@@ -512,5 +516,32 @@
       "article": "{title} — uit de keuken van Moment in Brussel.",
       "menu": "Cateringmenu"
     }
+  },
+  "menuFormats": {
+    "breakfast": "Ontbijt",
+    "lunch": "Kantoorlunch",
+    "apero": "Apéro",
+    "buffet": "Buffet",
+    "seated": "Zittend diner"
+  },
+  "menus": {
+    "lead": "Wat wij koken, per persoon. Elke formule hieronder is een vertrekpunt — wij passen de gerechten aan het seizoen aan, aan de locatie en aan wie er mee-eet.",
+    "perPerson": "per persoon",
+    "seeMenu": "Bekijk het menu",
+    "allMenus": "Alle formules",
+    "requestMenu": "Deze formule aanvragen",
+    "quoteNote": "Formules worden geoffreerd, niet online besteld. Laat ons de datum en het aantal personen weten, en wij komen terug met dit menu volledig gecalculeerd.",
+    "included": "Inbegrepen",
+    "quotedSeparately": "Apart geoffreerd",
+    "dietary": "Diëten en allergieën",
+    "guestsRange": "{min}–{max} personen",
+    "guestsFrom": "vanaf {min} personen",
+    "noticeWeek": "{count} week op voorhand",
+    "noticeWeeks": "{count} weken op voorhand",
+    "noticeDay": "{count} dag op voorhand",
+    "noticeDays": "{count} dagen op voorhand",
+    "metaPrice": "Vanaf {price} per persoon, {terms}.",
+    "enquiry": "Ik zou graag een offerte voor de formule {title} ({format}, {price} per persoon).\n\n",
+    "draftNotice": "Ontwerp — deze formules en prijzen zijn indicatieve voorbeelden, niet definitief. Menu's en tarieven worden met de keuken bevestigd."
   }
 }

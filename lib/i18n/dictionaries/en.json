@@ -104,7 +104,7 @@
       "legendOpen": "Open",
       "legendClosed": "Closed or full",
       "legendTooSoon": "Too soon",
-      "note": "Pick any open day to add it to your order — you do not need anything in your basket yet. We need {days} days' notice and we do not deliver on Sundays.",
+      "note": "Pick any open day to add it to your order — you do not need anything in your basket yet. We need {days} days' notice.",
       "prev": "Prev",
       "next": "Next",
       "dismiss": "Close",
@@ -141,7 +141,7 @@
       },
       {
         "q": "How far in advance should I order?",
-        "a": "We need {days} days' notice for a delivery, and we do not deliver on Sundays. The calendar on the site only shows days that are still open. For an event, get in touch as early as you can — busy dates go quickly."
+        "a": "We need {days} days' notice for a delivery.{closedDays} The calendar on the site only shows days that are still open. For an event, get in touch as early as you can — busy dates go quickly."
       },
       {
         "q": "Can I collect my order?",
@@ -162,7 +162,9 @@
     ]
   },
   "delivery": {
-    "calendarNote": "Blue days are closed or already full — we need {days} days’ notice and we do not deliver on Sundays.",
+    "calendarNote": "Blue days are closed or already full — we need {days} days’ notice.",
+    "closedDays": "We do not deliver on {closedDays}.",
+    "dayArticle": "",
     "unavailable": "Not available for delivery"
   },
   "deliveryMethods": {
@@ -263,7 +265,9 @@
   },
   "contact": {
     "title": "Request a quote",
+    "lead": "Tell us the date, the number of people and roughly what you have in mind. We will come back with a menu and a price.",
     "intro": "Tell us the shape of it.",
+    "notice": "We need {days} days' notice for delivery and about two weeks for an event. Anything sooner, say so — we will tell you straight away whether we can.",
     "steps": [
       {
         "title": "The basics",
@@ -511,5 +515,32 @@
       "article": "{title} — from the Moment kitchen in Brussels.",
       "menu": "Catering menu"
     }
+  },
+  "menuFormats": {
+    "breakfast": "Breakfast",
+    "lunch": "Office lunch",
+    "apero": "Apéro",
+    "buffet": "Buffet",
+    "seated": "Seated dinner"
+  },
+  "menus": {
+    "lead": "What we cook, by the head. Every format below is a starting point — we change the dishes to the season, the room and whoever is eating.",
+    "perPerson": "per person",
+    "seeMenu": "See the menu",
+    "allMenus": "All menus",
+    "requestMenu": "Request this menu",
+    "quoteNote": "Menus are quoted, not checked out. Tell us the date and the headcount and we come back with this menu costed for your room.",
+    "included": "Included",
+    "quotedSeparately": "Quoted separately",
+    "dietary": "Dietary",
+    "guestsRange": "{min}–{max} guests",
+    "guestsFrom": "from {min} guests",
+    "noticeWeek": "{count} week's notice",
+    "noticeWeeks": "{count} weeks' notice",
+    "noticeDay": "{count} day's notice",
+    "noticeDays": "{count} days' notice",
+    "metaPrice": "From {price} per person, {terms}.",
+    "enquiry": "I would like a quote for the {title} menu ({format}, {price} per person).\n\n",
+    "draftNotice": "Draft — these formats and prices are indicative examples, not final. Menus and pricing will be confirmed with the kitchen."
   }
 }

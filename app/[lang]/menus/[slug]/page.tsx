@@ -8,16 +8,10 @@ import { JsonLd } from "@/components/JsonLd";
 import { SanityImage } from "@/components/SanityImage";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
-import {
-  MENUS_DRAFT_NOTICE,
-  MENU_FORMAT_LABELS,
-  PLACEHOLDER_MENUS,
-  formatMenuPrice,
-  formatMenuTerms,
-  type Menu,
-} from "@/lib/menus";
+import { PLACEHOLDER_MENUS, formatMenuTerms, type Menu } from "@/lib/menus";
 import { toLocale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
+import { formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
 import { getMenuBySlug, getMenuSlugs } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
@@ -56,11 +50,14 @@ export async function generateMetadata({
 
   // The price belongs in the snippet: "from €32 per person" is the line that
   // decides whether the result is worth a click for a catering search.
-  const price = `From ${formatMenuPrice(menu.pricePerPerson)} per person, ${formatMenuTerms(menu).toLowerCase()}.`;
+  const price = interpolate(dict.menus.metaPrice, {
+    price: formatMoney(locale, menu.pricePerPerson),
+    terms: formatMenuTerms(dict.menus, menu).toLowerCase(),
+  });
 
   return pageMetadata({
     locale,
-    title: `${menu.title} — ${MENU_FORMAT_LABELS[menu.format] ?? dict.meta.fallback.menu}`,
+    title: `${menu.title} — ${dict.menuFormats[menu.format] ?? dict.meta.fallback.menu}`,
     description: toDescription(
       menu.summary ? `${menu.summary} ${price}` : price,
     ),
@@ -91,13 +88,17 @@ function DetailList({ title, items }: { title: string; items: string[] }) {
 }
 
 export default async function MenuPage({ params }: MenuPageProps) {
-  const { slug } = await params;
-  const menu = await getMenuBySlug(slug);
+  const { lang, slug } = await params;
+  const locale = toLocale(lang);
+  const [menu, dict] = await Promise.all([
+    getMenuBySlug(slug),
+    getDictionary(locale),
+  ]);
 
   if (!menu) notFound();
 
   const isDraft = PLACEHOLDER_MENUS.includes(menu);
-  const formatLabel = MENU_FORMAT_LABELS[menu.format] ?? menu.format;
+  const formatLabel = dict.menuFormats[menu.format] ?? menu.format;
 
   /**
    * The enquiry carries the menu with it. `occasion` is prefilled because the
@@ -159,7 +160,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
       {isDraft && (
         <GridSection className="pb-[6svh]">
           <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
-            <DraftNotice>{MENUS_DRAFT_NOTICE}</DraftNotice>
+            <DraftNotice>{dict.menus.draftNotice}</DraftNotice>
           </div>
         </GridSection>
       )}
@@ -183,9 +184,9 @@ export default async function MenuPage({ params }: MenuPageProps) {
           <div className="border-y border-sky px-(--grid-gutter) py-[5svh] md:grid md:grid-cols-7 md:gap-(--grid-gutter)">
             <div className="min-w-0 md:col-span-4">
               <p className="font-owners-narrow-bold text-[12vw] leading-none md:text-[min(4.4vw,7svh)]">
-                {formatMenuPrice(menu.pricePerPerson)}
+                {formatMoney(locale, menu.pricePerPerson)}
                 <span className="font-archivo-light ml-3 text-[18px] leading-none">
-                  per person
+                  {dict.menus.perPerson}
                 </span>
               </p>
 
@@ -196,14 +197,13 @@ export default async function MenuPage({ params }: MenuPageProps) {
               )}
 
               <p className="font-archivo-light mt-4 text-[18px] leading-normal">
-                {formatMenuTerms(menu)}
+                {formatMenuTerms(dict.menus, menu)}
               </p>
             </div>
 
             <div className="mt-8 min-w-0 md:col-span-3 md:mt-0">
               <p className="font-archivo-light max-w-[34ch] text-[18px] leading-normal">
-                Menus are quoted, not checked out. Tell us the date and the
-                headcount and we come back with this menu costed for your room.
+                {dict.menus.quoteNote}
               </p>
 
               <Link
@@ -211,7 +211,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
                 className="mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
               >
                 <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-                  Request this menu
+                  {dict.menus.requestMenu}
                   <span aria-hidden>&rarr;</span>
                 </span>
               </Link>
@@ -250,25 +250,26 @@ export default async function MenuPage({ params }: MenuPageProps) {
         </GridSection>
       )}
 
-      {(menu.includes?.length ||
-        menu.excludes?.length ||
-        menu.dietaryNote) && (
+      {(menu.includes?.length || menu.excludes?.length || menu.dietaryNote) && (
         <GridSection className="pb-[8svh]">
           <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
             <div className="grid gap-[5svh] md:grid-cols-2 md:gap-(--grid-gutter)">
               {menu.includes && menu.includes.length > 0 && (
-                <DetailList title="Included" items={menu.includes} />
+                <DetailList title={dict.menus.included} items={menu.includes} />
               )}
 
               {menu.excludes && menu.excludes.length > 0 && (
-                <DetailList title="Quoted separately" items={menu.excludes} />
+                <DetailList
+                  title={dict.menus.quotedSeparately}
+                  items={menu.excludes}
+                />
               )}
             </div>
 
             {menu.dietaryNote && (
               <div className="mt-[5svh] border-t border-sky pt-[4svh]">
                 <h3 className="font-owners-medium text-[11px] uppercase tracking-wide">
-                  Dietary
+                  {dict.menus.dietary}
                 </h3>
                 <p className="font-archivo-light mt-3 max-w-[52ch] text-[18px] leading-normal">
                   {menu.dietaryNote}
@@ -285,14 +286,14 @@ export default async function MenuPage({ params }: MenuPageProps) {
             href={routes.menus}
             className="font-owners-medium inline-block border border-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-sky/30"
           >
-            All menus
+            {dict.menus.allMenus}
           </Link>
 
           <Link
             href={quoteHref}
             className="font-owners-medium inline-block border border-sky bg-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-cream"
           >
-            Request this menu
+            {dict.menus.requestMenu}
           </Link>
         </div>
       </GridSection>

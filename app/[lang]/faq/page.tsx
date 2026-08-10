@@ -8,15 +8,12 @@ import {
   interpolate,
   type Dictionary,
 } from "@/lib/i18n/dictionaries";
-import {
-  DELIVERY_ZONES,
-  formatEuros,
-  MAX_DELIVERY_DISTANCE_KM,
-} from "@/lib/delivery-zones";
-import { LEAD_TIME_DAYS } from "@/lib/delivery";
+import { maxDeliveryDistanceKm, type ZoneTable } from "@/lib/delivery-zones";
+import { closedWeekdaysNote, formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/seo";
+import { getDeliveryRules } from "@/lib/shopify/zones";
 
 export const generateMetadata = localizedMetadata("faq", {
   path: routes.faq,
@@ -30,19 +27,21 @@ export const generateMetadata = localizedMetadata("faq", {
  * worse than no page — so the numbers are read from `DELIVERY_ZONES` and the
  * dictionary only holds the words around them.
  */
-function zoneSummary(locale: Locale, dict: Dictionary) {
-  return DELIVERY_ZONES.map((zone, index) => {
-    const previous = DELIVERY_ZONES[index - 1]?.maxDistanceKm ?? 0;
-    const where =
-      zone.maxDistanceKm === null
-        ? dict.faq.zoneBrussels
-        : `${previous}–${zone.maxDistanceKm} km`;
-    const minimum = interpolate(dict.faq.zoneMinimum, {
-      amount: formatEuros(zone.minimumOrder),
-    });
+function zoneSummary(locale: Locale, dict: Dictionary, zones: ZoneTable) {
+  return zones.zones
+    .map((zone, index) => {
+      const previous = zones.zones[index - 1]?.maxDistanceKm ?? 0;
+      const where =
+        zone.maxDistanceKm === null
+          ? dict.faq.zoneBrussels
+          : `${previous}–${zone.maxDistanceKm} km`;
+      const minimum = interpolate(dict.faq.zoneMinimum, {
+        amount: formatMoney(locale, zone.minimumOrder),
+      });
 
-    return `${where} ${formatEuros(zone.fee)} (${minimum})`;
-  }).join(" · ");
+      return `${where} ${formatMoney(locale, zone.fee)} (${minimum})`;
+    })
+    .join(" · ");
 }
 
 export default async function FaqPage({
@@ -52,14 +51,31 @@ export default async function FaqPage({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const dict = await getDictionary(locale);
+  const [dict, { availability, zones }] = await Promise.all([
+    getDictionary(locale),
+    getDeliveryRules(),
+  ]);
+
+  // The notice period and the closed days are quoted here as well as applied by
+  // the calendar, and a FAQ that contradicts the checkout is worse than no FAQ —
+  // so both come from the same place the calendar reads, not from a constant.
+  //
+  // The closed-days sentence carries its own leading space and disappears
+  // entirely when the kitchen delivers every day, which is why the answer runs
+  // it straight on from the full stop before it.
+  const closedDays = closedWeekdaysNote(
+    locale,
+    dict,
+    availability.closedWeekdays,
+  );
 
   const entries = dict.faq.items.map(({ q, a }) => ({
     question: q,
     answer: interpolate(a, {
-      days: LEAD_TIME_DAYS,
-      max: MAX_DELIVERY_DISTANCE_KM,
-      zones: zoneSummary(locale, dict),
+      days: availability.leadTimeDays,
+      closedDays: closedDays ? ` ${closedDays}` : "",
+      max: maxDeliveryDistanceKm(zones),
+      zones: zoneSummary(locale, dict, zones),
     }),
   }));
 

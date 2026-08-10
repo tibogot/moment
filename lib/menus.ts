@@ -10,7 +10,13 @@
  * The prices below are placeholders. See PLACEHOLDER_MENUS.
  */
 
+import type { Locale } from "./i18n/config";
+import { interpolate, type Dictionary } from "./i18n/dictionaries";
+import { formatMoney } from "./i18n/format";
 import type { SanityImage, SanitySlug } from "./sanity/types";
+
+/** The menus page's own copy, in the language the page is being read in. */
+export type MenuCopy = Dictionary["menus"];
 
 /**
  * What kind of service the menu is, which is the thing a visitor actually
@@ -25,14 +31,6 @@ export const MENU_FORMATS = [
 ] as const;
 
 export type MenuFormat = (typeof MENU_FORMATS)[number];
-
-export const MENU_FORMAT_LABELS: Record<MenuFormat, string> = {
-  breakfast: "Breakfast",
-  lunch: "Office lunch",
-  apero: "Apéro",
-  buffet: "Buffet",
-  seated: "Seated dinner",
-};
 
 /** A named part of the menu — "To start", "From the oven", "To finish". */
 export type MenuCourse = {
@@ -57,7 +55,7 @@ export type Menu = {
   priceNote?: string;
   minGuests: number;
   maxGuests?: number;
-  /** Notice needed, in days. Distinct from the shop's LEAD_TIME_DAYS. */
+  /** Notice needed, in days. Distinct from the shop's delivery lead time. */
   leadTimeDays: number;
   courses?: MenuCourse[];
   /** What the per-person price covers. */
@@ -70,28 +68,30 @@ export type Menu = {
 
 /* -------------------------------------------------------------------------- */
 
-const priceFormatter = new Intl.NumberFormat("en-BE", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
-});
-
-/** `24` -> `€24`, `24.5` -> `€24.50`. */
-export function formatMenuPrice(amount: number) {
-  return priceFormatter.format(amount);
-}
-
-/** The line under the price: what it takes to actually book this. */
-export function formatMenuTerms(menu: Menu) {
+/**
+ * The line under the price: what it takes to actually book this.
+ *
+ * Both halves are read from the dictionary rather than assembled from English
+ * fragments. The singular and plural forms are separate keys instead of a
+ * `count === 1` suffix in code, because the rule differs by language and the
+ * apostrophe in "week's notice" is not something a template can add.
+ */
+export function formatMenuTerms(copy: MenuCopy, menu: Menu) {
   const guests = menu.maxGuests
-    ? `${menu.minGuests}–${menu.maxGuests} guests`
-    : `from ${menu.minGuests} guests`;
+    ? interpolate(copy.guestsRange, {
+        min: menu.minGuests,
+        max: menu.maxGuests,
+      })
+    : interpolate(copy.guestsFrom, { min: menu.minGuests });
 
-  const notice =
-    menu.leadTimeDays % 7 === 0
-      ? `${menu.leadTimeDays / 7} ${menu.leadTimeDays === 7 ? "week" : "weeks"}' notice`
-      : `${menu.leadTimeDays} days' notice`;
+  const weeks = menu.leadTimeDays / 7;
+  const notice = Number.isInteger(weeks)
+    ? interpolate(weeks === 1 ? copy.noticeWeek : copy.noticeWeeks, {
+        count: weeks,
+      })
+    : interpolate(menu.leadTimeDays === 1 ? copy.noticeDay : copy.noticeDays, {
+        count: menu.leadTimeDays,
+      });
 
   return `${guests} · ${notice}`;
 }
@@ -104,8 +104,17 @@ export function formatMenuTerms(menu: Menu) {
  * their reading it and the kitchen reading the mail, that discrepancy is
  * something the kitchen needs to see rather than discover at the tasting.
  */
-export function menuEnquiryMessage(menu: Menu) {
-  return `I would like a quote for the ${menu.title} menu (${MENU_FORMAT_LABELS[menu.format] ?? menu.format}, ${formatMenuPrice(menu.pricePerPerson)} per person).\n\n`;
+export function menuEnquiryMessage(
+  locale: Locale,
+  copy: MenuCopy,
+  formats: Record<MenuFormat, string>,
+  menu: Menu,
+) {
+  return interpolate(copy.enquiry, {
+    title: menu.title,
+    format: formats[menu.format] ?? menu.format,
+    price: formatMoney(locale, menu.pricePerPerson),
+  });
 }
 
 /** Menus in the order they should be offered — cheapest format first. */
@@ -223,7 +232,10 @@ export const PLACEHOLDER_MENUS: Menu[] = [
       {
         _key: "apero-hot",
         title: "Hot",
-        items: ["Three hot bites per guest, passed", "One dish from the plancha"],
+        items: [
+          "Three hot bites per guest, passed",
+          "One dish from the plancha",
+        ],
       },
       {
         _key: "apero-sweet",
@@ -302,7 +314,11 @@ export const PLACEHOLDER_MENUS: Menu[] = [
       {
         _key: "seated-three",
         title: "Last",
-        items: ["Cheese, if you want it", "A dessert", "Coffee and petits fours"],
+        items: [
+          "Cheese, if you want it",
+          "A dessert",
+          "Coffee and petits fours",
+        ],
       },
     ],
     includes: [
@@ -310,7 +326,12 @@ export const PLACEHOLDER_MENUS: Menu[] = [
       "Kitchen team on site",
       "Delivery, setup and clearing",
     ],
-    excludes: ["Service staff", "Drinks", "Tableware and linen hire", "Furniture"],
+    excludes: [
+      "Service staff",
+      "Drinks",
+      "Tableware and linen hire",
+      "Furniture",
+    ],
     dietaryNote:
       "We take the full dietary list at confirmation and cook to it, per guest.",
   },
@@ -323,6 +344,3 @@ export const PLACEHOLDER_MENUS: Menu[] = [
 export function isPlaceholderContent(menus: Menu[]) {
   return menus === PLACEHOLDER_MENUS;
 }
-
-export const MENUS_DRAFT_NOTICE =
-  "Draft — these formats and prices are indicative examples, not final. Menus and pricing will be confirmed with the kitchen.";

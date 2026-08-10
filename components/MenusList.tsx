@@ -2,15 +2,21 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { routes } from "@/lib/routes";
-import {
-  MENU_FORMAT_LABELS,
-  formatMenuPrice,
-  formatMenuTerms,
-  type Menu,
-} from "@/lib/menus";
+import { formatMenuTerms, type Menu } from "@/lib/menus";
+import type { Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { formatMoney } from "@/lib/i18n/format";
 
 type MenusListProps = {
   menus: Menu[];
+  locale: Locale;
+  /**
+   * The page's copy and the format names, in the language being read. A Server
+   * Component takes its copy as a prop — context is client-only, and the page
+   * that renders this already has the dictionary.
+   */
+  copy: Dictionary["menus"];
+  formats: Dictionary["menuFormats"];
 };
 
 /**
@@ -23,7 +29,7 @@ type MenusListProps = {
  * the headline means a visitor can read the whole ladder of formats in one
  * vertical scan without opening any of them.
  */
-export function MenusList({ menus }: MenusListProps) {
+export function MenusList({ menus, locale, copy, formats }: MenusListProps) {
   return (
     <div className="col-start-2 col-end-5 min-w-0 md:col-end-9">
       <div className="border-b border-sky">
@@ -42,7 +48,7 @@ export function MenusList({ menus }: MenusListProps) {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="font-owners-medium text-[11px] uppercase tracking-wide text-black/55">
-                    {MENU_FORMAT_LABELS[menu.format] ?? menu.format}
+                    {formats[menu.format] ?? menu.format}
                   </span>
                 </div>
 
@@ -63,9 +69,9 @@ export function MenusList({ menus }: MenusListProps) {
                   a column the eye can compare down. */}
               <div className="mt-8 min-w-0 md:col-span-3 md:mt-0 md:text-right">
                 <p className="font-owners-narrow-bold text-[7vw] leading-none md:text-[min(2.6vw,4svh)]">
-                  {formatMenuPrice(menu.pricePerPerson)}
+                  {formatMoney(locale, menu.pricePerPerson)}
                   <span className="font-archivo-light ml-2 text-[16px] leading-none">
-                    per person
+                    {copy.perPerson}
                   </span>
                 </p>
 
@@ -76,12 +82,12 @@ export function MenusList({ menus }: MenusListProps) {
                 )}
 
                 <p className="font-archivo-light mt-4 text-[13px]">
-                  {formatMenuTerms(menu)}
+                  {formatMenuTerms(copy, menu)}
                 </p>
 
                 <span className="mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 group-hover:bg-cream">
                   <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-                    See the menu
+                    {copy.seeMenu}
                     <span
                       className="transition-transform duration-500 group-hover:translate-x-1.5"
                       aria-hidden

@@ -8,7 +8,7 @@ import {
   type ContactValues,
   type Occasion,
 } from "@/lib/contact";
-import { toLocale } from "@/lib/i18n/config";
+import { toLocale, type Locale } from "@/lib/i18n/config";
 import {
   getDictionary,
   interpolate,
@@ -16,7 +16,8 @@ import {
 } from "@/lib/i18n/dictionaries";
 import { menuEnquiryMessage } from "@/lib/menus";
 import { routes } from "@/lib/routes";
-import { getMenuBySlug } from "@/lib/sanity/queries";
+import { getMenuBySlug, getSiteDetails } from "@/lib/sanity/queries";
+import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { breadcrumbSchema, graph, organizationSchema } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
 
@@ -47,6 +48,7 @@ type ContactPageProps = {
 async function resolvePrefill(
   searchParams: ContactPageProps["searchParams"],
   dict: Dictionary,
+  locale: Locale,
 ): Promise<ContactValues> {
   const { menu: menuSlug, occasion, address, km } = await searchParams;
 
@@ -68,7 +70,12 @@ async function resolvePrefill(
     const menu = await getMenuBySlug(menuSlug);
     if (menu) {
       values.occasion = "Event";
-      values.message = menuEnquiryMessage(menu);
+      values.message = menuEnquiryMessage(
+        locale,
+        dict.menus,
+        dict.menuFormats,
+        menu,
+      );
     }
   }
 
@@ -86,8 +93,13 @@ export default async function ContactPage({
   searchParams,
 }: ContactPageProps) {
   const { lang } = await params;
-  const dict = await getDictionary(toLocale(lang));
-  const initialValues = await resolvePrefill(searchParams, dict);
+  const locale = toLocale(lang);
+  const dict = await getDictionary(locale);
+  const [initialValues, availability, siteDetails] = await Promise.all([
+    resolvePrefill(searchParams, dict, locale),
+    getDeliveryAvailability(),
+    getSiteDetails(),
+  ]);
 
   return (
     <>
@@ -97,7 +109,7 @@ export default async function ContactPage({
             "@type": "ContactPage",
             url: absoluteUrl(routes.contact),
             name: fullTitle("Contact"),
-            about: organizationSchema(),
+            about: organizationSchema(siteDetails),
           },
           breadcrumbSchema([
             { name: "Home", path: routes.home },
@@ -106,12 +118,12 @@ export default async function ContactPage({
         )}
       />
 
-      <PageIntro
-        title="Contact"
-        lead="Tell us the date, the number of people and roughly what you have in mind. We will come back with a menu and a price."
-      />
+      <PageIntro title="Contact" lead={dict.contact.lead} />
 
-      <ContactForm initialValues={initialValues} />
+      <ContactForm
+        initialValues={initialValues}
+        leadTimeDays={availability.leadTimeDays}
+      />
 
       <Footer />
     </>

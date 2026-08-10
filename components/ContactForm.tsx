@@ -15,9 +15,9 @@ import {
   type ContactFormState,
   type ContactValues,
 } from "@/lib/contact";
-import { LEAD_TIME_DAYS } from "@/lib/delivery";
-import { siteConfig } from "@/lib/site";
+import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { PRO_OCCASION, type ContactErrorCode } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
@@ -133,6 +133,13 @@ type ContactFormProps = {
    */
   initialValues?: ContactValues;
   /**
+   * Notice required for a delivery, quoted in the aside. Passed in rather than
+   * read from a constant because the owners set it in the Shopify admin — a
+   * page still promising two days while the kitchen wants four is a promise
+   * made to a customer that nobody in the kitchen agreed to.
+   */
+  leadTimeDays: number;
+  /**
    * `pro` is the professional account application: same pipeline, different
    * questions. It drops the occasion radios (the occasion is fixed), the date
    * and the headcount, and adds the VAT number and a delivery address.
@@ -152,7 +159,8 @@ type ContactFormProps = {
 export function ContactForm({
   initialValues = EMPTY_CONTACT_VALUES,
   variant = "enquiry",
-}: ContactFormProps = {}) {
+  leadTimeDays,
+}: ContactFormProps) {
   const dict = useDictionary();
   const t = dict.contact;
   const pro = variant === "pro";
@@ -189,10 +197,9 @@ export function ContactForm({
   const update = (field: ContactField) => (value: string) =>
     setValues((current) => ({ ...current, [field]: value }));
 
-  // Typed as the empty string by `as const` in lib/site, which would narrow
-  // every check below to `never`. Widened here so the fallbacks read normally.
-  const email: string = siteConfig.contact.email;
-  const phone: string = siteConfig.contact.phone;
+  // Either may be empty until the owners fill the Studio in — the block that
+  // renders them is guarded on that, rather than printing an empty line.
+  const { email, phone } = useSiteDetails().contact;
 
   return (
     <GridSection className="pb-[16svh]">
@@ -252,10 +259,7 @@ export function ContactForm({
               </ol>
 
               <p className="font-archivo-light mt-[4svh] max-w-[36ch] text-[18px] leading-normal">
-                We need {LEAD_TIME_DAYS}{" "}
-                days&apos; notice for delivery and about two weeks for an event.
-                Anything sooner, say so — we will tell you straight away whether
-                we can.
+                {interpolate(t.notice, { days: leadTimeDays })}
               </p>
 
               {(email || phone) && (

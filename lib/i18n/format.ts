@@ -12,6 +12,7 @@
  */
 
 import { INTL_LOCALE, type Locale } from "./config";
+import { interpolate, type Dictionary } from "./dictionaries";
 import { parseISODate } from "@/lib/delivery";
 
 export function formatMoney(
@@ -95,4 +96,44 @@ export function weekdayNames(locale: Locale) {
     day.setDate(monday.getDate() + offset);
     return day.toLocaleDateString(INTL_LOCALE[locale], { weekday: "long" });
   });
+}
+
+/**
+ * The days the kitchen never delivers on, as a sentence — or `null` when it
+ * delivers every day and there is nothing to say.
+ *
+ * This used to read "and we do not deliver on Sundays", written into the copy
+ * in all three languages. Sunday is now a setting the owners change in the
+ * Shopify admin, and a site that keeps announcing a rule the kitchen has
+ * dropped is the same failure as a FAQ quoting last year's delivery fee.
+ *
+ * The article travels in the dictionary rather than being assembled here:
+ * French wants it on every item ("le dimanche et le lundi"), English and Dutch
+ * put a preposition in front of the whole list ("on Sunday and Monday"). That
+ * is grammar, and grammar belongs with the words.
+ */
+export function closedWeekdaysNote(
+  locale: Locale,
+  dict: Dictionary,
+  closedWeekdays: number[],
+): string | null {
+  if (closedWeekdays.length === 0) return null;
+
+  const names = weekdayNames(locale);
+  const days = [...new Set(closedWeekdays)]
+    // `weekdayNames` runs Monday-first; `Date#getDay` counts from Sunday. This
+    // is the same shift `leadingBlanks` makes for the calendar grid.
+    .map((day) => (day + 6) % 7)
+    .filter((index) => index >= 0 && index < 7)
+    .sort((a, b) => a - b)
+    .map((index) => `${dict.delivery.dayArticle}${names[index]}`);
+
+  if (days.length === 0) return null;
+
+  const list = new Intl.ListFormat(INTL_LOCALE[locale], {
+    style: "long",
+    type: "conjunction",
+  }).format(days);
+
+  return interpolate(dict.delivery.closedDays, { closedDays: list });
 }
