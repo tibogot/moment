@@ -21,9 +21,9 @@ import { routes } from "@/lib/routes";
 import { siteGraph } from "@/lib/schema";
 import { languageAlternates } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getHomePageImages, getSiteDetails } from "@/lib/sanity/queries";
 import { getCollections } from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
-import { siteConfig } from "@/lib/site";
 
 /**
  * The home page keeps an absolute title rather than the "%s — Moment"
@@ -61,11 +61,14 @@ export default async function Home({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const [collections, availability, dict] = await Promise.all([
-    getCollections(),
-    getDeliveryAvailability(),
-    getDictionary(toLocale(lang)),
-  ]);
+  const [collections, availability, dict, siteDetails, images] =
+    await Promise.all([
+      getCollections(),
+      getDeliveryAvailability(),
+      getDictionary(toLocale(lang)),
+      getSiteDetails(),
+      getHomePageImages(),
+    ]);
   const home = dict.home;
 
   // Shopify seeds every store with a "frontpage" collection; skip it and show
@@ -78,13 +81,16 @@ export default async function Home({
     <>
       {/* Defines the organisation, website and business nodes the rest of the
           site's structured data refers back to by @id. */}
-      <JsonLd data={siteGraph()} />
+      <JsonLd data={siteGraph(siteDetails)} />
 
-      <Hero copy={home.hero} />
+      <Hero copy={home.hero} image={images.hero} />
       <IntroSection copy={home.intro} aboutLabel={dict.common.aboutUs} />
 
       {/* The two rooms of the business, side by side on identical 3 x 3 grids. */}
-      <PanelPairSection copy={home.panels} />
+      <PanelPairSection
+        copy={home.panels}
+        images={{ events: images.events, coffee: images.coffee }}
+      />
 
       {/* Image fills the left half — 3 columns x 3 rows — with the right half
           left as bare grid. The second reprises it smaller, on the right.

@@ -1,4 +1,6 @@
 import heroImage from "@/public/images/gemini-moment.webp";
+import { urlFor } from "@/lib/sanity/image";
+import type { HomePageImages } from "@/lib/sanity/queries";
 import { GridLines } from "@/components/GridLines";
 import { Lines } from "@/components/Lines";
 import { HeroParallaxImage } from "@/components/HeroParallaxImage";
@@ -13,15 +15,23 @@ import {
 
 type HeroProps = {
   copy: { headline: string; lead: string };
+  /** From the Studio. Null until someone uploads one, and then this is it. */
+  image?: HomePageImages["hero"];
 };
 
-export function Hero({ copy }: HeroProps) {
+export function Hero({ copy, image }: HeroProps) {
+  // 2400 wide rather than SanityImage's default 1600: this one is full-bleed
+  // and oversized by 30% again for the parallax drift, so it is the widest
+  // image on the site by some margin.
+  const heroSrc = image
+    ? urlFor(image).width(2400).auto("format").url()
+    : heroImage;
   return (
     <section
       className="relative h-svh w-full overflow-hidden"
       data-transparent-nav
     >
-      <HeroParallaxImage src={heroImage} />
+      <HeroParallaxImage src={heroSrc} blurDataURL={image?.lqip} />
       <div className="absolute inset-0 bg-black/20" aria-hidden />
 
       <GridLines
@@ -47,7 +57,11 @@ export function Hero({ copy }: HeroProps) {
         {/* text-left is required: the TextReveal CSS centres each split line
             unless an ancestor opts out. */}
         <div className="col-start-2 col-end-5 row-start-4 row-end-5 min-w-0 self-end px-(--grid-gutter) pb-4 text-left md:col-end-7 md:row-start-3 md:row-end-5 md:pb-[3.3svh]">
-          <TextReveal animateOnScroll={false} blockColor={REVEAL_HERO} delay={0.25}>
+          <TextReveal
+            animateOnScroll={false}
+            blockColor={REVEAL_HERO}
+            delay={0.25}
+          >
             <h1
               className="font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] uppercase"
               style={{ fontSize: "var(--hero-headline)" }}

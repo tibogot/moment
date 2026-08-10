@@ -1,6 +1,7 @@
 import { sanityClient, sanityFetchOptions } from "./client";
-import type { NewsArticle, NewsArticleListItem } from "./types";
+import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
+import { DEFAULT_SITE_DETAILS, type SiteDetails } from "../site";
 
 const articleListFields = `
   _id,
@@ -158,5 +159,149 @@ export async function getMenuBySlug(slug: string): Promise<Menu | null> {
     return menu ?? fallback();
   } catch {
     return fallback();
+  }
+}
+
+/* --------------------------- Company details ----------------------------- */
+
+/**
+ * The singleton company document. Pinned by id rather than matched by type, so
+ * a second one created by accident cannot win the ordering and change the VAT
+ * number on the legal page.
+ */
+export const siteDetailsQuery = `*[_id == "siteSettings"][0] {
+  contact,
+  legal,
+  socialLinks
+}`;
+
+type SiteDetailsResponse = {
+  contact?: Partial<SiteDetails["contact"]> | null;
+  legal?: Partial<SiteDetails["legal"]> | null;
+  socialLinks?: Partial<SiteDetails["social"]> | null;
+};
+
+/**
+ * A field the owners have actually answered.
+ *
+ * Sanity gives back `null` for a field that exists but was left alone, and the
+ * Studio writes `""` when someone types into a box and deletes it again.
+ * Neither is an answer, and neither must be allowed to blank out a default —
+ * that is how "Brussels" becomes an empty line on the legal page.
+ */
+function answered(value: string | undefined | null, fallback: string) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : fallback;
+}
+
+function mergeSiteDetails(response: SiteDetailsResponse | null): SiteDetails {
+  const defaults = DEFAULT_SITE_DETAILS;
+  const { contact, legal, socialLinks } = response ?? {};
+
+  return {
+    contact: {
+      street: answered(contact?.street, defaults.contact.street),
+      postalCode: answered(contact?.postalCode, defaults.contact.postalCode),
+      city: answered(contact?.city, defaults.contact.city),
+      region: answered(contact?.region, defaults.contact.region),
+      country: answered(contact?.country, defaults.contact.country),
+      phone: answered(contact?.phone, defaults.contact.phone),
+      email: answered(contact?.email, defaults.contact.email),
+    },
+    legal: {
+      companyName: answered(legal?.companyName, defaults.legal.companyName),
+      enterpriseNumber: answered(
+        legal?.enterpriseNumber,
+        defaults.legal.enterpriseNumber,
+      ),
+      vatNumber: answered(legal?.vatNumber, defaults.legal.vatNumber),
+      legalForm: answered(legal?.legalForm, defaults.legal.legalForm),
+    },
+    social: {
+      instagram: answered(socialLinks?.instagram, defaults.social.instagram),
+      facebook: answered(socialLinks?.facebook, defaults.social.facebook),
+    },
+  };
+}
+
+/**
+ * Never throws. These are read by the root layout, so Sanity being unreachable
+ * has to cost the site a phone number in the footer, not every page on it.
+ */
+export async function getSiteDetails(): Promise<SiteDetails> {
+  try {
+    const response = await sanityClient.fetch<SiteDetailsResponse | null>(
+      siteDetailsQuery,
+      {},
+      sanityFetchOptions,
+    );
+
+    return mergeSiteDetails(response);
+  } catch {
+    return DEFAULT_SITE_DETAILS;
+  }
+}
+
+/* ----------------------------- Home page --------------------------------- */
+
+/**
+ * The home page's photographs.
+ *
+ * `lqip` is a tiny base64 preview Sanity stores with every asset. It is what
+ * lets the hero keep its blur-up: the static import it falls back to gets one
+ * from Next at build time, and without this a Sanity-served hero would pop in
+ * grey instead.
+ */
+export const homePageQuery = `*[_id == "homePage"][0] {
+  heroImage { ..., "lqip": asset->metadata.lqip },
+  eventsImage,
+  coffeeImage
+}`;
+
+export type HomePageImages = {
+  hero: (SanityImage & { lqip?: string }) | null;
+  events: SanityImage | null;
+  coffee: SanityImage | null;
+};
+
+const NO_HOME_IMAGES: HomePageImages = {
+  hero: null,
+  events: null,
+  coffee: null,
+};
+
+type HomePageResponse = {
+  heroImage?: (SanityImage & { lqip?: string }) | null;
+  eventsImage?: SanityImage | null;
+  coffeeImage?: SanityImage | null;
+};
+
+/** An image field with nothing uploaded into it yet is `{}`, not null. */
+function uploaded<T extends SanityImage>(image: T | null | undefined) {
+  return image?.asset ? image : null;
+}
+
+/**
+ * Never throws, and never blocks the home page on Sanity: anything missing
+ * leaves the built-in photographs in place, which is also what a shop with no
+ * `homePage` document sees.
+ */
+export async function getHomePageImages(): Promise<HomePageImages> {
+  try {
+    const response = await sanityClient.fetch<HomePageResponse | null>(
+      homePageQuery,
+      {},
+      sanityFetchOptions,
+    );
+
+    if (!response) return NO_HOME_IMAGES;
+
+    return {
+      hero: uploaded(response.heroImage),
+      events: uploaded(response.eventsImage),
+      coffee: uploaded(response.coffeeImage),
+    };
+  } catch {
+    return NO_HOME_IMAGES;
   }
 }

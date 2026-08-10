@@ -8,16 +8,23 @@ import { GRID_VIEWPORT_IMAGE_SIZES } from "@/lib/grid";
 
 type HeroParallaxImageProps = {
   /**
-   * Statically imported, so Next generates the blur placeholder at build time.
-   * A string path would skip that and leave the hero blank while it loads.
+   * A statically imported image, or a URL.
+   *
+   * The static import is the better of the two: Next generates the blur
+   * placeholder from it at build time. A URL cannot be inspected at build time,
+   * so one coming from the Studio has to bring its own `blurDataURL` — see
+   * `lqip` in `getHomePageImages`. Without either, the hero is grey until the
+   * full image lands, which on a full-screen photograph is very visible.
    */
-  src: StaticImageData;
+  src: string | StaticImageData;
+  blurDataURL?: string;
   alt?: string;
   sizes?: string;
 };
 
 export function HeroParallaxImage({
   src,
+  blurDataURL,
   alt = "",
   sizes = GRID_VIEWPORT_IMAGE_SIZES,
 }: HeroParallaxImageProps) {
@@ -68,7 +75,12 @@ export function HeroParallaxImage({
           alt={alt}
           fill
           preload
-          placeholder="blur"
+          // A static import carries its own placeholder; a URL only blurs if a
+          // preview came with it. Asking for "blur" without one throws.
+          placeholder={
+            typeof src !== "string" || blurDataURL ? "blur" : "empty"
+          }
+          blurDataURL={blurDataURL}
           sizes={sizes}
           className="object-cover"
         />

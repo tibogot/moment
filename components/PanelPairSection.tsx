@@ -2,6 +2,8 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridLines } from "@/components/GridLines";
 import { ParallaxImage } from "@/components/ParallaxImage";
 import { routes } from "@/lib/routes";
+import { urlFor } from "@/lib/sanity/image";
+import type { SanityImage } from "@/lib/sanity/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -60,13 +62,31 @@ function PanelGrid() {
  * Two portrait photographs side by side, each ruled 3 x 3 with its title lying
  * in the cleared pair of cells at the bottom left.
  */
+type PanelKey = (typeof panels)[number]["key"];
+
 type PanelPairSectionProps = {
   /** Panel labels, keyed to match `panels` below. */
-  copy: Record<(typeof panels)[number]["key"], string>;
+  copy: Record<PanelKey, string>;
+  /**
+   * Photographs from the Studio, keyed the same way. Either may be absent —
+   * an owner who has replaced one and not the other should see exactly that,
+   * not a broken panel.
+   */
+  images?: Partial<Record<PanelKey, SanityImage | null>>;
   className?: string;
 };
 
-export function PanelPairSection({ copy, className }: PanelPairSectionProps) {
+export function PanelPairSection({
+  copy,
+  images,
+  className,
+}: PanelPairSectionProps) {
+  // Falls back to the photograph shipped with the site. The panels are half the
+  // viewport wide, so 1600 is generous even on a large screen.
+  const sourceFor = (key: PanelKey, fallback: string) => {
+    const image = images?.[key];
+    return image ? urlFor(image).width(1600).auto("format").url() : fallback;
+  };
 
   return (
     <section className={cn("relative w-full bg-cream pb-[12svh]", className)}>
@@ -97,7 +117,7 @@ export function PanelPairSection({ copy, className }: PanelPairSectionProps) {
                 )}
               >
                 <ParallaxImage
-                  src={panel.src}
+                  src={sourceFor(panel.key, panel.src)}
                   alt=""
                   sizes="(max-width: 48rem) 100vw, 50vw"
                   className="absolute inset-0"
