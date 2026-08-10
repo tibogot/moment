@@ -56,6 +56,13 @@ export function DeliveryDatePicker({
   const atFirstMonth =
     year === today.getFullYear() && month === today.getMonth();
 
+  const lastBookable = useMemo(
+    () => parseISODate(availability.lastBookable) ?? today,
+    [availability.lastBookable, today],
+  );
+  const atLastMonth =
+    year === lastBookable.getFullYear() && month === lastBookable.getMonth();
+
   const shiftMonth = (delta: number) =>
     setCursor(new Date(year, month + delta, 1));
 
@@ -76,7 +83,8 @@ export function DeliveryDatePicker({
         <button
           type="button"
           onClick={() => shiftMonth(1)}
-          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+          disabled={atLastMonth}
+          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
         >
           {dict.home.calendar.next}
         </button>
@@ -122,7 +130,8 @@ export function DeliveryDatePicker({
 
             // Past days keep their number, dimmed. They are simply gone, and
             // blanking them made the start of the month look fully booked.
-            if (state === "past") {
+            // Days past the far edge of the window read the same way.
+            if (state === "past" || state === "beyond") {
               return (
                 <div
                   key={day}

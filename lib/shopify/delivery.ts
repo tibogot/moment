@@ -1,118 +1,179 @@
-import { unstable_cache } from "next/cache";
 import {
+  DEFAULT_BOOKING_WINDOW_DAYS,
+  DEFAULT_CLOSED_WEEKDAYS,
+  DEFAULT_LEAD_TIME_DAYS,
+  expandClosureRange,
   firstBookableDate,
+  lastBookableDate,
   todayInDeliveryTimeZone,
   type DeliveryAvailability,
 } from "@/lib/delivery";
-import { getShopifyClient, isShopifyConfigured } from "./client";
+import { DEFAULT_ATELIER, type Coordinates } from "@/lib/delivery-zones";
+import {
+  metaobjectReader,
+  parseDecimalField,
+  parseIntegerField,
+  parseListField,
+} from "./metaobjects";
 
 /**
- * Days the owners close by hand — holidays, a full kitchen, staff off. They
- * live as metaobjects so the whole thing is managed in the Shopify admin
- * (Content -> Metaobjects) with no second CMS.
+ * The delivery rules in time — when the kitchen will take an order for — read
+ * from the Shopify admin so the owners change them without a deployment. The
+ * rules in space live next door in `zones.ts`.
  *
- * Set up in Shopify, once:
- *   1. Settings -> Custom data -> Metaobjects -> Add definition
- *   2. Name it so the type resolves to `delivery_closure`
- *   3. Add a field `date` of type Date. A `reason` text field is optional and
- *      ignored here — it is for the owners' own notes.
- *   4. On the definition, enable Storefront API access, or this query comes
- *      back empty and every day reads as open.
+ * Two metaobjects, both optional: every field falls back to the defaults in
+ * `lib/delivery.ts`, which are the values that used to be hard-coded. A shop
+ * with neither definition behaves exactly as it did before they existed.
+ *
+ * See SHOPIFY-SETUP.md for the field-by-field setup.
+ */
+
+/**
+ * Days the owners close by hand — holidays, a full kitchen, staff off. One
+ * entry can cover a period: `end_date` is optional and a missing one means the
+ * closure is the single day in `date`.
+ *
+ * Deliberately not a built-in list of Belgian public holidays. A caterer's
+ * best days are the ones everybody else takes off — closing 21 July
+ * automatically would cost them the sale, not protect them.
  */
 const CLOSURE_METAOBJECT_TYPE = "delivery_closure";
 const CLOSURE_DATE_FIELD = "date";
+const CLOSURE_END_DATE_FIELD = "end_date";
 
-/** Storefront connections cap out here. */
-const CLOSURES_PAGE_SIZE = 250;
+/** The standing rules. A singleton — only the first entry is read. */
+const SETTINGS_METAOBJECT_TYPE = "delivery_settings";
+const LEAD_TIME_FIELD = "lead_time_days";
+const CLOSED_WEEKDAYS_FIELD = "closed_weekdays";
+const BOOKING_WINDOW_FIELD = "booking_window_days";
+const ATELIER_LATITUDE_FIELD = "atelier_latitude";
+const ATELIER_LONGITUDE_FIELD = "atelier_longitude";
 
-/**
- * Shorter than the catalogue's hour: an owner who blocks tomorrow expects the
- * site to stop offering it fairly quickly. Invalidate immediately with
- * `revalidateTag(DELIVERY_CACHE_TAG)` from a webhook if you want it instant.
- */
-const DELIVERY_REVALIDATE = 300;
-export const DELIVERY_CACHE_TAG = "shopify-delivery";
+const readClosures = metaobjectReader(CLOSURE_METAOBJECT_TYPE);
+const readSettings = metaobjectReader(SETTINGS_METAOBJECT_TYPE, 1);
 
-const DELIVERY_CLOSURES_QUERY = `
-  query DeliveryClosures($type: String!, $first: Int!) {
-    metaobjects(type: $type, first: $first) {
-      edges {
-        node {
-          id
-          fields {
-            key
-            value
-          }
-        }
-      }
-    }
-  }
-`;
-
-type ClosuresQueryResponse = {
-  data?: {
-    metaobjects: {
-      edges: {
-        node: {
-          id: string;
-          fields: { key: string; value: string | null }[];
-        };
-      }[];
-    } | null;
-  };
-  errors?: { message: string }[];
+/** `0` is Sunday, matching `Date#getDay`. */
+const WEEKDAY_NUMBERS: Record<string, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
 };
 
-async function fetchClosures(): Promise<string[]> {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(DELIVERY_CLOSURES_QUERY, {
-    variables: { type: CLOSURE_METAOBJECT_TYPE, first: CLOSURES_PAGE_SIZE },
-  })) as ClosuresQueryResponse;
+/**
+ * Weekday names as the owners picked them in the admin, turned into numbers.
+ *
+ * Names rather than numbers because the admin shows this field to a person: a
+ * dropdown reading "sunday" is checkable at a glance, where `0` is a thing you
+ * have to be told.
+ */
+function parseClosedWeekdays(raw: string | undefined): number[] | null {
+  const entries = parseListField(raw);
+  if (!entries) return null;
 
-  if (errors?.length) {
-    throw new Error(errors.map((error) => error.message).join(", "));
-  }
+  const days = entries
+    .map((entry) => WEEKDAY_NUMBERS[entry.trim().toLowerCase()])
+    .filter((day): day is number => day !== undefined);
 
-  const dates = (data?.metaobjects?.edges ?? []).map(
-    ({ node }) =>
-      node.fields.find((field) => field.key === CLOSURE_DATE_FIELD)?.value ??
-      null,
-  );
-
-  return [...new Set(dates.filter((date): date is string => Boolean(date)))];
+  // An empty list is a real answer — "we deliver every day" — but an
+  // unparseable one is not, and must not read as though nothing were closed.
+  return days.length === entries.length ? [...new Set(days)] : null;
 }
 
-const getCachedClosures = unstable_cache(fetchClosures, ["shopify-delivery"], {
-  revalidate: DELIVERY_REVALIDATE,
-  tags: [DELIVERY_CACHE_TAG],
-});
+type DeliverySettings = {
+  leadTimeDays: number;
+  closedWeekdays: number[];
+  bookingWindowDays: number;
+  atelier: Coordinates;
+};
+
+async function getDeliverySettings(): Promise<DeliverySettings> {
+  const [entry] = await readSettings();
+
+  // Both halves of a coordinate or neither. Half a correction — a new latitude
+  // against the placeholder longitude — puts the atelier in a field outside
+  // Brussels and reprices every delivery, which is worse than not correcting it.
+  const latitude = parseDecimalField(entry?.get(ATELIER_LATITUDE_FIELD), {
+    min: -90,
+    max: 90,
+  });
+  const longitude = parseDecimalField(entry?.get(ATELIER_LONGITUDE_FIELD), {
+    min: -180,
+    max: 180,
+  });
+
+  return {
+    leadTimeDays:
+      parseIntegerField(entry?.get(LEAD_TIME_FIELD), { min: 0, max: 90 }) ??
+      DEFAULT_LEAD_TIME_DAYS,
+    closedWeekdays:
+      parseClosedWeekdays(entry?.get(CLOSED_WEEKDAYS_FIELD)) ??
+      DEFAULT_CLOSED_WEEKDAYS,
+    bookingWindowDays:
+      parseIntegerField(entry?.get(BOOKING_WINDOW_FIELD), {
+        min: 1,
+        max: 1095,
+      }) ?? DEFAULT_BOOKING_WINDOW_DAYS,
+    atelier:
+      latitude !== null && longitude !== null
+        ? { latitude, longitude }
+        : DEFAULT_ATELIER,
+  };
+}
+
+/** Where the van leaves from, for the zone table to measure against. */
+export async function getAtelier(): Promise<Coordinates> {
+  return (await getDeliverySettings()).atelier;
+}
 
 /**
- * Never throws: a missing metaobject definition, a token without Storefront
- * access, or Shopify being down all degrade to "no closures on file" rather
- * than taking the home page with them. The standing rules still apply.
+ * Closed days, with every period flattened into the individual dates it covers.
+ *
+ * Clipped to the booking window on the way out. Past closures are noise the
+ * calendar can never show — the owners are not expected to tidy up old entries
+ * — and a period reaching past the far edge only matters up to that edge.
  */
-export async function getDeliveryClosures(): Promise<string[]> {
-  if (!isShopifyConfigured()) return [];
+async function getDeliveryClosures(bounds: {
+  from: string;
+  to: string;
+}): Promise<string[]> {
+  const entries = await readClosures();
 
-  try {
-    return await getCachedClosures();
-  } catch (error) {
-    console.error("[shopify] getDeliveryClosures failed", error);
-    return [];
-  }
+  const dates = entries.flatMap((fields) => {
+    const start = fields.get(CLOSURE_DATE_FIELD);
+    if (!start) return [];
+
+    // No end date is the common case and the old shape of this metaobject:
+    // one entry, one day. An end *before* the start is a slip in the admin —
+    // read it as that single day, because an entry the owners believe closes
+    // the atelier must never expand to nothing.
+    const end = fields.get(CLOSURE_END_DATE_FIELD);
+    return expandClosureRange(start, end && end >= start ? end : start, bounds);
+  });
+
+  return [...new Set(dates)].sort();
 }
 
 export async function getDeliveryAvailability(): Promise<DeliveryAvailability> {
   const today = todayInDeliveryTimeZone();
-  const firstBookable = firstBookableDate(today);
-  const closedDates = await getDeliveryClosures();
+  const settings = await getDeliverySettings();
 
-  // Past closures are noise the calendar can never show — the owners are not
-  // expected to tidy up old entries.
+  const firstBookable = firstBookableDate(today, settings.leadTimeDays);
+  const lastBookable = lastBookableDate(today, settings.bookingWindowDays);
+  const closedDates = await getDeliveryClosures({
+    from: today,
+    to: lastBookable,
+  });
+
   return {
     today,
     firstBookable,
-    closedDates: closedDates.filter((date) => date >= today).sort(),
+    lastBookable,
+    leadTimeDays: settings.leadTimeDays,
+    closedWeekdays: settings.closedWeekdays,
+    closedDates,
   };
 }

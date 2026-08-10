@@ -21,13 +21,13 @@ import {
   getCartSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
+  getZonesSnapshot,
   notifyCartUpdated,
   subscribeCart,
 } from "@/lib/cart-store";
-import { LEAD_TIME_DAYS } from "@/lib/delivery";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
-import { formatLongDate } from "@/lib/i18n/format";
+import { closedWeekdaysNote, formatLongDate } from "@/lib/i18n/format";
 import {
   DELIVERY_METHODS,
   MIN_ADDRESS_QUERY_LENGTH,
@@ -35,7 +35,7 @@ import {
   type DeliveryMethod,
 } from "@/lib/order-preferences";
 import { LocaleLink as Link } from "@/components/LocaleLink";
-import { MAX_DELIVERY_DISTANCE_KM } from "@/lib/delivery-zones";
+import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
@@ -73,6 +73,13 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     subscribeCart,
     getAvailabilitySnapshot,
     getServerAvailabilitySnapshot,
+  );
+  // Never null, and the same before and after hydration, so one getter serves
+  // both sides — see `getZonesSnapshot`.
+  const zones = useSyncExternalStore(
+    subscribeCart,
+    getZonesSnapshot,
+    getZonesSnapshot,
   );
 
   const [panel, setPanel] = useState<Panel | null>(null);
@@ -219,8 +226,9 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
             <>
               <p className="font-archivo-light px-4 pt-4 text-[15px] leading-normal">
                 {interpolate(dict.delivery.calendarNote, {
-                  days: LEAD_TIME_DAYS,
-                })}
+                  days: availability.leadTimeDays,
+                })}{" "}
+                {closedWeekdaysNote(locale, dict, availability.closedWeekdays)}
               </p>
               <DeliveryDatePicker
                 availability={availability}
@@ -311,7 +319,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
             {interpolate(dict.quote.body, {
               address: quote.address,
               km: quote.km,
-              max: MAX_DELIVERY_DISTANCE_KM,
+              max: maxDeliveryDistanceKm(zones),
             })}
           </p>
           <Link

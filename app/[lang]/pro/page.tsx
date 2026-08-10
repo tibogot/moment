@@ -6,6 +6,7 @@ import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
+import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 
 export const generateMetadata = localizedMetadata("pro", {
   path: routes.proAccount,
@@ -30,7 +31,10 @@ export default async function ProAccountPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const dict = await getDictionary(toLocale(lang));
+  const [dict, availability] = await Promise.all([
+    getDictionary(toLocale(lang)),
+    getDeliveryAvailability(),
+  ]);
 
   return (
     <>
@@ -39,6 +43,7 @@ export default async function ProAccountPage({
       <ContactForm
         variant="pro"
         initialValues={{ ...EMPTY_CONTACT_VALUES, occasion: PRO_OCCASION }}
+        leadTimeDays={availability.leadTimeDays}
       />
 
       <Footer />

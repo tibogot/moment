@@ -7,16 +7,31 @@
  * `<` / `>=`, they survive the server -> client boundary without a timezone
  * shifting them a day, and they are the format Shopify's `date` metafields and
  * metaobject fields already use.
+ *
+ * The rules themselves are *data*, not constants. Lead time, which weekdays the
+ * kitchen opens and how far ahead it takes bookings all live in the Shopify
+ * admin and arrive on `DeliveryAvailability` — the owners change them without a
+ * deployment. The `DEFAULT_*` values below are what applies when nothing has
+ * been configured, and they reproduce the behaviour that used to be hard-coded.
  */
 
 /** The kitchen's clock. "Today" is whatever day it is in Brussels. */
 export const DELIVERY_TIMEZONE = "Europe/Brussels";
 
-/** Deliveries need notice, so the first bookable day is this far out. */
-export const LEAD_TIME_DAYS = 2;
+/** Deliveries need notice. Overridden from the Shopify admin. */
+export const DEFAULT_LEAD_TIME_DAYS = 2;
 
-/** Sunday is closed. */
-export const CLOSED_WEEKDAYS = new Set([0]);
+/** Sunday, until the owners say otherwise. `0` is Sunday in `Date#getDay`. */
+export const DEFAULT_CLOSED_WEEKDAYS = [0];
+
+/**
+ * How far ahead the calendar will take a booking.
+ *
+ * There has to be a far edge. Without one the month arrows walk forward for
+ * ever and a visitor can book a delivery in 2031 — which the kitchen would
+ * discover as a live order with a date nobody can plan against.
+ */
+export const DEFAULT_BOOKING_WINDOW_DAYS = 365;
 
 /**
  * The cart attribute the chosen day is stored under. It carries through
@@ -25,12 +40,27 @@ export const CLOSED_WEEKDAYS = new Set([0]);
  */
 export const DELIVERY_DATE_ATTRIBUTE = "Delivery date";
 
+/**
+ * Everything the calendars and the server action need to decide whether a day
+ * can be booked. Resolved once on the server, then handed to the client — a
+ * browser in another timezone must never be the one deciding what "today" is,
+ * and the rules must be the same on both sides of the boundary.
+ *
+ * Plain arrays rather than `Set`s on purpose: this object crosses into a Client
+ * Component and has to serialise.
+ */
 export type DeliveryAvailability = {
   /** Today in Brussels. */
   today: string;
   /** The earliest day that clears the lead time. */
   firstBookable: string;
-  /** Days the owners closed in the Shopify admin. */
+  /** The far edge of the booking window. */
+  lastBookable: string;
+  /** Notice required, in days. Shown to the customer as well as applied. */
+  leadTimeDays: number;
+  /** Weekdays the kitchen never delivers on, `0` = Sunday. */
+  closedWeekdays: number[];
+  /** Individual days the owners closed in the Shopify admin. */
   closedDates: string[];
 };
 
@@ -74,22 +104,71 @@ export function todayInDeliveryTimeZone(now = new Date()) {
   }).format(now);
 }
 
-export function firstBookableDate(today: string) {
+/** `today` shifted by `days`, or `today` unchanged if it will not parse. */
+export function shiftISODate(today: string, days: number) {
   const date = parseISODate(today);
   if (!date) return today;
-  return toISODate(addDays(date, LEAD_TIME_DAYS));
+  return toISODate(addDays(date, days));
+}
+
+export function firstBookableDate(
+  today: string,
+  leadTimeDays = DEFAULT_LEAD_TIME_DAYS,
+) {
+  return shiftISODate(today, leadTimeDays);
+}
+
+export function lastBookableDate(
+  today: string,
+  windowDays = DEFAULT_BOOKING_WINDOW_DAYS,
+) {
+  return shiftISODate(today, windowDays);
+}
+
+/**
+ * Every day from `start` to `end` inclusive, clipped to `[from, to]`.
+ *
+ * This is what makes a closure a *period* rather than a date. Three weeks shut
+ * in August is one entry in the Shopify admin, not twenty-one — and an owner
+ * who has to make twenty-one entries makes none, then rings to ask why the site
+ * took an order while the atelier was empty.
+ *
+ * Clipping is not tidiness: an open-ended range would otherwise expand to
+ * however many days it spans, all of them outside the window the calendar can
+ * even show.
+ */
+export function expandClosureRange(
+  start: string,
+  end: string,
+  bounds: { from: string; to: string },
+): string[] {
+  const first = start < bounds.from ? bounds.from : start;
+  const last = end > bounds.to ? bounds.to : end;
+  if (first > last) return [];
+
+  const cursor = parseISODate(first);
+  if (!cursor || !parseISODate(last)) return [];
+
+  const days: string[] = [];
+  for (let iso = first; iso <= last; iso = toISODate(cursor)) {
+    days.push(iso);
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return days;
 }
 
 /**
  * Why a day looks the way it does.
  *
- * `past` and `closed` are both unbookable, but they mean opposite things to a
- * visitor: one is a day that has already gone (or is inside the lead time), the
- * other is a day the kitchen turned down. Painting them identically made the
- * first half of every month read as "fully booked", so the calendars branch on
- * this and only `closed` gets the solid fill.
+ * `past`, `beyond` and `closed` are all unbookable, but they mean different
+ * things to a visitor: the first two are days the calendar does not offer — one
+ * already gone or inside the lead time, one further out than the kitchen plans
+ * — while `closed` is a day it actively turned down. Painting them identically
+ * made the first half of every month read as "fully booked", so the calendars
+ * branch on this and only `closed` gets the solid fill.
  */
-export type DayState = "past" | "closed" | "open";
+export type DayState = "past" | "beyond" | "closed" | "open";
 
 export function dayState(
   iso: string,
@@ -100,7 +179,8 @@ export function dayState(
 
   // Checked first: a Sunday that has already gone is past, not "closed today".
   if (iso < availability.firstBookable) return "past";
-  if (CLOSED_WEEKDAYS.has(date.getDay())) return "closed";
+  if (iso > availability.lastBookable) return "beyond";
+  if (availability.closedWeekdays.includes(date.getDay())) return "closed";
   return availability.closedDates.includes(iso) ? "closed" : "open";
 }
 
@@ -111,15 +191,4 @@ export function dayState(
  */
 export function isBookable(iso: string, availability: DeliveryAvailability) {
   return dayState(iso, availability) === "open";
-}
-
-export function formatDeliveryDate(iso: string) {
-  const date = parseISODate(iso);
-  if (!date) return iso;
-
-  return date.toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
 }

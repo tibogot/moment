@@ -10,9 +10,7 @@ import { notifyCartUpdated } from "@/lib/cart-store";
 import { gsap } from "@/lib/gsapConfig";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import {
-  LEAD_TIME_DAYS,
   dayState,
-  formatDeliveryDate,
   parseISODate,
   toISODate,
   type DeliveryAvailability,
@@ -20,7 +18,12 @@ import {
 import { routes } from "@/lib/routes";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
-import { formatMonth, weekdayNames } from "@/lib/i18n/format";
+import {
+  closedWeekdaysNote,
+  formatLongDate,
+  formatMonth,
+  weekdayNames,
+} from "@/lib/i18n/format";
 
 import { cn } from "@/lib/utils";
 
@@ -77,6 +80,13 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
   const locale = useLocale();
   const t = dict.home.calendar;
   const weekdays = useMemo(() => weekdayNames(locale), [locale]);
+  // Null when the kitchen delivers every day, in which case the note says
+  // nothing about closed days rather than saying there are none.
+  const closedDays = closedWeekdaysNote(
+    locale,
+    dict,
+    availability.closedWeekdays,
+  );
   const today = useMemo(
     () => parseISODate(availability.today) ?? new Date(),
     [availability.today],
@@ -100,6 +110,16 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
   const monthLabel = formatMonth(locale, cursor);
   const atFirstMonth =
     year === today.getFullYear() && month === today.getMonth();
+
+  // The far edge of the booking window. Without it the arrows walk forward for
+  // ever and a visitor can confirm a delivery years out — a live order with a
+  // date the kitchen cannot plan against.
+  const lastBookable = useMemo(
+    () => parseISODate(availability.lastBookable) ?? today,
+    [availability.lastBookable, today],
+  );
+  const atLastMonth =
+    year === lastBookable.getFullYear() && month === lastBookable.getMonth();
 
   const shiftMonth = (delta: number) => setCursor(new Date(year, month + delta, 1));
 
@@ -213,7 +233,8 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               <button
                 type="button"
                 onClick={() => shiftMonth(1)}
-                className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                disabled={atLastMonth}
+                className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
               >
                 {t.next}
               </button>
@@ -263,7 +284,9 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                 );
               }
 
-              if (state === "past") {
+              // Days gone and days past the far edge both read as "not on
+              // offer" rather than "turned down", so they share the dim cell.
+              if (state === "past" || state === "beyond") {
                 return (
                   <div
                     key={day}
@@ -337,7 +360,8 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
             </ul>
 
             <p className="font-archivo-light mt-6 max-w-[44ch] text-[18px] leading-normal md:text-[min(1.35vw,2svh)]">
-              {interpolate(t.note, { days: LEAD_TIME_DAYS })}
+              {interpolate(t.note, { days: availability.leadTimeDays })}
+              {closedDays ? ` ${closedDays}` : ""}
             </p>
           </div>
         </div>
@@ -373,7 +397,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
                 {t.savedPrefix}{" "}
                 <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
-                  {formatDeliveryDate(status.date)}
+                  {formatLongDate(locale, status.date)}
                 </span>
                 {t.savedSuffix}
               </p>
@@ -382,7 +406,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                 <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
                   {t.deliveryOn}{" "}
                   <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
-                    {selected ? formatDeliveryDate(selected) : ""}
+                    {selected ? formatLongDate(locale, selected) : ""}
                   </span>
                 </p>
                 {status.kind === "error" && (
