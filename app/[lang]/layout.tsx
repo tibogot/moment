@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import ScrollToTop from "@/components/ScrollToTop";
 import { InlineScript } from "@/components/InlineScript";
 import { LocaleProvider } from "@/components/LocaleProvider";
+import { SiteDetailsProvider } from "@/components/SiteDetailsProvider";
+import { getSiteDetails } from "@/lib/sanity/queries";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -12,12 +14,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { getProducts } from "@/lib/shopify/products";
 import { getCollections } from "@/lib/shopify/collections";
 import { languageAlternates } from "@/lib/seo";
-import {
-  isLocale,
-  LOCALES,
-  OG_LOCALE,
-  type Locale,
-} from "@/lib/i18n/config";
+import { isLocale, LOCALES, OG_LOCALE, type Locale } from "@/lib/i18n/config";
 import { siteConfig } from "@/lib/site";
 import {
   archivoLight,
@@ -51,52 +48,55 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : "fr";
-  const { meta } = await getDictionary(locale);
+  const [{ meta }, { legal }] = await Promise.all([
+    getDictionary(locale),
+    getSiteDetails(),
+  ]);
 
   return {
-  // Lets pages declare canonical and Open Graph URLs as plain route paths.
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: meta.home.title,
-    template: `%s — ${siteConfig.name}`,
-  },
-  description: meta.home.description,
-  applicationName: siteConfig.name,
-  creator: siteConfig.name,
-  publisher: siteConfig.legal.companyName || siteConfig.name,
-  category: "food",
-  // Safari turns anything that resembles a phone number into a call link,
-  // which mangles prices and order numbers.
-  formatDetection: { telephone: false },
-  // Tells search engines these three are the same page in three languages,
-  // rather than three pages competing with each other.
-  alternates: languageAlternates("/", locale),
-  openGraph: {
-    type: "website",
-    title: meta.home.title,
+    // Lets pages declare canonical and Open Graph URLs as plain route paths.
+    metadataBase: new URL(siteConfig.url),
+    title: {
+      default: meta.home.title,
+      template: `%s — ${siteConfig.name}`,
+    },
     description: meta.home.description,
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    locale: OG_LOCALE[locale],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: meta.home.title,
-    description: meta.home.description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    applicationName: siteConfig.name,
+    creator: siteConfig.name,
+    publisher: legal.companyName || siteConfig.name,
+    category: "food",
+    // Safari turns anything that resembles a phone number into a call link,
+    // which mangles prices and order numbers.
+    formatDetection: { telephone: false },
+    // Tells search engines these three are the same page in three languages,
+    // rather than three pages competing with each other.
+    alternates: languageAlternates("/", locale),
+    openGraph: {
+      type: "website",
+      title: meta.home.title,
+      description: meta.home.description,
+      url: siteConfig.url,
+      siteName: siteConfig.name,
+      locale: OG_LOCALE[locale],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.home.title,
+      description: meta.home.description,
+    },
+    robots: {
       index: true,
       follow: true,
-      // Let Google use full-size images and untruncated snippets — the default
-      // caps both, which costs us the visual slot on recipe/menu queries.
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        // Let Google use full-size images and untruncated snippets — the default
+        // caps both, which costs us the visual slot on recipe/menu queries.
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
-  },
   };
 }
 
@@ -119,10 +119,11 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [products, collections, dictionary] = await Promise.all([
+  const [products, collections, dictionary, siteDetails] = await Promise.all([
     getProducts(),
     getCollections(),
     getDictionary(lang),
+    getSiteDetails(),
   ]);
   const navCollections = collections.filter(
     (collection) => collection.handle !== "frontpage",
@@ -144,14 +145,16 @@ export default async function RootLayout({
       </head>
       <body className="min-h-svh flex flex-col">
         <LocaleProvider locale={lang} dictionary={dictionary}>
-          <SmoothScroll>
-            <ScrollToTop />
-            <Navbar products={products} collections={navCollections} />
-            <div className="relative flex flex-1 flex-col">{children}</div>
-            <CookieConsent />
-            <ConsentScripts />
-            <PaletteToggle />
-          </SmoothScroll>
+          <SiteDetailsProvider details={siteDetails}>
+            <SmoothScroll>
+              <ScrollToTop />
+              <Navbar products={products} collections={navCollections} />
+              <div className="relative flex flex-1 flex-col">{children}</div>
+              <CookieConsent />
+              <ConsentScripts />
+              <PaletteToggle />
+            </SmoothScroll>
+          </SiteDetailsProvider>
         </LocaleProvider>
       </body>
     </html>

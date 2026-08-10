@@ -1,13 +1,16 @@
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
+import { getSiteDetails } from "@/lib/sanity/queries";
 import { siteConfig } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("legal", {
   path: routes.legal,
 });
 
-export default function LegalPage() {
+export default async function LegalPage() {
+  const { contact, legal } = await getSiteDetails();
+
   return (
     <LegalDoc
       title="Legal notice"
@@ -15,26 +18,24 @@ export default function LegalPage() {
     >
       <LegalSection title="Publisher">
         <p>
-          {siteConfig.legal.companyName || siteConfig.name}
-          {siteConfig.legal.legalForm
-            ? ` (${siteConfig.legal.legalForm})`
-            : ""}
+          {legal.companyName || siteConfig.name}
+          {legal.legalForm ? ` (${legal.legalForm})` : ""}
         </p>
+        {contact.street && <p>{contact.street}</p>}
         <p>
-          {siteConfig.contact.city}, {siteConfig.contact.country}
+          {[contact.postalCode, contact.city].filter(Boolean).join(" ")},{" "}
+          {contact.country}
         </p>
-        {siteConfig.contact.email && <p>{siteConfig.contact.email}</p>}
-        {siteConfig.contact.phone && <p>{siteConfig.contact.phone}</p>}
+        {contact.email && <p>{contact.email}</p>}
+        {contact.phone && <p>{contact.phone}</p>}
       </LegalSection>
 
       <LegalSection title="Enterprise & VAT">
         <p>
           BCE / enterprise number:{" "}
-          {siteConfig.legal.enterpriseNumber || "[to be completed]"}
+          {legal.enterpriseNumber || "[to be completed]"}
         </p>
-        <p>
-          VAT number: {siteConfig.legal.vatNumber || "[to be completed]"}
-        </p>
+        <p>VAT number: {legal.vatNumber || "[to be completed]"}</p>
       </LegalSection>
 
       <LegalSection title="Hosting">

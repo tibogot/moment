@@ -23,36 +23,38 @@ import { aboutNav, mainNav, routes, type NavMenuKey } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
-import { siteConfig } from "@/lib/site";
+import { useSiteDetails } from "@/components/SiteDetailsProvider";
+import type { SiteDetails } from "@/lib/site";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 
-const PLACEHOLDER_PHONE = "+32 2 512 34 56";
-const PLACEHOLDER_PHONE_HREF = PLACEHOLDER_PHONE.replace(/\s+/g, "");
-
-const socialLinks = [
-  {
-    label: "Facebook",
-    href: siteConfig.social.facebook || "#",
-    icon: "/brand/facebook.svg",
-    width: 20,
-    height: 20,
-  },
-  {
-    label: "Instagram",
-    href: siteConfig.social.instagram || "#",
-    icon: "/brand/instagram.svg",
-    width: 20,
-    height: 20,
-  },
-  {
-    label: "Twitter",
-    href: "#",
-    icon: "/brand/twitter.svg",
-    width: 18,
-    height: 17,
-  },
-] as const;
+/**
+ * The accounts the owners have given us, and only those.
+ *
+ * This was a module-level array reading `siteConfig`, which is why it could not
+ * follow the Studio — and why the phone number beneath it was
+ * `+32 2 512 34 56`, an invented number rendered as a live `tel:` link. An
+ * account with no address is dropped rather than linked to "#": a social icon
+ * that goes nowhere costs more trust than a missing one.
+ */
+function socialLinksFor(details: SiteDetails) {
+  return [
+    {
+      label: "Facebook",
+      href: details.social.facebook,
+      icon: "/brand/facebook.svg",
+      width: 20,
+      height: 20,
+    },
+    {
+      label: "Instagram",
+      href: details.social.instagram,
+      icon: "/brand/instagram.svg",
+      width: 20,
+      height: 20,
+    },
+  ].filter((link) => Boolean(link.href));
+}
 
 type MobileNavMenuProps = {
   open: boolean;
@@ -73,6 +75,9 @@ export function MobileNavMenu({
   onClose,
   collections = [],
 }: MobileNavMenuProps) {
+  const details = useSiteDetails();
+  const socialLinks = socialLinksFor(details);
+  const phone = details.contact.phone;
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);
@@ -180,10 +185,7 @@ export function MobileNavMenu({
   // The same two panels the desktop nav opens, flattened to label + href.
   // Shop's children come from Shopify and About's are fixed, which is the only
   // reason they are built here rather than shared with the desktop menus.
-  const menuChildren: Record<
-    NavMenuKey,
-    { href: string; label: string }[]
-  > = {
+  const menuChildren: Record<NavMenuKey, { href: string; label: string }[]> = {
     shop: [
       { href: routes.shop, label: "All" },
       { href: routes.collections, label: dict.nav.collections },
@@ -379,32 +381,34 @@ export function MobileNavMenu({
             className="mt-auto shrink-0 border-t border-sky px-(--grid-inset) py-4"
           >
             <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-5">
-              {socialLinks.map(({ label, href, icon, width, height }) => (
+              <div className="flex items-center gap-5">
+                {socialLinks.map(({ label, href, icon, width, height }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-60"
+                  >
+                    <Image
+                      src={icon}
+                      alt=""
+                      width={width}
+                      height={height}
+                      aria-hidden
+                    />
+                  </a>
+                ))}
+              </div>
+              {phone && (
                 <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  target={href === "#" ? undefined : "_blank"}
-                  rel={href === "#" ? undefined : "noopener noreferrer"}
-                  className="transition-opacity hover:opacity-60"
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
                 >
-                  <Image
-                    src={icon}
-                    alt=""
-                    width={width}
-                    height={height}
-                    aria-hidden
-                  />
+                  {phone}
                 </a>
-              ))}
-            </div>
-            <a
-              href={`tel:${PLACEHOLDER_PHONE_HREF}`}
-              className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
-            >
-              {PLACEHOLDER_PHONE}
-            </a>
+              )}
             </div>
           </div>
         </nav>

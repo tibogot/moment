@@ -1,6 +1,6 @@
 import { routes } from "./routes";
 import { absoluteUrl, fullTitle } from "./seo";
-import { siteConfig } from "./site";
+import { siteConfig, type SiteDetails } from "./site";
 import type { Menu } from "./menus";
 import type { NewsArticle } from "./sanity/types";
 import type { ShopifyCollection, ShopifyProduct } from "./shopify/queries";
@@ -10,9 +10,11 @@ import type { ShopifyCollection, ShopifyProduct } from "./shopify/queries";
  * anchors — the organisation and the website — so a product page can point at
  * the same publisher node the home page defines instead of restating it.
  *
- * Several company facts (address, phone, VAT) are still blank in siteConfig
- * while we wait on the client. Blank values are dropped rather than emitted
- * empty: a missing property is fine, an empty one is a data-quality signal.
+ * The company facts — address, phone, VAT, social accounts — are passed in
+ * rather than imported: they are edited in the Studio and awaited by the page
+ * that renders the JSON-LD. Any of them may still be blank while the client
+ * fills the Studio in, and blank values are dropped rather than emitted empty:
+ * a missing property is fine, an empty one is a data-quality signal.
  */
 
 const ORGANIZATION_ID = `${siteConfig.url}/#organization`;
@@ -32,8 +34,8 @@ function compact<T extends Record<string, JsonLdValue>>(input: T) {
   );
 }
 
-function postalAddress() {
-  const { street, postalCode, city, region, country } = siteConfig.contact;
+function postalAddress(details: SiteDetails) {
+  const { street, postalCode, city, region, country } = details.contact;
 
   return compact({
     "@type": "PostalAddress",
@@ -45,25 +47,25 @@ function postalAddress() {
   });
 }
 
-function socialProfiles() {
-  return Object.values(siteConfig.social).filter(Boolean);
+function socialProfiles(details: SiteDetails) {
+  return Object.values(details.social).filter(Boolean);
 }
 
-export function organizationSchema() {
+export function organizationSchema(details: SiteDetails) {
   return compact({
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
-    name: siteConfig.legal.companyName || siteConfig.name,
+    name: details.legal.companyName || siteConfig.name,
     alternateName: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
     logo: absoluteUrl("/icon.png"),
-    email: siteConfig.contact.email,
-    telephone: siteConfig.contact.phone,
-    address: postalAddress(),
-    sameAs: socialProfiles(),
-    vatID: siteConfig.legal.vatNumber,
-    taxID: siteConfig.legal.enterpriseNumber,
+    email: details.contact.email,
+    telephone: details.contact.phone,
+    address: postalAddress(details),
+    sameAs: socialProfiles(details),
+    vatID: details.legal.vatNumber,
+    taxID: details.legal.enterpriseNumber,
   });
 }
 
@@ -83,7 +85,7 @@ export function websiteSchema() {
  * The trading entity as Google understands a caterer: a food business that
  * serves an area rather than seating guests at an address.
  */
-export function cateringBusinessSchema() {
+export function cateringBusinessSchema(details: SiteDetails) {
   return compact({
     "@type": "FoodEstablishment",
     additionalType: "https://schema.org/CateringBusiness",
@@ -92,28 +94,28 @@ export function cateringBusinessSchema() {
     description: siteConfig.description,
     url: siteConfig.url,
     image: absoluteUrl("/opengraph-image"),
-    email: siteConfig.contact.email,
-    telephone: siteConfig.contact.phone,
+    email: details.contact.email,
+    telephone: details.contact.phone,
     servesCuisine: ["Seasonal", "Belgian", "European"],
-    address: postalAddress(),
+    address: postalAddress(details),
     areaServed: {
       "@type": "AdministrativeArea",
       name: "Brussels-Capital Region",
     },
     availableLanguage: [...siteConfig.locales],
-    sameAs: socialProfiles(),
+    sameAs: socialProfiles(details),
     parentOrganization: { "@id": ORGANIZATION_ID },
   });
 }
 
 /** Home page graph — the three nodes every other page refers back to. */
-export function siteGraph() {
+export function siteGraph(details: SiteDetails) {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      organizationSchema(),
+      organizationSchema(details),
       websiteSchema(),
-      cateringBusinessSchema(),
+      cateringBusinessSchema(details),
     ],
   };
 }

@@ -1,13 +1,16 @@
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
+import { getSiteDetails } from "@/lib/sanity/queries";
 import { siteConfig } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("privacy", {
   path: routes.privacy,
 });
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const { contact, legal } = await getSiteDetails();
+
   return (
     <LegalDoc
       title="Privacy"
@@ -15,8 +18,8 @@ export default function PrivacyPage() {
     >
       <LegalSection title="Who we are">
         <p>
-          The data controller is {siteConfig.legal.companyName || siteConfig.name}
-          , based in {siteConfig.contact.city}, {siteConfig.contact.country}.
+          The data controller is {legal.companyName || siteConfig.name}, based
+          in {contact.city}, {contact.country}.
         </p>
       </LegalSection>
 
