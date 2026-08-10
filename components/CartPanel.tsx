@@ -22,17 +22,21 @@ import {
   getCartSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
+  getZonesSnapshot,
   refreshCart,
   setCart,
   subscribeCart,
 } from "@/lib/cart-store";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
-import { isBookable, LEAD_TIME_DAYS } from "@/lib/delivery";
+import { isBookable } from "@/lib/delivery";
 import { checkoutBlocker } from "@/lib/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
-import { formatLongDate } from "@/lib/i18n/format";
-import { formatEuros } from "@/lib/delivery-zones";
+import {
+  closedWeekdaysNote,
+  formatLongDate,
+  formatMoney,
+} from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -67,6 +71,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     subscribeCart,
     getAvailabilitySnapshot,
     getServerAvailabilitySnapshot,
+  );
+  // Same snapshot on the server as before the first fetch, so this needs no
+  // separate server getter: both sides start on the built-in table.
+  const zones = useSyncExternalStore(
+    subscribeCart,
+    getZonesSnapshot,
+    getZonesSnapshot,
   );
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -261,6 +272,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           subtotal: cart.subtotal,
         },
         availability,
+        zones,
       )
     : { kind: "no-date" as const };
 
@@ -326,8 +338,9 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               <p className="font-archivo-light px-6 pt-5 text-[15px] leading-normal">
                 {t.pickDayIntro}{" "}
                 {interpolate(dict.delivery.calendarNote, {
-                  days: LEAD_TIME_DAYS,
-                })}
+                  days: availability.leadTimeDays,
+                })}{" "}
+                {closedWeekdaysNote(locale, dict, availability.closedWeekdays)}
               </p>
 
               {error && (
@@ -502,8 +515,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 <p role="alert" className="font-archivo-light mt-3 text-[14px]">
                   {interpolate(t.belowMinimumShort, {
                     zone: blocker.zone.id,
-                    minimum: formatEuros(blocker.zone.minimumOrder),
-                    shortfall: formatEuros(blocker.shortfall),
+                    minimum: formatMoney(locale, blocker.zone.minimumOrder),
+                    shortfall: formatMoney(locale, blocker.shortfall),
                   })}
                 </p>
               )}

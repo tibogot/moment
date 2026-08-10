@@ -3,10 +3,17 @@
 // refreshes whenever a `cart-updated` event fires.
 
 import type { DeliveryAvailability } from "@/lib/delivery";
+import { DEFAULT_ZONE_TABLE, type ZoneTable } from "@/lib/delivery-zones";
 import type { Cart } from "@/lib/shopify/cart";
 
 let cart: Cart | null = null;
 let availability: DeliveryAvailability | null = null;
+/**
+ * Unlike the cart and the availability, this is never null: a fee line has to
+ * be able to render before the first fetch lands, and the built-in table is the
+ * same one the server falls back to. It is replaced, not filled in.
+ */
+let zones: ZoneTable = DEFAULT_ZONE_TABLE;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
 let refetchQueued = false;
@@ -37,9 +44,11 @@ function fetchCart(): Promise<void> {
       const data = (await response.json()) as {
         cart: Cart | null;
         availability: DeliveryAvailability | null;
+        zones?: ZoneTable;
       };
       cart = data.cart;
       availability = data.availability;
+      if (data.zones) zones = data.zones;
     } catch {
       // Keep the last known cart on network errors.
     } finally {
@@ -82,6 +91,17 @@ export function getAvailabilitySnapshot(): DeliveryAvailability | null {
 
 export function getServerAvailabilitySnapshot(): DeliveryAvailability | null {
   return null;
+}
+
+/**
+ * The zone table, for the fee and minimum-order lines.
+ *
+ * Same reasoning as availability — its own subscription rather than folded into
+ * the cart snapshot — and the same on both sides of hydration, since the
+ * built-in table is what the server renders with until a shop configures one.
+ */
+export function getZonesSnapshot(): ZoneTable {
+  return zones;
 }
 
 export function refreshCart(): Promise<void> {

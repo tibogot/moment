@@ -7,7 +7,7 @@ import { PageIntro } from "@/components/PageIntro";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getCart } from "@/app/actions/cart";
-import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import { getDeliveryRules } from "@/lib/shopify/zones";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
@@ -22,9 +22,9 @@ export default async function CartPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const [cart, availability, dict] = await Promise.all([
+  const [cart, { availability, zones }, dict] = await Promise.all([
     getCart(),
-    getDeliveryAvailability(),
+    getDeliveryRules(),
     getDictionary(toLocale(lang)),
   ]);
   const isEmpty = !cart || cart.lines.length === 0;
@@ -92,6 +92,7 @@ export default async function CartPage({
 
               <CartDeliverySection
                 availability={availability}
+                zones={zones}
                 deliveryDate={cart.deliveryDate}
                 deliveryMethod={cart.deliveryMethod}
                 deliveryAddress={cart.deliveryAddress}

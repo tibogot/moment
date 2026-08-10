@@ -16,6 +16,7 @@ import {
   zoneById,
   type DeliveryZone,
   type ZoneId,
+  type ZoneTable,
 } from "@/lib/delivery-zones";
 import { needsAddress, type DeliveryMethod } from "@/lib/order-preferences";
 
@@ -52,6 +53,7 @@ export type CheckoutState = {
 export function checkoutBlocker(
   cart: CheckoutState,
   availability: DeliveryAvailability | null,
+  zones: ZoneTable,
 ): CheckoutBlocker | null {
   if (!cart.deliveryDate) return { kind: "no-date" };
 
@@ -66,10 +68,11 @@ export function checkoutBlocker(
 
   if (!cart.deliveryAddress) return { kind: "no-address" };
 
-  // An address with no zone is an address saved before the zones existed, or
-  // one whose attribute an owner edited by hand. Treat it as unpriced and send
-  // them back through the address panel rather than guessing a minimum.
-  const zone = cart.deliveryZone ? zoneById(cart.deliveryZone) : null;
+  // An address with no zone is an address saved before the zones existed, one
+  // whose attribute an owner edited by hand, or one priced against a band that
+  // has since been removed from the table. Treat it as unpriced and send them
+  // back through the address panel rather than guessing a minimum.
+  const zone = cart.deliveryZone ? zoneById(zones, cart.deliveryZone) : null;
   if (!zone) return { kind: "no-address" };
 
   const shortfall = minimumOrderShortfall(cart.subtotal, zone);

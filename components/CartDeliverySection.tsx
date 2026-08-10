@@ -4,22 +4,22 @@ import { useState, useTransition } from "react";
 import { setDeliveryDate } from "@/app/actions/cart";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { notifyCartUpdated } from "@/lib/cart-store";
-import {
-  LEAD_TIME_DAYS,
-  formatDeliveryDate,
-  isBookable,
-  type DeliveryAvailability,
-} from "@/lib/delivery";
+import { isBookable, type DeliveryAvailability } from "@/lib/delivery";
 import { checkoutBlocker } from "@/lib/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
-import { formatLongDate } from "@/lib/i18n/format";
-import { formatEuros, zoneById, type ZoneId } from "@/lib/delivery-zones";
+import {
+  closedWeekdaysNote,
+  formatLongDate,
+  formatMoney,
+} from "@/lib/i18n/format";
+import { zoneById, type ZoneId, type ZoneTable } from "@/lib/delivery-zones";
 import { needsAddress, type DeliveryMethod } from "@/lib/order-preferences";
 import { useRouter } from "next/navigation";
 
 type CartDeliverySectionProps = {
   availability: DeliveryAvailability;
+  zones: ZoneTable;
   deliveryDate: string | null;
   deliveryMethod: DeliveryMethod | null;
   deliveryAddress: string | null;
@@ -37,6 +37,7 @@ type CartDeliverySectionProps = {
  */
 export function CartDeliverySection({
   availability,
+  zones,
   deliveryDate,
   deliveryMethod,
   deliveryAddress,
@@ -47,6 +48,11 @@ export function CartDeliverySection({
 }: CartDeliverySectionProps) {
   const dict = useDictionary();
   const locale = useLocale();
+  const closedDays = closedWeekdaysNote(
+    locale,
+    dict,
+    availability.closedWeekdays,
+  );
   const t = dict.cart;
   const router = useRouter();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -66,6 +72,7 @@ export function CartDeliverySection({
       subtotal,
     },
     availability,
+    zones,
   );
 
   // The two date blockers are the ones this section can fix in place, by
@@ -73,7 +80,7 @@ export function CartDeliverySection({
   const needsDate =
     blocker?.kind === "no-date" || blocker?.kind === "stale-date";
 
-  const zone = deliveryZone ? zoneById(deliveryZone) : null;
+  const zone = deliveryZone ? zoneById(zones, deliveryZone) : null;
 
   const chooseDate = (iso: string) => {
     setError(null);
@@ -160,9 +167,9 @@ export function CartDeliverySection({
             </span>
             <span className="font-archivo-light text-[13px]">
               {interpolate(t.zoneLine, {
-                fee: formatEuros(zone.fee),
+                fee: formatMoney(locale, zone.fee),
                 zone: zone.id,
-                minimum: formatEuros(zone.minimumOrder),
+                minimum: formatMoney(locale, zone.minimumOrder),
               })}
             </span>
           </div>
@@ -183,11 +190,12 @@ export function CartDeliverySection({
         )}
 
         {pickerOpen && (
-          <div className="mt-5 max-w-[420px] border border-sky">
+          <div className="mt-5 max-w-105 border border-sky">
             <p className="font-archivo-light px-6 pt-5 text-[13px] leading-normal">
               {interpolate(dict.delivery.calendarNote, {
-                days: LEAD_TIME_DAYS,
+                days: availability.leadTimeDays,
               })}
+              {closedDays ? ` ${closedDays}` : ""}
             </p>
             <DeliveryDatePicker
               availability={availability}
@@ -213,8 +221,8 @@ export function CartDeliverySection({
         <p role="alert" className="font-archivo-light mt-6 text-[13px]">
           {interpolate(t.belowMinimum, {
             zone: blocker.zone.id,
-            minimum: formatEuros(blocker.zone.minimumOrder),
-            shortfall: formatEuros(blocker.shortfall),
+            minimum: formatMoney(locale, blocker.zone.minimumOrder),
+            shortfall: formatMoney(locale, blocker.shortfall),
           })}
         </p>
       )}

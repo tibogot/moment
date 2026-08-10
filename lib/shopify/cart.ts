@@ -285,10 +285,7 @@ function mapCartNode(node: RawCart): Cart {
     deliveryDate: attribute(DELIVERY_DATE_ATTRIBUTE),
     deliveryMethod: parseDeliveryMethod(attribute(DELIVERY_METHOD_ATTRIBUTE)),
     deliveryAddress: attribute(DELIVERY_ADDRESS_ATTRIBUTE),
-    deliveryZone:
-      (parseZoneAttribute(attribute(DELIVERY_ZONE_ATTRIBUTE))?.id as
-        | ZoneId
-        | undefined) ?? null,
+    deliveryZone: parseZoneAttribute(attribute(DELIVERY_ZONE_ATTRIBUTE)),
   };
 }
 

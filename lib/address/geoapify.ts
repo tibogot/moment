@@ -19,7 +19,7 @@ import {
   type AddressProvider,
   type AddressSearch,
 } from "./provider";
-import { ATELIER } from "@/lib/delivery-zones";
+import { DEFAULT_ATELIER } from "@/lib/delivery-zones";
 import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
 
 const GEOAPIFY_ENDPOINT = "https://api.geoapify.com/v1/geocode/autocomplete";
@@ -139,9 +139,14 @@ async function query(text: string): Promise<GeoapifyProperties[]> {
   url.searchParams.set("filter", "countrycode:be");
   // Results near the kitchen first. Most orders are local, and without this a
   // street name that exists in six Belgian towns ranks arbitrarily.
+  //
+  // The built-in coordinates rather than the ones the owners set: this only
+  // ranks suggestions, where being a kilometre out changes nothing, and reading
+  // the configured atelier would put a Shopify round trip in front of every
+  // keystroke. Prices are measured from the real one — see `lib/shopify/zones`.
   url.searchParams.set(
     "bias",
-    `proximity:${ATELIER.longitude},${ATELIER.latitude}`,
+    `proximity:${DEFAULT_ATELIER.longitude},${DEFAULT_ATELIER.latitude}`,
   );
   url.searchParams.set("format", "geojson");
   url.searchParams.set("limit", String(MAX_SUGGESTIONS * 2));

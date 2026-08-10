@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import { getCart } from "@/app/actions/cart";
-import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import { getDeliveryRules } from "@/lib/shopify/zones";
 
 /**
- * Availability rides along with the cart so the panel's date picker never needs
- * a second round trip, and so a date saved days ago is re-checked against live
- * closures every time the cart is read.
+ * The delivery rules ride along with the cart so the panel's date picker and
+ * its fee line never need a second round trip, so a date saved days ago is
+ * re-checked against live closures every time the cart is read, and so a zone
+ * saved before a price change is priced against today's table.
  */
 export async function GET() {
-  const [cart, availability] = await Promise.all([
+  const [cart, { availability, zones }] = await Promise.all([
     getCart(),
-    getDeliveryAvailability(),
+    getDeliveryRules(),
   ]);
 
-  return NextResponse.json({ cart, availability });
+  return NextResponse.json({ cart, availability, zones });
 }

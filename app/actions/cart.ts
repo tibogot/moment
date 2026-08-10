@@ -12,12 +12,12 @@ import {
 } from "@/lib/shopify/cart";
 import { isShopifyConfigured } from "@/lib/shopify/client";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import { getZoneTable } from "@/lib/shopify/zones";
 import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
 import {
   DELIVERY_ZONE_ATTRIBUTE,
   formatZoneAttribute,
-  MAX_DELIVERY_DISTANCE_KM,
   resolveDeliveryZone,
 } from "@/lib/delivery-zones";
 import {
@@ -159,7 +159,10 @@ export async function setDeliveryAddress(value: string) {
   // Where it falls decides the fee and the minimum order, so it is resolved
   // once here and stored — the alternative is geocoding the label again on
   // every cart render just to know which zone it was.
-  const zone = resolveDeliveryZone({
+  //
+  // Against the live table, not the one the page was rendered with: a visitor
+  // who left the tab open through a price change must be quoted today's fee.
+  const zone = resolveDeliveryZone(await getZoneTable(), {
     postCode: resolved.postCode,
     coordinates: resolved.coordinates,
   });
