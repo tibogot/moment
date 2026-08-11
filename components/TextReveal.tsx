@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger, SplitText } from "@/lib/gsapConfig";
+import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
+import { SplitText } from "@/lib/gsapSplitText";
 import { onIntroReady } from "@/lib/intro";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
@@ -22,6 +23,59 @@ function scheduleScrollTriggerRefresh() {
     refreshFrame = null;
     ScrollTrigger.refresh();
   });
+}
+
+/*
+ * How far ahead of the viewport an instance arms itself. Has to clear the
+ * ScrollTrigger below, which starts at "top 90%" — i.e. the moment the element
+ * crosses into the bottom tenth of the screen. Splitting a full viewport-height
+ * earlier means the lines and their revealer blocks are in place, at rest, well
+ * before anything is asked to play.
+ */
+const ARM_MARGIN = "100% 0px";
+
+/*
+ * Splitting is the expensive half of this component: SplitText writes into the
+ * DOM and then measures it, per line, and the home page renders 24 instances.
+ * Doing that during hydration meant two dozen interleaved write/read cycles in
+ * the same task — half a second of style and layout for copy that was mostly
+ * several screens down and hidden anyway.
+ *
+ * So each instance waits until it is roughly one screen away. One shared
+ * observer rather than 24: the margin is identical for all of them, and this is
+ * a component that exists to keep work off the main thread.
+ */
+type ArmCallback = () => void;
+
+let armObserver: IntersectionObserver | null = null;
+const armCallbacks = new WeakMap<Element, ArmCallback>();
+
+function observeForArming(element: Element, onArm: ArmCallback) {
+  if (typeof IntersectionObserver === "undefined") {
+    onArm();
+    return () => {};
+  }
+
+  armObserver ??= new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        armObserver?.unobserve(entry.target);
+        const callback = armCallbacks.get(entry.target);
+        armCallbacks.delete(entry.target);
+        callback?.();
+      }
+    },
+    { rootMargin: ARM_MARGIN }
+  );
+
+  armCallbacks.set(element, onArm);
+  armObserver.observe(element);
+
+  return () => {
+    armCallbacks.delete(element);
+    armObserver?.unobserve(element);
+  };
 }
 
 interface TextRevealProps {
@@ -49,8 +103,20 @@ export default function TextReveal({
   const timelines = useRef<gsap.core.Timeline[]>([]);
   const releaseIntroRef = useRef<(() => void) | null>(null);
 
+  /*
+   * Intro copy is above the fold by definition and gated on lib/intro.ts
+   * anyway, so it arms on mount. Everything else waits for the observer.
+   */
+  const [armed, setArmed] = useState(!animateOnScroll);
+
+  useEffect(() => {
+    if (armed || !containerRef.current) return;
+    return observeForArming(containerRef.current, () => setArmed(true));
+  }, [armed]);
+
   useGSAP(
     () => {
+      if (!armed) return;
       if (!containerRef.current) return;
 
       // Ensure element is in the DOM and has content
@@ -167,9 +233,14 @@ export default function TextReveal({
 
       // Make container visible now that GSAP has initialized
       if (containerRef.current) {
+        /*
+         * No forced reflow here. gsap.set writes the inline style
+         * synchronously, and nothing below reads layout in this task — the
+         * scroll branch measures inside a double rAF, by which point the
+         * browser has laid out and painted on its own schedule. Reading
+         * offsetHeight only bought a synchronous layout per instance.
+         */
         gsap.set(containerRef.current, { visibility: "visible" });
-        // Force a reflow to ensure visibility change is applied
-        void containerRef.current.offsetHeight;
       }
 
       const createBlockRevealAnimation = (
@@ -297,7 +368,14 @@ export default function TextReveal({
     },
     {
       scope: containerRef,
-      dependencies: [animateOnScroll, delay, blockColor, stagger, duration],
+      dependencies: [
+        armed,
+        animateOnScroll,
+        delay,
+        blockColor,
+        stagger,
+        duration,
+      ],
     }
   );
 

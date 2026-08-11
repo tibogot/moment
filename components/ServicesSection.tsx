@@ -7,7 +7,8 @@ import type { CSSProperties } from "react";
 import { useGSAP } from "@gsap/react";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
-import { Flip, gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsapConfig";
+import { loadFlip, type FlipType } from "@/lib/gsapFlip";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { GRID_CONTENT_IMAGE_SIZES } from "@/lib/grid";
 import { routes } from "@/lib/routes";
@@ -69,6 +70,9 @@ export function ServicesSection() {
   const activeRef = useRef(0);
   /** The first placement is a jump; every later one is a Flip. */
   const placedRef = useRef(false);
+  /* Fetched when the section scrolls into view, so it has landed long before
+     a pointer reaches a row. Until then the frame snaps. See lib/gsapFlip.ts. */
+  const flipRef = useRef<typeof FlipType | null>(null);
   const [active, setActive] = useState(0);
 
   /** Snap the feature frame onto the active row's cells, without animating. */
@@ -105,9 +109,11 @@ export function ServicesSection() {
 
       activeRef.current = active;
 
+      const Flip = flipRef.current;
+
       // Below md the frame is display:none and Flip would read a zero rect,
       // so the mobile path only ever snaps.
-      if (placedRef.current && isDesktop()) {
+      if (Flip && placedRef.current && isDesktop()) {
         // Flip reads the frame where it is, we move it, Flip tweens the gap —
         // so one element travels between grid slots and resizes on the way.
         const state = Flip.getState(frameRef.current);
@@ -149,6 +155,31 @@ export function ServicesSection() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, [placeFrame]);
+
+  /*
+   * The section is several screens below the fold and the frame only morphs on
+   * desktop hover, so Flip is fetched when the rows come into view rather than
+   * at hydration. On mobile it is never fetched at all.
+   */
+  useEffect(() => {
+    const rows = rowsRef.current;
+    if (!rows || typeof IntersectionObserver === "undefined") return;
+    if (!isDesktop()) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        loadFlip().then((Flip) => {
+          flipRef.current = Flip;
+        });
+      },
+      { rootMargin: "100% 0px" },
+    );
+
+    observer.observe(rows);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section

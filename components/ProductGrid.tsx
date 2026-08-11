@@ -3,10 +3,11 @@
 import { useDictionary } from "@/components/LocaleProvider";
 
 import { LocaleLink as Link } from "@/components/LocaleLink";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { ProductCard } from "@/components/ProductCard";
-import { Flip, gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsapConfig";
+import { loadFlip, type FlipType } from "@/lib/gsapFlip";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 import { cn } from "@/lib/utils";
@@ -90,17 +91,35 @@ export function ProductGrid({
   const listRef = useRef<HTMLUListElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   /** Captured in the click handler — Flip needs the layout before React re-renders. */
-  const stateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
+  const stateRef = useRef<ReturnType<
+    (typeof FlipType)["getState"]
+  > | null>(null);
   const heightRef = useRef(0);
   const cardVarsRef = useRef<CardVars | null>(null);
   const flipRef = useRef<gsap.core.Timeline | null>(null);
+  /*
+   * The toggle captures state synchronously, before React re-renders, so Flip
+   * has to already be here when it is clicked — it cannot be awaited at that
+   * point. Fetched on mount rather than statically imported so it stays out of
+   * the chunk every other route loads; this is the shop, where it is certain to
+   * be wanted. See lib/gsapFlip.ts.
+   */
+  const flipModuleRef = useRef<typeof FlipType | null>(null);
+
+  useEffect(() => {
+    loadFlip().then((Flip) => {
+      flipModuleRef.current = Flip;
+    });
+  }, []);
 
   const selectView = (next: View) => {
     const list = listRef.current;
     const wrapper = wrapperRef.current;
+    const Flip = flipModuleRef.current;
     if (next === view || !list || !wrapper) return;
 
-    stateRef.current = Flip.getState(list.children);
+    // Not loaded yet — re-column without the tween rather than not at all.
+    stateRef.current = Flip ? Flip.getState(list.children) : null;
     heightRef.current = wrapper.offsetHeight;
     cardVarsRef.current = readCardVars(list);
     setView(next);
@@ -112,9 +131,10 @@ export function ProductGrid({
       const list = listRef.current;
       const wrapper = wrapperRef.current;
       const varsFrom = cardVarsRef.current;
+      const Flip = flipModuleRef.current;
       stateRef.current = null;
       cardVarsRef.current = null;
-      if (!state || !list || !wrapper) return;
+      if (!state || !list || !wrapper || !Flip) return;
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

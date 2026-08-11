@@ -114,7 +114,9 @@ export function weekdayNames(locale: Locale) {
  */
 export function closedWeekdaysNote(
   locale: Locale,
-  dict: Dictionary,
+  // Only the section it reads, so client components can pass the trimmed
+  // dictionary `useDictionary` hands them.
+  dict: Pick<Dictionary, "delivery">,
   closedWeekdays: number[],
 ): string | null {
   if (closedWeekdays.length === 0) return null;

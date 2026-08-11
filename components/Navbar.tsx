@@ -35,7 +35,7 @@ import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
 import { startIntro } from "@/lib/intro";
 import { blurFocusWithin, blurOpenOverlayFocus } from "@/lib/overlayFocus";
 import { mainNav, routes, type NavMenuKey } from "@/lib/routes";
-import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
+import { useNavCatalog } from "@/components/NavCatalogProvider";
 
 const DURATION = 0.48;
 const EASE = "power2.out";
@@ -97,18 +97,20 @@ const NAV_SCROLL_REVEAL_DISTANCE = 120;
 const CREAM = "#f8f7f2";
 const BLACK = "#000000";
 
-type NavbarProps = {
-  products?: ShopifyProduct[];
-  collections?: ShopifyCollection[];
-};
-
 type NavAppearance = {
   solid: boolean;
   expanded: boolean;
   immediate?: boolean;
 };
 
-export function Navbar({ products = [], collections = [] }: NavbarProps) {
+export function Navbar() {
+  /*
+   * Read rather than passed in. The collections come from the server through
+   * the provider, so the nav's links are in the HTML; the products arrive on
+   * idle, because they are only ever seen after a hover or a click and used to
+   * cost every page ~21 KB of RSC payload. See NavCatalogProvider.
+   */
+  const { products, collections, load: loadCatalog } = useNavCatalog();
   const pathname = usePathname();
   // Compared without the language segment: usePathname returns "/fr", and the
   // routes these are checked against have no locale on them.
@@ -646,6 +648,9 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
 
   const openNavMenuFor = (key: NavMenuKey) => () => {
     if (cartOpen || searchOpen || menuOpen || isMobileNav) return;
+    // No-op once the idle prefetch has run, which it almost always will have.
+    // This is the safety net for the visitor who reaches for the menu first.
+    loadCatalog();
     setOpenNavMenu(key);
   };
 
@@ -777,6 +782,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               data-nav-link
               onClick={() =>
                 withOverlayFocusRelease(() => {
+                  loadCatalog();
                   setMenuOpen(false);
                   setCartOpen(false);
                   setOpenNavMenu(null);
@@ -873,6 +879,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               className="hidden nav:block"
               onClick={() =>
                 withOverlayFocusRelease(() => {
+                  loadCatalog();
                   setMenuOpen(false);
                   setCartOpen(false);
                   setOpenNavMenu(null);

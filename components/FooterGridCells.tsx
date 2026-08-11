@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, type CSSProperties } from "react";
-import { Flip, gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsapConfig";
+import { loadFlip, type FlipType } from "@/lib/gsapFlip";
 import { GRID_ROWS, type GridHole } from "@/lib/grid";
 import { cn } from "@/lib/utils";
 
@@ -68,6 +69,9 @@ export function FooterGridCells({
   const highlightRef = useRef<HTMLDivElement>(null);
   const activeCellRef = useRef<HTMLElement | null>(null);
   const placedRef = useRef(false);
+  /* Requested on the first mousemove; null until it lands, which only costs
+     the very first cell its morph. See lib/gsapFlip.ts. */
+  const flipRef = useRef<typeof FlipType | null>(null);
 
   const positionHighlight = useCallback((cell: HTMLElement, animate: boolean) => {
     const container = containerRef.current;
@@ -91,7 +95,9 @@ export function FooterGridCells({
       opacity: 1,
     };
 
-    if (animate && placedRef.current && !reduceMotion) {
+    const Flip = flipRef.current;
+
+    if (Flip && animate && placedRef.current && !reduceMotion) {
       const state = Flip.getState(highlight);
       gsap.set(highlight, props);
       Flip.from(state, {
@@ -144,6 +150,14 @@ export function FooterGridCells({
     const onMove = (event: MouseEvent) => {
       if (!window.matchMedia("(hover: hover)").matches) return;
       if (container.getBoundingClientRect().width === 0) return;
+
+      // A pointer is in the footer, so the morph is about to be wanted. Cached
+      // after the first call, and touch devices never get here at all.
+      if (!flipRef.current) {
+        loadFlip().then((Flip) => {
+          flipRef.current = Flip;
+        });
+      }
 
       const cells = Array.from(
         container.querySelectorAll<HTMLElement>(".footer-grid-cell"),

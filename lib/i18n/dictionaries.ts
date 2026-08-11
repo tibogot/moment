@@ -68,6 +68,55 @@ export async function getDictionary(locale: Locale): Promise<Dictionary> {
 }
 
 /**
+ * The sections a Client Component can ask for through `useDictionary`.
+ *
+ * Anything handed to a client component is serialised into the RSC payload
+ * that ships inside every page's HTML, and the whole dictionary went through
+ * `LocaleProvider` — so the home page carried the FAQ answers, the cookie
+ * policy, the sign-in copy and all of `meta`, ~28 KB of JSON to parse before
+ * hydration could finish. `meta` is the clearest case: it exists for
+ * `generateMetadata`, which runs on the server and never renders.
+ *
+ * The rest stay server-side, where Server Components read them from
+ * `getDictionary` directly and they cost nothing on the client. Add a key here
+ * only when a component that says "use client" genuinely reads it — TypeScript
+ * will tell you, because `useDictionary` returns this type and not `Dictionary`.
+ */
+const CLIENT_SECTIONS = [
+  "aboutNav",
+  "cart",
+  "common",
+  "contact",
+  "cookies",
+  "delivery",
+  "deliveryMethods",
+  "errors",
+  "footer",
+  "home",
+  "language",
+  "legalNav",
+  "nav",
+  "news",
+  "orderBar",
+  "proAccount",
+  "product",
+  "quote",
+  "search",
+  "shop",
+] as const satisfies readonly (keyof Dictionary)[];
+
+export type ClientDictionary = Pick<
+  Dictionary,
+  (typeof CLIENT_SECTIONS)[number]
+>;
+
+export function clientDictionary(dictionary: Dictionary): ClientDictionary {
+  const picked = {} as Record<string, unknown>;
+  for (const section of CLIENT_SECTIONS) picked[section] = dictionary[section];
+  return picked as ClientDictionary;
+}
+
+/**
  * Fills `{name}` placeholders. Deliberately not a full ICU implementation —
  * the moment this needs plurals or gendered agreement, reach for `next-intl`
  * rather than growing this into a worse version of it.

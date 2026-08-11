@@ -3,7 +3,7 @@
 import { createContext, useContext } from "react";
 import { usePathname } from "next/navigation";
 import { DEFAULT_LOCALE, stripLocale, type Locale } from "@/lib/i18n/config";
-import type { Dictionary } from "@/lib/i18n/dictionaries";
+import type { ClientDictionary } from "@/lib/i18n/dictionaries";
 
 /**
  * The active language and its copy, for the parts of the tree that cannot ask
@@ -25,7 +25,7 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
  */
 type LocaleContextValue = {
   locale: Locale;
-  dictionary: Dictionary;
+  dictionary: ClientDictionary;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -36,7 +36,13 @@ export function LocaleProvider({
   children,
 }: {
   locale: Locale;
-  dictionary: Dictionary;
+  /*
+   * Deliberately the trimmed dictionary, not the whole one. Every prop that
+   * crosses into a client component is serialised into the page's RSC payload,
+   * so the sections only Server Components read would be paid for on every
+   * page in the site. See CLIENT_SECTIONS in lib/i18n/dictionaries.ts.
+   */
+  dictionary: ClientDictionary;
   children: React.ReactNode;
 }) {
   return (
@@ -68,7 +74,7 @@ export function useBarePathname() {
  * silent fallback would render a French navbar inside a Dutch page and look
  * like a translation gap rather than the wiring mistake it is.
  */
-export function useDictionary(): Dictionary {
+export function useDictionary(): ClientDictionary {
   const value = useContext(LocaleContext);
   if (!value) {
     throw new Error("useDictionary must be used inside <LocaleProvider>.");

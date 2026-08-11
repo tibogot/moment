@@ -5,13 +5,13 @@ import { InlineScript } from "@/components/InlineScript";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import { SiteDetailsProvider } from "@/components/SiteDetailsProvider";
 import { getSiteDetails } from "@/lib/sanity/queries";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { clientDictionary, getDictionary } from "@/lib/i18n/dictionaries";
 import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
 import { PaletteToggle } from "@/components/PaletteToggle";
 import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
-import { getProducts } from "@/lib/shopify/products";
+import { NavCatalogProvider } from "@/components/NavCatalogProvider";
 import { getCollections } from "@/lib/shopify/collections";
 import { languageAlternates } from "@/lib/seo";
 import { isLocale, LOCALES, OG_LOCALE, type Locale } from "@/lib/i18n/config";
@@ -125,15 +125,23 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [products, collections, dictionary, siteDetails] = await Promise.all([
-    getProducts(lang),
+  const [collections, dictionary, siteDetails] = await Promise.all([
     getCollections(lang),
     getDictionary(lang),
     getSiteDetails(),
   ]);
-  const navCollections = collections.filter(
-    (collection) => collection.handle !== "frontpage",
-  );
+
+  /*
+   * Titles and handles only. The nav needs the links in the HTML — they are
+   * real internal links, and the menu should have its shape before any JS runs
+   * — but each collection also carries the products behind its hover preview,
+   * and those are several screens of JSON nobody sees until they hover. The
+   * provider fills them back in on idle, along with the flat product list the
+   * search panel wants. See NavCatalogProvider.
+   */
+  const navCollections = collections
+    .filter((collection) => collection.handle !== "frontpage")
+    .map((collection) => ({ ...collection, products: [] }));
 
   return (
     <html
@@ -150,11 +158,13 @@ export default async function RootLayout({
         <InlineScript html={PALETTE_GUARD} />
       </head>
       <body className="min-h-svh flex flex-col">
-        <LocaleProvider locale={lang} dictionary={dictionary}>
+        <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
           <SiteDetailsProvider details={siteDetails}>
             <SmoothScroll>
               <ScrollToTop />
-              <Navbar products={products} collections={navCollections} />
+              <NavCatalogProvider collections={navCollections}>
+                <Navbar />
+              </NavCatalogProvider>
               <div className="relative flex flex-1 flex-col">{children}</div>
               <CookieConsent />
               <ConsentScripts />
