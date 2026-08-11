@@ -106,8 +106,8 @@ export function PanelPairSection({
           {/* The gap is a gutter, like every other gap on the page grid. It
               also takes a slice off each panel's width, and since the panels
               are ruled by aspect ratio, narrower is shorter. */}
-          <div className="col-start-2 grid grid-cols-1 md:grid-cols-2 md:gap-(--grid-gutter)">
-            {panels.map((panel, index) => (
+          <div className="col-start-2 grid grid-cols-1 gap-(--grid-gutter) md:grid-cols-2">
+            {panels.map((panel) => (
               <Link
                 key={panel.key}
                 href={panel.href}
@@ -122,10 +122,7 @@ export function PanelPairSection({
                   // rectangle: the two inner edges have no seam to share any
                   // more, and the outer two land under the page spines that
                   // are drawn over the photographs anyway.
-                  "md:border-x md:border-cream/60",
-                  // Stacked on mobile, so the seam between the two panels turns
-                  // from a vertical rule into a horizontal one.
-                  index > 0 && "border-t border-cream/60 md:border-t-0",
+                  "border-x border-cream/60",
                 )}
               >
                 <ParallaxImage
@@ -147,12 +144,24 @@ export function PanelPairSection({
                     height: `${100 / PANEL_ROWS}%`,
                   }}
                 >
-                  {/* Sized so the two lines of "Coffee desk" still clear the
-                      rule above the row. h2, not h3: these are two of the
-                      rooms of the business, peers of "What we do" and "Why
-                      us" further down, and there is no h2 in this section for
-                      an h3 to belong to. */}
-                  <h2 className="font-owners-narrow-bold text-cream text-[13vw] leading-[0.9] uppercase md:text-[min(5.6vw,10svh)]">
+                  {/* Sized to the longest label in any of the three
+                      languages, which is the Dutch "Evenementen".
+                      
+                      The box holds two lines and "Comptoir café" uses both,
+                      but a single long word cannot wrap into them — at the
+                      original 13vw / 5.6vw it ran 60px past the cell on a
+                      390px phone and 82px on a desktop. Measured, the widest
+                      label needs 9.9vw and 4.6vw at the sizes it is set in;
+                      these sit just under, because a value measured to the
+                      pixel still overflowed by one — fonts do not land on
+                      exactly the same width twice. English "Events" is the same size as the rest by
+                      choice: one type size across the three languages reads
+                      as a decision, three sizes read as an accident.
+
+                      h2, not h3: these are two of the rooms of the business,
+                      peers of "What we do" and "Why us" further down, and
+                      there is no h2 in this section for an h3 to belong to. */}
+                  <h2 className="font-owners-narrow-bold text-cream text-[9.4vw] leading-[0.9] uppercase md:text-[min(4.4vw,7.6svh)]">
                     {copy[panel.key]}
                   </h2>
                 </div>
