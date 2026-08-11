@@ -33,7 +33,12 @@
     "aboutUs": "Over ons",
     "talkToUs": "Praat met ons",
     "seeEverything": "Alles bekijken",
-    "viewCart": "Winkelmand bekijken"
+    "viewCart": "Winkelmand bekijken",
+    "notFound": {
+      "eyebrow": "Fout 404",
+      "lead": "Deze pagina bestaat niet meer, of heeft nooit bestaan. De rest van het huis staat er nog.",
+      "back": "Terug naar de startpagina"
+    }
   },
   "home": {
     "hero": {
@@ -232,10 +237,11 @@
     "layout": "Weergave",
     "unavailable": "De catalogus is momenteel niet beschikbaar. Probeer het later opnieuw.",
     "recentlyViewed": "Recent bekeken",
-    "lead": "Gerechten, salades en koudgeperste sappen, elke ochtend bereid en in heel Brussel geleverd."
+    "lead": "Gerechten, salades en koudgeperste sappen, elke ochtend bereid en in heel Brussel geleverd.",
+    "searchEmpty": "Producten verschijnen hier zodra de catalogus gekoppeld is."
   },
   "product": {
-    "orderPreferences": "Bestelvoorkeuren",
+    "orderPreferences": "Kies wanneer en hoe u uw bestelling wilt — aanpasbaar tot het afrekenen.",
     "similar": "Vergelijkbare producten",
     "addToCart": "In winkelmand",
     "adding": "Toevoegen…",

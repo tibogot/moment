@@ -33,7 +33,12 @@
     "aboutUs": "À propos",
     "talkToUs": "Parlons-en",
     "seeEverything": "Voir tout",
-    "viewCart": "Voir le panier"
+    "viewCart": "Voir le panier",
+    "notFound": {
+      "eyebrow": "Erreur 404",
+      "lead": "Cette page n'existe plus, ou n'a jamais existé. Le reste de la maison est toujours là.",
+      "back": "Retour à l'accueil"
+    }
   },
   "home": {
     "hero": {
@@ -232,10 +237,11 @@
     "layout": "Affichage",
     "unavailable": "Le catalogue n'est pas disponible pour le moment. Merci de réessayer plus tard.",
     "recentlyViewed": "Vus récemment",
-    "lead": "Plats, salades et jus pressés à froid, préparés chaque matin et livrés partout à Bruxelles."
+    "lead": "Plats, salades et jus pressés à froid, préparés chaque matin et livrés partout à Bruxelles.",
+    "searchEmpty": "Les produits apparaîtront ici dès que le catalogue sera connecté."
   },
   "product": {
-    "orderPreferences": "Préférences de commande",
+    "orderPreferences": "Choisissez quand et comment vous voulez votre commande — modifiable jusqu'au paiement.",
     "similar": "Produits similaires",
     "addToCart": "Ajouter au panier",
     "adding": "Ajout…",

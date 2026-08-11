@@ -33,7 +33,12 @@
     "aboutUs": "About us",
     "talkToUs": "Talk to us",
     "seeEverything": "See everything",
-    "viewCart": "View cart"
+    "viewCart": "View cart",
+    "notFound": {
+      "eyebrow": "Error 404",
+      "lead": "This page no longer exists, or never did. The rest of the house is still standing.",
+      "back": "Back to home"
+    }
   },
   "home": {
     "hero": {
@@ -232,10 +237,11 @@
     "layout": "Product layout",
     "unavailable": "The catalogue is not available right now. Please try again later.",
     "recentlyViewed": "Recently viewed",
-    "lead": "Plates, salads and cold-pressed juices, prepared each morning and delivered across Brussels."
+    "lead": "Plates, salads and cold-pressed juices, prepared each morning and delivered across Brussels.",
+    "searchEmpty": "Products will appear here once the catalogue is connected."
   },
   "product": {
-    "orderPreferences": "Order preferences",
+    "orderPreferences": "Choose when and how you would like your order — you can change it before checkout.",
     "similar": "Similar products",
     "addToCart": "Add to cart",
     "adding": "Adding…",

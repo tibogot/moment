@@ -111,8 +111,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {/* 18px, the same as every other lead on the site: Archivo Light
               sets small and anything under it stops reading as body copy. */}
           <p className="font-archivo-light mt-3 mb-6 max-w-[80ch] text-[18px] leading-normal">
-            Choose when and how you&apos;d like your order — you can change it
-            before checkout.
+            {dict.product.orderPreferences}
           </p>
 
           <OrderPreferencesBar />
@@ -146,7 +145,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             className="mt-8"
           />
 
-          {product.details && <ProductDetails details={product.details} copy={dict.product} />}
+          {product.details && (
+            <ProductDetails details={product.details} copy={dict.product} />
+          )}
         </div>
       </GridSection>
 

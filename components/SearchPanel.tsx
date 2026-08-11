@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useDictionary } from "@/components/LocaleProvider";
 import {
   FormEvent,
   useCallback,
@@ -56,6 +57,7 @@ export function SearchPanel({
   onClose,
   products = [],
 }: SearchPanelProps) {
+  const dict = useDictionary();
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -265,7 +267,7 @@ export function SearchPanel({
               <div className="px-(--grid-gutter) pb-8">
                 <div className="mb-6 h-px bg-sky" aria-hidden />
                 <p className="font-archivo-light text-[14px]">
-                  Products will appear here once the catalogue is connected.
+                  {dict.shop.searchEmpty}
                 </p>
               </div>
             ) : visibleProducts.length === 0 ? (
