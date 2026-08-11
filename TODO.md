@@ -75,13 +75,12 @@ square to the client.
 Measured, not guessed. Outside the legal pages there are about eleven blocks
 left:
 
-- `AboutIntro`, `AboutHero`, `AboutFacts`, `AboutCta` — seven blocks. The About
-  page is what a prospect reads after the home page, so this is the most visible
-  hole
-- `SearchPanel` empty state, `news/[slug]/not-found.tsx`, one line on the
-  product page. The news index's own copy is done
+- `SearchPanel` empty state, and one line on the product page
 - `app/[lang]/not-found.tsx` is hardcoded **French**, so it is wrong in Dutch
   and English rather than wrong in all three
+
+The About page and the news pages are done. What is left is two strings and the
+site-wide 404.
 
 The Events and Coffee pages came back nearly clean — worth knowing, since they
 were on the suspect list.
