@@ -114,6 +114,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   // Which nav panel is open, if any. Was a shop-only boolean until "About"
   // grew children too.
   const [openNavMenu, setOpenNavMenu] = useState<NavMenuKey | null>(null);
+  // Which menu the panel *renders*, which is not the same question as which one
+  // is open. `openNavMenu` goes null the moment you hover away, but the panel
+  // spends the next 0.48s collapsing — long enough to watch it swap to the
+  // other menu on the way out if the content is keyed off the open state.
+  const [shownNavMenu, setShownNavMenu] = useState<NavMenuKey>("shop");
   const [navHovered, setNavHovered] = useState(false);
   const [navSolid, setNavSolid] = useState(!allowsTransparentNav);
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -186,6 +191,14 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
     setOpenNavMenu(null);
+  }
+
+  // Follows the open menu on the way in and ignores it on the way out, so the
+  // closing panel keeps showing what you were looking at. Adjusted during
+  // render for the same reason as the line above: a frame of the wrong menu is
+  // exactly the bug being fixed.
+  if (openNavMenu !== null && openNavMenu !== shownNavMenu) {
+    setShownNavMenu(openNavMenu);
   }
 
   // Releasing the focus it held is *not* state: it reaches into the DOM, which
@@ -879,7 +892,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           inert={!navExpanded}
         >
           <div ref={menuInnerRef} className="nav:col-span-full">
-            {openNavMenu === "about" ? (
+            {shownNavMenu === "about" ? (
               <AboutNavMenu onNavigate={releaseShopMenuFocus} />
             ) : (
               <ShopNavMenu
