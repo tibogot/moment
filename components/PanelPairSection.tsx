@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 /**
  * Each half carries its own 3 x 3 grid, so the two panels are ruled
  * identically. Panels are portrait (taller than wide) so the cells read
- * as rectangles rather than squares.
+ * as rectangles rather than squares — gently so on desktop, where a panel is
+ * half the page wide and every point of ratio is worth ~100px of height.
  */
 const PANEL_COLUMNS = 3;
 const PANEL_ROWS = 3;
@@ -102,18 +103,29 @@ export function PanelPairSection({
           className="relative grid"
           style={{ gridTemplateColumns: MARGIN_COLUMNS }}
         >
-          <div className="col-start-2 grid grid-cols-1 md:grid-cols-2">
+          {/* The gap is a gutter, like every other gap on the page grid. It
+              also takes a slice off each panel's width, and since the panels
+              are ruled by aspect ratio, narrower is shorter. */}
+          <div className="col-start-2 grid grid-cols-1 md:grid-cols-2 md:gap-(--grid-gutter)">
             {panels.map((panel, index) => (
               <Link
                 key={panel.key}
                 href={panel.href}
                 className={cn(
-                  // 3/4 keeps cells clearly rectangular without overstretching.
-                  "group relative block aspect-[3/4] overflow-hidden",
+                  // Portrait either way, so the cells are never squares — but
+                  // less so once the panels sit side by side. At half the page
+                  // each, 3/4 made the pair taller than the screen it was being
+                  // read on; 6/7 lands around 80svh at 1440x900 and still
+                  // leaves the cells visibly taller than they are wide.
+                  "group relative block aspect-3/4 overflow-hidden md:aspect-6/7",
+                  // With a gap between them, each panel closes its own
+                  // rectangle: the two inner edges have no seam to share any
+                  // more, and the outer two land under the page spines that
+                  // are drawn over the photographs anyway.
+                  "md:border-x md:border-cream/60",
                   // Stacked on mobile, so the seam between the two panels turns
                   // from a vertical rule into a horizontal one.
-                  index > 0 &&
-                    "border-t border-cream/60 md:border-t-0 md:border-l",
+                  index > 0 && "border-t border-cream/60 md:border-t-0",
                 )}
               >
                 <ParallaxImage
