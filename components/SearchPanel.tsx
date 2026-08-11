@@ -176,7 +176,7 @@ export function SearchPanel({
           style={{ gridTemplateColumns: "var(--grid-columns)" }}
         >
           {/* Sticky band — matches navbar height so Close stays reachable. */}
-          <div className="sticky top-0 z-10 col-span-full relative bg-cream">
+          <div className="sticky top-0 z-10 col-span-full bg-cream">
             <GridLines lineClassName="bg-sky" />
             <div
               className="grid min-h-(--grid-band) items-center"
