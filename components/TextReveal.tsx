@@ -131,10 +131,15 @@ export default function TextReveal({
       }
 
       elements.forEach((element) => {
+        // aria: "none" — SplitText's default ("auto") sets aria-label on the
+        // split root. That is illegal on <p>/<h*> (ARIA naming prohibited on
+        // those roles) and fails PageSpeed / axe. Line-only splits keep the
+        // text readable in DOM order, so the label is unnecessary.
         const split = SplitText.create(element as gsap.DOMTarget, {
           type: "lines",
           linesClass: "block-line++",
           lineThreshold: 0.1,
+          aria: "none",
         });
 
         splitRefs.current.push(split);
