@@ -129,6 +129,18 @@ html {
   background: var(--color-cream);
   scrollbar-gutter: stable;
   scroll-behavior: auto !important;
+  /**
+   * The backstop, not the fix — see `.block-line-wrapper`.
+   *
+   * Anything that still manages to exceed the viewport gets clipped rather than
+   * making the whole page pannable sideways, which on a phone is the difference
+   * between a cropped edge and a site that feels broken.
+   *
+   * `clip` and not `hidden`: `hidden` turns this into a scroll container, which
+   * silently kills every `position: sticky` on the site — and the title panels
+   * and the shop filters depend on it.
+   */
+  overflow-x: clip;
 }
 
 html.lenis {
@@ -161,9 +173,24 @@ button:not(:disabled),
 
 .block-line-wrapper {
   position: relative;
-  /* max-content sizes to the line, but must not outgrow the padded column
-     or type clips past the grid gutter on narrow viewports. */
-  width: max-content;
+  /**
+   * `fit-content`, not `max-content`.
+   *
+   * Both size the wrapper to its line when there is room, and they render
+   * identically on every heading on this site — measured, 85 wrappers, zero
+   * difference. They part company when the text grows after SplitText has
+   * already measured it: `max-content` contributes the full unwrapped line to
+   * its parent's intrinsic width, so a grid track sized `auto` grows with it and
+   * the page becomes wider than the screen. `fit-content` contributes
+   * min-content instead, so the track holds and the line wraps inside it.
+   *
+   * That happens for real. Chrome's built-in translate rewrites these text nodes
+   * in place, long after the split has run and with no way to re-run it — a
+   * 390px phone rendered a 575px page. The client will hit the same thing the
+   * day they write a longer headline in the Studio; translation only found it
+   * first.
+   */
+  width: fit-content;
   max-width: 100%;
   display: block;
   margin-left: auto;
