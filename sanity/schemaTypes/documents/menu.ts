@@ -15,6 +15,11 @@ import { UlistIcon } from "@sanity/icons/Ulist";
  * field `name`s stay English — they are the contract shared with the `Menu`
  * type in `lib/menus.ts` and the GROQ projection between them, which returns
  * `undefined` rather than an error when they drift.
+ *
+ * Every field carrying *words* is a `locale*` object: one document, three
+ * languages side by side. Everything carrying a *number* — the price, the
+ * headcounts, the notice period — is shared, which is the whole reason this is
+ * field-level rather than a document per language. See `objects/locale.ts`.
  */
 export const menu = defineType({
   name: "menu",
@@ -29,11 +34,10 @@ export const menu = defineType({
     defineField({
       name: "title",
       title: "Nom de la formule",
-      type: "string",
+      type: "localeString",
       group: "content",
       description:
-        "Tel qu'il apparaît sur le site — « Apéro dînatoire », « Dîner assis ».",
-      validation: (rule) => rule.required(),
+        "Tel qu'il apparaît sur le site — « Apéro dînatoire », « Dîner assis ». Le français est obligatoire : c'est ce que le site affiche quand une traduction manque.",
     }),
 
     defineField({
@@ -43,7 +47,10 @@ export const menu = defineType({
       group: "content",
       description:
         "La fin de l'URL, générée depuis le nom. À ne plus modifier une fois la formule en ligne : les liens existants cesseraient de fonctionner.",
-      options: { source: "title", maxLength: 96 },
+      // Built from the French title, and shared by all three languages: one
+      // menu is one page in three languages, so /nl/menus/<slug> is genuinely
+      // the Dutch version of /fr/menus/<slug> rather than a different page.
+      options: { source: "title.fr", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),
 
@@ -72,15 +79,10 @@ export const menu = defineType({
     defineField({
       name: "summary",
       title: "Résumé",
-      type: "text",
-      rows: 3,
+      type: "localeText",
       group: "content",
       description:
-        "Une ou deux phrases. Affiché sous le nom dans la liste des formules, et repris par Google.",
-      validation: (rule) =>
-        rule
-          .max(200)
-          .warning("Restez sous 200 caractères — au-delà, Google coupe."),
+        "Une ou deux phrases. Affiché sous le nom dans la liste des formules, et repris par Google. Restez sous 200 caractères — au-delà, Google coupe.",
     }),
 
     defineField({
@@ -96,7 +98,8 @@ export const menu = defineType({
           name: "alt",
           title: "Description de la photo",
           type: "string",
-          description: "Décrivez le plat pour quelqu'un qui ne voit pas l'image.",
+          description:
+            "Décrivez le plat pour quelqu'un qui ne voit pas l'image.",
         }),
       ],
     }),
@@ -116,24 +119,20 @@ export const menu = defineType({
             defineField({
               name: "title",
               title: "Nom du service",
-              type: "string",
-              validation: (rule) => rule.required(),
+              type: "localeString",
             }),
             defineField({
               name: "items",
               title: "Plats",
-              type: "array",
-              of: [defineArrayMember({ type: "string" })],
-              validation: (rule) =>
-                rule.min(1).error("Ajoutez au moins un plat."),
+              type: "localeStringList",
             }),
           ],
           preview: {
-            select: { title: "title", items: "items" },
+            select: { title: "title.fr", items: "items.fr" },
             prepare({ title, items }) {
               const count = Array.isArray(items) ? items.length : 0;
               return {
-                title,
+                title: title ?? "Service sans nom",
                 subtitle: `${count} plat${count === 1 ? "" : "s"}`,
               };
             },
@@ -154,7 +153,7 @@ export const menu = defineType({
     defineField({
       name: "priceNote",
       title: "Précision sur le prix",
-      type: "string",
+      type: "localeString",
       group: "pricing",
       description:
         "La mention imprimée sous le prix — par exemple « hors TVA, service et boissons ».",
@@ -205,35 +204,32 @@ export const menu = defineType({
     defineField({
       name: "includes",
       title: "Compris dans le prix",
-      type: "array",
+      type: "localeStringList",
       group: "pricing",
-      of: [defineArrayMember({ type: "string" })],
     }),
 
     defineField({
       name: "excludes",
       title: "Non compris",
-      type: "array",
+      type: "localeStringList",
       group: "pricing",
       description:
         "Facturé séparément — service, boissons, location, mobilier.",
-      of: [defineArrayMember({ type: "string" })],
     }),
 
     defineField({
       name: "dietaryNote",
       title: "Régimes et allergies",
-      type: "text",
-      rows: 2,
+      type: "localeText",
       group: "pricing",
       description:
-        "Comment les demandes végétariennes, véganes et les allergies sont traitées pour cette formule.",
+        "Comment les demandes végétariennes, véganes et les allergies sont traitées pour cette formule. À faire relire par quelqu'un qui lit la langue : ce champ porte de l'information de sécurité, pas du marketing.",
     }),
   ],
 
   preview: {
     select: {
-      title: "title",
+      title: "title.fr",
       format: "format",
       price: "pricePerPerson",
       media: "image",

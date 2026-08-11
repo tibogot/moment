@@ -87,8 +87,7 @@ export const siteSettings = defineType({
           name: "companyName",
           title: "Dénomination sociale",
           type: "string",
-          description:
-            "Le nom inscrit à la BCE, s'il diffère de « Moment ».",
+          description: "Le nom inscrit à la BCE, s'il diffère de « Moment ».",
         }),
         defineField({
           name: "enterpriseNumber",

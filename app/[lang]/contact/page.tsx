@@ -14,7 +14,7 @@ import {
   interpolate,
   type Dictionary,
 } from "@/lib/i18n/dictionaries";
-import { menuEnquiryMessage } from "@/lib/menus";
+import { menuEnquiryMessage, resolveMenu } from "@/lib/menus";
 import { routes } from "@/lib/routes";
 import { getMenuBySlug, getSiteDetails } from "@/lib/sanity/queries";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
@@ -74,7 +74,9 @@ async function resolvePrefill(
         locale,
         dict.menus,
         dict.menuFormats,
-        menu,
+        // Resolved into the visitor's language: the message they are about to
+        // send should name the menu the way the page they came from named it.
+        resolveMenu(menu, locale),
       );
     }
   }

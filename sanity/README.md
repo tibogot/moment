@@ -10,14 +10,14 @@ one content model.
 
 ## Where things are
 
-| | |
-|---|---|
-| `sanity/schemaTypes/` | Every document and object type |
+|                               |                                                                                |
+| ----------------------------- | ------------------------------------------------------------------------------ |
+| `sanity/schemaTypes/`         | Every document and object type                                                 |
 | `sanity/schemaTypes/index.ts` | What the Studio actually loads — a type missing from this array does not exist |
-| `sanity/structure.ts` | The Studio's left-hand navigation |
-| `sanity.config.ts` | Studio config. Project id and dataset come from `lib/sanity/env` |
-| `sanity.cli.ts` | For the `sanity` CLI only — exports, TypeGen |
-| `app/studio/[[...tool]]/` | The route that serves it |
+| `sanity/structure.ts`         | The Studio's left-hand navigation                                              |
+| `sanity.config.ts`            | Studio config. Project id and dataset come from `lib/sanity/env`               |
+| `sanity.cli.ts`               | For the `sanity` CLI only — exports, TypeGen                                   |
+| `app/studio/[[...tool]]/`     | The route that serves it                                                       |
 
 ## Running it
 
@@ -80,7 +80,7 @@ nobody sees them. **Keep new fields to the same split**: French in `title` and
 `description`, English in `name`.
 
 The one place this needs care is a list of choices. `menu.format` shows French
-titles against English values (`lunch`, `seated`), and what the *visitor* reads
+titles against English values (`lunch`, `seated`), and what the _visitor_ reads
 comes from `menuFormats` in the dictionaries — three languages, one per site
 locale. Translating the Studio list without the dictionaries would have left the
 Studio saying "Lunch de bureau" and the site saying "Office lunch".

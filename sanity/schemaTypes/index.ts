@@ -5,6 +5,7 @@ import { homePage } from "./documents/homePage";
 import { menu } from "./documents/menu";
 import { siteSettings } from "./documents/siteSettings";
 import { blockContent } from "./objects/blockContent";
+import { localeString, localeStringList, localeText } from "./objects/locale";
 
 /**
  * Every type the Studio knows about.
@@ -22,4 +23,7 @@ export const schemaTypes = [
   menu,
   siteSettings,
   blockContent,
+  localeString,
+  localeText,
+  localeStringList,
 ];

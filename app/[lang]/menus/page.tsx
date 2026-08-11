@@ -4,7 +4,7 @@ import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
 import { MenusList } from "@/components/MenusList";
 import { PageIntro } from "@/components/PageIntro";
-import { isPlaceholderContent } from "@/lib/menus";
+import { isPlaceholderContent, resolveMenu } from "@/lib/menus";
 import { routes } from "@/lib/routes";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -22,8 +22,14 @@ export default async function MenusPage({
   params: Promise<{ lang: string }>;
 }) {
   const locale = toLocale((await params).lang);
-  const [menus, dict] = await Promise.all([getMenus(), getDictionary(locale)]);
-  const isDraft = isPlaceholderContent(menus);
+  const [rawMenus, dict] = await Promise.all([
+    getMenus(),
+    getDictionary(locale),
+  ]);
+  const isDraft = isPlaceholderContent(rawMenus);
+  // Flattened into this page's language once, so nothing below it has to know
+  // that a field might be missing a translation.
+  const menus = rawMenus.map((menu) => resolveMenu(menu, locale));
 
   return (
     <>

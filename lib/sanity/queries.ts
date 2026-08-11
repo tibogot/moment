@@ -92,6 +92,11 @@ const menuFields = `
 `;
 
 /**
+ * The translated fields come back whole — `{ fr, nl, en }` — and `resolveMenu`
+ * in `lib/menus.ts` flattens them into one language at the page. Projecting a
+ * single language here instead would push the fallback rule into GROQ, where it
+ * cannot be tested and has to be repeated in three queries.
+ *
  * `_key` is projected on every course: it is what the course list uses as its
  * React key, and what Visual Editing needs to anchor a click back to the array
  * item in the Studio.

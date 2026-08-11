@@ -8,7 +8,12 @@ import { JsonLd } from "@/components/JsonLd";
 import { SanityImage } from "@/components/SanityImage";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
-import { PLACEHOLDER_MENUS, formatMenuTerms, type Menu } from "@/lib/menus";
+import {
+  PLACEHOLDER_MENUS,
+  formatMenuTerms,
+  resolveMenu,
+  type ResolvedMenu,
+} from "@/lib/menus";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { formatMoney } from "@/lib/i18n/format";
@@ -27,7 +32,7 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-function shareImage(menu: Menu) {
+function shareImage(menu: ResolvedMenu) {
   if (!menu.image?.asset) return null;
 
   return {
@@ -41,12 +46,13 @@ export async function generateMetadata({
 }: MenuPageProps): Promise<Metadata> {
   const { lang, slug } = await params;
   const locale = toLocale(lang);
-  const [menu, dict] = await Promise.all([
+  const [raw, dict] = await Promise.all([
     getMenuBySlug(slug),
     getDictionary(locale),
   ]);
 
-  if (!menu) return notFoundMetadata();
+  if (!raw) return notFoundMetadata();
+  const menu = resolveMenu(raw, locale);
 
   // The price belongs in the snippet: "from €32 per person" is the line that
   // decides whether the result is worth a click for a catering search.
@@ -90,14 +96,15 @@ function DetailList({ title, items }: { title: string; items: string[] }) {
 export default async function MenuPage({ params }: MenuPageProps) {
   const { lang, slug } = await params;
   const locale = toLocale(lang);
-  const [menu, dict] = await Promise.all([
+  const [raw, dict] = await Promise.all([
     getMenuBySlug(slug),
     getDictionary(locale),
   ]);
 
-  if (!menu) notFound();
+  if (!raw) notFound();
 
-  const isDraft = PLACEHOLDER_MENUS.includes(menu);
+  const isDraft = PLACEHOLDER_MENUS.includes(raw);
+  const menu = resolveMenu(raw, locale);
   const formatLabel = dict.menuFormats[menu.format] ?? menu.format;
 
   /**

@@ -2,13 +2,13 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { routes } from "@/lib/routes";
-import { formatMenuTerms, type Menu } from "@/lib/menus";
+import { formatMenuTerms, type ResolvedMenu } from "@/lib/menus";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { formatMoney } from "@/lib/i18n/format";
 
 type MenusListProps = {
-  menus: Menu[];
+  menus: ResolvedMenu[];
   locale: Locale;
   /**
    * The page's copy and the format names, in the language being read. A Server

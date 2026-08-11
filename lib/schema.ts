@@ -1,7 +1,7 @@
 import { routes } from "./routes";
 import { absoluteUrl, fullTitle } from "./seo";
 import { siteConfig, type SiteDetails } from "./site";
-import type { Menu } from "./menus";
+import type { ResolvedMenu } from "./menus";
 import type { NewsArticle } from "./sanity/types";
 import type { ShopifyCollection, ShopifyProduct } from "./shopify/queries";
 
@@ -228,7 +228,7 @@ export function articleSchema(
  * "per person" would be a wrong number, and prices in structured data are the
  * one thing a search engine will quote back at a customer.
  */
-export function menuSchema(menu: Menu) {
+export function menuSchema(menu: ResolvedMenu) {
   const url = absoluteUrl(routes.menu(menu.slug.current));
 
   return compact({
@@ -280,7 +280,7 @@ export function menuSchema(menu: Menu) {
 }
 
 /** The menus index, as a list pointing at each menu's own node. */
-export function menuListSchema(menus: Menu[]) {
+export function menuListSchema(menus: ResolvedMenu[]) {
   const url = absoluteUrl(routes.menus);
 
   return {
