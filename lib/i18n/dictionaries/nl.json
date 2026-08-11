@@ -547,6 +547,11 @@
   "news": {
     "title": "Nieuws",
     "lead": "Uit de keuken, van de toog en van tafel — wat wij koken, serveren en in gedachten hebben.",
-    "empty": "Nog geen artikels in het Nederlands. Kom binnenkort terug."
+    "empty": "Nog geen artikels in het Nederlands. Kom binnenkort terug.",
+    "notFound": {
+      "title": "Artikel niet gevonden",
+      "body": "Dit artikel is mogelijk verwijderd, de link klopt niet, of het bestaat niet in deze taal.",
+      "back": "Terug naar het nieuws"
+    }
   }
 }

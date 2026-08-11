@@ -546,6 +546,11 @@
   "news": {
     "title": "News",
     "lead": "From the kitchen, the counter and the table — what we are cooking, serving and thinking about.",
-    "empty": "No articles in English yet. Check back soon."
+    "empty": "No articles in English yet. Check back soon.",
+    "notFound": {
+      "title": "Article not found",
+      "body": "This article may have been removed, the link may be wrong, or it may not exist in this language.",
+      "back": "Back to news"
+    }
   }
 }

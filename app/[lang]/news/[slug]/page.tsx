@@ -71,6 +71,8 @@ export async function generateMetadata({
     path: routes.newsArticle(slug),
     image: shareImage(article),
     type: "article",
+    // Written in one language; there is no French version to point at.
+    singleLanguage: true,
     publishedTime: article.publishedAt,
   });
 }

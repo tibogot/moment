@@ -34,6 +34,23 @@ export function absoluteUrl(path: string) {
  * it. `canonical` is the current language's own URL — a page is never the
  * canonical of its translation.
  */
+/**
+ * Canonical only, for a page that exists in one language.
+ *
+ * `languageAlternates` builds its hreflang set from the path alone, which
+ * assumes every page exists at the same path in all three languages. That is
+ * true of the shell — /fr/news, /nl/news, /en/news are the same page — and
+ * false of an article, which is written once in one language. Declaring the
+ * other two anyway pointed Google at URLs that 404, x-default included.
+ *
+ * A page with no translations needs no hreflang at all; Google reads its
+ * absence correctly. Give it back its alternates the day articles carry a link
+ * to their own translations.
+ */
+export function selfAlternate(path: string, locale: Locale) {
+  return { canonical: withLocale(stripLocale(path), locale) };
+}
+
 export function languageAlternates(path: string, locale: Locale) {
   const bare = stripLocale(path);
 
@@ -102,6 +119,12 @@ type PageSeo = {
   publishedTime?: string;
   modifiedTime?: string;
   /**
+   * Set for pages that exist in one language only — see `selfAlternate`.
+   * Default false, because the shell of this site genuinely is trilingual and
+   * a page that forgets to say so should claim its translations, not drop them.
+   */
+  singleLanguage?: boolean;
+  /**
    * The language this page is being rendered in. Optional only so the routes
    * that have not been converted to `generateMetadata` yet still compile —
    * every page should pass it, because without it the canonical and the
@@ -124,6 +147,7 @@ export function pageMetadata({
   noindex = false,
   publishedTime,
   modifiedTime,
+  singleLanguage = false,
   locale = DEFAULT_LOCALE,
 }: PageSeo): Metadata {
   const heading = fullTitle(title);
@@ -140,7 +164,9 @@ export function pageMetadata({
     title,
     description,
     ...(keywords ? { keywords: [...keywords] } : {}),
-    alternates: languageAlternates(path, locale),
+    alternates: singleLanguage
+      ? selfAlternate(path, locale)
+      : languageAlternates(path, locale),
     // Crawlers still follow the links out of a noindex page — that's how they
     // reach the catalogue from a shared cart URL.
     ...(noindex ? { robots: { index: false, follow: true } } : {}),

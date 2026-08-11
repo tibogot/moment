@@ -547,6 +547,11 @@
   "news": {
     "title": "Actualités",
     "lead": "De la cuisine, du comptoir et de la table — ce que nous cuisinons, servons et avons en tête.",
-    "empty": "Pas encore d'article en français. Revenez bientôt."
+    "empty": "Pas encore d'article en français. Revenez bientôt.",
+    "notFound": {
+      "title": "Article introuvable",
+      "body": "Cet article a peut-être été retiré, le lien est incorrect, ou il n'existe pas dans cette langue.",
+      "back": "Retour aux actualités"
+    }
   }
 }
