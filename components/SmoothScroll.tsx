@@ -3,7 +3,10 @@
 import { ReactLenis } from "lenis/react";
 import type { LenisRef } from "lenis/react";
 import { type ReactNode, useEffect, useRef } from "react";
-import { ScrollTrigger } from "@/lib/gsapConfig";
+import {
+  ScrollTrigger,
+  scheduleScrollTriggerRefresh,
+} from "@/lib/gsapConfig";
 
 type SmoothScrollProps = {
   children: ReactNode;
@@ -18,23 +21,23 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
 
     lenis.on("scroll", ScrollTrigger.update);
 
-    const refreshScrollTrigger = () => {
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
-    };
+    /*
+     * Two unconditional refreshes used to run here — one on mount and another
+     * on `load`, each a full-document forced layout roughly 100ms apart, and
+     * the first one's measurements were thrown away by the second. Both are now
+     * requests rather than calls: the shared scheduler in lib/gsapConfig folds
+     * them, and every TextReveal arming at the same time, into one refresh per
+     * frame.
+     */
+    scheduleScrollTriggerRefresh();
 
-    refreshScrollTrigger();
-
-    if (document.readyState === "complete") {
-      refreshScrollTrigger();
-    } else {
-      window.addEventListener("load", refreshScrollTrigger);
+    if (document.readyState !== "complete") {
+      window.addEventListener("load", scheduleScrollTriggerRefresh);
     }
 
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
-      window.removeEventListener("load", refreshScrollTrigger);
+      window.removeEventListener("load", scheduleScrollTriggerRefresh);
     };
   }, []);
 

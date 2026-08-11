@@ -25,4 +25,29 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+/*
+ * One refresh per frame, no matter how many callers ask.
+ *
+ * `ScrollTrigger.refresh()` re-measures every trigger against the whole
+ * document, and it is a forced synchronous layout — the trace attributes 63ms
+ * to a single call on the home page. Callers used to schedule their own:
+ * SmoothScroll fired twice on principle (once on mount, once again on `load`),
+ * and every TextReveal that armed wanted one too. They all land within a frame
+ * or two of each other and only the last one's measurements survive, so the
+ * rest are pure cost.
+ *
+ * Ask for a refresh whenever something may have changed height. The coalescing
+ * is this module's problem, not the caller's.
+ */
+let refreshFrame: number | null = null;
+
+export function scheduleScrollTriggerRefresh() {
+  if (typeof window === "undefined") return;
+  if (refreshFrame !== null) cancelAnimationFrame(refreshFrame);
+  refreshFrame = requestAnimationFrame(() => {
+    refreshFrame = null;
+    ScrollTrigger.refresh();
+  });
+}
+
 export { gsap, ScrollTrigger };
