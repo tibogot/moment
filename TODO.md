@@ -44,30 +44,31 @@ larger piece of work than the metaobject settings. Quote it separately.
 
 Nothing here waits on anyone.
 
-### Design — the client's two requests
+### Design — the client's two requests are done
 
-**Grid line weight.** Currently exactly `1px`, measured. `2px` doubles the
-visual weight, which is a lot on a grid this dense. Try `1.5px` first and judge
-it on a real screen, ideally theirs.
+Both shipped. Kept here for the measurements, which cost a browser session and
+contradict the obvious reading.
 
-**Cell proportions — "rectangular, 3/4 if possible".** This is three different
-problems wearing one sentence. Measured at three viewports:
+**Line weight: 2px, and 1.5 is not available.** Chrome rounds `border-width` to
+whole CSS pixels — measured at 1x *and* 2x — while the GridLines spans use
+`width`, which is not rounded. At 1.5px the overlay renders at 1.5 and all 117
+borders at 1, and the two meet at every corner of the grid. `--grid-line` in
+`globals.css` is the single number for both mechanisms; if 2px reads heavy, the
+honest lever is contrast, not width.
+
+**Cell proportions, measured at three viewports:**
 
 | | 1440×900 | 1920×951 | 2560×951 |
 |---|---|---|---|
 | Hero | 183×249 → **0.74** | 245×262 → **0.94** | 328×262 → **1.25** |
-| Events / Coffee panels | **0.75** | **0.75** | **0.75** |
-| Split image sections | **1.00** | **1.00** | **1.00** |
+| Events / Coffee panels | **0.75** at every width |||
+| Split sections (now) | **0.75** at every width |||
 
-- **The panels are already right** and never drift — `aspect-[3/4]` on the
-  `<a>` in `PanelPairSection`. Nothing to do.
-- **The split sections are square by declaration** — `aspect-square` in
-  `SplitImageSection`. Changing it to `aspect-[3/4]` is one line, but it changes
-  the section's height and therefore the rhythm of the whole page.
-- **The hero drifts** because its columns divide the viewport's *width* and its
-  rows divide its *height* — two independent dimensions. It is 3/4 on a 1440
-  laptop, which is where the design was clearly calibrated, and lands at 1.25 on
-  a 2560 screen. **This one is a trade-off, not a setting** (see §4).
+The panels were already right and never drifted. The split sections were square
+by declaration and are now 3/4. **The hero is the one still open**, and it is a
+trade-off rather than a value — see §4. It is 3/4 on a 1440 laptop, which is
+where the design was calibrated, and that is why it looks correct to us and
+square to the client.
 
 ### Copy still hardcoded in English
 
