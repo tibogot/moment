@@ -8,7 +8,7 @@ It is not `SCOPE.md`, which argues the commercial case, and not
 built, what is stuck and on precisely what, and what can be worked on today
 without waiting for anybody.
 
-Last reviewed: **11 August 2026**, at commit `bd87889`.
+Last reviewed: **11 August 2026**, at commit `bd7ebff`.
 
 ---
 
@@ -42,79 +42,94 @@ larger piece of work than the metaobject settings. Quote it separately.
 
 ## 2. Free to do now
 
-Nothing here waits on anyone.
+Nothing here waits on anyone. Roughly in the order I would take them.
 
-### Design — the client's two requests are done
+### 1. Menus are still single-language
 
-Both shipped. Kept here for the measurements, which cost a browser session and
-contradict the obvious reading.
+The last hole in the content, and the most commercially visible one. `menu`
+carries no language field at all, so an Apéro dînatoire written in French renders
+identically on `/nl/menus` and `/en/menus` — title, summary, courses, dishes.
+Only the chrome around it is translated.
 
-**Line weight: 2px, and 1.5 is not available.** Chrome rounds `border-width` to
-whole CSS pixels — measured at 1x *and* 2x — while the GridLines spans use
+**The *how* is decided: field-level translation.** One document, with title,
+summary and courses as `{fr, nl, en}` shown side by side, and the pricing shared.
+The alternative — one document per language — would triple the price, the minimum
+guests and the lead time as well, giving a tariff three places to drift apart.
+AI collapses the cost of the first translation to nothing and does nothing for
+the cost of keeping three versions in step, so the thing to optimise is *seeing
+what is stale*, and side-by-side fields do that.
+
+What is not decided is whether the client commits to writing Dutch. Ask it as
+"who reviews the Dutch, and how often?" rather than "do you want three
+languages?" — the first assumes the answer and settles the real question.
+
+**Two matching defects to fix in the same pass:**
+
+- The sitemap declares each menu as one URL with three language alternates. That
+  is a claim about translation which is not true yet.
+- So does the page's own `hreflang`. Articles were fixed with `singleLanguage`
+  in `pageMetadata`; menus need the same treatment, or the truth behind it.
+
+**Articles have a related gap.** They are one document per language, which is
+right for long-form, but nothing links a French article to its Dutch
+counterpart. Write the same piece three times today and Google sees three
+unrelated pages rather than three translations. That needs a translation
+reference before `hreflang` can be given back to them.
+
+### 2. The hero grid
+
+The one design request still open, and it is a trade-off rather than a value —
+see §4. Worth doing while the measurements below are fresh.
+
+### 3. TypeGen
+
+Schema and queries are in one repo now, so it can finally enforce the schema ↔
+GROQ ↔ TypeScript contract that `sanity/README.md` describes in prose. Invisible
+to the client; it is what stops the next silent `undefined`.
+
+### Autonomy, whenever
+
+All of these cost nothing in translation, which is what makes them cheap:
+
+- **The six remaining home page photographs.** The `homePage` schema takes them
+  one at a time and each falls back independently.
+- **The About page photographs**, same shape.
+- **The team** — names, photos, roles. Names do not translate and a role is two
+  words.
+- **The Presentation tool**, where the client edits by clicking the site itself.
+  The biggest autonomy lever left, and the one to quote rather than absorb.
+
+### Design measurements, for reference
+
+Both of the client's requests shipped. Kept because they cost a browser session
+and they contradict the obvious reading.
+
+**Line weight is 2px, and 1.5 is not available.** Chrome rounds `border-width`
+to whole CSS pixels — measured at 1x *and* 2x — while the GridLines spans use
 `width`, which is not rounded. At 1.5px the overlay renders at 1.5 and all 117
 borders at 1, and the two meet at every corner of the grid. `--grid-line` in
 `globals.css` is the single number for both mechanisms; if 2px reads heavy, the
-honest lever is contrast, not width.
+lever is contrast, not width.
 
-**Cell proportions, measured at three viewports:**
-
-| | 1440×900 | 1920×951 | 2560×951 |
+| Cell proportions | 1440×900 | 1920×951 | 2560×951 |
 |---|---|---|---|
 | Hero | 183×249 → **0.74** | 245×262 → **0.94** | 328×262 → **1.25** |
 | Events / Coffee panels | **0.75** at every width |||
-| Split sections (now) | **0.75** at every width |||
+| Split sections | **0.75** at every width |||
 
 The panels were already right and never drifted. The split sections were square
-by declaration and are now 3/4. **The hero is the one still open**, and it is a
-trade-off rather than a value — see §4. It is 3/4 on a 1440 laptop, which is
-where the design was calibrated, and that is why it looks correct to us and
-square to the client.
+by declaration and are now 3/4. The hero is the one still open: it is 3/4 on a
+1440 laptop, which is where the design was calibrated, and that is why it looks
+correct to us and square to the client.
 
-### Copy still hardcoded in English
+### Copy: done
 
-Measured, not guessed. Outside the legal pages there are about eleven blocks
-left:
+**No hardcoded English prose remains outside the legal pages** — measured, not
+assumed. The About page, the news pages, the menus pages, the 404s, the search
+panel and the product page all read from the dictionaries.
 
-- `SearchPanel` empty state, and one line on the product page
-- `app/[lang]/not-found.tsx` is hardcoded **French**, so it is wrong in Dutch
-  and English rather than wrong in all three
-
-The About page and the news pages are done. What is left is two strings and the
-site-wide 404.
-
-The Events and Coffee pages came back nearly clean — worth knowing, since they
-were on the suspect list.
-
-### Menus are still single-language
-
-The one hole the article fix did not close. `menu` carries no language field at
-all, so an Apéro dînatoire written in French renders identically on `/nl/menus`
-and `/en/menus` — title, summary, courses, dishes. Only the chrome around it is
-translated.
-
-Two ways out, and the second is better:
-
-1. **One document per language.** Three "Apéro dînatoire" documents. But price,
-   minimum guests and lead time have no language, so they would be tripled too —
-   three places for a tariff to drift apart.
-2. **Field-level translation.** One document, with title / summary / courses as
-   `{fr, nl, en}` shown side by side, and the pricing shared. The client sees
-   immediately that Dutch is missing rather than discovering it months later.
-
-Worth waiting for the meeting: the answer depends on whether they will actually
-write Dutch, and that changes the calculation completely.
-
-The sitemap has the matching defect — it declares each menu as one URL with
-three language alternates, which is a claim about translation that is not true
-yet. Fix both together.
-
-### Other
-
-- **The six remaining home page photographs.** The `homePage` schema is built to
-  take them one at a time; each falls back independently
-- **TypeGen.** Schema and queries are in one repo now, so it can finally enforce
-  the schema ↔ GROQ ↔ TypeScript contract that `sanity/README.md` currently
-  describes in prose
+The legal pages stay English deliberately: they are binding text carrying the
+zone fees and minimums, and they want a professional translator. See §4.
 
 ---
 
@@ -148,6 +163,17 @@ changing. Documented in both places.
 
 **`.env.example` is not in the repo.** `.gitignore` has `.env*`, which catches
 the example too. Worth a `!.env.example` negation.
+
+**The 404 needed two boundaries, and the reason is structural.** Recorded because
+it will look like over-engineering to whoever reads it cold: this app's root
+layout sits under a top-level dynamic segment (`app/[lang]/layout.tsx`), which
+the Next docs name as one of the two cases where a global 404 cannot be composed
+from a layout plus a `not-found`. A `not-found.tsx` beside that layout is
+compiled as the global route and rendered outside the layout — which is why the
+designed 404 in this repo had never once appeared, for any URL. So there is
+`app/global-not-found.tsx` behind the `globalNotFound` flag for unmatched URLs,
+and `app/[lang]/not-found.tsx` for `notFound()` raised inside a language. Do not
+merge them.
 
 ---
 
