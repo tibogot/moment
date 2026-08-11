@@ -44,37 +44,23 @@ larger piece of work than the metaobject settings. Quote it separately.
 
 Nothing here waits on anyone. Roughly in the order I would take them.
 
-### 1. Menus are still single-language
+### 1. Articles have no link between translations
 
-The last hole in the content, and the most commercially visible one. `menu`
-carries no language field at all, so an Apéro dînatoire written in French renders
-identically on `/nl/menus` and `/en/menus` — title, summary, courses, dishes.
-Only the chrome around it is translated.
+Menus are done — field-level, one document, three languages side by side, with
+the pricing shared. Articles still are not, and they need something different:
+one document per language is right for long-form, but nothing connects a French
+article to its Dutch counterpart. Write the same piece three times today and
+Google sees three unrelated pages.
 
-**The *how* is decided: field-level translation.** One document, with title,
-summary and courses as `{fr, nl, en}` shown side by side, and the pricing shared.
-The alternative — one document per language — would triple the price, the minimum
-guests and the lead time as well, giving a tariff three places to drift apart.
-AI collapses the cost of the first translation to nothing and does nothing for
-the cost of keeping three versions in step, so the thing to optimise is *seeing
-what is stale*, and side-by-side fields do that.
+Until a translation reference exists, articles emit no `hreflang` at all
+(`singleLanguage` in `pageMetadata`), which is honest but leaves the three
+versions competing separately.
 
-What is not decided is whether the client commits to writing Dutch. Ask it as
-"who reviews the Dutch, and how often?" rather than "do you want three
-languages?" — the first assumes the answer and settles the real question.
+**Two things to do when the client confirms they will write in three languages:**
 
-**Two matching defects to fix in the same pass:**
-
-- The sitemap declares each menu as one URL with three language alternates. That
-  is a claim about translation which is not true yet.
-- So does the page's own `hreflang`. Articles were fixed with `singleLanguage`
-  in `pageMetadata`; menus need the same treatment, or the truth behind it.
-
-**Articles have a related gap.** They are one document per language, which is
-right for long-form, but nothing links a French article to its Dutch
-counterpart. Write the same piece three times today and Google sees three
-unrelated pages rather than three translations. That needs a translation
-reference before `hreflang` can be given back to them.
+- A translation group on `article` — a shared id, or Sanity's document
+  internationalization plugin — so the three know about each other.
+- Give articles their alternates back once they do.
 
 ### 2. The hero grid
 
@@ -151,6 +137,13 @@ divergence for a subtler one. `SHOPIFY-SETUP.md` says so where it matters.
 bands into postcode lists is documented but manual. It is automatable — compute
 every Belgian postcode's distance from the atelier and bucket it — and that
 script is worth writing, but only once the atelier's real address is known.
+
+**Menus written before the schema changed hold the old shape.** Sanity does not
+rewrite documents when a schema changes, so a menu published before translation
+existed carries a bare string where `{ fr, nl, en }` now goes — and rendered with
+no title at all until `pick` learned to accept both. Delete that branch, and the
+`Legacy<T>` type beside it, once every menu has been opened and re-saved in the
+Studio. A menu with no title is the symptom it is still needed.
 
 **`PLACEHOLDER_MENUS` is still in `lib/menus.ts`.** It stopped being used the
 moment the first real menu was published; it stays as a fallback for Sanity
