@@ -167,7 +167,9 @@ export default async function MenuPage({ params }: MenuPageProps) {
       {isDraft && (
         <GridSection className="pb-[6svh]">
           <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
-            <DraftNotice>{dict.menus.draftNotice}</DraftNotice>
+            <DraftNotice label={dict.menus.draftLabel}>
+              {dict.menus.draftNotice}
+            </DraftNotice>
           </div>
         </GridSection>
       )}

@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils";
 
 type DraftNoticeProps = {
   children: React.ReactNode;
+  /** Passed in rather than read: this renders on the server, above the fold. */
+  label: string;
   className?: string;
 };
 
@@ -13,7 +15,7 @@ type DraftNoticeProps = {
  * It is deliberately plain and deliberately loud. Placeholder prices that read
  * as real ones are the failure mode worth spending a band of the page on.
  */
-export function DraftNotice({ children, className }: DraftNoticeProps) {
+export function DraftNotice({ children, label, className }: DraftNoticeProps) {
   return (
     <div
       role="note"
@@ -23,7 +25,7 @@ export function DraftNotice({ children, className }: DraftNoticeProps) {
       )}
     >
       <p className="font-owners-medium text-[11px] uppercase tracking-wide">
-        Placeholder content
+        {label}
       </p>
       <p className="font-archivo-light mt-2.5 max-w-[60ch] text-[18px] leading-normal">
         {children}

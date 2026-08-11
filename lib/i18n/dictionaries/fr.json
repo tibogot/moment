@@ -563,7 +563,8 @@
     "noticeDays": "{count} jours de délai",
     "metaPrice": "À partir de {price} par personne, {terms}.",
     "enquiry": "Je souhaite un devis pour la formule {title} ({format}, {price} par personne).\n\n",
-    "draftNotice": "Brouillon — ces formules et ces prix sont des exemples indicatifs, pas définitifs. Les menus et les tarifs seront confirmés avec la cuisine."
+    "draftNotice": "Brouillon — ces formules et ces prix sont des exemples indicatifs, pas définitifs. Les menus et les tarifs seront confirmés avec la cuisine.",
+    "draftLabel": "Contenu provisoire"
   },
   "news": {
     "title": "Actualités",
@@ -573,7 +574,8 @@
       "title": "Article introuvable",
       "body": "Cet article a peut-être été retiré, le lien est incorrect, ou il n'existe pas dans cette langue.",
       "back": "Retour aux actualités"
-    }
+    },
+    "back": "Retour aux actualités"
   },
   "about": {
     "hero": {

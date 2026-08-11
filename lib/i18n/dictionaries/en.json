@@ -562,7 +562,8 @@
     "noticeDays": "{count} days' notice",
     "metaPrice": "From {price} per person, {terms}.",
     "enquiry": "I would like a quote for the {title} menu ({format}, {price} per person).\n\n",
-    "draftNotice": "Draft — these formats and prices are indicative examples, not final. Menus and pricing will be confirmed with the kitchen."
+    "draftNotice": "Draft — these formats and prices are indicative examples, not final. Menus and pricing will be confirmed with the kitchen.",
+    "draftLabel": "Placeholder content"
   },
   "news": {
     "title": "News",
@@ -572,7 +573,8 @@
       "title": "Article not found",
       "body": "This article may have been removed, the link may be wrong, or it may not exist in this language.",
       "back": "Back to news"
-    }
+    },
+    "back": "Back to news"
   },
   "about": {
     "hero": {

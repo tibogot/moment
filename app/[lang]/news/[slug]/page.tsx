@@ -81,7 +81,11 @@ export default async function NewsArticlePage({
   params,
 }: NewsArticlePageProps) {
   const { lang, slug } = await params;
-  const article = await getNewsArticleBySlug(toLocale(lang), slug);
+  const locale = toLocale(lang);
+  const [article, dict] = await Promise.all([
+    getNewsArticleBySlug(locale, slug),
+    getDictionary(locale),
+  ]);
 
   if (!article) {
     notFound();
@@ -179,7 +183,7 @@ export default async function NewsArticlePage({
             href={routes.news}
             className="font-owners-medium inline-block border border-sky bg-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-cream"
           >
-            Back to news
+            {dict.news.back}
           </Link>
         </div>
       </GridSection>

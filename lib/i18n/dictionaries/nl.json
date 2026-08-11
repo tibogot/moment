@@ -563,7 +563,8 @@
     "noticeDays": "{count} dagen op voorhand",
     "metaPrice": "Vanaf {price} per persoon, {terms}.",
     "enquiry": "Ik zou graag een offerte voor de formule {title} ({format}, {price} per persoon).\n\n",
-    "draftNotice": "Ontwerp — deze formules en prijzen zijn indicatieve voorbeelden, niet definitief. Menu's en tarieven worden met de keuken bevestigd."
+    "draftNotice": "Ontwerp — deze formules en prijzen zijn indicatieve voorbeelden, niet definitief. Menu's en tarieven worden met de keuken bevestigd.",
+    "draftLabel": "Voorlopige inhoud"
   },
   "news": {
     "title": "Nieuws",
@@ -573,7 +574,8 @@
       "title": "Artikel niet gevonden",
       "body": "Dit artikel is mogelijk verwijderd, de link klopt niet, of het bestaat niet in deze taal.",
       "back": "Terug naar het nieuws"
-    }
+    },
+    "back": "Terug naar actualiteit"
   },
   "about": {
     "hero": {
