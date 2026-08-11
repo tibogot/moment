@@ -165,15 +165,24 @@ export default async function MenuPage({ params }: MenuPageProps) {
         </GridSection>
       )}
 
+      {/* Inside the grid rather than full bleed, so the photograph starts and
+          stops on the two spines every other block on this page is measured
+          against — its edges continue the rules instead of cutting across
+          them. No width of its own: the column span is the width. */}
       {menu.image && (
-        <div className="relative aspect-4/3 w-full overflow-hidden bg-sky/20 md:aspect-16/10">
-          <SanityImage
-            image={menu.image}
-            alt={menu.image.alt ?? menu.title}
-            sizes="100vw"
-            priority
-          />
-        </div>
+        <GridSection>
+          <div className="relative col-start-2 col-end-5 aspect-4/3 overflow-hidden bg-sky/20 md:col-end-9 md:aspect-16/10">
+            <SanityImage
+              image={menu.image}
+              alt={menu.image.alt ?? menu.title}
+              // Margin to margin, not edge to edge: --grid-margin is
+              // max(1.25rem, 4.9vw), which leaves ~90vw at every width from a
+              // 375px phone to a 1440px desktop.
+              sizes="90vw"
+              priority
+            />
+          </div>
+        </GridSection>
       )}
 
       {/* The price band. Given its own ruled row rather than folded into the

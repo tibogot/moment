@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import NextLink from "next/link";
 import { Lines } from "@/components/Lines";
 import { useDictionary } from "@/components/LocaleProvider";
 import { LocaleLink as Link } from "@/components/LocaleLink";
@@ -109,6 +110,32 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            {/* The client's way in to their own site, kept at the size of the
+                legal links because that is all the prominence it needs.
+                Untranslated on purpose: it is the name of the thing it opens.
+                nofollow is the third lock, after the noindex on the Studio page
+                and the disallow in robots.txt.
+
+                NextLink rather than LocaleLink: the Studio lives outside
+                /[lang] and the proxy skips it, so a language prefix would
+                point at a page that does not exist.
+
+                prefetch={false} is the load-bearing part. The footer is on
+                every page and this link is in the viewport whenever anyone
+                reaches the bottom of one, and the default would fetch the
+                Studio route there and then. Nothing is lost by refusing: the
+                Studio sits under a second root layout, and crossing root
+                layouts is a full page load whatever we prefetch. */}
+            <li>
+              <NextLink
+                href="/studio"
+                prefetch={false}
+                rel="nofollow"
+                className={`pointer-events-auto ${legalLinkClassName}`}
+              >
+                Studio
+              </NextLink>
+            </li>
           </ul>
         </div>
       </div>
