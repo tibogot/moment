@@ -407,7 +407,10 @@ export function MobileNavMenu({
                   ))}
                 </div>
 
-                <LanguageSwitcher className="shrink-0" />
+                {/* Wider apart than the desktop bar: the targets are now
+                    thumb-height, and the space between them is what stops a
+                    near miss landing on the wrong language. */}
+                <LanguageSwitcher className="shrink-0 gap-5" />
               </div>
               {phone && (
                 <a

@@ -24,7 +24,10 @@ export function LanguageSwitcher({ className }: { className?: string }) {
   const pathname = usePathname();
 
   return (
-    <nav className={cn("flex items-center gap-2", className)} aria-label="Language">
+    // The gap belongs to the caller: `cn` is a plain join, so a second gap
+    // class here would not lose to one passed in. The mobile menu wants the
+    // codes further apart than the desktop bar does.
+    <nav className={cn("flex items-center", className)} aria-label="Language">
       {LOCALES.map((locale) => {
         const current = locale === active;
 
@@ -43,7 +46,13 @@ export function LanguageSwitcher({ className }: { className?: string }) {
             // to say invisible.
             data-nav-link
             className={cn(
-              "font-owners-medium text-[11px] uppercase tracking-wide transition-opacity",
+              "font-owners-medium flex min-h-11 items-center text-[11px] uppercase tracking-wide transition-opacity",
+              // Tall enough to press with a thumb, then pulled back out of the
+              // layout so the row it sits in is the height it always was. Only
+              // the height grows: padding the sides too would butt the three
+              // targets against each other, and a mis-tap that switches you to
+              // the wrong language is worse than one that does nothing.
+              "-my-3",
               // 70 rather than 50: at 11px on the cream nav, half-opacity
               // black reads as disabled rather than as the language you are
               // not currently in.
@@ -120,7 +129,11 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
         aria-haspopup="true"
         aria-label={`Language: ${LOCALE_NAME[active]}`}
         onClick={() => setOpen((current) => !current)}
-        className="font-owners-medium block uppercase tracking-wide"
+        // Two characters is a target about 16px wide, which a finger misses.
+        // The box is padded out to the 44px minimum and the negative margin
+        // takes the padding back out of the layout, so the row spacing looks
+        // the way it did while the thing you actually press is finger-sized.
+        className="font-owners-medium -mx-2 flex min-h-11 min-w-11 items-center justify-center uppercase tracking-wide"
         style={{ fontSize: "var(--nav-text)" }}
       >
         {active}
@@ -132,7 +145,7 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
           // Right-aligned so the panel grows inwards and never past the edge of
           // the screen. Black is set rather than inherited: on the home page the
           // nav still carries the hero's cream for the first client render.
-          className="absolute top-full right-0 z-10 mt-3 flex flex-col items-end gap-2.5 border border-sky bg-cream px-3 py-2.5 text-black"
+          className="absolute top-full right-0 z-10 mt-2 flex min-w-24 flex-col border border-sky bg-cream text-black"
         >
           {LOCALES.map((locale) => {
             const current = locale === active;
@@ -146,8 +159,11 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
                 onClick={() => rememberLocale(locale)}
                 aria-current={current ? "true" : undefined}
                 title={LOCALE_NAME[locale]}
+                // A whole 44px row each, divided by the same sky rule the rest
+                // of the site uses, rather than three lines of text stacked
+                // close enough that a thumb cannot tell them apart.
                 className={cn(
-                  "font-owners-medium text-[12px] uppercase tracking-wide leading-none transition-opacity",
+                  "font-owners-medium flex min-h-11 items-center justify-end border-t border-sky px-4 text-[12px] uppercase tracking-wide transition-opacity first:border-t-0",
                   current ? "opacity-100" : "opacity-60 hover:opacity-100",
                 )}
               >

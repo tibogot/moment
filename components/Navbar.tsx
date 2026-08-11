@@ -839,7 +839,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               <CircleUserRound style={iconStyle} strokeWidth={1.5} />
             </Link>
 
-            <LanguageSwitcher className="hidden nav:flex" />
+            <LanguageSwitcher className="hidden gap-2 nav:flex" />
 
             {/* Below nav: only the current language, expanding to the rest.
                 Two links on the left of the row and two on the right keeps the
