@@ -813,6 +813,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               <Image
                 src="/brand/Moment-Logotype.svg"
                 alt="Moment"
+                translate="no"
                 width={1437}
                 height={220}
                 preload

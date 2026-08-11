@@ -1,8 +1,8 @@
+import { Brand } from "@/components/Brand";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { getSiteDetails } from "@/lib/sanity/queries";
-import { siteConfig } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("legal", {
   path: routes.legal,
@@ -18,7 +18,7 @@ export default async function LegalPage() {
     >
       <LegalSection title="Publisher">
         <p>
-          {legal.companyName || siteConfig.name}
+          <Brand name={legal.companyName} />
           {legal.legalForm ? ` (${legal.legalForm})` : ""}
         </p>
         {contact.street && <p>{contact.street}</p>}
@@ -49,8 +49,8 @@ export default async function LegalPage() {
       <LegalSection title="Intellectual property">
         <p>
           All content on this site — text, images, logos and design — is owned
-          by {siteConfig.name} or its partners and may not be reused without
-          prior written permission.
+          by <Brand /> or its partners and may not be reused without prior
+          written permission.
         </p>
       </LegalSection>
     </LegalDoc>

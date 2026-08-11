@@ -1,5 +1,6 @@
 "use client";
 
+import { Brand } from "@/components/Brand";
 import Image from "next/image";
 import NextLink from "next/link";
 import { Lines } from "@/components/Lines";
@@ -77,6 +78,7 @@ export function Footer() {
             <Image
               src="/brand/Moment-Logotype.svg"
               alt={siteConfig.name}
+              translate="no"
               width={1437}
               height={220}
               className="h-auto w-[62%] max-w-30"
@@ -87,7 +89,13 @@ export function Footer() {
 
         {/* Headline — open across the left; the rest of the field stays squared. */}
         <div className="col-start-2 col-end-5 row-start-3 row-end-5 min-w-0 self-end pb-5 pl-(--grid-gutter) text-left md:col-end-6 md:pb-[4svh]">
-          <p className="font-owners-narrow-bold max-w-full text-[13vw] leading-[0.88] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(7vw,12svh)]">
+          {/* Deliberately French in all three languages — it echoes the company
+              name and reads as a signature rather than a sentence. Which is
+              exactly what a translate bar would undo. */}
+          <p
+            translate="no"
+            className="font-owners-narrow-bold max-w-full text-[13vw] leading-[0.88] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(7vw,12svh)]"
+          >
             <Lines text={dict.footer.headline} />
           </p>
         </div>
@@ -95,7 +103,7 @@ export function Footer() {
         {/* Copyright + Belgian legal links in the bottom band. */}
         <div className="col-start-2 col-end-5 row-start-5 row-end-6 flex flex-col justify-center gap-2.5 px-(--grid-gutter) md:col-end-9 md:flex-row md:items-center md:justify-between md:gap-8">
           <p className="font-archivo-light shrink-0 text-[11px] leading-snug md:text-[12px]">
-            © {new Date().getFullYear()} {siteConfig.name}
+            © {new Date().getFullYear()} <Brand />
           </p>
           <ul className="flex flex-wrap gap-x-3 gap-y-1.5 md:justify-end md:gap-x-4 md:gap-y-2">
             <li>
@@ -105,7 +113,10 @@ export function Footer() {
             </li>
             {legalNav.map(({ key, href }) => (
               <li key={href}>
-                <Link href={href} className={`pointer-events-auto ${legalLinkClassName}`}>
+                <Link
+                  href={href}
+                  className={`pointer-events-auto ${legalLinkClassName}`}
+                >
                   {dict.legalNav[key]}
                 </Link>
               </li>
