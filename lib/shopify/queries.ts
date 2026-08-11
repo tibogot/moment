@@ -118,7 +118,8 @@ const PRODUCT_FIELDS = `
 `;
 
 export const ALL_PRODUCTS_QUERY = `
-  query AllProducts($first: Int!, $after: String) {
+  query AllProducts($first: Int!, $after: String, $language: LanguageCode)
+  @inContext(language: $language) {
     products(first: $first, after: $after, sortKey: CREATED_AT, reverse: true) {
       pageInfo {
         hasNextPage
@@ -134,7 +135,8 @@ export const ALL_PRODUCTS_QUERY = `
 `;
 
 export const PRODUCT_BY_HANDLE_QUERY = `
-  query ProductByHandle($handle: String!) {
+  query ProductByHandle($handle: String!, $language: LanguageCode)
+  @inContext(language: $language) {
     product(handle: $handle) {
       ${PRODUCT_FIELDS}
       descriptionHtml
@@ -237,7 +239,8 @@ const COLLECTION_FIELDS = `
 `;
 
 export const COLLECTIONS_QUERY = `
-  query Collections($first: Int!, $after: String) {
+  query Collections($first: Int!, $after: String, $language: LanguageCode)
+  @inContext(language: $language) {
     collections(first: $first, after: $after, sortKey: TITLE) {
       pageInfo {
         hasNextPage
@@ -260,7 +263,12 @@ export const COLLECTIONS_QUERY = `
 `;
 
 export const COLLECTION_BY_HANDLE_QUERY = `
-  query CollectionByHandle($handle: String!, $first: Int!, $after: String) {
+  query CollectionByHandle(
+    $handle: String!
+    $first: Int!
+    $after: String
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     collection(handle: $handle) {
       ${COLLECTION_FIELDS}
       products(first: $first, after: $after) {

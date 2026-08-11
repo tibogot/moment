@@ -1,5 +1,10 @@
 import { unstable_cache } from "next/cache";
-import { getShopifyClient, isShopifyConfigured } from "./client";
+import type { Locale } from "@/lib/i18n/config";
+import {
+  getShopifyClient,
+  isShopifyConfigured,
+  shopifyLanguage,
+} from "./client";
 import {
   ALL_PRODUCTS_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
@@ -48,7 +53,9 @@ export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
   };
 }
 
-function mapProductImages(node: ShopifyProductDetailNode): ShopifyProductImage[] {
+function mapProductImages(
+  node: ShopifyProductDetailNode,
+): ShopifyProductImage[] {
   const gallery = (node.images?.edges ?? []).map(({ node: image }) => ({
     url: image.url,
     altText: image.altText ?? node.title,
@@ -98,10 +105,14 @@ export function mapProductDetailNode(
   };
 }
 
-async function fetchProductsPage(after?: string | null) {
+async function fetchProductsPage(language: Locale, after?: string | null) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(ALL_PRODUCTS_QUERY, {
-    variables: { first: PRODUCTS_PAGE_SIZE, after: after ?? null },
+    variables: {
+      first: PRODUCTS_PAGE_SIZE,
+      after: after ?? null,
+      language: shopifyLanguage(language),
+    },
   })) as ProductsQueryResponse;
 
   if (errors?.length) {
@@ -116,14 +127,14 @@ async function fetchProductsPage(after?: string | null) {
   };
 }
 
-async function fetchAllProducts(): Promise<ShopifyProduct[]> {
+async function fetchAllProducts(language: Locale): Promise<ShopifyProduct[]> {
   const products: ShopifyProduct[] = [];
   let after: string | null = null;
 
   // Page through the whole catalogue — a traiteur menu is small enough that
   // one pass at build/revalidate time is cheaper than paginating in the UI.
   do {
-    const page = await fetchProductsPage(after);
+    const page = await fetchProductsPage(language, after);
     products.push(...page.products);
     after = page.pageInfo?.hasNextPage ? page.pageInfo.endCursor : null;
   } while (after);
@@ -131,17 +142,31 @@ async function fetchAllProducts(): Promise<ShopifyProduct[]> {
   return products;
 }
 
-const getCachedProducts = unstable_cache(fetchAllProducts, ["shopify-products"], {
-  revalidate: SHOPIFY_REVALIDATE,
-  tags: [SHOPIFY_CACHE_TAG],
-});
+/**
+ * The language is part of the cache key, not only the query.
+ *
+ * One cache entry per language, because the catalogue *is* different per
+ * language once Translate & Adapt is filled in. Leaving it out of the key would
+ * serve whichever language warmed the cache first to everybody — the kind of
+ * bug that looks like "the translations do not work" and is really "they
+ * worked once, for one visitor".
+ */
+const cachedProducts = (language: Locale) =>
+  unstable_cache(
+    () => fetchAllProducts(language),
+    ["shopify-products", language],
+    {
+      revalidate: SHOPIFY_REVALIDATE,
+      tags: [SHOPIFY_CACHE_TAG],
+    },
+  );
 
 /** Every product in the store. Returns [] when Shopify isn't configured. */
-export async function getProducts(): Promise<ShopifyProduct[]> {
+export async function getProducts(language: Locale): Promise<ShopifyProduct[]> {
   if (!isShopifyConfigured()) return [];
 
   try {
-    return await getCachedProducts();
+    return await cachedProducts(language)();
   } catch (error) {
     console.error("[shopify] getProducts failed", error);
     return [];
@@ -169,11 +194,12 @@ export function getSimilarProducts(
 }
 
 async function fetchProductByHandle(
+  language: Locale,
   handle: string,
 ): Promise<ShopifyProduct | null> {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(PRODUCT_BY_HANDLE_QUERY, {
-    variables: { handle },
+    variables: { handle, language: shopifyLanguage(language) },
   })) as ProductByHandleQueryResponse;
 
   if (errors?.length) {
@@ -184,14 +210,15 @@ async function fetchProductByHandle(
 }
 
 export async function getProductByHandle(
+  language: Locale,
   handle: string,
 ): Promise<ShopifyProduct | null> {
   if (!isShopifyConfigured()) return null;
 
   try {
     return await unstable_cache(
-      () => fetchProductByHandle(handle),
-      ["shopify-product", handle],
+      () => fetchProductByHandle(language, handle),
+      ["shopify-product", language, handle],
       { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
     )();
   } catch (error) {

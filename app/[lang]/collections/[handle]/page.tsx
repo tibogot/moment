@@ -5,7 +5,7 @@ import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
 import { ProductGrid } from "@/components/ProductGrid";
-import { toLocale } from "@/lib/i18n/config";
+import { DEFAULT_LOCALE, toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, collectionSchema, graph } from "@/lib/schema";
@@ -20,7 +20,10 @@ type CollectionPageProps = {
 };
 
 export async function generateStaticParams() {
-  const collections = await getCollections();
+  // Handles do not translate, so this only needs one language — and asking
+  // for the default keeps `generateStaticParams` on one cache entry rather
+  // than warming three to read the same list of slugs.
+  const collections = await getCollections(DEFAULT_LOCALE);
   return collections.map(({ handle }) => ({ handle }));
 }
 
@@ -30,7 +33,7 @@ export async function generateMetadata({
   const { lang, handle } = await params;
   const locale = toLocale(lang);
   const [collection, dict] = await Promise.all([
-    getCollectionByHandle(handle),
+    getCollectionByHandle(locale, handle),
     getDictionary(locale),
   ]);
 
@@ -52,8 +55,8 @@ export async function generateMetadata({
 }
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
-  const { handle } = await params;
-  const collection = await getCollectionByHandle(handle);
+  const { lang, handle } = await params;
+  const collection = await getCollectionByHandle(toLocale(lang), handle);
 
   if (!collection) notFound();
 

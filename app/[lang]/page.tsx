@@ -63,7 +63,7 @@ export default async function Home({
   const { lang } = await params;
   const [collections, availability, dict, siteDetails, images] =
     await Promise.all([
-      getCollections(),
+      getCollections(toLocale(lang)),
       getDeliveryAvailability(),
       getDictionary(toLocale(lang)),
       getSiteDetails(),

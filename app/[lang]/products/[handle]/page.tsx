@@ -9,7 +9,7 @@ import { ProductDetails } from "@/components/ProductDetails";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductRowSection } from "@/components/ProductRowSection";
 import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
-import { toLocale } from "@/lib/i18n/config";
+import { DEFAULT_LOCALE, toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, graph, productSchema } from "@/lib/schema";
@@ -25,7 +25,8 @@ type ProductPageProps = {
 };
 
 export async function generateStaticParams() {
-  const products = await getProducts();
+  // See the note in collections/[handle] — handles do not translate.
+  const products = await getProducts(DEFAULT_LOCALE);
   return products.map(({ handle }) => ({ handle }));
 }
 
@@ -35,7 +36,7 @@ export async function generateMetadata({
   const { lang, handle } = await params;
   const locale = toLocale(lang);
   const [product, dict] = await Promise.all([
-    getProductByHandle(handle),
+    getProductByHandle(locale, handle),
     getDictionary(locale),
   ]);
 
@@ -57,10 +58,11 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { lang, handle } = await params;
-  const dict = await getDictionary(toLocale(lang));
+  const locale = toLocale(lang);
+  const dict = await getDictionary(locale);
   const [product, allProducts] = await Promise.all([
-    getProductByHandle(handle),
-    getProducts(),
+    getProductByHandle(locale, handle),
+    getProducts(locale),
   ]);
 
   if (!product) notFound();

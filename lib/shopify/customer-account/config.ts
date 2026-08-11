@@ -12,7 +12,7 @@ export const OAUTH_COOKIE_MAX_AGE = 60 * 10;
 export function isCustomerAccountConfigured() {
   return Boolean(
     process.env.SHOPIFY_STORE_DOMAIN &&
-      process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID,
+    process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID,
   );
 }
 

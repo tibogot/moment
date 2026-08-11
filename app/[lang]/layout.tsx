@@ -126,8 +126,8 @@ export default async function RootLayout({
   if (!isLocale(lang)) notFound();
 
   const [products, collections, dictionary, siteDetails] = await Promise.all([
-    getProducts(),
-    getCollections(),
+    getProducts(lang),
+    getCollections(lang),
     getDictionary(lang),
     getSiteDetails(),
   ]);

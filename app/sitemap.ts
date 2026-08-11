@@ -104,8 +104,10 @@ async function safely<T>(
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, collections, menus, articlesByLocale] = await Promise.all([
-    safely(getProducts, "products"),
-    safely(getCollections, "collections"),
+    // One language is enough: the sitemap lists handles, and a handle is the
+    // same in all three.
+    safely(() => getProducts(DEFAULT_LOCALE), "products"),
+    safely(() => getCollections(DEFAULT_LOCALE), "collections"),
     safely(getMenus, "menus"),
     Promise.all(
       LOCALES.map(async (locale) => ({

@@ -215,7 +215,10 @@ export async function buildLogoutUrl() {
   const logoutUrl = new URL(config.end_session_endpoint);
 
   logoutUrl.searchParams.set("id_token_hint", session.idToken);
-  logoutUrl.searchParams.set("post_logout_redirect_uri", getLogoutRedirectUrl());
+  logoutUrl.searchParams.set(
+    "post_logout_redirect_uri",
+    getLogoutRedirectUrl(),
+  );
 
   return logoutUrl.toString();
 }

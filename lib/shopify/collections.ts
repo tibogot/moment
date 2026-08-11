@@ -1,5 +1,10 @@
 import { unstable_cache } from "next/cache";
-import { getShopifyClient, isShopifyConfigured } from "./client";
+import type { Locale } from "@/lib/i18n/config";
+import {
+  getShopifyClient,
+  isShopifyConfigured,
+  shopifyLanguage,
+} from "./client";
 import { SHOPIFY_CACHE_TAG, mapProductNode } from "./products";
 import {
   COLLECTIONS_QUERY,
@@ -34,10 +39,16 @@ function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
   };
 }
 
-async function fetchCollections(): Promise<ShopifyCollection[]> {
+async function fetchCollections(
+  language: Locale,
+): Promise<ShopifyCollection[]> {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(COLLECTIONS_QUERY, {
-    variables: { first: COLLECTIONS_PAGE_SIZE, after: null },
+    variables: {
+      first: COLLECTIONS_PAGE_SIZE,
+      after: null,
+      language: shopifyLanguage(language),
+    },
   })) as CollectionsQueryResponse;
 
   if (errors?.length) {
@@ -49,18 +60,22 @@ async function fetchCollections(): Promise<ShopifyCollection[]> {
   );
 }
 
-const getCachedCollections = unstable_cache(
-  fetchCollections,
-  ["shopify-collections"],
-  { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
-);
+/** One cache entry per language — see the note in `products.ts`. */
+const cachedCollections = (language: Locale) =>
+  unstable_cache(
+    () => fetchCollections(language),
+    ["shopify-collections", language],
+    { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+  );
 
 /** Every collection in the store. Returns [] when Shopify isn't configured. */
-export async function getCollections(): Promise<ShopifyCollection[]> {
+export async function getCollections(
+  language: Locale,
+): Promise<ShopifyCollection[]> {
   if (!isShopifyConfigured()) return [];
 
   try {
-    return await getCachedCollections();
+    return await cachedCollections(language)();
   } catch (error) {
     console.error("[shopify] getCollections failed", error);
     return [];
@@ -72,6 +87,7 @@ export type CollectionWithProducts = ShopifyCollection & {
 };
 
 async function fetchCollectionByHandle(
+  language: Locale,
   handle: string,
 ): Promise<CollectionWithProducts | null> {
   const client = getShopifyClient();
@@ -80,6 +96,7 @@ async function fetchCollectionByHandle(
       handle,
       first: COLLECTION_PRODUCTS_PAGE_SIZE,
       after: null,
+      language: shopifyLanguage(language),
     },
   })) as CollectionByHandleQueryResponse;
 
@@ -106,14 +123,15 @@ async function fetchCollectionByHandle(
 }
 
 export async function getCollectionByHandle(
+  language: Locale,
   handle: string,
 ): Promise<CollectionWithProducts | null> {
   if (!isShopifyConfigured()) return null;
 
   try {
     return await unstable_cache(
-      () => fetchCollectionByHandle(handle),
-      ["shopify-collection", handle],
+      () => fetchCollectionByHandle(language, handle),
+      ["shopify-collection", language, handle],
       { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
     )();
   } catch (error) {

@@ -19,10 +19,11 @@ export default async function ShopPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const dict = await getDictionary(toLocale(lang));
+  const locale = toLocale(lang);
+  const dict = await getDictionary(locale);
   const [products, collections] = await Promise.all([
-    getProducts(),
-    getCollections(),
+    getProducts(locale),
+    getCollections(locale),
   ]);
 
   // Shopify seeds every store with a "frontpage" collection; it isn't a real
@@ -33,10 +34,7 @@ export default async function ShopPage({
 
   return (
     <>
-      <PageIntro
-        title={dict.shop.title}
-        lead={dict.shop.lead}
-      />
+      <PageIntro title={dict.shop.title} lead={dict.shop.lead} />
 
       <GridSection className="pb-[14svh]">
         <ProductGrid products={products} collections={visibleCollections} />
