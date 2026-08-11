@@ -67,6 +67,18 @@ const ANIM_DURATION = 0.75;
 const OPEN_EASE = "power3.out";
 const CLOSE_EASE = "power3.inOut";
 
+/*
+ * The hover fade sits on this inner span rather than on the `[data-menu-item]`
+ * element itself, and that placement is load-bearing. GSAP writes opacity to
+ * the item as an inline style; a `transition-opacity` on that same element
+ * turns every write into a 150ms CSS tween, including the instantaneous reset
+ * back to 0 at the start of the reveal. The links were fading *out* over the
+ * panel's first frames before staggering back in — the flicker on open.
+ * `group-hover` keeps the whole padded row as the hover target.
+ */
+const menuLabelClassName =
+  "font-owners-narrow-bold block text-[10vw] leading-[1.05] uppercase transition-opacity group-hover:opacity-60";
+
 /**
  * Stays mounted and slides in and out, so there is no open/closing state to
  * juggle — `open` alone drives the timeline.
@@ -172,7 +184,14 @@ export function MobileNavMenu({
         yPercent: -100,
         duration: ANIM_DURATION,
         ease: CLOSE_EASE,
-        onComplete: () => setExpandedMenu(null),
+        onComplete: () => {
+          setExpandedMenu(null);
+          // Park the items again now that the panel is out of sight, so the
+          // next open starts from the same state the first one did. Left at
+          // opacity 1 they are on screen for the first frames of the reopen,
+          // and the reveal reads as a flicker rather than an entrance.
+          gsap.set(items, { yPercent: 100, opacity: 0 });
+        },
       });
     }
 
@@ -287,9 +306,11 @@ export function MobileNavMenu({
                         href={item.href}
                         data-menu-item
                         onClick={handleClose}
-                        className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                        className="group block px-(--grid-inset) py-4"
                       >
-                        {dict.nav[item.key]}
+                        <span className={menuLabelClassName}>
+                          {dict.nav[item.key]}
+                        </span>
                       </Link>
                     </li>
                   );
@@ -311,9 +332,9 @@ export function MobileNavMenu({
                         href={item.menu === "shop" ? routes.shop : routes.about}
                         data-menu-item
                         onClick={handleClose}
-                        className="font-owners-narrow-bold block px-(--grid-inset) py-4 text-[10vw] leading-[1.05] uppercase transition-opacity hover:opacity-60"
+                        className="group block px-(--grid-inset) py-4"
                       >
-                        {label}
+                        <span className={menuLabelClassName}>{label}</span>
                       </Link>
                     </li>
                   );
@@ -340,13 +361,11 @@ export function MobileNavMenu({
                           expanded ? dict.nav.hideLinks : dict.nav.showLinks,
                           { label },
                         )}
-                        className="flex w-full items-center justify-between gap-4 text-left transition-opacity hover:opacity-60"
+                        className="group flex w-full items-center justify-between gap-4 text-left"
                       >
-                        <span className="font-owners-narrow-bold text-[10vw] leading-[1.05] uppercase">
-                          {label}
-                        </span>
+                        <span className={menuLabelClassName}>{label}</span>
                         <span
-                          className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide"
+                          className="font-owners-medium shrink-0 text-[14px] uppercase tracking-wide transition-opacity group-hover:opacity-60"
                           aria-hidden
                         >
                           {expanded ? "−" : "+"}
