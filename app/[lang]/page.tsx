@@ -84,7 +84,12 @@ export default async function Home({
       <JsonLd data={siteGraph(siteDetails)} />
 
       <Hero copy={home.hero} image={images.hero} />
-      <IntroSection copy={home.intro} aboutLabel={dict.common.aboutUs} />
+      {/* The page's h1 lives here rather than in the hero — see IntroSection. */}
+      <IntroSection
+        copy={home.intro}
+        aboutLabel={dict.common.aboutUs}
+        headingAs="h1"
+      />
 
       {/* The two rooms of the business, side by side on identical 3 x 3 grids. */}
       <PanelPairSection

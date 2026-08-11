@@ -62,12 +62,18 @@ export function Hero({ copy, image }: HeroProps) {
             blockColor={REVEAL_HERO}
             delay={0.25}
           >
-            <h1
+            {/* The slogan, not the page's subject — it names neither the trade
+                nor the city, and the h1 is worth more than that. IntroSection
+                carries it instead, one section down: "Un traiteur bruxellois…".
+                A p, not a heading of any level: this line is display type, and
+                inventing an h2 for it above the real h1 would be worse than
+                the h1 it used to be. Nothing about how it looks changes. */}
+            <p
               className="font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] uppercase"
               style={{ fontSize: "var(--hero-headline)" }}
             >
               <Lines text={copy.headline} />
-            </h1>
+            </p>
           </TextReveal>
         </div>
 

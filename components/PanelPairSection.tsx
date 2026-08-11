@@ -136,10 +136,13 @@ export function PanelPairSection({
                   }}
                 >
                   {/* Sized so the two lines of "Coffee desk" still clear the
-                      rule above the row. */}
-                  <h3 className="font-owners-narrow-bold text-cream text-[13vw] leading-[0.9] uppercase md:text-[min(5.6vw,10svh)]">
+                      rule above the row. h2, not h3: these are two of the
+                      rooms of the business, peers of "What we do" and "Why
+                      us" further down, and there is no h2 in this section for
+                      an h3 to belong to. */}
+                  <h2 className="font-owners-narrow-bold text-cream text-[13vw] leading-[0.9] uppercase md:text-[min(5.6vw,10svh)]">
                     {copy[panel.key]}
-                  </h3>
+                  </h2>
                 </div>
               </Link>
             ))}

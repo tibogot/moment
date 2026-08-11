@@ -214,9 +214,13 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                 key remounts the reveal when Prev/Next changes the month. */}
             <div className="w-full min-w-0 text-left md:flex-1">
               <TextReveal key={monthLabel} blockColor={REVEAL_BLOCK} stagger={0.12}>
-                <h2 className="font-owners-narrow-bold text-[13vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
+                {/* Not a heading: the section's heading is the label above,
+                    which is stable. This is the month on show, and Prev/Next
+                    rewrites it — a document outline whose sections rename
+                    themselves as you click is not describing the document. */}
+                <p className="font-owners-narrow-bold text-[13vw] leading-[0.85] wrap-break-word uppercase md:text-[min(9vw,14svh)]">
                   {monthLabel}
-                </h2>
+                </p>
               </TextReveal>
             </div>
 

@@ -13,12 +13,20 @@ type IntroSectionProps = {
    * the indented one — see /coffee. Drop the prop once the call is made.
    */
   indentFirstLine?: boolean;
+  /**
+   * `h1` on the home page, where this line is the page's subject: it names the
+   * trade and the city, which the hero's slogan above it deliberately does not.
+   * Stays `h2` everywhere else — /coffee opens with a PageIntro that owns the
+   * h1 already, and a second one here would be competing with it.
+   */
+  headingAs?: "h1" | "h2";
 };
 
 export function IntroSection({
   copy,
   aboutLabel,
   indentFirstLine = true,
+  headingAs: Heading = "h2",
 }: IntroSectionProps) {
   return (
     <GridSection className="pt-[10svh] pb-[14svh]">
@@ -26,14 +34,14 @@ export function IntroSection({
       <div className="col-span-full mb-[6svh] h-px bg-sky" />
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
-          <h2
+          <Heading
             className={cn(
               "font-owners-narrow-bold max-w-full text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(6vw,9svh)]",
               indentFirstLine && "indent-first-line intro-headline"
             )}
           >
             {copy.headline}
-          </h2>
+          </Heading>
         </TextReveal>
       </div>
 
