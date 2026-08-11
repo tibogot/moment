@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { setDeliveryDate } from "@/app/actions/cart";
+import { setDeliveryDate, setDeliveryNote } from "@/app/actions/cart";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { notifyCartUpdated } from "@/lib/cart-store";
 import { isBookable, type DeliveryAvailability } from "@/lib/delivery";
@@ -14,7 +14,11 @@ import {
   formatMoney,
 } from "@/lib/i18n/format";
 import { zoneById, type ZoneId, type ZoneTable } from "@/lib/delivery-zones";
-import { needsAddress, type DeliveryMethod } from "@/lib/order-preferences";
+import {
+  DELIVERY_NOTE_MAX,
+  needsAddress,
+  type DeliveryMethod,
+} from "@/lib/order-preferences";
 import { useRouter } from "next/navigation";
 
 type CartDeliverySectionProps = {
@@ -23,6 +27,7 @@ type CartDeliverySectionProps = {
   deliveryDate: string | null;
   deliveryMethod: DeliveryMethod | null;
   deliveryAddress: string | null;
+  deliveryNote: string | null;
   deliveryZone: ZoneId | null;
   subtotal: number;
   totalPrice: string;
@@ -41,6 +46,7 @@ export function CartDeliverySection({
   deliveryDate,
   deliveryMethod,
   deliveryAddress,
+  deliveryNote,
   deliveryZone,
   subtotal,
   totalPrice,
@@ -57,6 +63,7 @@ export function CartDeliverySection({
   const router = useRouter();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [noteSaved, setNoteSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const dateIsStale = Boolean(
@@ -81,6 +88,21 @@ export function CartDeliverySection({
     blocker?.kind === "no-date" || blocker?.kind === "stale-date";
 
   const zone = deliveryZone ? zoneById(zones, deliveryZone) : null;
+
+  const saveNote = (value: string) => {
+    if (value.trim() === (deliveryNote ?? "").trim()) return;
+    setError(null);
+    startTransition(async () => {
+      const result = await setDeliveryNote(value);
+      if (!result.ok) {
+        setError(dict.errors[result.code]);
+        return;
+      }
+      setNoteSaved(true);
+      notifyCartUpdated();
+      router.refresh();
+    });
+  };
 
   const chooseDate = (iso: string) => {
     setError(null);
@@ -155,6 +177,39 @@ export function CartDeliverySection({
             <span className="font-archivo-light text-[13px]">
               {deliveryAddress}
             </span>
+          </div>
+        )}
+
+        {/* Only for delivery: "ring at reception" means nothing to someone
+            collecting from the atelier themselves. Saved on blur rather than
+            behind a button — a note nobody remembers to submit is a note the
+            driver never gets. */}
+        {needsAddress(deliveryMethod) && (
+          <div className="mt-3">
+            <label
+              htmlFor="delivery-note"
+              className="font-owners-medium text-[12px] uppercase tracking-wide"
+            >
+              {t.note}
+            </label>
+            <textarea
+              id="delivery-note"
+              rows={2}
+              defaultValue={deliveryNote ?? ""}
+              maxLength={DELIVERY_NOTE_MAX}
+              placeholder={t.notePlaceholder}
+              disabled={isPending}
+              onBlur={(event) => saveNote(event.target.value)}
+              className="font-archivo-light mt-2 w-full resize-none border border-sky bg-transparent px-3 py-2 text-[13px] leading-normal outline-none transition-colors duration-300 focus:bg-sky/20 disabled:opacity-40"
+            />
+            {noteSaved && (
+              <p
+                role="status"
+                className="font-archivo-light mt-1 text-[12px] opacity-60"
+              >
+                {t.noteSaved}
+              </p>
+            )}
           </div>
         )}
 

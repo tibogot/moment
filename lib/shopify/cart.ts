@@ -6,6 +6,7 @@ import {
 } from "@/lib/delivery-zones";
 import {
   DELIVERY_ADDRESS_ATTRIBUTE,
+  DELIVERY_NOTE_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
   parseDeliveryMethod,
   type DeliveryMethod,
@@ -50,6 +51,8 @@ export type Cart = {
   deliveryMethod: DeliveryMethod | null;
   /** The canonical register address, only ever set for home delivery. */
   deliveryAddress: string | null;
+  /** Free text for the driver — see DELIVERY_NOTE_ATTRIBUTE. */
+  deliveryNote: string | null;
   /**
    * The zone that address fell in, resolved when it was saved rather than on
    * every read — recomputing it would mean geocoding the stored label again on
@@ -285,6 +288,7 @@ function mapCartNode(node: RawCart): Cart {
     deliveryDate: attribute(DELIVERY_DATE_ATTRIBUTE),
     deliveryMethod: parseDeliveryMethod(attribute(DELIVERY_METHOD_ATTRIBUTE)),
     deliveryAddress: attribute(DELIVERY_ADDRESS_ATTRIBUTE),
+    deliveryNote: attribute(DELIVERY_NOTE_ATTRIBUTE),
     deliveryZone: parseZoneAttribute(attribute(DELIVERY_ZONE_ATTRIBUTE)),
   };
 }
@@ -307,10 +311,9 @@ async function runCartMutation(
   fallbackError: string,
 ) {
   const client = getShopifyClient();
-  const { data, errors } = (await client.request(
-    mutation,
-    { variables },
-  )) as CartMutationResponse;
+  const { data, errors } = (await client.request(mutation, {
+    variables,
+  })) as CartMutationResponse;
 
   if (errors?.length) {
     console.error(`[shopify] ${key} errors:`, errors);
@@ -372,7 +375,10 @@ export async function addVariantToCart(
   if (existingCartId) {
     const added = await runCartMutation(
       CART_LINES_ADD_MUTATION,
-      { cartId: existingCartId, lines: [{ merchandiseId: variantId, quantity }] },
+      {
+        cartId: existingCartId,
+        lines: [{ merchandiseId: variantId, quantity }],
+      },
       "cartLinesAdd",
       "Could not add this item to your cart.",
     );
@@ -389,7 +395,9 @@ export async function addVariantToCart(
 }
 
 type AttributeQueryResponse = {
-  data?: { cart: { attributes: { key: string; value: string | null }[] } | null };
+  data?: {
+    cart: { attributes: { key: string; value: string | null }[] } | null;
+  };
   errors?: { message: string }[];
 };
 

@@ -229,7 +229,11 @@
     "noAddress": "Add a delivery address on any product page to see the fee and the minimum order for your zone.",
     "noAddressShort": "Add a delivery address to see your zone’s fee and minimum order.",
     "deliveryDateTitle": "Delivery date",
-    "pickDayIntro": "Pick the day you want this delivered."
+    "pickDayIntro": "Pick the day you want this delivered.",
+    "note": "Delivery instructions",
+    "notePlaceholder": "Ring at reception, third floor, door code 1234…",
+    "noteSave": "Save",
+    "noteSaved": "Saved"
   },
   "shop": {
     "title": "Shop",
@@ -662,5 +666,12 @@
       "Quiche"
     ],
     "popularSearches": "Popular searches"
+  },
+  "account": {
+    "title": "Account",
+    "signedInAs": "Signed in as {name}.",
+    "orders": "Orders",
+    "noOrders": "No orders yet.",
+    "signOut": "Sign out"
   }
 }

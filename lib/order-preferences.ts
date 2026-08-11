@@ -15,6 +15,23 @@ export const DELIVERY_METHOD_ATTRIBUTE = "Delivery method";
 export const DELIVERY_ADDRESS_ATTRIBUTE = "Delivery address";
 
 /**
+ * Whatever the customer needs the driver to know — "ring at reception", "third
+ * floor, no lift", "leave with the concierge".
+ *
+ * An attribute like the rest, so it lands on the order page in the Shopify
+ * admin beside the address rather than in a system only the website can read.
+ * The kitchen prints the order; the note has to be on it.
+ */
+export const DELIVERY_NOTE_ATTRIBUTE = "Delivery note";
+
+/**
+ * Long enough for a floor, a door code and a name; short enough that it cannot
+ * be used as a second message box. Enforced on the server too — see
+ * `setDeliveryNote` — because the limit on the input is a courtesy, not a rule.
+ */
+export const DELIVERY_NOTE_MAX = 200;
+
+/**
  * Below this the address register's fuzzy matcher just returns noise. It lives
  * here rather than next to the lookup itself so the client can read it without
  * pulling the server-side module into the browser bundle.

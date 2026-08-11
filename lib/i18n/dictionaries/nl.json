@@ -229,7 +229,11 @@
     "noAddress": "Voeg een leveradres toe op een productpagina om de kosten en het minimum van uw zone te zien.",
     "noAddressShort": "Voeg een leveradres toe om de kosten en het minimum van uw zone te zien.",
     "deliveryDateTitle": "Leverdatum",
-    "pickDayIntro": "Kies de dag van levering."
+    "pickDayIntro": "Kies de dag van levering.",
+    "note": "Aanwijzingen voor de levering",
+    "notePlaceholder": "Aanbellen aan de receptie, derde verdieping, code 1234…",
+    "noteSave": "Bewaren",
+    "noteSaved": "Bewaard"
   },
   "shop": {
     "title": "Winkel",
@@ -663,5 +667,12 @@
       "Quiche"
     ],
     "popularSearches": "Populaire zoekopdrachten"
+  },
+  "account": {
+    "title": "Account",
+    "signedInAs": "Aangemeld als {name}.",
+    "orders": "Bestellingen",
+    "noOrders": "Nog geen bestellingen.",
+    "signOut": "Afmelden"
   }
 }

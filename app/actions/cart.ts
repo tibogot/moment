@@ -23,6 +23,8 @@ import {
 import {
   DELIVERY_ADDRESS_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
+  DELIVERY_NOTE_ATTRIBUTE,
+  DELIVERY_NOTE_MAX,
   deliveryMethodAttributeValue,
   isDeliveryMethod,
   type DeliveryMethod,
@@ -79,7 +81,11 @@ export async function addToCart(variantId: string, quantity = 1) {
   await setCartCookie(result.cartId);
   revalidatePath(routes.cart);
 
-  return { ok: true as const, totalQuantity: result.totalQuantity, cart: result.cart };
+  return {
+    ok: true as const,
+    totalQuantity: result.totalQuantity,
+    cart: result.cart,
+  };
 }
 
 /**
@@ -124,6 +130,24 @@ export async function setDeliveryDate(isoDate: string) {
   if (!saved.ok) return saved;
 
   return { ok: true as const, date: isoDate, cart: saved.cart };
+}
+
+/**
+ * Trimmed and capped here, not only in the input: the value arrives from the
+ * client as a string like any other, and this one is printed on a kitchen
+ * ticket. An empty note clears the attribute rather than storing "".
+ */
+export async function setDeliveryNote(value: string) {
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
+
+  const note = value.trim().slice(0, DELIVERY_NOTE_MAX);
+
+  const saved = await saveOrderPreferences({
+    [DELIVERY_NOTE_ATTRIBUTE]: note || null,
+  });
+  if (!saved.ok) return saved;
+
+  return { ok: true as const, note };
 }
 
 export async function setDeliveryMethod(method: DeliveryMethod) {

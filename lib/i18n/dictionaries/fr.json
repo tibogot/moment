@@ -229,7 +229,11 @@
     "noAddress": "Ajoutez une adresse de livraison sur une page produit pour voir les frais et le minimum de votre zone.",
     "noAddressShort": "Ajoutez une adresse de livraison pour voir les frais et le minimum de votre zone.",
     "deliveryDateTitle": "Date de livraison",
-    "pickDayIntro": "Choisissez le jour de livraison."
+    "pickDayIntro": "Choisissez le jour de livraison.",
+    "note": "Précisions pour la livraison",
+    "notePlaceholder": "Sonner à l'accueil, 3e étage, code 1234…",
+    "noteSave": "Enregistrer",
+    "noteSaved": "Enregistré"
   },
   "shop": {
     "title": "Boutique",
@@ -663,5 +667,12 @@
       "Quiche"
     ],
     "popularSearches": "Recherches fréquentes"
+  },
+  "account": {
+    "title": "Compte",
+    "signedInAs": "Connecté en tant que {name}.",
+    "orders": "Commandes",
+    "noOrders": "Aucune commande pour l'instant.",
+    "signOut": "Se déconnecter"
   }
 }
