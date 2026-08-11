@@ -363,7 +363,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               </li>
             </ul>
 
-            <p className="font-archivo-light mt-6 max-w-[44ch] text-[18px] leading-normal md:text-[min(1.35vw,2svh)]">
+            <p className="font-archivo-light mt-6 max-w-[44ch] text-(length:--body-text) leading-normal">
               {interpolate(t.note, { days: availability.leadTimeDays })}
               {closedDays ? ` ${closedDays}` : ""}
             </p>

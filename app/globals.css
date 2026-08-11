@@ -66,6 +66,10 @@
      rows on viewports wider than ~16:10 — raise it to let type run bigger. */
   --hero-headline: min(17vw, 8svh);
   --hero-body: 18px;
+  /* Body copy in the sections that place it on the grid. A token rather than a
+     repeated expression: it was written out at six call sites, so the floor
+     added below would have had to be remembered six times. */
+  --body-text: 18px;
   --nav-text: 12px;
   /* Width, not height — the logotype is 6.5:1, so this is ~15px of drawn mark.
      Nudged up from 92px when the final logotype landed: it is proportionally
@@ -100,7 +104,17 @@
        wider and the svh term governs, holding the headline at ~75% of its two
        rows. Raise the svh value to let the type run closer to the rule above. */
     --hero-headline: min(10.6vw, 15svh);
-    --hero-body: min(1.63vw, 2.4svh);
+    /* The floor goes inside the min, not around it. 1.63vw is 12.5px at the
+       breakpoint itself, so the lead used to *shrink* — 18px to 12.5px — as
+       the layout switched to seven columns, and did not climb back past 18px
+       until ~1104px. Flooring the width term fixes that; leaving the svh cap
+       outermost keeps what it was there for, which is a short viewport where
+       the lead has one fixed grid row to fit into and no room to grow. */
+    --hero-body: min(max(16px, 1.63vw), 2.4svh);
+    /* Same trough, same fix: 1.35vw is 10.4px at 768. Here the cap can stay
+       inside, because this copy sits in normal flow and cannot overflow a row
+       — nothing needs to hold it under 18px, only above. */
+    --body-text: max(18px, min(1.35vw, 2svh));
     /* Fixed, not vw-scaled: the navbar is chrome, and letting it grow with the
        viewport made the links 18px on a 1920 screen. */
     --nav-text: 14px;

@@ -149,7 +149,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
               animateOnScroll={false}
               delay={0.35}
             >
-              <p className="font-archivo-light mt-[5svh] max-w-[44ch] text-[15px] leading-[1.5] text-black/70 md:text-[min(1.35vw,2svh)]">
+              <p className="font-archivo-light mt-[5svh] max-w-[44ch] text-(length:--body-text) leading-normal text-black/70">
                 {menu.summary}
               </p>
             </TextReveal>

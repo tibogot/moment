@@ -24,7 +24,7 @@ export function AboutIntro() {
 
       <div className="col-start-2 col-end-5 mt-[6svh] min-w-0 px-(--grid-gutter) text-left md:col-start-5 md:col-end-8 md:mt-[10svh]">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.08} duration={0.6}>
-          <p className="font-archivo-light max-w-full text-[18px] leading-normal wrap-break-word text-black md:text-[min(1.35vw,2svh)]">
+          <p className="font-archivo-light max-w-full text-(length:--body-text) leading-normal wrap-break-word text-black">
             Moment is a traiteur and catering kitchen in Brussels. Every
             morning we cook seasonal plates, salads, pastries and cold-pressed
             juices, then send them out across the city — to offices in the
@@ -32,7 +32,7 @@ export function AboutIntro() {
             between.
           </p>
 
-          <p className="font-archivo-light mt-5 max-w-full text-[18px] leading-normal wrap-break-word text-black md:mt-[3svh] md:text-[min(1.35vw,2svh)]">
+          <p className="font-archivo-light mt-5 max-w-full text-(length:--body-text) leading-normal wrap-break-word text-black md:mt-[3svh]">
             Some weeks that is forty lunches before ten in the morning. Some
             weeks it is a seated dinner for thirty, a launch for two hundred,
             or a coffee desk open until the room empties. The logistics change.

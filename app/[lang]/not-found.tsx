@@ -80,7 +80,7 @@ export default function NotFound() {
               stagger={0.08}
               duration={0.6}
             >
-              <p className="font-archivo-light max-w-[34ch] text-[15px] leading-[1.5] wrap-break-word md:text-[min(1.35vw,2svh)]">
+              <p className="font-archivo-light max-w-[34ch] text-(length:--body-text) leading-normal wrap-break-word">
                 Cette page n&apos;existe plus, ou n&apos;a jamais existé. Le
                 reste de la maison est toujours là.
               </p>

@@ -47,7 +47,7 @@ export function IntroSection({
 
       <div className="col-start-2 col-end-5 mt-[6svh] min-w-0 px-(--grid-gutter) text-left md:col-start-5 md:col-end-8 md:mt-[10svh]">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.08} duration={0.6}>
-          <p className="font-archivo-light max-w-full text-[18px] leading-normal wrap-break-word text-black md:text-[min(1.35vw,2svh)]">
+          <p className="font-archivo-light max-w-full text-(length:--body-text) leading-normal wrap-break-word text-black">
             {copy.body}
           </p>
 
