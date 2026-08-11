@@ -379,7 +379,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
         ref={barRef}
         className="fixed inset-x-0 bottom-0 z-30 invisible border-t border-sky bg-cream text-black"
         role="region"
-        aria-label="Selected delivery date"
+        aria-label={dict.orderBar.selectedDate}
         aria-hidden={!barOpen}
         inert={!barOpen}
       >
@@ -390,7 +390,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
             <button
               type="button"
               onClick={dismissBar}
-              aria-label="Dismiss"
+              aria-label={dict.common.dismiss}
               className="font-owners-medium shrink-0 text-[12px] uppercase tracking-wide opacity-60 transition-opacity hover:opacity-100 md:text-(length:--nav-text)"
             >
               {t.dismiss}

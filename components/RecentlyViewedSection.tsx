@@ -57,6 +57,8 @@ export function RecentlyViewedSection({
   return (
     <ProductRowSection
       title={dict.shop.recentlyViewed}
+      viewAllLabel={dict.common.seeEverything}
+      soldOutLabel={dict.product.soldOut}
       products={products}
       className={cn("pt-[10svh] pb-[14svh]", className)}
     />

@@ -758,7 +758,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           >
             <button
               type="button"
-              aria-label="Open menu"
+              aria-label={dict.nav.openMenu}
               data-nav-link
               onClick={() =>
                 withOverlayFocusRelease(() => {
@@ -773,7 +773,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             </button>
             <button
               type="button"
-              aria-label="Search"
+              aria-label={dict.nav.search}
               data-nav-link
               onClick={() =>
                 withOverlayFocusRelease(() => {
@@ -843,7 +843,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
               Lives on the Link, not the span — GSAP owns the span's filter. */}
           <Link
             href={routes.home}
-            aria-label="Moment home"
+            aria-label={dict.nav.home}
             className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6 nav:translate-y-[-1.5px]"
             onMouseEnter={closeNavMenu}
             onClick={handleLogoClick}
@@ -868,7 +868,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           >
             <button
               type="button"
-              aria-label="Search"
+              aria-label={dict.nav.search}
               data-nav-link
               className="hidden nav:block"
               onClick={() =>
@@ -885,7 +885,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
 
             <Link
               href={routes.account}
-              aria-label="Account"
+              aria-label={dict.nav.account}
               data-nav-link
               className="hidden nav:block"
             >
@@ -901,7 +901,7 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
 
             <button
               type="button"
-              aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
+              aria-label={`${dict.nav.cart}${cartCount ? ` (${cartCount})` : ""}`}
               data-nav-link
               onClick={() =>
                 withOverlayFocusRelease(() => {

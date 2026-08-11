@@ -156,6 +156,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {similarProducts.length > 0 && (
         <ProductRowSection
           title={dict.product.similar}
+          viewAllLabel={dict.common.seeEverything}
+          soldOutLabel={dict.product.soldOut}
           products={similarProducts}
           viewAllHref={routes.shop}
           className="pb-0"

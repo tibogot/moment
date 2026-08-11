@@ -287,6 +287,7 @@ export function SearchPanel({
                           the "Popular products" label above, which is a
                           paragraph, so it reads as a skipped level too. */}
                       <ProductCard
+                        soldOutLabel={dict.product.soldOut}
                         product={product}
                         compact
                         titleAs="span"

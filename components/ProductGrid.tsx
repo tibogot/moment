@@ -240,7 +240,7 @@ export function ProductGrid({
             >
               {/* `sizes` stays fixed across views on purpose: changing it would
                   swap the srcset candidate and flash the image mid-flip. */}
-              <ProductCard product={product} />
+              <ProductCard product={product} soldOutLabel={dict.product.soldOut} />
             </li>
           ))}
         </ul>

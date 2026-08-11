@@ -11,6 +11,12 @@ type ProductCardProps = {
   /** Tighter padding for overlays like search. */
   compact?: boolean;
   /**
+   * Passed in rather than read from the dictionary: this card renders on both
+   * sides of the client boundary, and a hook here would make every product grid
+   * a client component to translate two words.
+   */
+  soldOutLabel: string;
+  /**
    * What the title is, structurally. A heading on the pages where the card is
    * content — the shop grid, the product rows — under the section heading
    * above it. `span` where the card sits in an overlay that is mounted on
@@ -32,6 +38,7 @@ export function ProductCard({
   product,
   sizes = "(max-width: 768px) 50vw, 33vw",
   compact = false,
+  soldOutLabel,
   titleAs: Title = "h3",
   onNavigate,
 }: ProductCardProps) {
@@ -55,7 +62,7 @@ export function ProductCard({
           )}
           {!product.availableForSale && (
             <span className="font-owners-medium absolute top-3 left-3 bg-cream px-2 py-1 text-[10px] uppercase">
-              Sold out
+              {soldOutLabel}
             </span>
           )}
         </div>

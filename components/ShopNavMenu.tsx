@@ -155,7 +155,7 @@ export function ShopNavMenu({
       onMouseLeave={resetHover}
     >
       <nav
-        aria-label="Shop"
+        aria-label={dict.nav.shop}
         className="relative col-start-2 col-end-4 flex flex-col gap-2.5 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh]"
       >
         <Link
@@ -165,7 +165,7 @@ export function ShopNavMenu({
           onFocus={setHover("all")}
           onClick={onNavigate}
         >
-          All
+          {dict.nav.all}
         </Link>
         <Link
           href={routes.collections}

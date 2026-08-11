@@ -207,7 +207,7 @@ export function MobileNavMenu({
   // reason they are built here rather than shared with the desktop menus.
   const menuChildren: Record<NavMenuKey, { href: string; label: string }[]> = {
     shop: [
-      { href: routes.shop, label: "All" },
+      { href: routes.shop, label: dict.nav.all },
       { href: routes.collections, label: dict.nav.collections },
       ...collections.map((collection) => ({
         href: routes.collection(collection.handle),
@@ -227,7 +227,7 @@ export function MobileNavMenu({
       className="fixed inset-0 z-50 bg-cream text-black nav:hidden"
       role="dialog"
       aria-modal="true"
-      aria-label="Menu"
+      aria-label={dict.nav.menu}
       aria-hidden={!open}
       inert={!open}
     >
@@ -244,12 +244,12 @@ export function MobileNavMenu({
               onClick={handleClose}
               className="font-owners-medium justify-self-start text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60"
             >
-              Close
+              {dict.common.close}
             </button>
 
             <Link
               href={routes.home}
-              aria-label="Moment home"
+              aria-label={dict.nav.home}
               className="flex justify-center justify-self-center"
               onClick={handleClose}
             >
@@ -268,7 +268,7 @@ export function MobileNavMenu({
 
             <button
               type="button"
-              aria-label={`Cart${cartCount ? ` (${cartCount})` : ""}`}
+              aria-label={`${dict.nav.cart}${cartCount ? ` (${cartCount})` : ""}`}
               onClick={() => {
                 handleClose();
                 window.dispatchEvent(new Event("cart-open"));

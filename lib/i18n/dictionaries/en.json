@@ -14,7 +14,11 @@
     "signOut": "Sign out",
     "collections": "Collections",
     "showLinks": "Show {label} links",
-    "hideLinks": "Hide {label} links"
+    "hideLinks": "Hide {label} links",
+    "all": "All",
+    "home": "Home",
+    "openMenu": "Open menu",
+    "menu": "Menu"
   },
   "legalNav": {
     "legal": "Legal notice",
@@ -38,7 +42,9 @@
       "eyebrow": "Error 404",
       "lead": "This page no longer exists, or never did. The rest of the house is still standing.",
       "back": "Back to home"
-    }
+    },
+    "back": "Back",
+    "dismiss": "Dismiss"
   },
   "home": {
     "hero": {
@@ -200,7 +206,8 @@
     "checking": "Checking…",
     "noMatch": "No Belgian address matches that.",
     "didYouMean": "Did you mean {streets}? Add a house number.",
-    "loadingDays": "Loading available days…"
+    "loadingDays": "Loading available days…",
+    "selectedDate": "Selected delivery date"
   },
   "cart": {
     "title": "Cart",
@@ -329,7 +336,11 @@
       "company_required": "We need the company name.",
       "vat_required": "We need your VAT number to invoice you.",
       "vat_invalid": "A Belgian VAT number is BE followed by ten digits."
-    }
+    },
+    "phonePlaceholder": "+32",
+    "datePlaceholder": "14 March",
+    "guestsPlaceholder": "25, or 20–30",
+    "messagePlaceholder": "Lunch for a board meeting, dietary requirements, a budget to work to — whatever you already know."
   },
   "proAccount": {
     "title": "Professional account",

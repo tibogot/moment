@@ -73,7 +73,7 @@ function CookiePreferencesPanel({
       <button
         type="button"
         className="absolute inset-0 bg-black/40"
-        aria-label="Close cookie preferences"
+        aria-label={t.closeLabel}
         onClick={onClose}
       />
 

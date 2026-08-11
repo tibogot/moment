@@ -326,7 +326,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               onClick={pickerOpen ? () => setPickerOpen(false) : closePanel}
               className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
             >
-              {pickerOpen ? "Back" : "Close"}
+              {pickerOpen ? dict.common.back : dict.common.close}
             </button>
           </div>
           <div className="h-px bg-sky" aria-hidden />
@@ -476,7 +476,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     onClick={() => setPickerOpen(true)}
                     className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
                   >
-                    {dateIsStale ? "Pick another day" : "Choose a date"}
+                    {dateIsStale ? t.pickAnother : t.pick}
                   </button>
                 )}
               </div>

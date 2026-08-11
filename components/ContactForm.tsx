@@ -384,7 +384,7 @@ export function ContactForm({
                   value={values.phone}
                   onChange={update("phone")}
                   error={errorText(state.errors.phone)}
-                  placeholder="+32"
+                  placeholder={t.phonePlaceholder}
                   autoComplete="tel"
                 />
 
@@ -468,7 +468,7 @@ export function ContactForm({
                     value={values.date}
                     onChange={update("date")}
                     error={errorText(state.errors.date)}
-                    placeholder="14 March"
+                    placeholder={t.datePlaceholder}
                   />
 
                   <TextField
@@ -478,7 +478,7 @@ export function ContactForm({
                     value={values.guests}
                     onChange={update("guests")}
                     error={errorText(state.errors.guests)}
-                    placeholder="25, or 20–30"
+                    placeholder={t.guestsPlaceholder}
                   />
                   </>
                 )}
@@ -514,7 +514,7 @@ export function ContactForm({
                   value={values.message}
                   onChange={update("message")}
                   error={errorText(state.errors.message)}
-                  placeholder="Lunch for a board meeting, dietary requirements, a budget to work to — whatever you already know."
+                  placeholder={t.messagePlaceholder}
                   rows={6}
                   maxLength={MESSAGE_MAX}
                   required

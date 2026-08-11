@@ -5,7 +5,8 @@ import NextLink from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LOCALES, LOCALE_NAME, withLocale } from "@/lib/i18n/config";
 import { rememberLocale } from "@/lib/i18n/remember-locale";
-import { useLocale } from "@/components/LocaleProvider";
+import { useLocale, useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 
 /**
@@ -20,6 +21,7 @@ import { cn } from "@/lib/utils";
  * `withLocale` swaps the language rather than stacking a second one on top.
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
+  const dict = useDictionary();
   const active = useLocale();
   const pathname = usePathname();
 
@@ -27,7 +29,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     // The gap belongs to the caller: `cn` is a plain join, so a second gap
     // class here would not lose to one passed in. The mobile menu wants the
     // codes further apart than the desktop bar does.
-    <nav className={cn("flex items-center", className)} aria-label="Language">
+    <nav className={cn("flex items-center", className)} aria-label={dict.language.label}>
       {LOCALES.map((locale) => {
         const current = locale === active;
 
@@ -39,6 +41,13 @@ export function LanguageSwitcher({ className }: { className?: string }) {
             lang={locale}
             onClick={() => rememberLocale(locale)}
             aria-current={current ? "true" : undefined}
+            aria-label={
+              current
+                ? undefined
+                : interpolate(dict.language.switchTo, {
+                    language: LOCALE_NAME[locale],
+                  })
+            }
             title={LOCALE_NAME[locale]}
             // The navbar scrubs every [data-nav-link] from cream to black as
             // the hero scrolls past. Without it these keep the cream they
@@ -77,6 +86,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
  * for the reasons above.
  */
 export function CompactLanguageSwitcher({ className }: { className?: string }) {
+  const dict = useDictionary();
   const active = useLocale();
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -127,7 +137,7 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
         data-nav-link
         aria-expanded={open}
         aria-haspopup="true"
-        aria-label={`Language: ${LOCALE_NAME[active]}`}
+        aria-label={`${dict.language.label}: ${LOCALE_NAME[active]}`}
         onClick={() => setOpen((current) => !current)}
         // Two characters is a target about 16px wide, which a finger misses.
         // The box is padded out to the 44px minimum and the negative margin
@@ -141,7 +151,7 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
 
       {open && (
         <nav
-          aria-label="Language"
+          aria-label={dict.language.label}
           // Right-aligned so the panel grows inwards and never past the edge of
           // the screen. Black is set rather than inherited: on the home page the
           // nav still carries the hero's cream for the first client render.
@@ -158,6 +168,13 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
                 lang={locale}
                 onClick={() => rememberLocale(locale)}
                 aria-current={current ? "true" : undefined}
+                aria-label={
+                  current
+                    ? undefined
+                    : interpolate(dict.language.switchTo, {
+                        language: LOCALE_NAME[locale],
+                      })
+                }
                 title={LOCALE_NAME[locale]}
                 // A whole 44px row each, divided by the same sky rule the rest
                 // of the site uses, rather than three lines of text stacked

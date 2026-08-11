@@ -14,7 +14,11 @@
     "signOut": "Se déconnecter",
     "collections": "Collections",
     "showLinks": "Afficher les liens {label}",
-    "hideLinks": "Masquer les liens {label}"
+    "hideLinks": "Masquer les liens {label}",
+    "all": "Tout",
+    "home": "Accueil",
+    "openMenu": "Ouvrir le menu",
+    "menu": "Menu"
   },
   "legalNav": {
     "legal": "Mentions légales",
@@ -38,7 +42,9 @@
       "eyebrow": "Erreur 404",
       "lead": "Cette page n'existe plus, ou n'a jamais existé. Le reste de la maison est toujours là.",
       "back": "Retour à l'accueil"
-    }
+    },
+    "back": "Retour",
+    "dismiss": "Fermer"
   },
   "home": {
     "hero": {
@@ -200,7 +206,8 @@
     "checking": "Recherche…",
     "noMatch": "Aucune adresse belge ne correspond.",
     "didYouMean": "Vouliez-vous dire {streets} ? Ajoutez un numéro.",
-    "loadingDays": "Chargement des jours disponibles…"
+    "loadingDays": "Chargement des jours disponibles…",
+    "selectedDate": "Date de livraison choisie"
   },
   "cart": {
     "title": "Panier",
@@ -329,7 +336,11 @@
       "company_required": "Il nous faut le nom de la société.",
       "vat_required": "Il nous faut votre numéro de TVA pour facturer.",
       "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres."
-    }
+    },
+    "phonePlaceholder": "+32",
+    "datePlaceholder": "14 mars",
+    "guestsPlaceholder": "25, ou 20–30",
+    "messagePlaceholder": "Un déjeuner pour un conseil d'administration, des régimes particuliers, un budget à respecter — tout ce que vous savez déjà."
   },
   "proAccount": {
     "title": "Compte professionnel",

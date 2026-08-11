@@ -14,7 +14,11 @@
     "signOut": "Afmelden",
     "collections": "Collecties",
     "showLinks": "{label}-links tonen",
-    "hideLinks": "{label}-links verbergen"
+    "hideLinks": "{label}-links verbergen",
+    "all": "Alles",
+    "home": "Home",
+    "openMenu": "Menu openen",
+    "menu": "Menu"
   },
   "legalNav": {
     "legal": "Wettelijke vermeldingen",
@@ -38,7 +42,9 @@
       "eyebrow": "Fout 404",
       "lead": "Deze pagina bestaat niet meer, of heeft nooit bestaan. De rest van het huis staat er nog.",
       "back": "Terug naar de startpagina"
-    }
+    },
+    "back": "Terug",
+    "dismiss": "Sluiten"
   },
   "home": {
     "hero": {
@@ -200,7 +206,8 @@
     "checking": "Zoeken…",
     "noMatch": "Geen Belgisch adres komt overeen.",
     "didYouMean": "Bedoelde u {streets}? Voeg een huisnummer toe.",
-    "loadingDays": "Beschikbare dagen laden…"
+    "loadingDays": "Beschikbare dagen laden…",
+    "selectedDate": "Gekozen leverdatum"
   },
   "cart": {
     "title": "Winkelmand",
@@ -329,7 +336,11 @@
       "company_required": "Wij hebben de bedrijfsnaam nodig.",
       "vat_required": "Wij hebben uw btw-nummer nodig om te factureren.",
       "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers."
-    }
+    },
+    "phonePlaceholder": "+32",
+    "datePlaceholder": "14 maart",
+    "guestsPlaceholder": "25, of 20–30",
+    "messagePlaceholder": "Een lunch voor een bestuursvergadering, dieetwensen, een budget om rekening mee te houden — alles wat u al weet."
   },
   "proAccount": {
     "title": "Zakelijk account",
