@@ -62,12 +62,33 @@ versions competing separately.
   internationalization plugin — so the three know about each other.
 - Give articles their alternates back once they do.
 
-### 2. The hero grid
+### 2. Search suggestions should come from the catalogue
+
+The chips under "Popular searches" are six hardcoded terms typed into the box
+and matched against Shopify. Five of the original six found nothing — the shop
+is stocked in French and the chips were in English. They are now French terms
+verified against the live catalogue, identical in all three dictionaries,
+because a chip in the visitor's language that returns nothing is worse than one
+in the wrong language.
+
+That is a patch. The chips are a hardcoded guess at what the shop sells, and
+they go stale the moment the client adds a product line nobody remembers to add
+here.
+
+**Derive them from the collections instead.** Those are the catalogue's own
+vocabulary, they already come from Shopify, they are already in the nav, and
+they cannot go stale. It means changing what a chip *does* — link to the
+collection rather than fill the search box — which is a better outcome anyway:
+someone clicking "Salades" wants the salads, not a text search for the word.
+
+A decision rather than a fix, which is why it is here.
+
+### 3. The hero grid
 
 The one design request still open, and it is a trade-off rather than a value —
 see §4. Worth doing while the measurements below are fresh.
 
-### 3. TypeGen
+### 4. TypeGen
 
 Schema and queries are in one repo now, so it can finally enforce the schema ↔
 GROQ ↔ TypeScript contract that `sanity/README.md` describes in prose. Invisible
