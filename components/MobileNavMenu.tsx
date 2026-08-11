@@ -14,6 +14,7 @@ import {
 import { Handbag } from "lucide-react";
 import { gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
   getCartSnapshot,
   getServerCartSnapshot,
@@ -381,25 +382,32 @@ export function MobileNavMenu({
             className="mt-auto shrink-0 border-t border-sky px-(--grid-inset) py-4"
           >
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-5">
-                {socialLinks.map(({ label, href, icon, width, height }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-opacity hover:opacity-60"
-                  >
-                    <Image
-                      src={icon}
-                      alt=""
-                      width={width}
-                      height={height}
-                      aria-hidden
-                    />
-                  </a>
-                ))}
+              {/* The panel covers the navbar, so its compact switcher is
+                  unreachable from here. This row has the width the bar does
+                  not, so it carries all three languages outright. */}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-5">
+                  {socialLinks.map(({ label, href, icon, width, height }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      aria-label={label}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-opacity hover:opacity-60"
+                    >
+                      <Image
+                        src={icon}
+                        alt=""
+                        width={width}
+                        height={height}
+                        aria-hidden
+                      />
+                    </a>
+                  ))}
+                </div>
+
+                <LanguageSwitcher className="shrink-0" />
               </div>
               {phone && (
                 <a

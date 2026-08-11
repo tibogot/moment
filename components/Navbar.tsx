@@ -2,7 +2,10 @@
 
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import {
+  CompactLanguageSwitcher,
+  LanguageSwitcher,
+} from "@/components/LanguageSwitcher";
 import { useBarePathname, useDictionary } from "@/components/LocaleProvider";
 import { usePathname } from "next/navigation";
 import {
@@ -837,6 +840,11 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             </Link>
 
             <LanguageSwitcher className="hidden nav:flex" />
+
+            {/* Below nav: only the current language, expanding to the rest.
+                Two links on the left of the row and two on the right keeps the
+                logo where it belongs. */}
+            <CompactLanguageSwitcher className="nav:hidden" />
 
             <button
               type="button"
