@@ -56,13 +56,14 @@ export default async function AboutPage({
     getDictionary(toLocale(lang)),
     getSiteDetails(),
   ]);
+  const about = dict.about;
   const jsonLd = aboutJsonLd(dict.meta.about, siteDetails);
   return (
     <>
       <JsonLd data={jsonLd} />
 
-      <AboutHero />
-      <AboutIntro />
+      <AboutHero copy={about.hero} />
+      <AboutIntro copy={about.intro} />
 
       {/* Mirror of the home page's split blocks, flipped: the large image sits
           on the right half here, with the smaller one answering on the left. */}
@@ -98,29 +99,29 @@ export default async function AboutPage({
       />
 
       <StickyTitleSection
-        label="Our story"
-        title="It began with one table too many."
-        body="Moment started in a rented kitchen off the Chaussée d'Ixelles, cooking Friday lunch for a design studio that had run out of decent options. Word travelled the way it does here — one office told another, then someone's launch, then someone's wedding. We still cook to order, still cap the covers at what we can plate properly, and still send out nothing we would not happily eat standing at the pass."
+        label={about.story.label}
+        title={about.story.title}
+        body={about.story.body}
         src="/images/anita-austvika.jpg"
       />
 
-      <AboutPrinciples />
+      <AboutPrinciples copy={about.principles} />
 
       <StickyTitleSection
         theme="sky"
         imagePosition="left"
-        label="Sourcing"
-        title="We buy short, and we buy close."
-        body="Vegetables from Flemish and Walloon market gardens, bread from a bakery two streets away, fish only when the North Sea sends something worth serving. We order small and often rather than large and once, which is why the menu moves through the year — and why so little is thrown away. What does not go out, the team eats."
+        label={about.sourcing.label}
+        title={about.sourcing.title}
+        body={about.sourcing.body}
         src="/images/kateryna-hliznitsova.jpg"
       />
 
       {/* Full-height breath before the practical half of the page. */}
       <FullBleedImageSection src="/images/svitlana.jpg" />
 
-      <AboutTeam />
-      <AboutFacts />
-      <AboutCta />
+      <AboutTeam copy={about.team} />
+      <AboutFacts copy={about.facts} />
+      <AboutCta copy={about.cta} />
       <Footer />
     </>
   );

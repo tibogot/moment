@@ -553,5 +553,92 @@
       "body": "Dit artikel is mogelijk verwijderd, de link klopt niet, of het bestaat niet in deze taal.",
       "back": "Terug naar het nieuws"
     }
+  },
+  "about": {
+    "hero": {
+      "title": "Over ons",
+      "lead": "Moment is een traiteur in Brussel. Wij koken voor particulieren en voor bedrijven die willen dat het eten iets over hen zegt."
+    },
+    "intro": {
+      "headline": "Wij koken voor wie de zaal moet voeden.",
+      "body": [
+        "Moment is een traiteur en cateringkeuken in Brussel. Elke ochtend bereiden wij seizoensgerechten, salades, gebak en koudgeperste sappen, en sturen die de stad in — naar kantoren in de Europese wijk, naar studio's in Sint-Gillis, naar keukentafels daartussenin.",
+        "Sommige weken zijn dat veertig lunches voor tien uur 's ochtends. Andere weken is het een zittend diner voor dertig, een lancering voor tweehonderd, of een koffiebar die open blijft tot de zaal leegloopt. De logistiek verandert. De keuken erachter niet."
+      ]
+    },
+    "story": {
+      "label": "Ons verhaal",
+      "title": "Het begon met één tafel te veel.",
+      "body": "Moment ontstond in een gehuurde keuken vlak bij de Elsensesteenweg, met de vrijdaglunch voor een designstudio die door zijn fatsoenlijke opties heen was. Het ging van mond tot mond zoals dat hier gaat — het ene kantoor vertelde het aan het andere, dan volgde een lancering, dan een huwelijk. Wij koken nog altijd op bestelling, houden het aantal couverts nog altijd bij wat wij deftig kunnen opmaken, en sturen nog altijd niets buiten dat wij niet zelf met plezier aan de doorgeefkast zouden opeten."
+    },
+    "principles": {
+      "label": "Hoe wij werken",
+      "items": [
+        {
+          "title": "Van het seizoen, of niet",
+          "body": "Het menu volgt de markt, en niet omgekeerd. Asperges in mei, tomaten wanneer ze echt naar iets smaken, witloof en wild de hele winter door. Is het deze week niet goed, dan staat het deze week niet op de kaart."
+        },
+        {
+          "title": "Gekookt, nooit samengesteld",
+          "body": "Fonds die 's nachts inkoken, dressings op het laatste moment aangemaakt, deeg met de hand getoerd. Alles verlaat onze eigen keuken in Brussel, diezelfde ochtend gemaakt van verse producten — niets opgewarmd, niets kant-en-klaar ingekocht."
+        },
+        {
+          "title": "Geleverd, klaar om te serveren",
+          "body": "Isothermische dozen, porties al opgemaakt, garnituur apart. U pakt uit, schikt en serveert. Geen keuken nodig bij u, en niets dat moet worden opgemaakt door iemand die liever gastheer zou zijn."
+        },
+        {
+          "title": "Eén keuken, één standaard",
+          "body": "Hetzelfde eten gaat naar een bureaulunch voor twee en naar een receptie voor tweehonderd. De schaal verandert het aantal handen en het uur waarop wij beginnen, niet het recept of wat wij bereid zijn buiten te sturen."
+        }
+      ]
+    },
+    "sourcing": {
+      "label": "Inkoop",
+      "title": "Wij kopen kort, en wij kopen dichtbij.",
+      "body": "Groenten van Vlaamse en Waalse tuinders, brood van een bakker twee straten verder, vis alleen wanneer de Noordzee iets stuurt dat het serveren waard is. Wij bestellen klein en vaak in plaats van groot en eenmalig — daarom beweegt de kaart doorheen het jaar, en daarom gooien wij zo weinig weg. Wat niet buitengaat, eet het team op."
+    },
+    "team": {
+      "label": "Ons team",
+      "roles": {
+        "founder": "Oprichtster & chef-kok",
+        "sousChef": "Souschef",
+        "pastry": "Patisserie",
+        "sourcing": "Inkoop & producten",
+        "events": "Verantwoordelijke evenementen",
+        "deliveries": "Leveringen"
+      }
+    },
+    "facts": {
+      "label": "In het kort",
+      "headline": "Wat men vraagt voor men om een menu vraagt.",
+      "terms": {
+        "based": "Gevestigd in",
+        "since": "Sinds",
+        "cookFor": "Wij koken voor",
+        "services": "Diensten",
+        "deliveryArea": "Leveringsgebied",
+        "leadTime": "Termijn",
+        "diets": "Diëten",
+        "languages": "Talen"
+      },
+      "values": {
+        "based": "Brussel, België",
+        "cookFor": "Particulieren, kantoren, bureaus, ambassades",
+        "services": "Dagelijkse levering, evenementencatering, koffiebar",
+        "deliveryArea": "Brussels Hoofdstedelijk Gewest, en de ring op aanvraag",
+        "leadTime": "48 uur voor een levering, twee weken voor een evenement",
+        "diets": "Vegetarisch, veganistisch en glutenvrij op elk menu",
+        "languages": "Français, Nederlands, English"
+      }
+    },
+    "cta": {
+      "headline": "Vertel ons wat u plant.",
+      "body": "Een datum, een aantal personen en een ruw idee van de locatie volstaan om te beginnen. Wij komen terug met een menu, een prijs, en wat er nodig is om het op tafel te krijgen.",
+      "links": {
+        "events": "Een evenement plannen",
+        "delivery": "Een levering bestellen",
+        "contact": "Contacteer ons"
+      }
+    }
   }
 }

@@ -1,18 +1,22 @@
 import Image from "next/image";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { GridSection } from "@/components/GridSection";
 
 /**
  * Placeholder people and portraits — swap the picsum seeds for the real
  * headshots before launch. The seed keeps each card on the same image between
  * builds rather than reshuffling on every request.
+ *
+ * Names stay here; roles are keys into the dictionary. A name is the same in
+ * every language and a job title is not.
  */
 const team = [
-  { name: "Camille Verhoeven", role: "Founder & Head Chef", seed: "camille" },
-  { name: "Youssef Benali", role: "Sous Chef", seed: "youssef" },
-  { name: "Lotte Van Damme", role: "Pastry", seed: "lotte" },
-  { name: "Marek Nowak", role: "Sourcing & Produce", seed: "marek" },
-  { name: "Inès Dubois", role: "Events Lead", seed: "ines" },
-  { name: "Tom Peeters", role: "Deliveries", seed: "tom" },
+  { name: "Camille Verhoeven", role: "founder", seed: "camille" },
+  { name: "Youssef Benali", role: "sousChef", seed: "youssef" },
+  { name: "Lotte Van Damme", role: "pastry", seed: "lotte" },
+  { name: "Marek Nowak", role: "sourcing", seed: "marek" },
+  { name: "Inès Dubois", role: "events", seed: "ines" },
+  { name: "Tom Peeters", role: "deliveries", seed: "tom" },
 ] as const;
 
 /**
@@ -20,12 +24,12 @@ const team = [
  * the registered `--card-*` properties, so these sit on exactly the type and
  * padding scale the product grid rests at — see globals.css.
  */
-export function AboutTeam() {
+export function AboutTeam({ copy }: { copy: Dictionary["about"]["team"] }) {
   return (
     <GridSection className="pt-[12svh] pb-[14svh]">
       <div className="col-start-2 col-end-5 px-(--grid-gutter) pb-[5svh] md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-          Our team
+          {copy.label}
         </h2>
       </div>
 
@@ -57,7 +61,7 @@ export function AboutTeam() {
                     {member.name}
                   </h3>
                   <p className="font-archivo-light mt-1 text-[15px] leading-snug md:text-[16px]">
-                    {member.role}
+                    {copy.roles[member.role]}
                   </p>
                 </div>
               </div>

@@ -552,5 +552,92 @@
       "body": "This article may have been removed, the link may be wrong, or it may not exist in this language.",
       "back": "Back to news"
     }
+  },
+  "about": {
+    "hero": {
+      "title": "About",
+      "lead": "Moment is a traiteur in Brussels. We cook for private hosts and for companies who want the food to say something about them."
+    },
+    "intro": {
+      "headline": "We cook for whoever has to feed the room.",
+      "body": [
+        "Moment is a traiteur and catering kitchen in Brussels. Every morning we cook seasonal plates, salads, pastries and cold-pressed juices, then send them out across the city — to offices in the European quarter, to studios in Saint-Gilles, to kitchen tables in between.",
+        "Some weeks that is forty lunches before ten in the morning. Some weeks it is a seated dinner for thirty, a launch for two hundred, or a coffee desk open until the room empties. The logistics change. The kitchen behind them does not."
+      ]
+    },
+    "story": {
+      "label": "Our story",
+      "title": "It began with one table too many.",
+      "body": "Moment started in a rented kitchen off the Chaussée d'Ixelles, cooking Friday lunch for a design studio that had run out of decent options. Word travelled the way it does here — one office told another, then someone's launch, then someone's wedding. We still cook to order, still cap the covers at what we can plate properly, and still send out nothing we would not happily eat standing at the pass."
+    },
+    "principles": {
+      "label": "How we work",
+      "items": [
+        {
+          "title": "Seasonal, or not at all",
+          "body": "The menu follows the market rather than the other way round. Asparagus in May, tomatoes when they actually taste of something, chicory and game through the winter. If it is not good this week, it is not on the list this week."
+        },
+        {
+          "title": "Cooked, never assembled",
+          "body": "Stocks reduced overnight, dressings mixed at the last minute, pastry laminated by hand. Everything leaves our own kitchen in Brussels, made from raw ingredients that same morning — nothing reheated, nothing bought in finished."
+        },
+        {
+          "title": "Delivered ready to serve",
+          "body": "Insulated boxes, portions already set, garnishes kept separate. You unwrap it, arrange it and serve it. No kitchen needed at your end, and nothing that has to be plated by someone who would rather be hosting."
+        },
+        {
+          "title": "One kitchen, one standard",
+          "body": "The same food goes to a two-person desk lunch and a two-hundred-guest reception. Scale changes the number of hands and the hour we start, not the recipe or what we are willing to send out."
+        }
+      ]
+    },
+    "sourcing": {
+      "label": "Sourcing",
+      "title": "We buy short, and we buy close.",
+      "body": "Vegetables from Flemish and Walloon market gardens, bread from a bakery two streets away, fish only when the North Sea sends something worth serving. We order small and often rather than large and once, which is why the menu moves through the year — and why so little is thrown away. What does not go out, the team eats."
+    },
+    "team": {
+      "label": "Our team",
+      "roles": {
+        "founder": "Founder & Head Chef",
+        "sousChef": "Sous Chef",
+        "pastry": "Pastry",
+        "sourcing": "Sourcing & Produce",
+        "events": "Events Lead",
+        "deliveries": "Deliveries"
+      }
+    },
+    "facts": {
+      "label": "At a glance",
+      "headline": "The details people ask before they ask for a menu.",
+      "terms": {
+        "based": "Based",
+        "since": "Since",
+        "cookFor": "We cook for",
+        "services": "Services",
+        "deliveryArea": "Delivery area",
+        "leadTime": "Lead time",
+        "diets": "Diets",
+        "languages": "Languages"
+      },
+      "values": {
+        "based": "Brussels, Belgium",
+        "cookFor": "Private hosts, offices, agencies, embassies",
+        "services": "Daily delivery, event catering, coffee desk",
+        "deliveryArea": "Brussels-Capital Region, and the ring on request",
+        "leadTime": "48 hours for delivery, two weeks for events",
+        "diets": "Vegetarian, vegan and gluten-free on every menu",
+        "languages": "Français, Nederlands, English"
+      }
+    },
+    "cta": {
+      "headline": "Tell us what you are planning.",
+      "body": "A date, a headcount and a rough idea of the room is enough to start. We come back with a menu, a price and what it takes to put it on the table.",
+      "links": {
+        "events": "Plan an event",
+        "delivery": "Order delivery",
+        "contact": "Get in touch"
+      }
+    }
   }
 }

@@ -553,5 +553,92 @@
       "body": "Cet article a peut-être été retiré, le lien est incorrect, ou il n'existe pas dans cette langue.",
       "back": "Retour aux actualités"
     }
+  },
+  "about": {
+    "hero": {
+      "title": "À propos",
+      "lead": "Moment est un traiteur bruxellois. Nous cuisinons pour les particuliers et pour les entreprises qui veulent que la table dise quelque chose d'elles."
+    },
+    "intro": {
+      "headline": "Nous cuisinons pour ceux qui doivent nourrir la salle.",
+      "body": [
+        "Moment est un traiteur et une cuisine de catering à Bruxelles. Chaque matin nous préparons des plats de saison, des salades, des pâtisseries et des jus pressés à froid, puis nous les envoyons à travers la ville — vers les bureaux du quartier européen, vers les studios de Saint-Gilles, vers les tables de cuisine entre les deux.",
+        "Certaines semaines, c'est quarante déjeuners avant dix heures du matin. D'autres, c'est un dîner assis pour trente, un lancement pour deux cents, ou un comptoir café ouvert jusqu'à ce que la salle se vide. La logistique change. La cuisine derrière, non."
+      ]
+    },
+    "story": {
+      "label": "Notre histoire",
+      "title": "Tout a commencé avec une table de trop.",
+      "body": "Moment est né dans une cuisine louée près de la Chaussée d'Ixelles, à préparer le déjeuner du vendredi pour un studio de design à court d'options correctes. Le bouche-à-oreille a fait le reste, comme ici — un bureau en a parlé à un autre, puis il y a eu un lancement, puis un mariage. Nous cuisinons toujours à la commande, nous limitons toujours le nombre de couverts à ce que nous pouvons dresser correctement, et nous n'envoyons toujours rien que nous ne mangerions pas volontiers debout au passe."
+    },
+    "principles": {
+      "label": "Notre façon de travailler",
+      "items": [
+        {
+          "title": "De saison, ou pas du tout",
+          "body": "Le menu suit le marché, et non l'inverse. Les asperges en mai, les tomates quand elles ont vraiment du goût, le chicon et le gibier tout l'hiver. Si ce n'est pas bon cette semaine, ce n'est pas à la carte cette semaine."
+        },
+        {
+          "title": "Cuisiné, jamais assemblé",
+          "body": "Des fonds réduits la nuit, des vinaigrettes montées à la dernière minute, une pâte feuilletée tournée à la main. Tout sort de notre propre cuisine à Bruxelles, fait à partir de produits bruts le matin même — rien de réchauffé, rien acheté tout prêt."
+        },
+        {
+          "title": "Livré prêt à servir",
+          "body": "Boîtes isothermes, portions déjà dressées, garnitures à part. Vous ouvrez, vous disposez, vous servez. Aucune cuisine nécessaire chez vous, et rien à dresser par quelqu'un qui préférerait recevoir ses invités."
+        },
+        {
+          "title": "Une cuisine, un standard",
+          "body": "La même cuisine part pour un déjeuner à deux au bureau et pour une réception de deux cents personnes. L'échelle change le nombre de mains et l'heure à laquelle nous commençons, pas la recette ni ce que nous acceptons d'envoyer."
+        }
+      ]
+    },
+    "sourcing": {
+      "label": "Approvisionnement",
+      "title": "Nous achetons court, et nous achetons près.",
+      "body": "Des légumes de maraîchers flamands et wallons, du pain d'une boulangerie à deux rues, du poisson uniquement quand la mer du Nord envoie quelque chose qui mérite d'être servi. Nous commandons petit et souvent plutôt que grand et une fois — c'est pour ça que la carte bouge au fil de l'année, et pour ça qu'on jette si peu. Ce qui ne part pas, l'équipe le mange."
+    },
+    "team": {
+      "label": "Notre équipe",
+      "roles": {
+        "founder": "Fondatrice & cheffe",
+        "sousChef": "Sous-chef",
+        "pastry": "Pâtisserie",
+        "sourcing": "Approvisionnement",
+        "events": "Responsable événements",
+        "deliveries": "Livraisons"
+      }
+    },
+    "facts": {
+      "label": "En bref",
+      "headline": "Ce qu'on nous demande avant de demander un menu.",
+      "terms": {
+        "based": "Basés à",
+        "since": "Depuis",
+        "cookFor": "Nous cuisinons pour",
+        "services": "Services",
+        "deliveryArea": "Zone de livraison",
+        "leadTime": "Délai",
+        "diets": "Régimes",
+        "languages": "Langues"
+      },
+      "values": {
+        "based": "Bruxelles, Belgique",
+        "cookFor": "Particuliers, bureaux, agences, ambassades",
+        "services": "Livraison quotidienne, traiteur événementiel, comptoir café",
+        "deliveryArea": "Région de Bruxelles-Capitale, et le ring sur demande",
+        "leadTime": "48 heures pour une livraison, deux semaines pour un événement",
+        "diets": "Végétarien, végane et sans gluten sur chaque menu",
+        "languages": "Français, Nederlands, English"
+      }
+    },
+    "cta": {
+      "headline": "Dites-nous ce que vous préparez.",
+      "body": "Une date, un nombre de convives et une idée approximative du lieu suffisent pour commencer. Nous revenons vers vous avec un menu, un prix, et ce qu'il faut pour le mettre sur la table.",
+      "links": {
+        "events": "Organiser un événement",
+        "delivery": "Commander une livraison",
+        "contact": "Nous écrire"
+      }
+    }
   }
 }

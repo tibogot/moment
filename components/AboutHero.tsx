@@ -1,3 +1,4 @@
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
@@ -8,7 +9,7 @@ import {
   HERO_GRID_HOLES_MOBILE,
 } from "@/lib/grid";
 
-export function AboutHero() {
+export function AboutHero({ copy }: { copy: Dictionary["about"]["hero"] }) {
   return (
     <section className="relative h-svh w-full overflow-hidden bg-cream">
       <GridLines
@@ -45,7 +46,7 @@ export function AboutHero() {
               className="font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] uppercase"
               style={{ fontSize: "var(--hero-headline)" }}
             >
-              About
+              {copy.title}
             </h1>
           </TextReveal>
         </div>
@@ -62,8 +63,7 @@ export function AboutHero() {
               className="font-archivo-light max-w-full leading-[1.43]"
               style={{ fontSize: "var(--hero-body)" }}
             >
-              Moment is a traiteur in Brussels. We cook for private hosts and
-              for companies who want the food to say something about them.
+              {copy.lead}
             </p>
           </TextReveal>
         </div>
