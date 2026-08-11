@@ -183,8 +183,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       try {
         const result =
           target === 0
-            ? await removeFromCart(lineId)
-            : await updateCartLine(lineId, target);
+            ? await removeFromCart(locale, lineId)
+            : await updateCartLine(locale, lineId, target);
 
         if (!result.ok) {
           setError(dict.errors[result.code] ?? dict.errors.generic);
@@ -282,7 +282,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const chooseDate = (iso: string) => {
     setError(null);
     startTransition(async () => {
-      const result = await setDeliveryDate(iso);
+      const result = await setDeliveryDate(locale, iso);
       if (!result.ok) {
         setError(dict.errors[result.code]);
         return;

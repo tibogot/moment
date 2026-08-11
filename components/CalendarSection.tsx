@@ -138,7 +138,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
     if (!selected) return;
 
     startTransition(async () => {
-      const result = await setDeliveryDate(selected);
+      const result = await setDeliveryDate(locale, selected);
 
       if (!result.ok) {
         setStatus({ kind: "error", message: dict.errors[result.code] });

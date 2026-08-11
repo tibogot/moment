@@ -13,6 +13,7 @@ import {
 import { isShopifyConfigured } from "@/lib/shopify/client";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 import { getZoneTable } from "@/lib/shopify/zones";
+import type { Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
 import {
@@ -48,13 +49,22 @@ async function clearCartCookie() {
   cookieStore.delete(getCartCookieOptions().name);
 }
 
-export async function getCart() {
+/**
+ * Every one of these takes the locale from its caller.
+ *
+ * The cart is one basket shared by three languages — the cookie does not care
+ * which one the shopper is reading — so the *language of a read* is a property
+ * of the page asking, not of the cart. Shopify contextualises the line titles
+ * and the prices from it, which is why a mutation returning the new cart has to
+ * carry it too: the panel repaints from that response.
+ */
+export async function getCart(locale: Locale) {
   if (!isShopifyConfigured()) return null;
 
   const cartId = await getCartIdFromCookies();
   if (!cartId) return null;
 
-  const cart = await getCartById(cartId);
+  const cart = await getCartById(locale, cartId);
   if (!cart) {
     await clearCartCookie();
     return null;
@@ -63,17 +73,26 @@ export async function getCart() {
   return cart;
 }
 
-export async function addToCart(variantId: string, quantity = 1) {
+export async function addToCart(
+  locale: Locale,
+  variantId: string,
+  quantity = 1,
+) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const existingCartId = await getCartIdFromCookies();
-  let result = await addVariantToCart(variantId, quantity, existingCartId);
+  let result = await addVariantToCart(
+    locale,
+    variantId,
+    quantity,
+    existingCartId,
+  );
 
   // A stale cart id (expired or already completed) makes cartLinesAdd fail —
   // drop the cookie and start a fresh cart rather than surfacing the error.
   if (!result.ok && existingCartId) {
     await clearCartCookie();
-    result = await addVariantToCart(variantId, quantity);
+    result = await addVariantToCart(locale, variantId, quantity);
   }
 
   if (!result.ok) return orderFailure("cart_failed");
@@ -93,13 +112,16 @@ export async function addToCart(variantId: string, quantity = 1) {
  * recovery as addToCart: an expired or completed cart id fails the update, so
  * drop the cookie and open a fresh one.
  */
-async function saveOrderPreferences(patch: Record<string, string | null>) {
+async function saveOrderPreferences(
+  locale: Locale,
+  patch: Record<string, string | null>,
+) {
   const existingCartId = await getCartIdFromCookies();
-  let result = await setCartAttributes(patch, existingCartId);
+  let result = await setCartAttributes(locale, patch, existingCartId);
 
   if (!result.ok && existingCartId) {
     await clearCartCookie();
-    result = await setCartAttributes(patch);
+    result = await setCartAttributes(locale, patch);
   }
 
   if (!result.ok) return orderFailure("cart_failed");
@@ -116,7 +138,7 @@ async function saveOrderPreferences(patch: Record<string, string | null>) {
  * left open overnight, or one served from the static shell, cannot book a day
  * the owners have since closed.
  */
-export async function setDeliveryDate(isoDate: string) {
+export async function setDeliveryDate(locale: Locale, isoDate: string) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const availability = await getDeliveryAvailability();
@@ -124,7 +146,7 @@ export async function setDeliveryDate(isoDate: string) {
     return orderFailure("date_unavailable");
   }
 
-  const saved = await saveOrderPreferences({
+  const saved = await saveOrderPreferences(locale, {
     [DELIVERY_DATE_ATTRIBUTE]: isoDate,
   });
   if (!saved.ok) return saved;
@@ -137,12 +159,12 @@ export async function setDeliveryDate(isoDate: string) {
  * client as a string like any other, and this one is printed on a kitchen
  * ticket. An empty note clears the attribute rather than storing "".
  */
-export async function setDeliveryNote(value: string) {
+export async function setDeliveryNote(locale: Locale, value: string) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const note = value.trim().slice(0, DELIVERY_NOTE_MAX);
 
-  const saved = await saveOrderPreferences({
+  const saved = await saveOrderPreferences(locale, {
     [DELIVERY_NOTE_ATTRIBUTE]: note || null,
   });
   if (!saved.ok) return saved;
@@ -150,11 +172,11 @@ export async function setDeliveryNote(value: string) {
   return { ok: true as const, note };
 }
 
-export async function setDeliveryMethod(method: DeliveryMethod) {
+export async function setDeliveryMethod(locale: Locale, method: DeliveryMethod) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
   if (!isDeliveryMethod(method)) return orderFailure("unknown_method");
 
-  const saved = await saveOrderPreferences({
+  const saved = await saveOrderPreferences(locale, {
     [DELIVERY_METHOD_ATTRIBUTE]: deliveryMethodAttributeValue(method),
     // Click & collect leaves nothing to deliver to, so a previously saved
     // address is cleared rather than left on the order contradicting it — and
@@ -174,7 +196,7 @@ export async function setDeliveryMethod(method: DeliveryMethod) {
  * came from a suggestion the visitor clicked. The register's own spelling is
  * what gets stored.
  */
-export async function setDeliveryAddress(value: string) {
+export async function setDeliveryAddress(locale: Locale, value: string) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const resolved = await resolveAddress(value);
@@ -204,7 +226,7 @@ export async function setDeliveryAddress(value: string) {
     };
   }
 
-  const saved = await saveOrderPreferences({
+  const saved = await saveOrderPreferences(locale, {
     [DELIVERY_ADDRESS_ATTRIBUTE]: resolved.label,
     // An address only makes sense for delivery, so choosing one settles the
     // method too — otherwise the order carries a destination and no way to it.
@@ -229,21 +251,25 @@ export async function setDeliveryAddress(value: string) {
  * Function makes every previously visited page refetch on the next navigation —
  * a lot of work to hang off a quantity stepper.
  */
-export async function updateCartLine(lineId: string, quantity: number) {
+export async function updateCartLine(
+  locale: Locale,
+  lineId: string,
+  quantity: number,
+) {
   const cartId = await getCartIdFromCookies();
   if (!cartId) return orderFailure("no_cart");
 
-  const result = await updateCartLineQuantity(cartId, lineId, quantity);
+  const result = await updateCartLineQuantity(locale, cartId, lineId, quantity);
   if (!result.ok) return orderFailure("cart_failed");
 
   return { ok: true as const, cart: result.cart };
 }
 
-export async function removeFromCart(lineId: string) {
+export async function removeFromCart(locale: Locale, lineId: string) {
   const cartId = await getCartIdFromCookies();
   if (!cartId) return orderFailure("no_cart");
 
-  const result = await removeCartLines(cartId, [lineId]);
+  const result = await removeCartLines(locale, cartId, [lineId]);
   if (!result.ok) return orderFailure("cart_failed");
 
   return { ok: true as const, cart: result.cart };

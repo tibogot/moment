@@ -11,7 +11,13 @@ import {
   parseDeliveryMethod,
   type DeliveryMethod,
 } from "@/lib/order-preferences";
-import { getShopifyClient, isShopifyConfigured } from "./client";
+import type { Locale } from "@/lib/i18n/config";
+import { formatPriceAmount } from "@/lib/i18n/format";
+import {
+  getShopifyClient,
+  isShopifyConfigured,
+  shopifyLanguage,
+} from "./client";
 
 export const CART_COOKIE_NAME = "shopify_cart_id";
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
@@ -175,31 +181,48 @@ const CART_RESULT_FIELDS = `
 `;
 
 const CART_CREATE_MUTATION = `
-  mutation CartCreate($input: CartInput!) {
+  mutation CartCreate($input: CartInput!, $language: LanguageCode)
+  @inContext(language: $language) {
     cartCreate(input: $input) { ${CART_RESULT_FIELDS} }
   }
 `;
 
 const CART_LINES_ADD_MUTATION = `
-  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+  mutation CartLinesAdd(
+    $cartId: ID!
+    $lines: [CartLineInput!]!
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     cartLinesAdd(cartId: $cartId, lines: $lines) { ${CART_RESULT_FIELDS} }
   }
 `;
 
 const CART_LINES_UPDATE_MUTATION = `
-  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+  mutation CartLinesUpdate(
+    $cartId: ID!
+    $lines: [CartLineUpdateInput!]!
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) { ${CART_RESULT_FIELDS} }
   }
 `;
 
 const CART_LINES_REMOVE_MUTATION = `
-  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+  mutation CartLinesRemove(
+    $cartId: ID!
+    $lineIds: [ID!]!
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { ${CART_RESULT_FIELDS} }
   }
 `;
 
 const CART_ATTRIBUTES_UPDATE_MUTATION = `
-  mutation CartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
+  mutation CartAttributesUpdate(
+    $cartId: ID!
+    $attributes: [AttributeInput!]!
+    $language: LanguageCode
+  ) @inContext(language: $language) {
     cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
       ${CART_RESULT_FIELDS}
     }
@@ -222,16 +245,21 @@ const CART_ATTRIBUTES_QUERY = `
 `;
 
 const CART_QUERY = `
-  query GetCart($cartId: ID!) {
+  query GetCart($cartId: ID!, $language: LanguageCode)
+  @inContext(language: $language) {
     cart(id: $cartId) { ${CART_FIELDS} }
   }
 `;
 
-function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("en-BE", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(Number(amount));
+/**
+ * The cart's own money formatter.
+ *
+ * It was pinned to `en-BE`, so a French or Dutch shopper read their basket in
+ * the English convention. Same class of bug as the delivery dates and the menu
+ * prices before them, in the last place that still had it.
+ */
+function formatPrice(locale: Locale, amount: string, currencyCode: string) {
+  return formatPriceAmount(locale, amount, currencyCode);
 }
 
 function formatUserErrors(
@@ -242,7 +270,7 @@ function formatUserErrors(
   return userErrors.map((error) => error.message).join(" ");
 }
 
-function mapCartNode(node: RawCart): Cart {
+function mapCartNode(locale: Locale, node: RawCart): Cart {
   const { amount, currencyCode } = node.cost.totalAmount;
 
   const lines = node.lines.edges
@@ -262,10 +290,11 @@ function mapCartNode(node: RawCart): Cart {
         imageUrl: merchandise.image?.url ?? null,
         imageAlt: merchandise.image?.altText ?? merchandise.product.title,
         price: formatPrice(
+          locale,
           merchandise.price.amount,
           merchandise.price.currencyCode,
         ),
-        lineTotal: formatPrice(lineCost.amount, lineCost.currencyCode),
+        lineTotal: formatPrice(locale, lineCost.amount, lineCost.currencyCode),
         variantId: merchandise.id,
       } satisfies CartLine;
     })
@@ -282,7 +311,7 @@ function mapCartNode(node: RawCart): Cart {
     id: node.id,
     checkoutUrl: node.checkoutUrl,
     totalQuantity: node.totalQuantity,
-    totalPrice: formatPrice(amount, currencyCode),
+    totalPrice: formatPrice(locale, amount, currencyCode),
     subtotal: Number.isFinite(subtotal) ? subtotal : 0,
     lines,
     deliveryDate: attribute(DELIVERY_DATE_ATTRIBUTE),
@@ -305,6 +334,7 @@ export function getCartCookieOptions() {
 }
 
 async function runCartMutation(
+  locale: Locale,
   mutation: string,
   variables: Record<string, unknown>,
   key: keyof NonNullable<CartMutationResponse["data"]>,
@@ -312,7 +342,7 @@ async function runCartMutation(
 ) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(mutation, {
-    variables,
+    variables: { ...variables, language: shopifyLanguage(locale) },
   })) as CartMutationResponse;
 
   if (errors?.length) {
@@ -338,17 +368,20 @@ async function runCartMutation(
     cartId: payload.cart.id,
     checkoutUrl: payload.cart.checkoutUrl,
     totalQuantity: payload.cart.totalQuantity,
-    cart: mapCartNode(payload.cart),
+    cart: mapCartNode(locale, payload.cart),
   };
 }
 
-export async function getCartById(cartId: string): Promise<Cart | null> {
+export async function getCartById(
+  locale: Locale,
+  cartId: string,
+): Promise<Cart | null> {
   if (!isShopifyConfigured()) return null;
 
   try {
     const client = getShopifyClient();
     const { data, errors } = (await client.request(CART_QUERY, {
-      variables: { cartId },
+      variables: { cartId, language: shopifyLanguage(locale) },
     })) as CartQueryResponse;
 
     if (errors?.length) {
@@ -356,7 +389,7 @@ export async function getCartById(cartId: string): Promise<Cart | null> {
       return null;
     }
 
-    return data?.cart ? mapCartNode(data.cart) : null;
+    return data?.cart ? mapCartNode(locale, data.cart) : null;
   } catch (error) {
     console.error("[shopify] getCartById failed", error);
     return null;
@@ -364,6 +397,7 @@ export async function getCartById(cartId: string): Promise<Cart | null> {
 }
 
 export async function addVariantToCart(
+  locale: Locale,
   variantId: string,
   quantity: number,
   existingCartId?: string,
@@ -374,6 +408,7 @@ export async function addVariantToCart(
 
   if (existingCartId) {
     const added = await runCartMutation(
+      locale,
       CART_LINES_ADD_MUTATION,
       {
         cartId: existingCartId,
@@ -387,6 +422,7 @@ export async function addVariantToCart(
   }
 
   return runCartMutation(
+    locale,
     CART_CREATE_MUTATION,
     { input: { lines: [{ merchandiseId: variantId, quantity }] } },
     "cartCreate",
@@ -451,6 +487,7 @@ function toAttributeInput(attributes: Record<string, string | null>) {
  * with no cart yet this opens an empty one carrying just the attributes.
  */
 export async function setCartAttributes(
+  locale: Locale,
   patch: Record<string, string | null>,
   existingCartId?: string,
 ) {
@@ -465,6 +502,7 @@ export async function setCartAttributes(
     // recovers from by starting a fresh cart. Merging blindly would be worse.
     if (existing) {
       const updated = await runCartMutation(
+        locale,
         CART_ATTRIBUTES_UPDATE_MUTATION,
         {
           cartId: existingCartId,
@@ -479,6 +517,7 @@ export async function setCartAttributes(
   }
 
   return runCartMutation(
+    locale,
     CART_CREATE_MUTATION,
     { input: { attributes: toAttributeInput(patch) } },
     "cartCreate",
@@ -486,12 +525,17 @@ export async function setCartAttributes(
   );
 }
 
-export async function removeCartLines(cartId: string, lineIds: string[]) {
+export async function removeCartLines(
+  locale: Locale,
+  cartId: string,
+  lineIds: string[],
+) {
   if (!isShopifyConfigured()) {
     return { ok: false as const, error: "The shop is not configured." };
   }
 
   return runCartMutation(
+    locale,
     CART_LINES_REMOVE_MUTATION,
     { cartId, lineIds },
     "cartLinesRemove",
@@ -500,6 +544,7 @@ export async function removeCartLines(cartId: string, lineIds: string[]) {
 }
 
 export async function updateCartLineQuantity(
+  locale: Locale,
   cartId: string,
   lineId: string,
   quantity: number,
@@ -508,9 +553,10 @@ export async function updateCartLineQuantity(
     return { ok: false as const, error: "The shop is not configured." };
   }
 
-  if (quantity < 1) return removeCartLines(cartId, [lineId]);
+  if (quantity < 1) return removeCartLines(locale, cartId, [lineId]);
 
   return runCartMutation(
+    locale,
     CART_LINES_UPDATE_MUTATION,
     { cartId, lines: [{ id: lineId, quantity }] },
     "cartLinesUpdate",

@@ -93,7 +93,7 @@ export function CartDeliverySection({
     if (value.trim() === (deliveryNote ?? "").trim()) return;
     setError(null);
     startTransition(async () => {
-      const result = await setDeliveryNote(value);
+      const result = await setDeliveryNote(locale, value);
       if (!result.ok) {
         setError(dict.errors[result.code]);
         return;
@@ -107,7 +107,7 @@ export function CartDeliverySection({
   const chooseDate = (iso: string) => {
     setError(null);
     startTransition(async () => {
-      const result = await setDeliveryDate(iso);
+      const result = await setDeliveryDate(locale, iso);
       if (!result.ok) {
         setError(dict.errors[result.code]);
         return;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useDictionary } from "@/components/LocaleProvider";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { addToCart } from "@/app/actions/cart";
@@ -18,6 +18,7 @@ export function AddToCartButton({
   available,
   className,
 }: AddToCartButtonProps) {
+  const locale = useLocale();
   const dict = useDictionary();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export function AddToCartButton({
     setError(null);
 
     startTransition(async () => {
-      const result = await addToCart(variantId, quantity);
+      const result = await addToCart(locale, variantId, quantity);
 
       if (!result.ok) {
         setError(dict.errors[result.code]);

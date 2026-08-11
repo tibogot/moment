@@ -149,7 +149,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     setError(null);
 
     startTransition(async () => {
-      const result = await setDeliveryDate(iso);
+      const result = await setDeliveryDate(locale, iso);
       if (!result.ok) {
         setDraft((current) => ({ ...current, date: undefined }));
         setError(dict.errors[result.code]);
@@ -171,7 +171,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     setError(null);
 
     startTransition(async () => {
-      const result = await setDeliveryMethod(method);
+      const result = await setDeliveryMethod(locale, method);
       if (!result.ok) {
         setDraft((current) => ({ ...current, method: undefined }));
         setError(dict.errors[result.code]);
@@ -187,7 +187,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     setQuote(null);
 
     startTransition(async () => {
-      const result = await setDeliveryAddress(value);
+      const result = await setDeliveryAddress(locale, value);
 
       if (!result.ok) {
         // Too far to price, not wrong. The panel swaps to an enquiry rather

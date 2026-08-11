@@ -35,7 +35,13 @@ function fetchCart(): Promise<void> {
 
   inFlight = (async () => {
     try {
-      const response = await fetch("/api/cart", { cache: "no-store" });
+      // The language is read off the URL rather than passed in: this store is
+      // a module shared by the navbar, the panel and the preferences bar, and
+      // none of them owns the locale. The path always does.
+      const lang = window.location.pathname.split("/")[1] || "";
+      const response = await fetch(`/api/cart?lang=${encodeURIComponent(lang)}`, {
+        cache: "no-store",
+      });
       if (!response.ok) {
         cart = null;
         return;
