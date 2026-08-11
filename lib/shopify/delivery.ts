@@ -96,24 +96,24 @@ async function getDeliverySettings(): Promise<DeliverySettings> {
   // Both halves of a coordinate or neither. Half a correction — a new latitude
   // against the placeholder longitude — puts the atelier in a field outside
   // Brussels and reprices every delivery, which is worse than not correcting it.
-  const latitude = parseDecimalField(entry?.get(ATELIER_LATITUDE_FIELD), {
+  const latitude = parseDecimalField(entry?.[ATELIER_LATITUDE_FIELD], {
     min: -90,
     max: 90,
   });
-  const longitude = parseDecimalField(entry?.get(ATELIER_LONGITUDE_FIELD), {
+  const longitude = parseDecimalField(entry?.[ATELIER_LONGITUDE_FIELD], {
     min: -180,
     max: 180,
   });
 
   return {
     leadTimeDays:
-      parseIntegerField(entry?.get(LEAD_TIME_FIELD), { min: 0, max: 90 }) ??
+      parseIntegerField(entry?.[LEAD_TIME_FIELD], { min: 0, max: 90 }) ??
       DEFAULT_LEAD_TIME_DAYS,
     closedWeekdays:
-      parseClosedWeekdays(entry?.get(CLOSED_WEEKDAYS_FIELD)) ??
+      parseClosedWeekdays(entry?.[CLOSED_WEEKDAYS_FIELD]) ??
       DEFAULT_CLOSED_WEEKDAYS,
     bookingWindowDays:
-      parseIntegerField(entry?.get(BOOKING_WINDOW_FIELD), {
+      parseIntegerField(entry?.[BOOKING_WINDOW_FIELD], {
         min: 1,
         max: 1095,
       }) ?? DEFAULT_BOOKING_WINDOW_DAYS,
@@ -143,14 +143,14 @@ async function getDeliveryClosures(bounds: {
   const entries = await readClosures();
 
   const dates = entries.flatMap((fields) => {
-    const start = fields.get(CLOSURE_DATE_FIELD);
+    const start = fields[CLOSURE_DATE_FIELD];
     if (!start) return [];
 
     // No end date is the common case and the old shape of this metaobject:
     // one entry, one day. An end *before* the start is a slip in the admin —
     // read it as that single day, because an entry the owners believe closes
     // the atelier must never expand to nothing.
-    const end = fields.get(CLOSURE_END_DATE_FIELD);
+    const end = fields[CLOSURE_END_DATE_FIELD];
     return expandClosureRange(start, end && end >= start ? end : start, bounds);
   });
 

@@ -58,9 +58,17 @@ type MetaobjectsQueryResponse = {
   errors?: { message: string }[];
 };
 
-/** One entry's fields. Empty values are dropped, so `get` returning undefined
- * means "not filled in" without every caller having to check for `""` too. */
-export type MetaobjectFields = Map<string, string>;
+/**
+ * One entry's fields, keyed by field key. Empty values are dropped, so a
+ * missing key means "not filled in" without every caller checking for `""`.
+ *
+ * A plain object rather than a `Map`, and that is not a style choice:
+ * `unstable_cache` stores its result as JSON, and a `Map` does not survive the
+ * round trip — it comes back as `{}`. The first call worked and every cached
+ * call after it threw `entry.get is not a function`, which is a failure that
+ * only appears once the cache is warm, i.e. in production and not in the build.
+ */
+export type MetaobjectFields = Record<string, string>;
 
 async function fetchMetaobjects(
   type: string,
@@ -75,15 +83,14 @@ async function fetchMetaobjects(
     throw new Error(errors.map((error) => error.message).join(", "));
   }
 
-  return (data?.metaobjects?.edges ?? []).map(
-    ({ node }) =>
-      new Map(
-        node.fields
-          .filter((field): field is { key: string; value: string } =>
-            Boolean(field.value),
-          )
-          .map((field) => [field.key, field.value]),
-      ),
+  return (data?.metaobjects?.edges ?? []).map(({ node }) =>
+    Object.fromEntries(
+      node.fields
+        .filter((field): field is { key: string; value: string } =>
+          Boolean(field.value),
+        )
+        .map((field) => [field.key, field.value]),
+    ),
   );
 }
 

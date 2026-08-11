@@ -53,10 +53,10 @@ const EUROS_RANGE = { min: 0, max: 10_000 };
 const DISTANCE_RANGE = { min: 0, max: 1_000 };
 
 function parseZone(fields: MetaobjectFields): DeliveryZone | null {
-  const id = parseIntegerField(fields.get(ZONE_ID_FIELD), ZONE_ID_RANGE);
-  const fee = parseDecimalField(fields.get(FEE_FIELD), EUROS_RANGE);
+  const id = parseIntegerField(fields[ZONE_ID_FIELD], ZONE_ID_RANGE);
+  const fee = parseDecimalField(fields[FEE_FIELD], EUROS_RANGE);
   const minimumOrder = parseDecimalField(
-    fields.get(MINIMUM_ORDER_FIELD),
+    fields[MINIMUM_ORDER_FIELD],
     EUROS_RANGE,
   );
 
@@ -65,7 +65,7 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
   // Empty is meaningful here — it is what marks the administrative zone — so an
   // absent field is null rather than a failure. A *present* but unreadable one
   // still is: "abc" km must not quietly become "the Brussels zone".
-  const rawDistance = fields.get(MAX_DISTANCE_FIELD);
+  const rawDistance = fields[MAX_DISTANCE_FIELD];
   const maxDistanceKm =
     rawDistance === undefined
       ? null
