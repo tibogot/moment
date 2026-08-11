@@ -646,5 +646,22 @@
         "contact": "Contacteer ons"
       }
     }
+  },
+  "search": {
+    "label": "Zoeken",
+    "placeholder": "Waar bent u naar op zoek?",
+    "close": "Sluiten",
+    "results": "Resultaten",
+    "popular": "Populaire producten",
+    "noResults": "Geen producten gevonden voor „{query}”.",
+    "suggestions": [
+      "Jus",
+      "Granola",
+      "Salade",
+      "Café",
+      "Soupe",
+      "Quiche"
+    ],
+    "popularSearches": "Populaire zoekopdrachten"
   }
 }

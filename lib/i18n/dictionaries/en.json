@@ -645,5 +645,22 @@
         "contact": "Get in touch"
       }
     }
+  },
+  "search": {
+    "label": "Search",
+    "placeholder": "What are you looking for?",
+    "close": "Close",
+    "results": "Results",
+    "popular": "Popular products",
+    "noResults": "No products match “{query}”.",
+    "suggestions": [
+      "Jus",
+      "Granola",
+      "Salade",
+      "Café",
+      "Soupe",
+      "Quiche"
+    ],
+    "popularSearches": "Popular searches"
   }
 }

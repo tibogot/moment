@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import {
   FormEvent,
   useCallback,
@@ -31,16 +32,6 @@ const OPEN_EASE = "power3.out";
 const CLOSE_EASE = "power3.inOut";
 const POPULAR_COUNT = 4;
 const LIVE_RESULTS_COUNT = 8;
-
-/** Curated until search analytics land. */
-const POPULAR_SEARCHES = [
-  "Plates",
-  "Salads",
-  "Juices",
-  "Coffee",
-  "Granola",
-  "Catering",
-] as const;
 
 function matchesQuery(product: ShopifyProduct, query: string) {
   const q = query.toLowerCase();
@@ -166,7 +157,7 @@ export function SearchPanel({
         className="fixed inset-0 z-50 overflow-y-auto bg-cream text-black md:inset-x-0 md:bottom-auto md:max-h-svh"
         role="dialog"
         aria-modal="true"
-        aria-label="Search"
+        aria-label={dict.search.label}
         aria-hidden={!open}
         inert={!open}
         data-lenis-prevent
@@ -193,7 +184,7 @@ export function SearchPanel({
                   onClick={closePanel}
                   className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
                 >
-                  Close
+                  {dict.search.close}
                 </button>
               </div>
             </div>
@@ -214,7 +205,7 @@ export function SearchPanel({
               name="q"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="What are you looking for?"
+              placeholder={dict.search.placeholder}
               autoComplete="off"
               enterKeyHint="search"
               className="search-input font-owners-narrow-bold w-full border-b border-sky bg-transparent pb-4 text-[9vw] leading-[1.05] text-black uppercase outline-none placeholder:text-black/25 md:text-[min(4.5vw,4.5rem)]"
@@ -226,10 +217,16 @@ export function SearchPanel({
 
           <div className="relative col-start-2 col-end-5 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh] md:col-end-4">
             <p className="font-owners-medium text-[11px] uppercase tracking-wide">
-              Popular searches
+              {dict.search.popularSearches}
             </p>
+            {/* The terms are the same in all three dictionaries on purpose.
+                They are typed into the box and matched against Shopify, whose
+                catalogue is French only — an English chip reading "Salads"
+                found nothing at all, which is worse than a chip in the wrong
+                language. They can diverge the day Translate & Adapt is set up
+                in Shopify. */}
             <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-3 md:mt-6 md:flex-col md:gap-3">
-              {POPULAR_SEARCHES.map((term) => (
+              {dict.search.suggestions.map((term) => (
                 <li key={term}>
                   <button
                     type="button"
@@ -259,7 +256,7 @@ export function SearchPanel({
 
             <div className="px-(--grid-gutter) pt-[4svh] pb-4 md:pt-[4svh]">
               <p className="font-owners-medium text-[11px] uppercase tracking-wide">
-                {isSearching ? "Results" : "Popular products"}
+                {isSearching ? dict.search.results : dict.search.popular}
               </p>
             </div>
 
@@ -274,7 +271,9 @@ export function SearchPanel({
               <div className="px-(--grid-gutter) pb-8">
                 <div className="mb-6 h-px bg-sky" aria-hidden />
                 <p className="font-archivo-light text-[14px]">
-                  No products match “{deferredQuery}”.
+                  {interpolate(dict.search.noResults, {
+                    query: deferredQuery,
+                  })}
                 </p>
               </div>
             ) : (

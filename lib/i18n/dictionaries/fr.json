@@ -646,5 +646,22 @@
         "contact": "Nous écrire"
       }
     }
+  },
+  "search": {
+    "label": "Rechercher",
+    "placeholder": "Que cherchez-vous ?",
+    "close": "Fermer",
+    "results": "Résultats",
+    "popular": "Produits populaires",
+    "noResults": "Aucun produit ne correspond à « {query} ».",
+    "suggestions": [
+      "Jus",
+      "Granola",
+      "Salade",
+      "Café",
+      "Soupe",
+      "Quiche"
+    ],
+    "popularSearches": "Recherches fréquentes"
   }
 }
