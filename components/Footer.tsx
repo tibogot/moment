@@ -74,10 +74,10 @@ export function Footer() {
             className="pointer-events-auto flex w-full justify-center"
           >
             <Image
-              src="/brand/logonav.svg"
+              src="/brand/Moment-Logotype.svg"
               alt={siteConfig.name}
-              width={155}
-              height={29}
+              width={1437}
+              height={220}
               className="h-auto w-[62%] max-w-30"
               style={{ filter: "brightness(0)" }}
             />

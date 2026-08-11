@@ -67,7 +67,10 @@
   --hero-headline: min(17vw, 8svh);
   --hero-body: 18px;
   --nav-text: 12px;
-  --nav-logo: 92px;
+  /* Width, not height — the logotype is 6.5:1, so this is ~15px of drawn mark.
+     Nudged up from 92px when the final logotype landed: it is proportionally
+     wider than the old file, so the same width read shorter in the bar. */
+  --nav-logo: 100px;
   --nav-icon: 20px;
 
   /* The nav links previously needed their own fluid type scale: seven
@@ -101,7 +104,7 @@
     /* Fixed, not vw-scaled: the navbar is chrome, and letting it grow with the
        viewport made the links 18px on a 1920 screen. */
     --nav-text: 14px;
-    --nav-logo: 106px;
+    --nav-logo: 116px;
     --nav-icon: 16px;
     --card-type: 13px;
     --card-price: 15px;

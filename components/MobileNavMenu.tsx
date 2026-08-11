@@ -235,10 +235,10 @@ export function MobileNavMenu({
             >
               <span className="inline-flex" style={{ filter: "brightness(0)" }}>
                 <Image
-                  src="/brand/logonav.svg"
+                  src="/brand/Moment-Logotype.svg"
                   alt="Moment"
-                  width={110}
-                  height={21}
+                  width={1437}
+                  height={220}
                   className="h-auto"
                   style={{ width: "var(--nav-logo)" }}
                 />

@@ -779,19 +779,26 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
             )}
           </ul>
 
+          {/* The -1.5px is optical, not layout. The links are uppercase, so
+              their line box reserves descender space no glyph fills and the
+              caps ride above its centre; the logo is a tight-cropped SVG whose
+              box is its ink, so it centres true and reads low beside them.
+              Scoped to nav: because below that the links are hidden and the
+              logo sits against the icons, which are square and need no nudge.
+              Lives on the Link, not the span — GSAP owns the span's filter. */}
           <Link
             href={routes.home}
             aria-label="Moment home"
-            className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6"
+            className="flex justify-center justify-self-center nav:col-start-5 nav:col-end-6 nav:translate-y-[-1.5px]"
             onMouseEnter={closeNavMenu}
             onClick={handleLogoClick}
           >
             <span ref={logoRef} data-nav-logo className="inline-flex">
               <Image
-                src="/brand/logonav.svg"
+                src="/brand/Moment-Logotype.svg"
                 alt="Moment"
-                width={110}
-                height={21}
+                width={1437}
+                height={220}
                 preload
                 className="h-auto"
                 style={{ width: "var(--nav-logo)" }}
