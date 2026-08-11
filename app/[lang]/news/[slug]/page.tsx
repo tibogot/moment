@@ -26,8 +26,17 @@ type NewsArticlePageProps = {
   params: Promise<{ lang: string; slug: string }>;
 };
 
-export async function generateStaticParams() {
-  const slugs = await getNewsArticleSlugs();
+/**
+ * Per language, not per slug. An article exists in one language only, so
+ * prerendering every slug under every locale would build /nl/news/<french-slug>
+ * — a page whose own query then finds nothing and 404s.
+ */
+export async function generateStaticParams({
+  params,
+}: {
+  params: { lang: string };
+}) {
+  const slugs = await getNewsArticleSlugs(toLocale(params.lang));
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -47,7 +56,7 @@ export async function generateMetadata({
   const { lang, slug } = await params;
   const locale = toLocale(lang);
   const [article, dict] = await Promise.all([
-    getNewsArticleBySlug(slug),
+    getNewsArticleBySlug(locale, slug),
     getDictionary(locale),
   ]);
 
@@ -66,9 +75,11 @@ export async function generateMetadata({
   });
 }
 
-export default async function NewsArticlePage({ params }: NewsArticlePageProps) {
-  const { slug } = await params;
-  const article = await getNewsArticleBySlug(slug);
+export default async function NewsArticlePage({
+  params,
+}: NewsArticlePageProps) {
+  const { lang, slug } = await params;
+  const article = await getNewsArticleBySlug(toLocale(lang), slug);
 
   if (!article) {
     notFound();

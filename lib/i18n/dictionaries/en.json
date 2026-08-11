@@ -542,5 +542,10 @@
     "metaPrice": "From {price} per person, {terms}.",
     "enquiry": "I would like a quote for the {title} menu ({format}, {price} per person).\n\n",
     "draftNotice": "Draft — these formats and prices are indicative examples, not final. Menus and pricing will be confirmed with the kitchen."
+  },
+  "news": {
+    "title": "News",
+    "lead": "From the kitchen, the counter and the table — what we are cooking, serving and thinking about.",
+    "empty": "No articles in English yet. Check back soon."
   }
 }

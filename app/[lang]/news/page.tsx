@@ -2,6 +2,8 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { NewsArticleCard } from "@/components/NewsArticleCard";
 import { PageIntro } from "@/components/PageIntro";
+import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getNewsArticles } from "@/lib/sanity/queries";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
@@ -10,15 +12,20 @@ export const generateMetadata = localizedMetadata("news", {
   path: routes.news,
 });
 
-export default async function NewsPage() {
-  const articles = await getNewsArticles();
+export default async function NewsPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const locale = toLocale((await params).lang);
+  const [articles, dict] = await Promise.all([
+    getNewsArticles(locale),
+    getDictionary(locale),
+  ]);
 
   return (
     <>
-      <PageIntro
-        title="News"
-        lead="From the kitchen, the counter and the table — what we are cooking, serving and thinking about."
-      />
+      <PageIntro title={dict.news.title} lead={dict.news.lead} />
 
       <GridSection className="pb-[14svh]">
         {articles.length > 0 ? (
@@ -35,7 +42,7 @@ export default async function NewsPage() {
         ) : (
           <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) py-[6svh] md:col-end-8">
             <p className="font-archivo-light text-[17px] leading-normal text-black/70">
-              No articles yet. Check back soon.
+              {dict.news.empty}
             </p>
           </div>
         )}

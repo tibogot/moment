@@ -543,5 +543,10 @@
     "metaPrice": "Vanaf {price} per persoon, {terms}.",
     "enquiry": "Ik zou graag een offerte voor de formule {title} ({format}, {price} per persoon).\n\n",
     "draftNotice": "Ontwerp — deze formules en prijzen zijn indicatieve voorbeelden, niet definitief. Menu's en tarieven worden met de keuken bevestigd."
+  },
+  "news": {
+    "title": "Nieuws",
+    "lead": "Uit de keuken, van de toog en van tafel — wat wij koken, serveren en in gedachten hebben.",
+    "empty": "Nog geen artikels in het Nederlands. Kom binnenkort terug."
   }
 }

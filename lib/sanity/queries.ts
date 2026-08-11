@@ -1,4 +1,5 @@
 import { sanityClient, sanityFetchOptions } from "./client";
+import type { Locale } from "../i18n/config";
 import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
 import { DEFAULT_SITE_DETAILS, type SiteDetails } from "../site";
@@ -14,41 +15,57 @@ const articleListFields = `
   categories[]->{ title }
 `;
 
-export const articlesQuery = `*[_type == "article"] | order(publishedAt desc) {
+/**
+ * Every article query filters on `language`.
+ *
+ * An article is written in one language and is not a translation of any other:
+ * the schema has asked for that language since it was written, the client has
+ * been filling it in, and nothing read it — so /fr/news, /nl/news and /en/news
+ * served one undifferentiated pile, and the sitemap told Google the three were
+ * translations of each other.
+ *
+ * The consequence to be clear about: a Dutch reader sees only Dutch articles,
+ * and an empty page until one exists. That is correct. Showing them French is
+ * not a fallback, it is a different article.
+ */
+export const articlesQuery = `*[_type == "article" && language == $language] | order(publishedAt desc) {
   ${articleListFields}
 }`;
 
-export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug][0] {
+export const articleBySlugQuery = `*[_type == "article" && language == $language && slug.current == $slug][0] {
   ${articleListFields},
   body
 }`;
 
-export const articleSlugsQuery = `*[_type == "article" && defined(slug.current)]{
+export const articleSlugsQuery = `*[_type == "article" && language == $language && defined(slug.current)]{
   "slug": slug.current
 }`;
 
-export async function getNewsArticles(): Promise<NewsArticleListItem[]> {
+export async function getNewsArticles(
+  language: Locale,
+): Promise<NewsArticleListItem[]> {
   return sanityClient.fetch<NewsArticleListItem[]>(
     articlesQuery,
-    {},
+    { language },
     sanityFetchOptions,
   );
 }
 
 export async function getNewsArticleBySlug(
+  language: Locale,
   slug: string,
 ): Promise<NewsArticle | null> {
   return sanityClient.fetch<NewsArticle | null>(
     articleBySlugQuery,
-    { slug },
+    { language, slug },
     sanityFetchOptions,
   );
 }
 
-export async function getNewsArticleSlugs(): Promise<string[]> {
+export async function getNewsArticleSlugs(language: Locale): Promise<string[]> {
   const rows = await sanityClient.fetch<{ slug: string }[]>(
     articleSlugsQuery,
-    {},
+    { language },
     sanityFetchOptions,
   );
 

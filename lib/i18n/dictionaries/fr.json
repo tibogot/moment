@@ -543,5 +543,10 @@
     "metaPrice": "À partir de {price} par personne, {terms}.",
     "enquiry": "Je souhaite un devis pour la formule {title} ({format}, {price} par personne).\n\n",
     "draftNotice": "Brouillon — ces formules et ces prix sont des exemples indicatifs, pas définitifs. Les menus et les tarifs seront confirmés avec la cuisine."
+  },
+  "news": {
+    "title": "Actualités",
+    "lead": "De la cuisine, du comptoir et de la table — ce que nous cuisinons, servons et avons en tête.",
+    "empty": "Pas encore d'article en français. Revenez bientôt."
   }
 }

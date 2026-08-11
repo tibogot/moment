@@ -5,6 +5,7 @@ import {
   INTL_LOCALE,
   LOCALES,
   withLocale,
+  type Locale,
 } from "@/lib/i18n/config";
 import { routes } from "@/lib/routes";
 import { absoluteUrl } from "@/lib/seo";
@@ -41,11 +42,32 @@ function localized(
 }
 
 /**
+ * One page, one language, no alternates.
+ *
+ * For articles. `localized` declares three URLs as translations of one another,
+ * which is true of a product or a menu page — same content, three shells — and
+ * false of an article: an article is written in one language and there is no
+ * Dutch counterpart to point a crawler at. Claiming otherwise sends Google to
+ * a URL that 404s.
+ */
+function single(
+  path: string,
+  locale: Locale,
+  rest: Omit<Entry, "url" | "alternates">,
+): Entry {
+  return { url: absoluteUrl(withLocale(path, locale)), ...rest };
+}
+
+/**
  * Hand-ranked rather than left at the default 0.5 — priority is only a hint,
  * but the ordering tells a crawler which pages we consider the site's front
  * door. Cart, account and sign-in are deliberately absent: they're noindex.
  */
-const staticRoutes: { path: string; changeFrequency: Entry["changeFrequency"]; priority: number }[] = [
+const staticRoutes: {
+  path: string;
+  changeFrequency: Entry["changeFrequency"];
+  priority: number;
+}[] = [
   { path: routes.home, changeFrequency: "weekly", priority: 1 },
   { path: routes.shop, changeFrequency: "daily", priority: 0.9 },
   { path: routes.collections, changeFrequency: "weekly", priority: 0.8 },
@@ -68,7 +90,10 @@ const staticRoutes: { path: string; changeFrequency: Entry["changeFrequency"]; p
  * A sitemap that 500s is worse than one missing a section, and the CMS is the
  * one source here that throws rather than degrading to an empty list.
  */
-async function safely<T>(load: () => Promise<T[]>, label: string): Promise<T[]> {
+async function safely<T>(
+  load: () => Promise<T[]>,
+  label: string,
+): Promise<T[]> {
   try {
     return await load();
   } catch (error) {
@@ -78,11 +103,19 @@ async function safely<T>(load: () => Promise<T[]>, label: string): Promise<T[]> 
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, collections, articles, menus] = await Promise.all([
+  const [products, collections, menus, articlesByLocale] = await Promise.all([
     safely(getProducts, "products"),
     safely(getCollections, "collections"),
-    safely(getNewsArticles, "articles"),
     safely(getMenus, "menus"),
+    Promise.all(
+      LOCALES.map(async (locale) => ({
+        locale,
+        articles: await safely(
+          () => getNewsArticles(locale),
+          `articles (${locale})`,
+        ),
+      })),
+    ),
   ]);
 
   const now = new Date();
@@ -116,14 +149,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       }),
     ),
-    ...articles.map((article) =>
-      localized(routes.newsArticle(article.slug.current), {
-        lastModified: article.publishedAt
-          ? new Date(article.publishedAt)
-          : now,
-        changeFrequency: "yearly",
-        priority: 0.5,
-      }),
+    ...articlesByLocale.flatMap(({ locale, articles }) =>
+      articles.map((article) =>
+        single(routes.newsArticle(article.slug.current), locale, {
+          lastModified: article.publishedAt
+            ? new Date(article.publishedAt)
+            : now,
+          changeFrequency: "yearly",
+          priority: 0.5,
+        }),
+      ),
     ),
   ];
 }
