@@ -10,6 +10,15 @@ type ProductCardProps = {
   sizes?: string;
   /** Tighter padding for overlays like search. */
   compact?: boolean;
+  /**
+   * What the title is, structurally. A heading on the pages where the card is
+   * content — the shop grid, the product rows — under the section heading
+   * above it. `span` where the card sits in an overlay that is mounted on
+   * every page: those titles are not part of any page's outline, and rendering
+   * them as h3 puts four of them, with nothing above them to nest under, into
+   * the heading structure of the whole site.
+   */
+  titleAs?: "h2" | "h3" | "span";
   onNavigate?: () => void;
 };
 
@@ -23,6 +32,7 @@ export function ProductCard({
   product,
   sizes = "(max-width: 768px) 50vw, 33vw",
   compact = false,
+  titleAs: Title = "h3",
   onNavigate,
 }: ProductCardProps) {
   return (
@@ -55,9 +65,11 @@ export function ProductCard({
           price drops under the title on its own, mid-flip, instead of the
           whole row changing direction in a single frame. */}
       <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-(--card-gutter)">
-        <h3 className="font-owners-medium text-(length:--card-type) uppercase tracking-wide">
+        {/* Both are flex items here, so blockified either way: the element
+            changes what the title *is*, never how it sits. */}
+        <Title className="font-owners-medium text-(length:--card-type) uppercase tracking-wide">
           {product.title}
-        </h3>
+        </Title>
         <span className="font-archivo-light text-(length:--card-price)">
           {product.price}
         </span>

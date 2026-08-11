@@ -281,9 +281,14 @@ export function SearchPanel({
                 <ul className="grid grid-cols-2 gap-px border-x border-sky bg-sky md:grid-cols-4 md:border-x-0">
                   {visibleProducts.map((product) => (
                     <li key={product.id} className="bg-cream">
+                      {/* Not a heading: this panel is mounted on every page,
+                          so an h3 here lands in every page's outline — under
+                          the "Popular products" label above, which is a
+                          paragraph, so it reads as a skipped level too. */}
                       <ProductCard
                         product={product}
                         compact
+                        titleAs="span"
                         sizes="(max-width: 768px) 50vw, 20vw"
                         onNavigate={closePanel}
                       />
