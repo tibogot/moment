@@ -77,13 +77,36 @@ left:
 - `AboutIntro`, `AboutHero`, `AboutFacts`, `AboutCta` — seven blocks. The About
   page is what a prospect reads after the home page, so this is the most visible
   hole
-- `SearchPanel` empty state, `news/page.tsx` empty state,
-  `news/[slug]/not-found.tsx`, one line on the product page
+- `SearchPanel` empty state, `news/[slug]/not-found.tsx`, one line on the
+  product page. The news index's own copy is done
 - `app/[lang]/not-found.tsx` is hardcoded **French**, so it is wrong in Dutch
   and English rather than wrong in all three
 
 The Events and Coffee pages came back nearly clean — worth knowing, since they
 were on the suspect list.
+
+### Menus are still single-language
+
+The one hole the article fix did not close. `menu` carries no language field at
+all, so an Apéro dînatoire written in French renders identically on `/nl/menus`
+and `/en/menus` — title, summary, courses, dishes. Only the chrome around it is
+translated.
+
+Two ways out, and the second is better:
+
+1. **One document per language.** Three "Apéro dînatoire" documents. But price,
+   minimum guests and lead time have no language, so they would be tripled too —
+   three places for a tariff to drift apart.
+2. **Field-level translation.** One document, with title / summary / courses as
+   `{fr, nl, en}` shown side by side, and the pricing shared. The client sees
+   immediately that Dutch is missing rather than discovering it months later.
+
+Worth waiting for the meeting: the answer depends on whether they will actually
+write Dutch, and that changes the calculation completely.
+
+The sitemap has the matching defect — it declares each menu as one URL with
+three language alternates, which is a claim about translation that is not true
+yet. Fix both together.
 
 ### Other
 
