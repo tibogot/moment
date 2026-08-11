@@ -40,8 +40,22 @@ import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 const DURATION = 0.48;
 const EASE = "power2.out";
 const CLOSE_EASE = "power2.inOut";
-const MENU_CONTENT_OFFSET = 6;
-const CONTENT_REVEAL_AT = 0.22;
+
+/*
+ * The panel unfurl gets its own pair rather than borrowing DURATION/EASE.
+ * Those are tuned for the bar itself — a cream sheet scaling over its own
+ * height, where power2.out's fast first frames read as responsive. The menu is
+ * several times taller, and on that distance the same curve is past 40% before
+ * the eye has caught up: it slams to nearly open and then creeps the last
+ * stretch. An in-out curve gives the height a start as well as a stop.
+ */
+const MENU_DURATION = 0.62;
+const MENU_EASE = "power2.inOut";
+
+const MENU_CONTENT_OFFSET = 14;
+/* Late enough that the content rises into a panel already making room for it,
+   early enough that it has settled by the time the height does. */
+const CONTENT_REVEAL_AT = 0.42;
 
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
 const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
@@ -295,8 +309,6 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
     });
     navTweenRef.current = tl;
 
-    const bgScaleY = Number(gsap.getProperty(bg, "scaleY") ?? 0);
-    const bgVisible = bgScaleY > 0.01;
     const menuCurrentH = menu
       ? Number(gsap.getProperty(menu, "height") ?? 0)
       : 0;
@@ -314,24 +326,35 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
           tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET }, 0);
         }
 
+        const menuDuration = immediate ? 0 : MENU_DURATION;
+
+        /* One duration and one curve for both. The cream sheet is what the
+           panel's bottom border is drawn on, so any difference between the two
+           shows up as the rule detaching from the content it belongs to for
+           the whole length of the tween. */
         tl.to(
           bg,
           {
             scaleY: 1,
             height: navHeight + menuHeight,
-            duration: duration * (bgVisible ? 1 : 1.1),
+            duration: menuDuration,
+            ease: MENU_EASE,
           },
           0,
         );
-        tl.to(menu, { height: menuHeight, duration: duration * 1.1 }, 0);
+        tl.to(
+          menu,
+          { height: menuHeight, duration: menuDuration, ease: MENU_EASE },
+          0,
+        );
         tl.to(
           menuInner,
           {
             autoAlpha: 1,
             y: 0,
-            duration: duration * 0.7,
+            duration: menuDuration * 0.55,
           },
-          duration * CONTENT_REVEAL_AT,
+          menuDuration * CONTENT_REVEAL_AT,
         );
       } else if (menuIsOpen && menu && menuInner) {
         tl.to(
@@ -571,22 +594,38 @@ export function Navbar({ products = [], collections = [] }: NavbarProps) {
       const nav = navRef.current;
       if (!menuInner || !menu || !bg || !nav || !navExpanded) return;
 
+      /*
+       * observe() delivers the element's current size straight away, and that
+       * first callback lands a frame into the open timeline. It carries no new
+       * information — it is the same measurement the unfurl was just built
+       * from — but acting on it overwrites that tween with a short correction,
+       * which is what made the panel snap open rather than open. Only a real
+       * change in the content, such as swapping Shop for About while the panel
+       * is already down, is worth a tween here.
+       */
+      let measured = false;
+
       const observer = new ResizeObserver(() => {
+        if (!measured) {
+          measured = true;
+          return;
+        }
         if (!navExpandedRef.current) return;
 
         const navHeight = nav.offsetHeight;
         const menuHeight = menuInner.offsetHeight;
+        const duration = MENU_DURATION * 0.5;
 
         gsap.to(menu, {
           height: menuHeight,
-          duration: DURATION * 0.35,
-          ease: EASE,
+          duration,
+          ease: MENU_EASE,
           overwrite: "auto",
         });
         gsap.to(bg, {
           height: navHeight + menuHeight,
-          duration: DURATION * 0.35,
-          ease: EASE,
+          duration,
+          ease: MENU_EASE,
           overwrite: "auto",
         });
       });
