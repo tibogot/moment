@@ -93,13 +93,24 @@ settings in the Shopify admin now — see SEO-CLIENT-CHECKLIST.md §3.
 Confirmed as **corporate clients ordering catering**, not resellers.
 
 **Do professional customers see different prices? — BLOCKING**
-This is the single question that decides how big the B2B work is.
+This is the question that decides how big the B2B work is, and the answer to it
+got considerably cheaper on 2 April 2026.
 
-- *Same prices* — straightforward. Tag the customer in Shopify, show them
-  invoices, saved addresses and one-click reordering. Days of work.
-- *Different prices* — Shopify's real B2B (price lists, company accounts,
-  payment terms) is **Plus only**, roughly €2,000+/month. The alternatives on
-  your current plan are workarounds and each has a cost.
+Shopify's native B2B — company profiles, price catalogues, payment terms and
+saved cards — used to be Plus only, at roughly €2,000/month. It is now included
+on **Basic, Grow and Advanced at no extra cost**. An earlier version of this
+document said otherwise; it was written before the change.
+
+- *Same prices for everyone* — tag the customer, show them their orders, saved
+  addresses and one-click reordering. Days of work.
+- *One or two professional price levels* — native, on your current plan. You get
+  **up to 3 catalogues**, so up to three price tiers.
+- *A rate negotiated per company* — still Plus. Assigning a catalogue directly to
+  one company is the line Shopify kept above the paywall.
+
+So the question to answer is narrower than it was: **how many different price
+levels do you need — one for everyone, or a professional rate, or genuinely
+different terms per client?** Three or fewer costs you nothing extra.
 
 **Who approves a professional account application, and how fast?** A company
 signing up needs someone to check it and tag them. Same day? Next working day?
@@ -109,7 +120,12 @@ number, contact name, email, phone, delivery address, and a free-text note. Add
 or remove anything.
 
 **Payment terms.** Do corporate clients pay at checkout like everyone else, or
-do you invoice them after the fact? The second needs Shopify Plus or an app.
+do you invoice them after the fact?
+
+Also changed in April: **net payment terms are now native on your plan**, along
+with saved company cards and a draft-order-to-invoice flow. Invoicing a company
+at 30 days no longer needs Plus or a third-party app. Deposits and partial
+payments still do.
 
 ---
 

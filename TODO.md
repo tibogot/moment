@@ -24,7 +24,7 @@ thing that unblocks it.
 | **Correct zone pricing** | The atelier's real street address. Distances are currently measured from the centroid of 1190 Forest, so anyone near a band edge is quoted the wrong fee |
 | **Legal launch** | BCE number, VAT number, legal form. Belgian law requires them on a commercial site; the legal page prints `[to be completed]` until they arrive |
 | **Search visibility** | `moment.be` registered. The site is deliberately `noindex` until it exists — see §5 |
-| **How big the B2B work is** | Do professional customers see different prices? Same prices is days of work; different prices needs Shopify Plus or a workaround |
+| **How big the B2B work is** | How many price levels? Shopify made native B2B free on Basic/Grow/Advanced on 2 April 2026 — company profiles, net terms, saved cards and **up to 3 catalogues**. Only per-company negotiated pricing still needs Plus |
 | **VAT invoices** | Which of the three options in `CLIENT-QUESTIONS.md` §4 |
 | **Legal page copy** | The lawyer's versions, or written acceptance of the drafts |
 

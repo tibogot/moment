@@ -131,7 +131,7 @@ fonctions passeraient par des abonnements mensuels :
 | Minimum de commande par zone | Application |
 | Site multilingue | Supplément payant sur Webflow, licence annuelle sur WordPress |
 | Autocomplétion d'adresse | Facturée à l'usage chez Google |
-| Comptes entreprises, paiement sur facture | Shopify Plus uniquement |
+| Comptes entreprises, paiement sur facture | Natif depuis avril 2026 sur Basic/Grow/Advanced |
 | Factures TVA téléchargeables | Application dédiée — **celle-ci reste à prévoir** |
 
 > Les montants exacts changent régulièrement selon les éditeurs et les plans
@@ -156,8 +156,10 @@ devisés :
 - **Recommander en un clic** à partir d'une commande précédente
 - **Carnet d'adresses** enregistrées (siège social, bureaux…)
 - **Note de commande** (ex. « sonner à l'accueil »)
-- **Paiement sur facture pour les entreprises** — fonction Shopify Plus ;
-  décision de plan à prendre avant tout développement
+- **Paiement sur facture pour les entreprises** — natif sur le plan actuel
+  depuis le 2 avril 2026, avec les profils entreprises, les délais de paiement
+  et les cartes enregistrées. Ce point ne demande plus de changement de plan ;
+  seuls les acomptes et les paiements partiels restent réservés à Plus
 - **Informations de facturation enregistrées** : société, TVA, contact, adresse
   de facturation distincte
 - **Factures téléchargeables** — nécessite une application Shopify
