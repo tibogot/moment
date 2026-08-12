@@ -73,6 +73,11 @@
     "collections": {
       "label": "Onze collecties"
     },
+    "selections": {
+      "events": "Voor evenementen",
+      "home": "Voor thuis",
+      "office": "Voor op kantoor"
+    },
     "statement": {
       "headline": "Eten dat de tafel draagt, niet alleen het bord — die ochtend gekookt, klaar om te serveren.",
       "body": [

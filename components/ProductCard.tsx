@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
-import type { CSSProperties } from "react";
+import type { CSSProperties, MouseEvent } from "react";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -26,6 +26,11 @@ type ProductCardProps = {
    */
   titleAs?: "h2" | "h3" | "span";
   onNavigate?: () => void;
+  /**
+   * Receives the click before navigation. Return or `preventDefault` to cancel
+   * — used by drag carousels so a swipe does not open the product.
+   */
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 };
 
 /**
@@ -41,11 +46,18 @@ export function ProductCard({
   soldOutLabel,
   titleAs: Title = "h3",
   onNavigate,
+  onClick,
 }: ProductCardProps) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(event);
+    if (event.defaultPrevented) return;
+    onNavigate?.();
+  };
+
   return (
     <Link
       href={routes.product(product.handle)}
-      onClick={onNavigate}
+      onClick={handleClick}
       className="group block h-full py-(--card-pad)"
       style={compact ? ({ "--card-pad": "1.25rem" } as CSSProperties) : undefined}
     >

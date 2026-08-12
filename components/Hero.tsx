@@ -32,7 +32,7 @@ export function Hero({ copy, image }: HeroProps) {
       data-transparent-nav
     >
       <HeroParallaxImage src={heroSrc} blurDataURL={image?.lqip} />
-      <div className="absolute inset-0 bg-black/20" aria-hidden />
+      <div className="absolute inset-0 bg-black/10" aria-hidden />
 
       <GridLines
         ruled

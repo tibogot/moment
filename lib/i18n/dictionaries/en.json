@@ -73,6 +73,11 @@
     "collections": {
       "label": "Our collections"
     },
+    "selections": {
+      "events": "For events",
+      "home": "For home",
+      "office": "For office"
+    },
     "statement": {
       "headline": "Food that holds the table, not just the plate — cooked that morning, ready to serve.",
       "body": [

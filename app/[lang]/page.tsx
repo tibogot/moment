@@ -10,6 +10,7 @@ import { NewsletterSection } from "@/components/NewsletterSection";
 import { PanelPairFlipSmoothSection } from "@/components/PanelPairFlipSmoothSection";
 // import { PanelPairFlipSection } from "@/components/PanelPairFlipSection";
 // import { PanelPairSection } from "@/components/PanelPairSection";
+import { SelectionCollectionsSection } from "@/components/SelectionCollectionsSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitStatementSection } from "@/components/SplitStatementSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
@@ -25,7 +26,12 @@ import { siteGraph } from "@/lib/schema";
 import { languageAlternates } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getHomePageImages, getSiteDetails } from "@/lib/sanity/queries";
-import { getCollections } from "@/lib/shopify/collections";
+import {
+  getCollectionByHandle,
+  getCollections,
+  SELECTION_COLLECTION_HANDLES,
+  SELECTION_COLLECTION_HANDLE_SET,
+} from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 
 /**
@@ -64,20 +70,31 @@ export default async function Home({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const [collections, availability, dict, siteDetails, images] =
+  const locale = toLocale(lang);
+  const [collections, selectionCollections, availability, dict, siteDetails, images] =
     await Promise.all([
-      getCollections(toLocale(lang)),
+      getCollections(locale),
+      Promise.all(
+        SELECTION_COLLECTION_HANDLES.map((handle) =>
+          getCollectionByHandle(locale, handle),
+        ),
+      ).then((items) => items.filter((item) => item !== null)),
       getDeliveryAvailability(),
-      getDictionary(toLocale(lang)),
+      getDictionary(locale),
       getSiteDetails(),
       getHomePageImages(),
     ]);
   const home = dict.home;
 
-  // Shopify seeds every store with a "frontpage" collection; skip it and show
-  // the first three real ones.
+  // Shopify seeds every store with a "frontpage" collection; skip it and the
+  // occasion sélections (those have their own section) and show the first
+  // three real product collections.
   const featured = collections
-    .filter((collection) => collection.handle !== "frontpage")
+    .filter(
+      (collection) =>
+        collection.handle !== "frontpage" &&
+        !SELECTION_COLLECTION_HANDLE_SET.has(collection.handle),
+    )
     .slice(0, 3);
 
   return (
@@ -157,6 +174,28 @@ export default async function Home({
         collections={featured}
         heading={home.collections.label}
         viewAllLabel={dict.common.seeEverything}
+      />
+
+      <SelectionCollectionsSection
+        collections={selectionCollections}
+        tabs={[
+          {
+            handle: "pour-les-evenements",
+            label: home.selections.events,
+          },
+          {
+            handle: "pour-la-maison",
+            label: home.selections.home,
+          },
+          {
+            handle: "pour-le-bureau",
+            label: home.selections.office,
+          },
+        ]}
+        viewAllLabel={dict.common.seeEverything}
+        soldOutLabel={dict.product.soldOut}
+        prevLabel={home.calendar.prev}
+        nextLabel={home.calendar.next}
       />
 
       <StickyTitleSection

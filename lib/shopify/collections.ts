@@ -20,6 +20,23 @@ const COLLECTIONS_PAGE_SIZE = 50;
 const COLLECTION_PRODUCTS_PAGE_SIZE = 100;
 const SHOPIFY_REVALIDATE = 3600;
 
+/**
+ * Occasion-based collections featured on the home "sélections" section.
+ * Order is intentional — Events, Home, Office — not Shopify's title sort.
+ */
+export const SELECTION_COLLECTION_HANDLES = [
+  "pour-les-evenements",
+  "pour-la-maison",
+  "pour-le-bureau",
+] as const;
+
+/** Default tab on the home sélections carousel. */
+export const DEFAULT_SELECTION_HANDLE = "pour-la-maison";
+
+export const SELECTION_COLLECTION_HANDLE_SET = new Set<string>(
+  SELECTION_COLLECTION_HANDLES,
+);
+
 function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
   const products = (node.products?.edges ?? []).map(({ node: productNode }) =>
     mapProductNode(productNode),

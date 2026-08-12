@@ -289,6 +289,12 @@ button:not(:disabled),
   pointer-events: none;
 }
 
+/* Persistent underline for selected tabs (e.g. home sélections). */
+.animated-underline[aria-selected="true"]::after {
+  transform: scaleX(1);
+  transform-origin: 0% 50%;
+}
+
 @media (hover: hover) {
   .animated-underline:hover::after {
     transform: scaleX(1);

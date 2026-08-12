@@ -73,6 +73,11 @@
     "collections": {
       "label": "Nos collections"
     },
+    "selections": {
+      "events": "Pour les événements",
+      "home": "Pour la maison",
+      "office": "Pour le bureau"
+    },
     "statement": {
       "headline": "Des plats qui tiennent la table, pas seulement l'assiette — cuisinés le matin, prêts à servir.",
       "body": [
