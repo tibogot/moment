@@ -376,9 +376,11 @@
     "occasions": {
       "Delivery": "Livraison",
       "Event": "Événement",
-      "Coffee": "Cafe",
+      "Coffee": "Café",
       "Something else": "Autre chose"
     },
+    "optional": "optionnel",
+    "dateHint": "ou à peu près",
     "submit": "Demander un devis",
     "sending": "Envoi…",
     "sentTitle": "Demande envoyée",

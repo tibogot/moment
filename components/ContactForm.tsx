@@ -379,7 +379,7 @@ export function ContactForm({
                 <TextField
                   name="phone"
                   label={t.phone}
-                  hint="optional"
+                  hint={t.optional}
                   type="tel"
                   value={values.phone}
                   onChange={update("phone")}
@@ -391,7 +391,7 @@ export function ContactForm({
                 <TextField
                   name="company"
                   label={t.company}
-                  hint="optional"
+                  hint={t.optional}
                   value={values.company}
                   onChange={update("company")}
                   error={errorText(state.errors.company)}
@@ -426,7 +426,7 @@ export function ContactForm({
                         <label
                           key={occasion}
                           className={cn(
-                            "font-owners-medium border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
+                            "font-owners-medium cursor-pointer border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
                             "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
                             "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
                           )}
@@ -446,7 +446,7 @@ export function ContactForm({
                             }
                             className="sr-only"
                           />
-                          {occasion}
+                          {t.occasions[occasion]}
                         </label>
                       ))}
                     </div>
@@ -464,7 +464,7 @@ export function ContactForm({
                   <TextField
                     name="date"
                     label={t.date}
-                    hint="or roughly when"
+                    hint={t.dateHint}
                     value={values.date}
                     onChange={update("date")}
                     error={errorText(state.errors.date)}
@@ -474,7 +474,7 @@ export function ContactForm({
                   <TextField
                     name="guests"
                     label={t.guests}
-                    hint="optional"
+                    hint={t.optional}
                     value={values.guests}
                     onChange={update("guests")}
                     error={errorText(state.errors.guests)}
@@ -544,7 +544,11 @@ export function ContactForm({
                     className="shrink-0 self-start border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream disabled:opacity-40 md:self-auto"
                   >
                     <span className="font-owners-medium inline-flex items-center text-[14px] uppercase tracking-wide">
-                      {pending ? "Sending…" : "Send request"}
+                      {pending
+                        ? t.sending
+                        : pro
+                          ? dict.proAccount.submit
+                          : t.submit}
                     </span>
                   </button>
                 </div>

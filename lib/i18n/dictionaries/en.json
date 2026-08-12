@@ -379,6 +379,8 @@
       "Coffee": "Coffee",
       "Something else": "Something else"
     },
+    "optional": "optional",
+    "dateHint": "or roughly when",
     "submit": "Request a quote",
     "sending": "Sending…",
     "sentTitle": "Request sent",

@@ -379,6 +379,8 @@
       "Coffee": "Koffie",
       "Something else": "Iets anders"
     },
+    "optional": "optioneel",
+    "dateHint": "of ongeveer wanneer",
     "submit": "Offerte aanvragen",
     "sending": "Versturen…",
     "sentTitle": "Aanvraag verstuurd",
