@@ -77,11 +77,11 @@ export function AboutValuesSection({
 
           {/* Scrolling cards — portrait 3/4 frames, narrower than the column.
               Their stacked height is what keeps the left pinned. */}
-          <ul className="flex flex-col items-end gap-[10svh] px-(--grid-gutter) pb-[8svh] md:gap-[12svh] md:pt-(--grid-band) md:pb-[8svh] md:pl-0 md:pr-(--grid-gutter)">
+          <ul className="flex flex-col items-end gap-[5svh] px-(--grid-gutter) pb-[8svh] md:gap-[12svh] md:pt-(--grid-band) md:pb-[8svh] md:pl-0 md:pr-(--grid-gutter)">
             {copy.cards.map((card) => (
               <li
                 key={card.title}
-                className="flex aspect-3/4 w-[68%] flex-col justify-between bg-sky px-4 py-5 text-left md:w-[55%] md:px-5 md:py-6"
+                className="flex aspect-3/4 w-full flex-col justify-between bg-sky px-4 py-5 text-left md:w-[55%] md:px-5 md:py-6"
               >
                 <TextReveal blockColor={REVEAL_BLOCK_ON_SKY} stagger={0.12}>
                   <h3 className="font-owners-narrow-bold max-w-[16ch] text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(2.6vw,4svh)]">

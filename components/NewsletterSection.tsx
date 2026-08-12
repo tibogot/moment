@@ -73,7 +73,7 @@ export function NewsletterSection({ copy, className }: NewsletterSectionProps) {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="mt-3 flex w-full items-stretch bg-cream"
+                className="mt-3 flex w-full items-stretch bg-cream p-1.5"
               >
                 <label className="sr-only" htmlFor="newsletter-email">
                   {copy.placeholder}
@@ -87,11 +87,11 @@ export function NewsletterSection({ copy, className }: NewsletterSectionProps) {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder={copy.placeholder}
-                  className="font-archivo-light min-w-0 flex-1 bg-transparent px-4 py-3.5 text-[15px] text-black outline-none placeholder:text-black/35 md:px-5 md:text-[16px]"
+                  className="font-archivo-light min-w-0 flex-1 bg-transparent px-3 py-3 text-[15px] uppercase tracking-wide text-black outline-none placeholder:text-black/35 md:px-4 md:text-[16px]"
                 />
                 <button
                   type="submit"
-                  className="font-owners-medium shrink-0 bg-sky px-4 py-3.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-cream md:px-5"
+                  className="font-owners-medium shrink-0 bg-sky px-4 py-3 text-[11px] uppercase tracking-wide text-black transition-opacity duration-500 hover:opacity-80 md:px-5"
                 >
                   {copy.submit}
                 </button>
