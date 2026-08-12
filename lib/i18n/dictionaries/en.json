@@ -65,6 +65,11 @@
       "title": "Prepared at dawn, served by lunch.",
       "body": "We pack and send across Brussels in the early hours, so lunch arrives as the kitchen intended. Insulated boxes, portions already set, garnishes kept separate — ready to unwrap and serve at your desk, in a meeting room, or at home before your guests walk in."
     },
+    "hosting": {
+      "label": "The table",
+      "title": "A table set for the room.",
+      "body": "Seasonal menus, quiet service, timing held end to end — for hosts who want the table to say something about them."
+    },
     "collections": {
       "label": "Our collections"
     },
@@ -130,6 +135,14 @@
     "panels": {
       "events": "Events",
       "coffee": "Coffee desk"
+    },
+    "newsletter": {
+      "headline": "Sign up to our newsletter",
+      "body": "Seasonal menus, event dates and what is leaving the kitchen — a mail when there is something worth saying, and not otherwise.",
+      "formLabel": "Join our newsletter",
+      "placeholder": "Email address",
+      "submit": "Sign up",
+      "success": "Thank you — we will write when there is something new."
     }
   },
   "footer": {

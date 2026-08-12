@@ -65,6 +65,11 @@
       "title": "Préparé à l'aube, servi à midi.",
       "body": "Nous emballons et partons dans Bruxelles aux premières heures, pour que le déjeuner arrive tel que la cuisine l'a voulu. Boîtes isothermes, portions déjà dressées, garnitures à part — prêt à ouvrir et à servir, à votre bureau, en salle de réunion ou chez vous avant l'arrivée de vos invités."
     },
+    "hosting": {
+      "label": "La table",
+      "title": "Une table dressée pour la salle.",
+      "body": "Menus de saison, service discret, rythme tenu de bout en bout — pour les hôtes qui veulent que la table dise quelque chose d'eux."
+    },
     "collections": {
       "label": "Nos collections"
     },
@@ -130,6 +135,14 @@
     "panels": {
       "events": "Événements",
       "coffee": "Comptoir café"
+    },
+    "newsletter": {
+      "headline": "Inscrivez-vous à notre newsletter",
+      "body": "Menus de saison, dates d'événements et ce qui sort de la cuisine — un mail quand il y a vraiment quelque chose à dire, pas plus.",
+      "formLabel": "Rejoindre la newsletter",
+      "placeholder": "Adresse e-mail",
+      "submit": "S'inscrire",
+      "success": "Merci — on vous écrit dès qu'il y a du nouveau."
     }
   },
   "footer": {

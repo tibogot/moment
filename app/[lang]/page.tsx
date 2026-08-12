@@ -6,6 +6,7 @@ import { FullBleedImageSection } from "@/components/FullBleedImageSection";
 import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
 import { JsonLd } from "@/components/JsonLd";
+import { NewsletterSection } from "@/components/NewsletterSection";
 import { PanelPairSection } from "@/components/PanelPairSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitImageSection } from "@/components/SplitImageSection";
@@ -153,15 +154,29 @@ export default async function Home({
         src="/images/william-king.jpg"
       />
 
+      {/* Same cream sticky layout as kitchen — third beat after delivery. */}
+      <StickyTitleSection
+        label={home.hosting.label}
+        title={home.hosting.title}
+        body={home.hosting.body}
+        src="/images/nicole-herrero.jpg"
+      />
+
       <ServicesSection />
 
       {/* The reasons, once the visitor knows what we actually do. */}
       <WhyUsSection copy={home.whyUs} ctaLabel={dict.common.talkToUs} />
 
-      {/* Full-height breath between the reasons and the calendar. */}
-      <FullBleedImageSection src="/images/svitlana.jpg" />
+      {/* Full-height breath between the reasons and the calendar.
+          Spines stay in the DOM but paint transparent — flip back to
+          bg-cream/60 if the continuous grid should read across again. */}
+      <FullBleedImageSection
+        src="/images/svitlana.jpg"
+        lineClassName="bg-transparent"
+      />
 
       <CalendarSection availability={availability} />
+      <NewsletterSection copy={home.newsletter} />
       <Footer />
     </>
   );

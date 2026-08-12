@@ -65,6 +65,11 @@
       "title": "Bereid bij dageraad, geserveerd bij de lunch.",
       "body": "Wij pakken in en rijden 's ochtends vroeg door Brussel, zodat de lunch aankomt zoals de keuken het bedoelde. Isothermische dozen, porties al opgemaakt, garnituur apart — klaar om uit te pakken en te serveren aan uw bureau, in een vergaderzaal of thuis voor uw gasten binnenkomen."
     },
+    "hosting": {
+      "label": "De tafel",
+      "title": "Een tafel gedekt voor de zaal.",
+      "body": "Seizoensmenu's, discrete service, ritme van begin tot eind — voor gastheren die willen dat de tafel iets over hen zegt."
+    },
     "collections": {
       "label": "Onze collecties"
     },
@@ -130,6 +135,14 @@
     "panels": {
       "events": "Evenementen",
       "coffee": "Koffiebar"
+    },
+    "newsletter": {
+      "headline": "Schrijf u in op onze nieuwsbrief",
+      "body": "Seizoensmenu's, evenementdata en wat de keuken verlaat — een mail wanneer er echt iets te zeggen valt, niet vaker.",
+      "formLabel": "Word lid van de nieuwsbrief",
+      "placeholder": "E-mailadres",
+      "submit": "Inschrijven",
+      "success": "Dank u — wij schrijven wanneer er iets nieuws is."
     }
   },
   "footer": {

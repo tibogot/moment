@@ -7,6 +7,11 @@ type FullBleedImageSectionProps = {
   alt?: string;
   priority?: boolean;
   className?: string;
+  /**
+   * Colour of the two outer spines. Pass something transparent to hide them
+   * without removing the nodes — easy to bring back later.
+   */
+  lineClassName?: string;
 };
 
 /**
@@ -19,6 +24,7 @@ export function FullBleedImageSection({
   alt = "",
   priority = false,
   className,
+  lineClassName = "bg-cream/60",
 }: FullBleedImageSectionProps) {
   return (
     <section className={cn("relative h-[85svh] w-full overflow-hidden md:h-svh", className)}>
@@ -32,7 +38,7 @@ export function FullBleedImageSection({
 
       {/* Unruled, so only the two outer spines carry through — and those sit
           on the margins, which do not change with the column count. */}
-      <GridLines lineClassName="bg-cream/60" />
+      <GridLines lineClassName={lineClassName} />
     </section>
   );
 }
