@@ -20,26 +20,7 @@ import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
  */
 const ARM_MARGIN = "100% 0px";
 
-/*
- * Not zero, and that is the whole point.
- *
- * Chrome's LCP algorithm ignores paints at `opacity: 0` — the element is
- * treated as not yet rendered, and the clock keeps running until it is
- * repainted at a visible opacity. The hero headline is the largest element in
- * the desktop viewport, so LCP was not being recorded when the text laid out at
- * ~380ms; it waited for the intro gate (430ms), the 0.25s hold, the per-line
- * stagger and the full 0.75s block wipe, and landed at 1.77s. Every millisecond
- * of that was choreography, not loading.
- *
- * Any non-zero value is a paint as far as the metric is concerned. At 1% the
- * line is submitted to the compositor the moment it is laid out, so LCP is the
- * layout — while remaining, on cream type over a dark photograph, invisible.
- * The reveal itself is untouched: the block still wipes across and the line
- * still snaps to 1 behind it.
- *
- * https://www.debugbear.com/blog/opacity-animation-poor-lcp
- */
-const HIDDEN_OPACITY = 0.01;
+const HIDDEN_OPACITY = 0;
 
 /*
  * Splitting is the expensive half of this component: SplitText writes into the
