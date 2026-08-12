@@ -9,7 +9,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { NewsletterSection } from "@/components/NewsletterSection";
 import { PanelPairSection } from "@/components/PanelPairSection";
 import { ServicesSection } from "@/components/ServicesSection";
-import { SplitImageSection } from "@/components/SplitImageSection";
+import { SplitStatementSection } from "@/components/SplitStatementSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
 import { WhyUsSection } from "@/components/WhyUsSection";
 import {
@@ -98,9 +98,7 @@ export default async function Home({
         images={{ events: images.events, coffee: images.coffee }}
       />
 
-      {/* Image fills the left half — 3 columns x 3 rows — with the right half
-          left as bare grid. The second reprises it smaller, on the right.
-          On mobile the grid runs taller so each image reads at a useful size. */}
+      {/* Split image grid parked on /events for now — bring back here when needed.
       <SplitImageSection
         src="/images/anita-austvika.jpg"
         alt=""
@@ -130,6 +128,13 @@ export default async function Home({
         }}
         continueGrid
         fullBleedBottom
+      />
+      */}
+
+      <SplitStatementSection
+        copy={home.statement}
+        headlineSize="md"
+        className="pb-[6svh]"
       />
 
       <CollectionsSection

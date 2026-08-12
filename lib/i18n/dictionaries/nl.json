@@ -73,6 +73,13 @@
     "collections": {
       "label": "Onze collecties"
     },
+    "statement": {
+      "headline": "Eten dat de tafel draagt, niet alleen het bord — die ochtend gekookt, klaar om te serveren.",
+      "body": [
+        "Elke collectie verlaat dezelfde keuken in Brussel — seizoensgerechten, salades, gebak en koudgeperste sappen, die ochtend bereid van verse producten. Niets opgewarmd, niets kant-en-klaar: wat buitengaat is wat wij aan de doorgeefkast zouden opmaken.",
+        "Kies wat past bij het bureau, thuis of de zaal — lunch voor tien, aperitief voor dertig, een zittend diner. Wij regelen het ritme, de levering en wat op tijd op tafel moet staan, klaar om te serveren."
+      ]
+    },
     "services": {
       "label": "Wat wij doen",
       "items": [

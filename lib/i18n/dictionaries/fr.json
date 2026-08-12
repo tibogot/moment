@@ -73,6 +73,13 @@
     "collections": {
       "label": "Nos collections"
     },
+    "statement": {
+      "headline": "Des plats qui tiennent la table, pas seulement l'assiette — cuisinés le matin, prêts à servir.",
+      "body": [
+        "Chaque collection part de la même cuisine à Bruxelles — assiettes de saison, salades, pâtisseries et jus pressés à froid, préparés le matin même à partir de produits bruts. Rien de réchauffé, rien acheté tout prêt : ce qui part chez vous est ce que nous dresserions au passe.",
+        "Choisissez ce qui convient au bureau, à la maison ou à la salle — un déjeuner pour dix, un apéro pour trente, un dîner assis. On s'occupe du rythme, de la livraison et de ce qui doit être sur la table à l'heure, prêt à servir."
+      ]
+    },
     "services": {
       "label": "Ce que nous faisons",
       "items": [

@@ -73,6 +73,13 @@
     "collections": {
       "label": "Our collections"
     },
+    "statement": {
+      "headline": "Food that holds the table, not just the plate — cooked that morning, ready to serve.",
+      "body": [
+        "Every collection leaves the same kitchen in Brussels — seasonal plates, salads, pastries and cold-pressed juices, cooked that morning from raw ingredients. Nothing reheated, nothing bought in finished: what goes out is what we would plate at the pass.",
+        "Pick what suits the desk, the house or the room — lunch for ten, drinks for thirty, a seated dinner. We handle the timing, the delivery and what needs to be on the table on time, ready to serve."
+      ]
+    },
     "services": {
       "label": "What we do",
       "items": [
