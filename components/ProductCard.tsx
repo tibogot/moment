@@ -48,11 +48,17 @@ export function ProductCard({
   onNavigate,
   onClick,
 }: ProductCardProps) {
-  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    onClick?.(event);
-    if (event.defaultPrevented) return;
-    onNavigate?.();
-  };
+  // LocaleLink is a Client Component. Passing a function from a Server
+  // Component (the similar-products row on this page) is illegal — even a
+  // no-op. Only attach a handler when a client parent actually supplied one.
+  const handleClick =
+    onClick || onNavigate
+      ? (event: MouseEvent<HTMLAnchorElement>) => {
+          onClick?.(event);
+          if (event.defaultPrevented) return;
+          onNavigate?.();
+        }
+      : undefined;
 
   return (
     <Link
