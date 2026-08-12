@@ -91,39 +91,22 @@ export function PanelPairSection({
 
   return (
     <section className={cn("relative w-full bg-cream pb-[12svh]", className)}>
-      {/* Sky spines for the breathing room below the panels, where there is no
-          photograph for the cream ones to read against. Drawn first, so the
-          images paint over them across the panels themselves. */}
+      {/* Same sky spines as every other cream section. */}
       <GridLines lineClassName="bg-sky" />
 
-      {/* Wraps the panels alone, so the cream spines inside it stop where the
-          photographs do rather than running on through the gap. */}
       <div className="relative">
         <div
           className="relative grid"
           style={{ gridTemplateColumns: MARGIN_COLUMNS }}
         >
-          {/* The gap is a gutter, like every other gap on the page grid. It
-              also takes a slice off each panel's width, and since the panels
-              are ruled by aspect ratio, narrower is shorter. */}
-          <div className="col-start-2 grid grid-cols-1 gap-(--grid-gutter) md:grid-cols-2">
+          {/* Inset from the spines with the page gutter — panels sit closer as
+              a pair and shrink a touch (aspect ratio follows width). */}
+          <div className="col-start-2 grid grid-cols-1 gap-(--grid-gutter) px-(--grid-gutter) md:grid-cols-2">
             {panels.map((panel) => (
               <Link
                 key={panel.key}
                 href={panel.href}
-                className={cn(
-                  // Portrait either way, so the cells are never squares — but
-                  // less so once the panels sit side by side. At half the page
-                  // each, 3/4 made the pair taller than the screen it was being
-                  // read on; 6/7 lands around 80svh at 1440x900 and still
-                  // leaves the cells visibly taller than they are wide.
-                  "group relative block aspect-3/4 overflow-hidden md:aspect-6/7",
-                  // With a gap between them, each panel closes its own
-                  // rectangle: the two inner edges have no seam to share any
-                  // more, and the outer two land under the page spines that
-                  // are drawn over the photographs anyway.
-                  "border-x border-cream/60",
-                )}
+                className="group relative block aspect-3/4 overflow-hidden md:aspect-6/7"
               >
                 <ParallaxImage
                   src={sourceFor(panel.key, panel.src)}
@@ -169,10 +152,6 @@ export function PanelPairSection({
             ))}
           </div>
         </div>
-
-        {/* Drawn after the photographs so the two page spines carry over them,
-            the same way the full-bleed image section keeps them visible. */}
-        <GridLines lineClassName="bg-cream/60" />
       </div>
     </section>
   );
