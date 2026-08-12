@@ -22,7 +22,9 @@ type HoverKey = "all" | "collections" | string;
 const PREVIEW_COUNT = NAV_PREVIEW_COUNT;
 
 const linkClassName =
-  "animated-underline font-owners-medium text-[12px] uppercase tracking-wide";
+  "group block w-full py-1 font-owners-medium text-[12px] uppercase tracking-wide";
+
+const linkLabelClassName = "animated-underline";
 
 /* The previews are cards, not nav links: they take the shop grid's sky reveal
    rather than the underline the column on the left uses. */
@@ -156,7 +158,7 @@ export function ShopNavMenu({
     >
       <nav
         aria-label={dict.nav.shop}
-        className="relative col-start-2 col-end-4 flex flex-col gap-2.5 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh]"
+        className="relative col-start-2 col-end-4 flex flex-col gap-1 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh]"
       >
         <Link
           href={routes.shop}
@@ -165,7 +167,7 @@ export function ShopNavMenu({
           onFocus={setHover("all")}
           onClick={onNavigate}
         >
-          {dict.nav.all}
+          <span className={linkLabelClassName}>{dict.nav.all}</span>
         </Link>
         <Link
           href={routes.collections}
@@ -174,7 +176,7 @@ export function ShopNavMenu({
           onFocus={setHover("collections")}
           onClick={onNavigate}
         >
-          {dict.nav.collections}
+          <span className={linkLabelClassName}>{dict.nav.collections}</span>
         </Link>
         {collections.map((collection) => (
           <Link
@@ -185,7 +187,7 @@ export function ShopNavMenu({
             onFocus={setHover(collection.handle)}
             onClick={onNavigate}
           >
-            {collection.title}
+            <span className={linkLabelClassName}>{collection.title}</span>
           </Link>
         ))}
       </nav>
