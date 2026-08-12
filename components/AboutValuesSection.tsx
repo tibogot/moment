@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
-import { REVEAL_BLOCK, REVEAL_BLOCK_ON_SKY } from "@/lib/colors";
+import { REVEAL_BLOCK } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
@@ -83,21 +83,13 @@ export function AboutValuesSection({
                 key={card.title}
                 className="flex aspect-3/4 w-full flex-col justify-between bg-sky px-4 py-5 text-left md:w-[55%] md:px-5 md:py-6"
               >
-                <TextReveal blockColor={REVEAL_BLOCK_ON_SKY} stagger={0.12}>
-                  <h3 className="font-owners-narrow-bold max-w-[16ch] text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(2.6vw,4svh)]">
-                    {card.title}
-                  </h3>
-                </TextReveal>
+                <h3 className="font-owners-narrow-bold max-w-[16ch] text-[8vw] leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(2.6vw,4svh)]">
+                  {card.title}
+                </h3>
 
-                <TextReveal
-                  blockColor={REVEAL_BLOCK_ON_SKY}
-                  stagger={0.08}
-                  duration={0.6}
-                >
-                  <p className="font-archivo-light mt-8 max-w-[32ch] text-[18px] leading-normal text-black md:mt-0">
-                    {card.body}
-                  </p>
-                </TextReveal>
+                <p className="font-archivo-light mt-8 max-w-[32ch] text-[18px] leading-normal text-black md:mt-0">
+                  {card.body}
+                </p>
               </li>
             ))}
           </ul>
