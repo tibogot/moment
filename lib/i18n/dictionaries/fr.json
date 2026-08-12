@@ -280,7 +280,39 @@
     "unavailable": "Le catalogue n'est pas disponible pour le moment. Merci de réessayer plus tard.",
     "recentlyViewed": "Vus récemment",
     "lead": "Plats, salades et jus pressés à froid, préparés chaque matin et livrés partout à Bruxelles.",
-    "searchEmpty": "Les produits apparaîtront ici dès que le catalogue sera connecté."
+    "searchEmpty": "Les produits apparaîtront ici dès que le catalogue sera connecté.",
+    "sort": {
+      "label": "Trier",
+      "featured": "Plus récents",
+      "priceAsc": "Prix croissant",
+      "priceDesc": "Prix décroissant",
+      "titleAsc": "A–Z"
+    },
+    "filters": {
+      "type": "Type",
+      "diet": "Régime",
+      "occasion": "Occasion",
+      "empty": "Aucun plat ne correspond à ces filtres.",
+      "tags": {
+        "salade": "Salade",
+        "plat": "Plat",
+        "quiche": "Quiche",
+        "soupe": "Soupe",
+        "granola": "Granola",
+        "porridge": "Porridge",
+        "jus": "Jus",
+        "limonade": "Limonade",
+        "cafe": "Café",
+        "snack": "Snack",
+        "cookie": "Cookie",
+        "vegan": "Vegan",
+        "vegetarien": "Végétarien",
+        "sans-gluten": "Sans gluten",
+        "maison": "Maison",
+        "bureau": "Bureau",
+        "evenements": "Événements"
+      }
+    }
   },
   "product": {
     "orderPreferences": "Choisissez quand et comment vous voulez votre commande — modifiable jusqu'au paiement.",

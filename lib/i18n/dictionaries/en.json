@@ -280,7 +280,39 @@
     "unavailable": "The catalogue is not available right now. Please try again later.",
     "recentlyViewed": "Recently viewed",
     "lead": "Plates, salads and cold-pressed juices, prepared each morning and delivered across Brussels.",
-    "searchEmpty": "Products will appear here once the catalogue is connected."
+    "searchEmpty": "Products will appear here once the catalogue is connected.",
+    "sort": {
+      "label": "Sort",
+      "featured": "Newest",
+      "priceAsc": "Price, low to high",
+      "priceDesc": "Price, high to low",
+      "titleAsc": "A–Z"
+    },
+    "filters": {
+      "type": "Type",
+      "diet": "Diet",
+      "occasion": "Occasion",
+      "empty": "Nothing matches these filters.",
+      "tags": {
+        "salade": "Salad",
+        "plat": "Plate",
+        "quiche": "Quiche",
+        "soupe": "Soup",
+        "granola": "Granola",
+        "porridge": "Porridge",
+        "jus": "Juice",
+        "limonade": "Lemonade",
+        "cafe": "Coffee",
+        "snack": "Snack",
+        "cookie": "Cookie",
+        "vegan": "Vegan",
+        "vegetarien": "Vegetarian",
+        "sans-gluten": "Gluten-free",
+        "maison": "Home",
+        "bureau": "Office",
+        "evenements": "Events"
+      }
+    }
   },
   "product": {
     "orderPreferences": "Choose when and how you would like your order — you can change it before checkout.",

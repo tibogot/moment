@@ -280,7 +280,39 @@
     "unavailable": "De catalogus is momenteel niet beschikbaar. Probeer het later opnieuw.",
     "recentlyViewed": "Recent bekeken",
     "lead": "Gerechten, salades en koudgeperste sappen, elke ochtend bereid en in heel Brussel geleverd.",
-    "searchEmpty": "Producten verschijnen hier zodra de catalogus gekoppeld is."
+    "searchEmpty": "Producten verschijnen hier zodra de catalogus gekoppeld is.",
+    "sort": {
+      "label": "Sorteren",
+      "featured": "Nieuwste",
+      "priceAsc": "Prijs, laag naar hoog",
+      "priceDesc": "Prijs, hoog naar laag",
+      "titleAsc": "A–Z"
+    },
+    "filters": {
+      "type": "Type",
+      "diet": "Dieet",
+      "occasion": "Gelegenheid",
+      "empty": "Niets komt overeen met deze filters.",
+      "tags": {
+        "salade": "Salade",
+        "plat": "Gerecht",
+        "quiche": "Quiche",
+        "soupe": "Soep",
+        "granola": "Granola",
+        "porridge": "Porridge",
+        "jus": "Sap",
+        "limonade": "Limonade",
+        "cafe": "Koffie",
+        "snack": "Snack",
+        "cookie": "Cookie",
+        "vegan": "Vegan",
+        "vegetarien": "Vegetarisch",
+        "sans-gluten": "Glutenvrij",
+        "maison": "Thuis",
+        "bureau": "Kantoor",
+        "evenements": "Evenementen"
+      }
+    }
   },
   "product": {
     "orderPreferences": "Kies wanneer en hoe u uw bestelling wilt — aanpasbaar tot het afrekenen.",
