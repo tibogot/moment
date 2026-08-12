@@ -11,22 +11,18 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 /**
- * Experimental duplicate of PanelPairSection: the photograph is sliced into the
- * same 3 × 3 cell geometry, except the bottom-left title block is one double-
- * wide tile. Hover flips every tile to a sky back; leave flips them back.
+ * Comparison build of the tiled flip, sitting under PanelPairFlipSection.
  *
- * Flip is a hinge (rotateY → 90°, swap faces, rotateY → 0). Cells stay
- * overflow-visible so perspective does not clip the top and bottom edges.
+ * The hinge above kills eight timelines on every hover and swaps faces at 90°.
+ * This one keeps a single paused timeline per card and reverses it, uses a
+ * real 0→180 card (both faces live, backface hidden), and puts perspective on
+ * the board so the mosaic shares one camera.
  */
 
 const PANEL_COLUMNS = 3;
 const PANEL_ROWS = 3;
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 
-/**
- * Same visual grid as PanelPairSection, but the cleared title block is a
- * single col-span-2 tile so it flips as one piece.
- */
 const TILES = [
   { key: "0-0", col: 0, row: 0, colSpan: 1 },
   { key: "1-0", col: 1, row: 0, colSpan: 1 },
@@ -38,10 +34,6 @@ const TILES = [
   { key: "2-2", col: 2, row: 2, colSpan: 1 },
 ] as const;
 
-/**
- * Fixed start order for the stagger — same every hover, just not left-to-right
- * then top-to-bottom, which reads as a linear wipe.
- */
 const FLIP_ORDER = [3, 7, 0, 5, 1, 6, 2, 4] as const;
 
 const panels = [
@@ -56,7 +48,7 @@ type PanelCopy = {
   lead: string;
 };
 
-type PanelPairFlipSectionProps = {
+type PanelPairFlipSmoothSectionProps = {
   copy: Record<PanelKey, PanelCopy>;
   images?: Partial<Record<PanelKey, SanityImage | null>>;
   className?: string;
@@ -65,16 +57,12 @@ type PanelPairFlipSectionProps = {
 const titleClassName =
   "font-owners-narrow-bold text-[9.4vw] leading-[0.9] uppercase md:text-[min(4.4vw,7.6svh)]";
 
-// const leadClassName =
-//   "font-archivo-light mt-2 text-[20px] leading-snug md:text-[22px]";
-
 function PanelLabel({
   title,
   className,
   heading = false,
 }: {
   title: string;
-  lead: string;
   className: string;
   heading?: boolean;
 }) {
@@ -82,10 +70,7 @@ function PanelLabel({
 
   return (
     <div className="absolute inset-0 flex items-end p-4">
-      <div>
-        <Title className={cn(titleClassName, className)}>{title}</Title>
-        {/* <p className={cn(leadClassName, className)}>{lead}</p> */}
-      </div>
+      <Title className={cn(titleClassName, className)}>{title}</Title>
     </div>
   );
 }
@@ -102,9 +87,8 @@ function FlipPanel({
   lead: string;
 }) {
   const boardRef = useRef<HTMLDivElement>(null);
-  const flippedRef = useRef(false);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const enabledRef = useRef(false);
-  const timelinesRef = useRef<gsap.core.Timeline[]>([]);
 
   useEffect(() => {
     const board = boardRef.current;
@@ -113,14 +97,19 @@ function FlipPanel({
     const tiles = Array.from(
       board.querySelectorAll<HTMLElement>("[data-flip-tile]"),
     );
+    const backs = board.querySelectorAll<HTMLElement>('[data-face="back"]');
+
+    gsap.set(board, { perspective: 1600 });
     gsap.set(tiles, {
       rotateY: 0,
       transformOrigin: "50% 50%",
-      transformPerspective: 1600,
+      transformStyle: "preserve-3d",
       force3D: true,
     });
-    gsap.set(board.querySelectorAll('[data-face="back"]'), { autoAlpha: 0 });
-    gsap.set(board.querySelectorAll('[data-face="front"]'), { autoAlpha: 1 });
+    gsap.set(backs, {
+      rotateY: 180,
+      force3D: true,
+    });
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -128,51 +117,27 @@ function FlipPanel({
     const supportsHover = window.matchMedia("(hover: hover)").matches;
     enabledRef.current = !reduceMotion && supportsHover;
 
+    const tl = gsap.timeline({ paused: true });
+    FLIP_ORDER.forEach((tileIndex, order) => {
+      tl.to(
+        tiles[tileIndex],
+        { rotateY: 180, duration: 1.05, ease: "sine.inOut" },
+        order * 0.055,
+      );
+    });
+    timelineRef.current = tl;
+
     return () => {
-      timelinesRef.current.forEach((tl) => tl.kill());
-      gsap.killTweensOf(tiles);
+      tl.kill();
+      timelineRef.current = null;
     };
   }, []);
 
   const flipTo = (flipped: boolean) => {
-    if (!enabledRef.current || !boardRef.current) return;
-    if (flippedRef.current === flipped) return;
-
-    flippedRef.current = flipped;
-
-    const tiles = Array.from(
-      boardRef.current.querySelectorAll<HTMLElement>("[data-flip-tile]"),
-    );
-
-    timelinesRef.current.forEach((tl) => tl.kill());
-    timelinesRef.current = [];
-
-    tiles.forEach((tile, index) => {
-      const front = tile.querySelector<HTMLElement>('[data-face="front"]');
-      const back = tile.querySelector<HTMLElement>('[data-face="back"]');
-      if (!front || !back) return;
-
-      const show = flipped ? back : front;
-      const hide = flipped ? front : back;
-
-      const tl = gsap.timeline({ delay: FLIP_ORDER[index] * 0.055 });
-      timelinesRef.current.push(tl);
-
-      // Edge-on → swap the flat faces → open the other way.
-      tl.to(tile, {
-        rotateY: 90,
-        duration: 0.5,
-        ease: "sine.in",
-      })
-        .set(hide, { autoAlpha: 0 })
-        .set(show, { autoAlpha: 1 })
-        .set(tile, { rotateY: -90 })
-        .to(tile, {
-          rotateY: 0,
-          duration: 0.55,
-          ease: "sine.out",
-        });
-    });
+    const tl = timelineRef.current;
+    if (!enabledRef.current || !tl) return;
+    if (flipped) tl.play();
+    else tl.reverse();
   };
 
   return (
@@ -185,7 +150,7 @@ function FlipPanel({
     >
       <div
         ref={boardRef}
-        className="absolute inset-0 grid grid-cols-3 grid-rows-3"
+        className="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3"
         aria-hidden
       >
         {TILES.map((tile) => {
@@ -196,8 +161,6 @@ function FlipPanel({
             tile.col > 0 && "border-l",
           );
 
-          // Mosaic sized to this tile: a col-span-2 cell is twice as wide, so
-          // the full board image is 1.5× that width rather than 3×.
           const mosaicWidth = `${(PANEL_COLUMNS / tile.colSpan) * 100}%`;
           const mosaicHeight = `${PANEL_ROWS * 100}%`;
           const mosaicLeft = `-${(tile.col / tile.colSpan) * 100}%`;
@@ -214,60 +177,61 @@ function FlipPanel({
             >
               <div
                 data-flip-tile
-                className="absolute inset-0"
+                className="absolute inset-0 will-change-transform"
                 style={{ transformOrigin: "50% 50%" }}
               >
-                {/* Front — photograph (+ cream title on the wide title tile). */}
+                {/* Front — photograph. Overflow lives on the inner clip so
+                    Safari still honours backface-visibility on this face. */}
                 <div
                   data-face="front"
-                  className={cn(
-                    "absolute inset-0 overflow-hidden bg-sky",
-                    cellBorder,
-                  )}
+                  className="absolute inset-0 backface-hidden"
                 >
                   <div
-                    className="absolute"
-                    style={{
-                      width: mosaicWidth,
-                      height: mosaicHeight,
-                      left: mosaicLeft,
-                      top: mosaicTop,
-                    }}
+                    className={cn(
+                      "absolute inset-0 overflow-hidden bg-sky",
+                      cellBorder,
+                    )}
                   >
-                    <Image
-                      src={src}
-                      alt=""
-                      fill
-                      sizes="(max-width: 48rem) 100vw, 50vw"
-                      className="object-cover"
-                    />
+                    <div
+                      className="absolute"
+                      style={{
+                        width: mosaicWidth,
+                        height: mosaicHeight,
+                        left: mosaicLeft,
+                        top: mosaicTop,
+                      }}
+                    >
+                      <Image
+                        src={src}
+                        alt=""
+                        fill
+                        sizes="(max-width: 48rem) 100vw, 50vw"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/20" />
+                    {"hasTitle" in tile && tile.hasTitle ? (
+                      <PanelLabel title={title} className="text-cream" heading />
+                    ) : null}
                   </div>
-                  <div className="absolute inset-0 bg-black/20" />
-                  {"hasTitle" in tile && tile.hasTitle ? (
-                    <PanelLabel
-                      title={title}
-                      lead={lead}
-                      className="text-cream"
-                      heading
-                    />
-                  ) : null}
                 </div>
 
-                {/* Back — sky cover (+ black title on the wide title tile). */}
+                {/* Back — sky. Pre-rotated 180° in the effect; this face is
+                    never swapped, only revealed as the tile turns. */}
                 <div
                   data-face="back"
-                  className={cn(
-                    "absolute inset-0 overflow-hidden bg-sky",
-                    cellBorder,
-                  )}
+                  className="absolute inset-0 backface-hidden"
                 >
-                  {"hasTitle" in tile && tile.hasTitle ? (
-                    <PanelLabel
-                      title={title}
-                      lead={lead}
-                      className="text-black"
-                    />
-                  ) : null}
+                  <div
+                    className={cn(
+                      "absolute inset-0 overflow-hidden bg-sky",
+                      cellBorder,
+                    )}
+                  >
+                    {"hasTitle" in tile && tile.hasTitle ? (
+                      <PanelLabel title={title} className="text-black" />
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>
@@ -278,11 +242,11 @@ function FlipPanel({
   );
 }
 
-export function PanelPairFlipSection({
+export function PanelPairFlipSmoothSection({
   copy,
   images,
   className,
-}: PanelPairFlipSectionProps) {
+}: PanelPairFlipSmoothSectionProps) {
   const sourceFor = (key: PanelKey, fallback: string) => {
     const image = images?.[key];
     return image ? urlFor(image).width(1600).auto("format").url() : fallback;

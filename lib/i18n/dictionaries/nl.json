@@ -140,8 +140,14 @@
       "askAboutDate": "Een vraag over deze datum"
     },
     "panels": {
-      "events": "Evenementen",
-      "coffee": "Koffiebar"
+      "events": {
+        "title": "Evenementen",
+        "lead": "Van lancering tot diner, menu en service inbegrepen."
+      },
+      "coffee": {
+        "title": "Koffiebar",
+        "lead": "Koffie, gebak en sappen, open voor wie langskomt."
+      }
     },
     "newsletter": {
       "headline": "Schrijf u in op onze nieuwsbrief",

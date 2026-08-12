@@ -65,9 +65,14 @@ function PanelGrid() {
  */
 type PanelKey = (typeof panels)[number]["key"];
 
+type PanelCopy = {
+  title: string;
+  lead: string;
+};
+
 type PanelPairSectionProps = {
   /** Panel labels, keyed to match `panels` below. */
-  copy: Record<PanelKey, string>;
+  copy: Record<PanelKey, PanelCopy>;
   /**
    * Photographs from the Studio, keyed the same way. Either may be absent —
    * an owner who has replaced one and not the other should see exactly that,
@@ -144,9 +149,14 @@ export function PanelPairSection({
                       h2, not h3: these are two of the rooms of the business,
                       peers of "What we do" and "Why us" further down, and
                       there is no h2 in this section for an h3 to belong to. */}
-                  <h2 className="font-owners-narrow-bold text-cream text-[9.4vw] leading-[0.9] uppercase md:text-[min(4.4vw,7.6svh)]">
-                    {copy[panel.key]}
-                  </h2>
+                  <div>
+                    <h2 className="font-owners-narrow-bold text-cream text-[9.4vw] leading-[0.9] uppercase md:text-[min(4.4vw,7.6svh)]">
+                      {copy[panel.key].title}
+                    </h2>
+                    <p className="font-archivo-light mt-2 text-[20px] leading-snug text-cream md:text-[22px]">
+                      {copy[panel.key].lead}
+                    </p>
+                  </div>
                 </div>
               </Link>
             ))}

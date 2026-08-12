@@ -7,7 +7,8 @@ import { Hero } from "@/components/Hero";
 import { IntroSection } from "@/components/IntroSection";
 import { JsonLd } from "@/components/JsonLd";
 import { NewsletterSection } from "@/components/NewsletterSection";
-import { PanelPairFlipSection } from "@/components/PanelPairFlipSection";
+import { PanelPairFlipSmoothSection } from "@/components/PanelPairFlipSmoothSection";
+// import { PanelPairFlipSection } from "@/components/PanelPairFlipSection";
 // import { PanelPairSection } from "@/components/PanelPairSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitStatementSection } from "@/components/SplitStatementSection";
@@ -100,8 +101,15 @@ export default async function Home({
       />
       */}
 
-      {/* Isolation sandbox for the tiled flip hover — remove once tuned. */}
+      {/* Hinge flip — kept for comparison. The 90° face-swap jittered on hover.
       <PanelPairFlipSection
+        copy={home.panels}
+        images={{ events: images.events, coffee: images.coffee }}
+      />
+      */}
+
+      {/* Solid 3D flip — one reversible timeline, shared perspective. */}
+      <PanelPairFlipSmoothSection
         copy={home.panels}
         images={{ events: images.events, coffee: images.coffee }}
       />

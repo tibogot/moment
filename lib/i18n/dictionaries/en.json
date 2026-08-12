@@ -140,8 +140,14 @@
       "askAboutDate": "Ask about this date"
     },
     "panels": {
-      "events": "Events",
-      "coffee": "Coffee desk"
+      "events": {
+        "title": "Events",
+        "lead": "From a launch to a seated dinner, menu and service included."
+      },
+      "coffee": {
+        "title": "Coffee desk",
+        "lead": "Coffee, pastries and juices, open to anyone passing by."
+      }
     },
     "newsletter": {
       "headline": "Sign up to our newsletter",

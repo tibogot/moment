@@ -140,8 +140,14 @@
       "askAboutDate": "Poser une question sur cette date"
     },
     "panels": {
-      "events": "Événements",
-      "coffee": "Comptoir café"
+      "events": {
+        "title": "Événements",
+        "lead": "Du lancement au dîner assis, menu et service compris."
+      },
+      "coffee": {
+        "title": "Comptoir café",
+        "lead": "Café, pâtisseries et jus, ouvert à qui passe."
+      }
     },
     "newsletter": {
       "headline": "Inscrivez-vous à notre newsletter",
