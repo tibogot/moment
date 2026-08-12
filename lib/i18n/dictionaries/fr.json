@@ -589,6 +589,51 @@
         "Certaines semaines, c'est quarante déjeuners avant dix heures du matin. D'autres, c'est un dîner assis pour trente, un lancement pour deux cents, ou un comptoir café ouvert jusqu'à ce que la salle se vide. La logistique change. La cuisine derrière, non."
       ]
     },
+    "statement": {
+      "headline": "La table est le premier endroit où l'on vous rencontre."
+    },
+    "values": {
+      "label": "À propos",
+      "lead": "Nous cuisinons pour les particuliers et les entreprises de toute la ville. Plats de saison, salades et jus pressés à froid, préparés chaque matin et livrés prêts à servir.",
+      "aside": "Nous orchestrons vos événements de bout en bout, et gardons un comptoir café ouvert à qui passe.",
+      "cards": [
+        {
+          "title": "Une table qui parle de vous",
+          "body": "Menus sur mesure, dressage soigné, service discret — la salle vous ressemble dès le premier plateau."
+        },
+        {
+          "title": "Du marché à votre bureau",
+          "body": "Produits de saison, cuisinés le matin, livrés à travers Bruxelles avant que vos invités s'assoient."
+        },
+        {
+          "title": "Événements de bout en bout",
+          "body": "De la proposition au dernier café servi — on gère le rythme pour que vous gardiez vos hôtes."
+        },
+        {
+          "title": "Un café ouvert à la ville",
+          "body": "Le comptoir reste là entre deux livraisons : même cuisine, même exigence, pour qui passe."
+        }
+      ]
+    },
+    "accordion": {
+      "headline": "Pour ceux qui soignent le goût — et l'allure, à Bruxelles.",
+      "body": "Préparé chaque matin et livré prêt à servir. Nous orchestrons vos événements de bout en bout, et gardons un comptoir café.",
+      "cta": "Voir les menus",
+      "items": [
+        {
+          "title": "Cuisiné le matin même",
+          "body": "Plats, salades et jus pressés à froid partent de notre cuisine le jour où on les mange — rien de réchauffé, rien de la veille."
+        },
+        {
+          "title": "Livré prêt à dresser",
+          "body": "Portions déjà montées, garnitures à part, boîtes isothermes. Vous ouvrez, vous disposez, vous servez."
+        },
+        {
+          "title": "Pensé pour la salle",
+          "body": "Un déjeuner de bureau, un lancement, un dîner assis — le menu suit le nombre de couverts et le rythme de votre journée."
+        }
+      ]
+    },
     "story": {
       "label": "Notre histoire",
       "title": "Tout a commencé avec une table de trop.",

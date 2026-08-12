@@ -588,6 +588,51 @@
         "Some weeks that is forty lunches before ten in the morning. Some weeks it is a seated dinner for thirty, a launch for two hundred, or a coffee desk open until the room empties. The logistics change. The kitchen behind them does not."
       ]
     },
+    "statement": {
+      "headline": "The table is the first place people meet you."
+    },
+    "values": {
+      "label": "About",
+      "lead": "We cook for private hosts and companies across the city. Seasonal plates, salads and cold-pressed juices, prepared each morning and delivered ready to serve.",
+      "aside": "We run events end to end, and keep a coffee desk open for anyone passing by.",
+      "cards": [
+        {
+          "title": "A table that speaks for you",
+          "body": "Menus shaped around you, careful plating, quiet service — the room feels like yours from the first plate."
+        },
+        {
+          "title": "From the market to your desk",
+          "body": "Seasonal produce, cooked that morning, delivered across Brussels before your guests sit down."
+        },
+        {
+          "title": "Events run end to end",
+          "body": "From the first proposal to the last coffee poured — we hold the timing so you can hold the room."
+        },
+        {
+          "title": "A café open to the city",
+          "body": "The desk stays open between deliveries: same kitchen, same care, for whoever stops by."
+        }
+      ]
+    },
+    "accordion": {
+      "headline": "For people who care how it tastes — and how it looks, in Brussels.",
+      "body": "Prepared each morning and delivered ready to serve. We run events end to end, and keep a coffee desk.",
+      "cta": "See menus",
+      "items": [
+        {
+          "title": "Cooked that morning",
+          "body": "Plates, salads and cold-pressed juices leave our kitchen the day they are eaten — nothing reheated, nothing from the day before."
+        },
+        {
+          "title": "Delivered ready to plate",
+          "body": "Portions already set, garnishes kept separate, insulated boxes. You unwrap, arrange and serve."
+        },
+        {
+          "title": "Built for the room",
+          "body": "A desk lunch, a launch, a seated dinner — the menu follows the covers and the pace of your day."
+        }
+      ]
+    },
     "story": {
       "label": "Our story",
       "title": "It began with one table too many.",

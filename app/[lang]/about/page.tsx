@@ -1,12 +1,17 @@
+import { AboutAccordionSection } from "@/components/AboutAccordionSection";
 import { AboutCta } from "@/components/AboutCta";
 import { AboutFacts } from "@/components/AboutFacts";
 import { AboutHero } from "@/components/AboutHero";
 import { AboutIntro } from "@/components/AboutIntro";
 import { AboutPrinciples } from "@/components/AboutPrinciples";
+import { AboutStatement } from "@/components/AboutStatement";
 import { AboutTeam } from "@/components/AboutTeam";
+import { AboutValuesSection } from "@/components/AboutValuesSection";
 import { Footer } from "@/components/Footer";
 import { FullBleedImageSection } from "@/components/FullBleedImageSection";
+import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
+import { ParallaxImage } from "@/components/ParallaxImage";
 import { SplitImageSection } from "@/components/SplitImageSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
 import { toLocale } from "@/lib/i18n/config";
@@ -64,6 +69,25 @@ export default async function AboutPage({
 
       <AboutHero copy={about.hero} />
       <AboutIntro copy={about.intro} />
+
+      {/* Tall photograph held to the page spines — margin to margin, not edge
+          to edge — so the grid continues through rather than cutting across. */}
+      <GridSection>
+        <div className="relative col-start-2 col-end-5 h-[70svh] overflow-hidden md:col-end-9 md:h-svh">
+          <ParallaxImage
+            src="/images/onur-kaya.jpg"
+            alt=""
+            sizes="90vw"
+            className="absolute inset-0"
+          />
+        </div>
+      </GridSection>
+
+      <AboutStatement headline={about.statement.headline} />
+
+      <AboutValuesSection copy={about.values} />
+
+      <AboutAccordionSection copy={about.accordion} />
 
       {/* Mirror of the home page's split blocks, flipped: the large image sits
           on the right half here, with the smaller one answering on the left. */}

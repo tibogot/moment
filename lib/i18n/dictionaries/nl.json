@@ -589,6 +589,51 @@
         "Sommige weken zijn dat veertig lunches voor tien uur 's ochtends. Andere weken is het een zittend diner voor dertig, een lancering voor tweehonderd, of een koffiebar die open blijft tot de zaal leegloopt. De logistiek verandert. De keuken erachter niet."
       ]
     },
+    "statement": {
+      "headline": "De tafel is de eerste plek waar men u ontmoet."
+    },
+    "values": {
+      "label": "Over ons",
+      "lead": "Wij koken voor particulieren en bedrijven in heel de stad. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd.",
+      "aside": "Wij verzorgen evenementen van begin tot eind, en houden een koffiebar open voor wie langskomt.",
+      "cards": [
+        {
+          "title": "Een tafel die over u spreekt",
+          "body": "Menu's op maat, zorgvuldig opgemaakt, discrete service — de zaal lijkt op u vanaf het eerste bord."
+        },
+        {
+          "title": "Van de markt naar uw bureau",
+          "body": "Seizoensproducten, die ochtend gekookt, geleverd door Brussel voor uw gasten plaatsnemen."
+        },
+        {
+          "title": "Evenementen van begin tot eind",
+          "body": "Van het eerste voorstel tot de laatste koffie — wij houden het ritme, u houdt uw gasten."
+        },
+        {
+          "title": "Een café open voor de stad",
+          "body": "De balie blijft open tussen twee leveringen: dezelfde keuken, dezelfde zorg, voor wie langskomt."
+        }
+      ]
+    },
+    "accordion": {
+      "headline": "Voor wie geeft om smaak — en om presentatie, in Brussel.",
+      "body": "Elke ochtend bereid en klaar om te serveren geleverd. Wij verzorgen evenementen van begin tot eind, en houden een koffiebar.",
+      "cta": "Bekijk de menu's",
+      "items": [
+        {
+          "title": "Gekookt op de ochtend zelf",
+          "body": "Gerechten, salades en koudgeperste sappen verlaten onze keuken op de dag dat ze gegeten worden — niets opgewarmd, niets van gisteren."
+        },
+        {
+          "title": "Geleverd, klaar om op te maken",
+          "body": "Porties al opgemaakt, garnituur apart, isothermische dozen. U pakt uit, schikt en serveert."
+        },
+        {
+          "title": "Gemaakt voor de zaal",
+          "body": "Een bureaulunch, een lancering, een zittend diner — het menu volgt het aantal couverts en het ritme van uw dag."
+        }
+      ]
+    },
     "story": {
       "label": "Ons verhaal",
       "title": "Het begon met één tafel te veel.",
