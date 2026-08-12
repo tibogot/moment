@@ -40,9 +40,9 @@ export function SplitStatementSection({
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
           <h2
             className={cn(
-              "indent-first-line intro-headline font-owners-narrow-bold max-w-full leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase",
+              "indent-first-line intro-headline font-owners-narrow-bold leading-[0.95] tracking-[-0.005em] wrap-break-word text-black uppercase",
               headlineSize === "md"
-                ? "max-w-[16ch] text-[7.5vw] md:text-[min(5vw,7.5svh)]"
+                ? "max-w-full text-[7.5vw] md:text-[min(5vw,7.5svh)]"
                 : "max-w-full text-[8vw] md:text-[min(6vw,9svh)]",
             )}
           >
