@@ -77,7 +77,7 @@ export function DeliveryDatePicker({
         >
           {dict.home.calendar.prev}
         </button>
-        <span className="font-owners-medium min-w-0 truncate text-center text-[13px] uppercase tracking-wide">
+        <span className="font-owners-medium min-w-0 truncate text-center text-[14px] uppercase tracking-wide">
           {label} <span className="font-archivo-light">{year}</span>
         </span>
         <button
@@ -95,7 +95,7 @@ export function DeliveryDatePicker({
           {weekdays.map((weekday) => (
             <div
               key={weekday}
-              className="font-owners-medium min-w-0 pb-2 text-center text-[11px] uppercase tracking-wide opacity-70"
+              className="font-owners-medium min-w-0 pb-2 text-center text-[12px] uppercase tracking-wide opacity-70"
             >
               {weekday.slice(0, 1)}
             </div>
@@ -138,7 +138,7 @@ export function DeliveryDatePicker({
                   className={cn(cellClassName, "bg-sky/25")}
                   aria-hidden
                 >
-                  <span className="font-owners-medium text-[11px] @[20rem]:text-[13px]">
+                  <span className="font-owners-medium text-[13px]">
                     {number}
                   </span>
                 </div>
@@ -161,7 +161,7 @@ export function DeliveryDatePicker({
                   isSelected && "bg-black text-cream hover:bg-black",
                 )}
               >
-                <span className="font-owners-medium text-[11px] @[20rem]:text-[13px]">{number}</span>
+                <span className="font-owners-medium text-[13px]">{number}</span>
               </button>
             );
           })}

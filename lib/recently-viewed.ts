@@ -1,6 +1,5 @@
 export const RECENTLY_VIEWED_KEY = "moment-recently-viewed";
 export const RECENTLY_VIEWED_MAX = 6;
-export const RECENTLY_VIEWED_DISPLAY = 3;
 
 export function readRecentlyViewedHandles(): string[] {
   if (typeof window === "undefined") return [];

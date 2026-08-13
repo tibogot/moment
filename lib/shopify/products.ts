@@ -173,7 +173,7 @@ export async function getProducts(language: Locale): Promise<ShopifyProduct[]> {
   }
 }
 
-const SIMILAR_PRODUCTS_LIMIT = 3;
+const SIMILAR_PRODUCTS_LIMIT = 6;
 
 /** Same product type first, then anything else from the catalogue. */
 export function getSimilarProducts(

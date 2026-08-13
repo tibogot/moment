@@ -224,7 +224,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         >
           {availability ? (
             <>
-              <p className="font-archivo-light px-5 pt-4 text-[15px] leading-normal">
+              <p className="font-archivo-light px-5 pt-4 text-[18px] leading-normal">
                 {interpolate(dict.delivery.calendarNote, {
                   days: availability.leadTimeDays,
                 })}{" "}
@@ -238,7 +238,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
               />
             </>
           ) : (
-            <p className="font-archivo-light p-4 text-[15px]">
+            <p className="font-archivo-light p-4 text-[18px]">
               {t.loadingDays}
             </p>
           )}
@@ -291,10 +291,10 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
                   deliveryMethod === option && "bg-sky/40",
                 )}
               >
-                <span className="font-owners-medium block text-[13px] uppercase tracking-wide">
+                <span className="font-owners-medium block text-[14px] uppercase tracking-wide">
                   {dict.deliveryMethods[option].label}
                 </span>
-                <span className="font-archivo-light mt-1 block text-[15px] leading-normal">
+                <span className="font-archivo-light mt-1 block text-[18px] leading-normal">
                   {dict.deliveryMethods[option].description}
                 </span>
               </button>
@@ -304,7 +304,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
       </div>
 
       {error && (
-        <p role="alert" className="font-archivo-light mt-3 text-[15px]">
+        <p role="alert" className="font-archivo-light mt-3 text-[18px]">
           {error}
         </p>
       )}
@@ -314,7 +314,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
           <p className="font-owners-medium text-[12px] uppercase tracking-wide">
             {dict.quote.heading}
           </p>
-          <p className="font-archivo-light mt-2 text-[15px] leading-normal">
+          <p className="font-archivo-light mt-2 text-[18px] leading-normal">
             {interpolate(dict.quote.body, {
               address: quote.address,
               km: quote.km,
@@ -390,12 +390,12 @@ function Segment({
           open && "bg-sky/25",
         )}
       >
-        <span className="font-owners-medium text-[11px] uppercase tracking-wide opacity-60">
+        <span className="font-owners-medium text-[12px] uppercase tracking-wide">
           {label}
         </span>
         <span
           className={cn(
-            "font-archivo-light mt-1 w-full truncate text-[16px]",
+            "font-archivo-light mt-1 w-full truncate text-[18px]",
             !value && "opacity-50",
           )}
         >
@@ -412,7 +412,7 @@ function Segment({
         >
           <p
             id={titleId}
-            className="font-owners-medium border-b border-sky px-5 py-3.5 text-left text-[12px] wrap-break-word uppercase tracking-wide"
+            className="font-owners-medium border-b border-sky px-5 py-3.5 text-left text-[13px] wrap-break-word uppercase tracking-wide"
           >
             {title}
           </p>
@@ -506,9 +506,9 @@ function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={t.addressPlaceholder}
-          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[16px] outline-none placeholder:opacity-40"
+          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[18px] outline-none placeholder:opacity-40"
         />
-        <p className="font-archivo-light mt-3 text-[14px] leading-normal opacity-70">
+        <p className="font-archivo-light mt-3 text-[18px] leading-normal opacity-70">
           {t.addressHint}
         </p>
       </div>
@@ -519,7 +519,7 @@ function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
           className="max-h-60 overflow-y-auto border-t border-sky"
         >
           {searching && (
-            <p className="font-archivo-light px-4 py-3 text-[15px] opacity-70">
+            <p className="font-archivo-light px-4 py-3 text-[18px] opacity-70">
               {t.checking}
             </p>
           )}
@@ -530,7 +530,7 @@ function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
               type="button"
               disabled={saving}
               onClick={() => onSelect(match.label)}
-              className="font-archivo-light block w-full px-4 py-3 text-left text-[15px] wrap-break-word transition-colors hover:bg-sky/30 disabled:opacity-40"
+              className="font-archivo-light block w-full px-4 py-3 text-left text-[18px] wrap-break-word transition-colors hover:bg-sky/30 disabled:opacity-40"
             >
               {match.label}
             </button>
@@ -538,11 +538,11 @@ function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
 
           {showEmpty && (
             <div className="px-4 py-3">
-              <p className="font-archivo-light text-[15px]">
+              <p className="font-archivo-light text-[18px]">
                 {t.noMatch}
               </p>
               {data.streets.length > 0 && (
-                <p className="font-archivo-light mt-2 text-[15px] opacity-70">
+                <p className="font-archivo-light mt-2 text-[18px] opacity-70">
                   {interpolate(t.didYouMean, {
                     streets: data.streets.join(", "),
                   })}

@@ -7,8 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { OrderPreferencesBar } from "@/components/OrderPreferencesBar";
 import { ProductDetails } from "@/components/ProductDetails";
 import { ProductGallery } from "@/components/ProductGallery";
-import { ProductRowSection } from "@/components/ProductRowSection";
-import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
+import { ProductRelatedSection } from "@/components/ProductRelatedSection";
 import { DEFAULT_LOCALE, toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
@@ -153,21 +152,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </GridSection>
 
-      {similarProducts.length > 0 && (
-        <ProductRowSection
-          title={dict.product.similar}
-          viewAllLabel={dict.common.seeEverything}
-          soldOutLabel={dict.product.soldOut}
-          products={similarProducts}
-          viewAllHref={routes.shop}
-          className="pb-0"
-        />
-      )}
-
-      <RecentlyViewedSection
+      <ProductRelatedSection
+        similar={similarProducts}
         allProducts={allProducts}
         currentHandle={handle}
-        className={similarProducts.length > 0 ? "pt-[5svh]" : undefined}
       />
 
       <Footer />
