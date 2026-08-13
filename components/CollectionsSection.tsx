@@ -32,14 +32,14 @@ export function CollectionsSection({
       )}
     >
       {showHeader && heading && (
-        <div className="col-start-2 col-end-5 flex flex-col items-start gap-4 px-(--grid-gutter) pb-[5svh] md:col-end-9 md:flex-row md:items-end md:justify-between">
+        <div className="col-start-2 col-end-5 flex items-end justify-between gap-4 px-(--grid-gutter) pb-[5svh] md:col-end-9">
           <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
             {heading}
           </h2>
 
           <Link
             href={routes.collections}
-            className="group inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+            className="group shrink-0 border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
           >
             <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
               {viewAllLabel}
