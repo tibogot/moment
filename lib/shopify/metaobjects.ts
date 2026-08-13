@@ -14,15 +14,21 @@
  */
 
 import { unstable_cache } from "next/cache";
+import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
 import { getShopifyClient, isShopifyConfigured } from "./client";
 
 /**
- * Shorter than the catalogue's hour: an owner who blocks tomorrow, or drops a
- * delivery fee, expects the site to catch up fairly quickly. Invalidate
- * immediately with `revalidateTag(DELIVERY_CACHE_TAG)` from a webhook if you
- * want it instant.
+ * An owner who blocks tomorrow, or drops a delivery fee, expects the site to
+ * catch up quickly — and it does, but by being told rather than by asking.
+ * `/api/revalidate/shopify` invalidates this tag on any `metaobjects/*`
+ * webhook, which is both faster than polling and very much cheaper.
+ *
+ * It polled every 5 minutes before, and that was the most expensive line in
+ * the project. These settings are read by the home page, /contact, /pro and
+ * /faq, so a 5-minute window meant those pages — times three locales — each
+ * rebuilt 288 times a day whether or not anything had changed.
  */
-export const DELIVERY_REVALIDATE = 300;
+export const DELIVERY_REVALIDATE = CACHE_BACKSTOP_SECONDS;
 export const DELIVERY_CACHE_TAG = "shopify-delivery";
 
 /** Storefront connections cap out here. */

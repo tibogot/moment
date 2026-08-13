@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
 import type { Locale } from "@/lib/i18n/config";
 import {
   getShopifyClient,
@@ -21,9 +22,14 @@ import {
 const PRODUCTS_PAGE_SIZE = 100;
 
 // The catalogue changes infrequently, so cache it rather than hitting the
-// Storefront API on every request. Invalidate on demand with
-// `revalidateTag(SHOPIFY_CACHE_TAG)` from a webhook.
-const SHOPIFY_REVALIDATE = 3600;
+// Storefront API on every request. `/api/revalidate/shopify` invalidates this
+// tag when Shopify says a product or collection changed; the window below is
+// only the backstop for a webhook that never arrived — see `lib/cache.ts`.
+//
+// It used to be an hour, which reads as conservative and is not: `unstable_cache`
+// lowers the revalidate of the route that reads it, so an hour here put every
+// product and collection page, in all three locales, on 24 rebuilds a day.
+export const SHOPIFY_REVALIDATE = CACHE_BACKSTOP_SECONDS;
 export const SHOPIFY_CACHE_TAG = "shopify-products";
 
 export function formatPrice(amount: string, currencyCode: string) {

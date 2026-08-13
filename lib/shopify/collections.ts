@@ -5,7 +5,11 @@ import {
   isShopifyConfigured,
   shopifyLanguage,
 } from "./client";
-import { SHOPIFY_CACHE_TAG, mapProductNode } from "./products";
+import {
+  SHOPIFY_CACHE_TAG,
+  SHOPIFY_REVALIDATE,
+  mapProductNode,
+} from "./products";
 import {
   COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
@@ -18,7 +22,6 @@ import {
 
 const COLLECTIONS_PAGE_SIZE = 50;
 const COLLECTION_PRODUCTS_PAGE_SIZE = 100;
-const SHOPIFY_REVALIDATE = 3600;
 
 /**
  * Occasion-based collections featured on the home "sélections" section.

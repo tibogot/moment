@@ -1,4 +1,4 @@
-import { sanityClient, sanityFetchOptions } from "./client";
+import { sanityClient, sanityCache } from "./client";
 import type { Locale } from "../i18n/config";
 import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
@@ -47,7 +47,7 @@ export async function getNewsArticles(
   return sanityClient.fetch<NewsArticleListItem[]>(
     articlesQuery,
     { language },
-    sanityFetchOptions,
+    sanityCache("article", "author", "category"),
   );
 }
 
@@ -58,7 +58,7 @@ export async function getNewsArticleBySlug(
   return sanityClient.fetch<NewsArticle | null>(
     articleBySlugQuery,
     { language, slug },
-    sanityFetchOptions,
+    sanityCache("article", "author", "category"),
   );
 }
 
@@ -66,7 +66,7 @@ export async function getNewsArticleSlugs(language: Locale): Promise<string[]> {
   const rows = await sanityClient.fetch<{ slug: string }[]>(
     articleSlugsQuery,
     { language },
-    sanityFetchOptions,
+    sanityCache("article"),
   );
 
   return rows.map((row) => row.slug).filter(Boolean);
@@ -136,7 +136,7 @@ export async function getMenus(): Promise<Menu[]> {
     const menus = await sanityClient.fetch<Menu[]>(
       menusQuery,
       {},
-      sanityFetchOptions,
+      sanityCache("menu"),
     );
 
     return menus?.length ? sortMenus(menus) : PLACEHOLDER_MENUS;
@@ -157,7 +157,7 @@ export async function getMenuSlugs(): Promise<string[]> {
     const rows = await sanityClient.fetch<{ slug: string }[]>(
       menuSlugsQuery,
       {},
-      sanityFetchOptions,
+      sanityCache("menu"),
     );
 
     const slugs = rows.map((row) => row.slug).filter(Boolean);
@@ -175,7 +175,7 @@ export async function getMenuBySlug(slug: string): Promise<Menu | null> {
     const menu = await sanityClient.fetch<Menu | null>(
       menuBySlugQuery,
       { slug },
-      sanityFetchOptions,
+      sanityCache("menu"),
     );
 
     return menu ?? fallback();
@@ -255,7 +255,7 @@ export async function getSiteDetails(): Promise<SiteDetails> {
     const response = await sanityClient.fetch<SiteDetailsResponse | null>(
       siteDetailsQuery,
       {},
-      sanityFetchOptions,
+      sanityCache("siteSettings"),
     );
 
     return mergeSiteDetails(response);
@@ -313,7 +313,7 @@ export async function getHomePageImages(): Promise<HomePageImages> {
     const response = await sanityClient.fetch<HomePageResponse | null>(
       homePageQuery,
       {},
-      sanityFetchOptions,
+      sanityCache("homePage"),
     );
 
     if (!response) return NO_HOME_IMAGES;
