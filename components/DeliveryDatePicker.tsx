@@ -67,35 +67,35 @@ export function DeliveryDatePicker({
     setCursor(new Date(year, month + delta, 1));
 
   return (
-    <div>
-      <div className="flex items-center justify-between px-6 py-4">
+    <div className="@container min-w-0">
+      <div className="flex items-center justify-between gap-2 px-4 py-4 @[28rem]:px-6">
         <button
           type="button"
           onClick={() => shiftMonth(-1)}
           disabled={atFirstMonth}
-          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
+          className="font-owners-medium shrink-0 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
         >
           {dict.home.calendar.prev}
         </button>
-        <span className="font-owners-medium text-[13px] uppercase tracking-wide">
+        <span className="font-owners-medium min-w-0 truncate text-center text-[13px] uppercase tracking-wide">
           {label} <span className="font-archivo-light">{year}</span>
         </span>
         <button
           type="button"
           onClick={() => shiftMonth(1)}
           disabled={atLastMonth}
-          className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
+          className="font-owners-medium shrink-0 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-30"
         >
           {dict.home.calendar.next}
         </button>
       </div>
 
-      <div className="px-6 pb-6">
-        <div className="grid grid-cols-7">
+      <div className="min-w-0 px-4 pb-4 @[28rem]:px-6 @[28rem]:pb-6">
+        <div className="grid w-full grid-cols-7">
           {weekdays.map((weekday) => (
             <div
               key={weekday}
-              className="font-owners-medium pb-2 text-center text-[11px] uppercase tracking-wide opacity-70"
+              className="font-owners-medium min-w-0 pb-2 text-center text-[11px] uppercase tracking-wide opacity-70"
             >
               {weekday.slice(0, 1)}
             </div>
@@ -104,10 +104,10 @@ export function DeliveryDatePicker({
 
         {/* Same border trick as the home page grid: the wrapper closes the top
             and right, every cell carries left and bottom. */}
-        <div className="grid grid-cols-7 border-t border-r border-sky">
+        <div className="grid w-full min-w-0 grid-cols-7 border-t border-r border-sky">
           {cells.map((day, index) => {
             const cellClassName =
-              "aspect-square border-b border-l border-sky flex items-center justify-center";
+              "aspect-square min-w-0 border-b border-l border-sky flex items-center justify-center";
 
             if (day === null) {
               return <div key={`blank-${index}`} className={cellClassName} />;
@@ -138,7 +138,7 @@ export function DeliveryDatePicker({
                   className={cn(cellClassName, "bg-sky/25")}
                   aria-hidden
                 >
-                  <span className="font-owners-medium text-[13px]">
+                  <span className="font-owners-medium text-[11px] @[20rem]:text-[13px]">
                     {number}
                   </span>
                 </div>
@@ -161,7 +161,7 @@ export function DeliveryDatePicker({
                   isSelected && "bg-black text-cream hover:bg-black",
                 )}
               >
-                <span className="font-owners-medium text-[13px]">{number}</span>
+                <span className="font-owners-medium text-[11px] @[20rem]:text-[13px]">{number}</span>
               </button>
             );
           })}

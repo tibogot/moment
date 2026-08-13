@@ -213,7 +213,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
-      <div className="flex flex-col border border-sky md:flex-row md:items-stretch">
+      <div className="flex min-w-0 flex-col border border-sky md:flex-row md:items-stretch">
         <Segment
           label={t.date}
           title={t.chooseDateTitle}
@@ -224,7 +224,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         >
           {availability ? (
             <>
-              <p className="font-archivo-light px-4 pt-4 text-[15px] leading-normal">
+              <p className="font-archivo-light px-5 pt-4 text-[15px] leading-normal">
                 {interpolate(dict.delivery.calendarNote, {
                   days: availability.leadTimeDays,
                 })}{" "}
@@ -275,7 +275,6 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
           placeholder={t.deliveryType}
           open={panel === "delivery"}
           onToggle={() => togglePanel("delivery")}
-          align="right"
         >
           {/* Only vertical padding: the options carry px-4 of their own, which
               is what lines their text up with the title above. */}
@@ -361,7 +360,6 @@ type SegmentProps = {
   children: React.ReactNode;
   disabled?: boolean;
   disabledHint?: string;
-  align?: "left" | "right";
 };
 
 function Segment({
@@ -374,12 +372,11 @@ function Segment({
   children,
   disabled = false,
   disabledHint,
-  align = "left",
 }: SegmentProps) {
   const titleId = useId();
 
   return (
-    <div className="relative flex-1">
+    <div className="relative min-w-0 flex-1">
       <button
         type="button"
         onClick={onToggle}
@@ -388,7 +385,7 @@ function Segment({
         aria-haspopup="dialog"
         title={disabled ? disabledHint : undefined}
         className={cn(
-          "flex w-full flex-col items-start px-5 py-4 text-left transition-colors",
+          "flex w-full min-w-0 flex-col items-start px-5 py-4 text-left transition-colors",
           disabled ? "cursor-default opacity-50" : "hover:bg-sky/20",
           open && "bg-sky/25",
         )}
@@ -398,7 +395,7 @@ function Segment({
         </span>
         <span
           className={cn(
-            "font-archivo-light mt-1 text-[16px]",
+            "font-archivo-light mt-1 w-full truncate text-[16px]",
             !value && "opacity-50",
           )}
         >
@@ -410,14 +407,12 @@ function Segment({
         <div
           role="dialog"
           aria-labelledby={titleId}
-          className={cn(
-            "absolute top-full z-10 mt-2 w-[min(88vw,420px)] border border-sky bg-cream",
-            align === "right" ? "right-0" : "left-0",
-          )}
+          data-lenis-prevent
+          className="absolute -inset-x-(--grid-line) top-full z-20 border border-sky bg-cream"
         >
           <p
             id={titleId}
-            className="font-owners-medium border-b border-sky px-4 py-3.5 text-left text-[12px] uppercase tracking-wide"
+            className="font-owners-medium border-b border-sky px-5 py-3.5 text-left text-[12px] wrap-break-word uppercase tracking-wide"
           >
             {title}
           </p>
@@ -535,7 +530,7 @@ function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
               type="button"
               disabled={saving}
               onClick={() => onSelect(match.label)}
-              className="font-archivo-light block w-full px-4 py-3 text-left text-[15px] transition-colors hover:bg-sky/30 disabled:opacity-40"
+              className="font-archivo-light block w-full px-4 py-3 text-left text-[15px] wrap-break-word transition-colors hover:bg-sky/30 disabled:opacity-40"
             >
               {match.label}
             </button>
