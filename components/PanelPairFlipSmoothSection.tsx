@@ -17,11 +17,31 @@ import { useEffect, useRef } from "react";
  * This one keeps a single paused timeline per card and reverses it, uses a
  * real 0→180 card (both faces live, backface hidden), and puts perspective on
  * the board so the mosaic shares one camera.
+ *
+ * Grid rules are gutters, not borders on the faces — cream shows through
+ * `--grid-line` gaps so the lines stay still while the tiles turn.
  */
 
 const PANEL_COLUMNS = 3;
 const PANEL_ROWS = 3;
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
+const LINE = "var(--grid-line)";
+
+/**
+ * Photograph sized to the full board, then clipped by the tile. Percentages
+ * are relative to the tile, so the extra line terms restore the gutters
+ * (`gap` + top/bottom padding) that a plain 300% mosaic would skip.
+ */
+function mosaicBox(col: number, row: number, colSpan: number) {
+  const widthExtra = colSpan === 1 ? `2 * ${LINE}` : `${LINE} / 2`;
+
+  return {
+    width: `calc(${(PANEL_COLUMNS / colSpan) * 100}% + ${widthExtra})`,
+    height: `calc(${PANEL_ROWS * 100}% + 4 * ${LINE})`,
+    left: `calc(${(-col / colSpan) * 100}% - ${col} * ${LINE})`,
+    top: `calc(${-row * 100}% - ${row + 1} * ${LINE})`,
+  };
+}
 
 const TILES = [
   { key: "0-0", col: 0, row: 0, colSpan: 1 },
@@ -150,21 +170,11 @@ function FlipPanel({
     >
       <div
         ref={boardRef}
-        className="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3"
+        className="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 gap-(--grid-line) py-(--grid-line)"
         aria-hidden
       >
         {TILES.map((tile) => {
-          const lastRow = tile.row === PANEL_ROWS - 1;
-          const cellBorder = cn(
-            "border-t border-cream/60",
-            lastRow && "border-b",
-            tile.col > 0 && "border-l",
-          );
-
-          const mosaicWidth = `${(PANEL_COLUMNS / tile.colSpan) * 100}%`;
-          const mosaicHeight = `${PANEL_ROWS * 100}%`;
-          const mosaicLeft = `-${(tile.col / tile.colSpan) * 100}%`;
-          const mosaicTop = `-${tile.row * 100}%`;
+          const mosaic = mosaicBox(tile.col, tile.row, tile.colSpan);
 
           return (
             <div
@@ -186,21 +196,8 @@ function FlipPanel({
                   data-face="front"
                   className="absolute inset-0 backface-hidden"
                 >
-                  <div
-                    className={cn(
-                      "absolute inset-0 overflow-hidden bg-sky",
-                      cellBorder,
-                    )}
-                  >
-                    <div
-                      className="absolute"
-                      style={{
-                        width: mosaicWidth,
-                        height: mosaicHeight,
-                        left: mosaicLeft,
-                        top: mosaicTop,
-                      }}
-                    >
+                  <div className="absolute inset-0 overflow-hidden bg-sky">
+                    <div className="absolute" style={mosaic}>
                       <Image
                         src={src}
                         alt=""
@@ -222,12 +219,7 @@ function FlipPanel({
                   data-face="back"
                   className="absolute inset-0 backface-hidden"
                 >
-                  <div
-                    className={cn(
-                      "absolute inset-0 overflow-hidden bg-sky",
-                      cellBorder,
-                    )}
-                  >
+                  <div className="absolute inset-0 overflow-hidden bg-sky">
                     {"hasTitle" in tile && tile.hasTitle ? (
                       <PanelLabel title={title} className="text-black" />
                     ) : null}
