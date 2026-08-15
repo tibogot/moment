@@ -10,7 +10,7 @@ import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getMenus } from "@/lib/sanity/queries";
 import { breadcrumbSchema, graph, menuListSchema } from "@/lib/schema";
-import { localizedMetadata } from "@/lib/seo";
+import { fullTitle, localizedMetadata } from "@/lib/seo";
 
 export const generateMetadata = localizedMetadata("menus", {
   path: routes.menus,
@@ -35,10 +35,10 @@ export default async function MenusPage({
     <>
       <JsonLd
         data={graph(
-          menuListSchema(menus),
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
-            { name: "Menus", path: routes.menus },
+          menuListSchema(locale, fullTitle(dict.nav.menus), menus),
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.menus, path: routes.menus },
           ]),
         )}
       />

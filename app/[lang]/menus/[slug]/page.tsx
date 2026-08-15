@@ -119,10 +119,10 @@ export default async function MenuPage({ params }: MenuPageProps) {
     <>
       <JsonLd
         data={graph(
-          menuSchema(menu),
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
-            { name: "Menus", path: routes.menus },
+          menuSchema(locale, menu),
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.menus, path: routes.menus },
             { name: menu.title, path: routes.menu(menu.slug.current) },
           ]),
         )}

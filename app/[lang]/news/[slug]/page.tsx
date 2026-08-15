@@ -104,10 +104,12 @@ export default async function NewsArticlePage({
     <>
       <JsonLd
         data={graph(
-          articleSchema(article, { imageUrl: shareImage(article)?.url }),
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
-            { name: "News", path: routes.news },
+          articleSchema(locale, article, {
+            imageUrl: shareImage(article)?.url,
+          }),
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.news, path: routes.news },
             { name: article.title, path: routes.newsArticle(slug) },
           ]),
         )}

@@ -1,5 +1,6 @@
+import { withLocale, type Locale } from "./i18n/config";
 import { routes } from "./routes";
-import { absoluteUrl, fullTitle } from "./seo";
+import { absoluteUrl } from "./seo";
 import { siteConfig, type SiteDetails } from "./site";
 import type { ResolvedMenu } from "./menus";
 import type { NewsArticle } from "./sanity/types";
@@ -21,6 +22,22 @@ const ORGANIZATION_ID = `${siteConfig.url}/#organization`;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
 
 type JsonLdValue = string | number | boolean | object | undefined | null;
+
+/**
+ * The absolute URL of a page, in the language it is being read in.
+ *
+ * Every page-level node has to use this rather than `absoluteUrl` directly. A
+ * route path carries no language, so `absoluteUrl("/menus")` names an address
+ * that only resolves through a redirect — and all three language versions of a
+ * page would claim the same `@id`, while the canonical in the head says
+ * otherwise. Structured data that contradicts the canonical is worse than none.
+ *
+ * The organisation, website and business nodes deliberately do *not* use it:
+ * there is one company, not three, and their `@id`s anchor every other node.
+ */
+function pageUrl(locale: Locale, path: string) {
+  return absoluteUrl(withLocale(path, locale));
+}
 
 /** Drops keys whose value is empty — see the note above. */
 function compact<T extends Record<string, JsonLdValue>>(input: T) {
@@ -125,20 +142,20 @@ export type BreadcrumbItem = {
   path: string;
 };
 
-export function breadcrumbSchema(items: BreadcrumbItem[]) {
+export function breadcrumbSchema(locale: Locale, items: BreadcrumbItem[]) {
   return {
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: absoluteUrl(item.path),
+      item: pageUrl(locale, item.path),
     })),
   };
 }
 
-export function productSchema(product: ShopifyProduct) {
-  const url = absoluteUrl(routes.product(product.handle));
+export function productSchema(locale: Locale, product: ShopifyProduct) {
+  const url = pageUrl(locale, routes.product(product.handle));
   const images = product.images?.length
     ? product.images.map((image) => image.url)
     : product.imageUrl
@@ -170,8 +187,8 @@ export function productSchema(product: ShopifyProduct) {
   });
 }
 
-export function collectionSchema(collection: ShopifyCollection) {
-  const url = absoluteUrl(routes.collection(collection.handle));
+export function collectionSchema(locale: Locale, collection: ShopifyCollection) {
+  const url = pageUrl(locale, routes.collection(collection.handle));
 
   return compact({
     "@type": "CollectionPage",
@@ -187,17 +204,18 @@ export function collectionSchema(collection: ShopifyCollection) {
         "@type": "ListItem",
         position: index + 1,
         name: product.title,
-        url: absoluteUrl(routes.product(product.handle)),
+        url: pageUrl(locale, routes.product(product.handle)),
       })),
     },
   });
 }
 
 export function articleSchema(
+  locale: Locale,
   article: NewsArticle,
   { imageUrl }: { imageUrl?: string | null } = {},
 ) {
-  const url = absoluteUrl(routes.newsArticle(article.slug.current));
+  const url = pageUrl(locale, routes.newsArticle(article.slug.current));
 
   return compact({
     "@type": "Article",
@@ -208,7 +226,7 @@ export function articleSchema(
     url,
     datePublished: article.publishedAt,
     dateModified: article.publishedAt,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: locale,
     articleSection: article.categories?.[0]?.title,
     author: article.author?.name
       ? { "@type": "Person", name: article.author.name }
@@ -228,8 +246,8 @@ export function articleSchema(
  * "per person" would be a wrong number, and prices in structured data are the
  * one thing a search engine will quote back at a customer.
  */
-export function menuSchema(menu: ResolvedMenu) {
-  const url = absoluteUrl(routes.menu(menu.slug.current));
+export function menuSchema(locale: Locale, menu: ResolvedMenu) {
+  const url = pageUrl(locale, routes.menu(menu.slug.current));
 
   return compact({
     "@type": "Menu",
@@ -237,7 +255,7 @@ export function menuSchema(menu: ResolvedMenu) {
     name: menu.title,
     description: menu.summary,
     url,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: locale,
     provider: { "@id": `${siteConfig.url}/#business` },
     isPartOf: { "@id": WEBSITE_ID },
     hasMenuSection: menu.courses?.map((course) =>
@@ -280,13 +298,17 @@ export function menuSchema(menu: ResolvedMenu) {
 }
 
 /** The menus index, as a list pointing at each menu's own node. */
-export function menuListSchema(menus: ResolvedMenu[]) {
-  const url = absoluteUrl(routes.menus);
+export function menuListSchema(
+  locale: Locale,
+  name: string,
+  menus: ResolvedMenu[],
+) {
+  const url = pageUrl(locale, routes.menus);
 
   return {
     "@type": "CollectionPage",
     "@id": `${url}#menus`,
-    name: fullTitle("Menus"),
+    name,
     url,
     isPartOf: { "@id": WEBSITE_ID },
     about: { "@id": `${siteConfig.url}/#business` },
@@ -297,7 +319,7 @@ export function menuListSchema(menus: ResolvedMenu[]) {
         "@type": "ListItem",
         position: index + 1,
         name: menu.title,
-        url: absoluteUrl(routes.menu(menu.slug.current)),
+        url: pageUrl(locale, routes.menu(menu.slug.current)),
       })),
     },
   };

@@ -14,8 +14,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { ParallaxImage } from "@/components/ParallaxImage";
 import { SplitImageSection } from "@/components/SplitImageSection";
 import { StickyTitleSection } from "@/components/StickyTitleSection";
-import { toLocale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { toLocale, withLocale, type Locale } from "@/lib/i18n/config";
+import { getDictionary, type Dictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { getSiteDetails } from "@/lib/sanity/queries";
 import type { SiteDetails } from "@/lib/site";
@@ -33,6 +33,8 @@ export const generateMetadata = localizedMetadata("about", {
  * lib/schema.ts, shared with the home page.
  */
 function aboutJsonLd(
+  locale: Locale,
+  dict: Dictionary,
   meta: { title: string; description: string },
   details: SiteDetails,
 ) {
@@ -41,12 +43,12 @@ function aboutJsonLd(
       "@type": "AboutPage",
       name: fullTitle(meta.title),
       description: meta.description,
-      url: absoluteUrl(routes.about),
+      url: absoluteUrl(withLocale(routes.about, locale)),
       mainEntity: cateringBusinessSchema(details),
     },
-    breadcrumbSchema([
-      { name: "Home", path: routes.home },
-      { name: "About", path: routes.about },
+    breadcrumbSchema(locale, [
+      { name: dict.nav.home, path: routes.home },
+      { name: dict.nav.about, path: routes.about },
     ]),
   );
 }
@@ -57,12 +59,13 @@ export default async function AboutPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
+  const locale = toLocale(lang);
   const [dict, siteDetails] = await Promise.all([
-    getDictionary(toLocale(lang)),
+    getDictionary(locale),
     getSiteDetails(),
   ]);
   const about = dict.about;
-  const jsonLd = aboutJsonLd(dict.meta.about, siteDetails);
+  const jsonLd = aboutJsonLd(locale, dict, dict.meta.about, siteDetails);
   return (
     <>
       <JsonLd data={jsonLd} />

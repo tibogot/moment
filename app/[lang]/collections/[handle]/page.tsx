@@ -56,7 +56,11 @@ export async function generateMetadata({
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
   const { lang, handle } = await params;
-  const collection = await getCollectionByHandle(toLocale(lang), handle);
+  const locale = toLocale(lang);
+  const [collection, dict] = await Promise.all([
+    getCollectionByHandle(locale, handle),
+    getDictionary(locale),
+  ]);
 
   if (!collection) notFound();
 
@@ -64,10 +68,10 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
     <>
       <JsonLd
         data={graph(
-          collectionSchema(collection),
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
-            { name: "Collections", path: routes.collections },
+          collectionSchema(locale, collection),
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.collections, path: routes.collections },
             {
               name: collection.title,
               path: routes.collection(collection.handle),

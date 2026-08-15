@@ -80,10 +80,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
           product in search rather than a plain blue link. */}
       <JsonLd
         data={graph(
-          productSchema(product),
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
-            { name: "Shop", path: routes.shop },
+          productSchema(locale, product),
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.shop, path: routes.shop },
             { name: product.title, path: routes.product(product.handle) },
           ]),
         )}

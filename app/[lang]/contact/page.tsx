@@ -8,7 +8,7 @@ import {
   type ContactValues,
   type Occasion,
 } from "@/lib/contact";
-import { toLocale, type Locale } from "@/lib/i18n/config";
+import { toLocale, type Locale, withLocale } from "@/lib/i18n/config";
 import {
   getDictionary,
   interpolate,
@@ -109,13 +109,13 @@ export default async function ContactPage({
         data={graph(
           {
             "@type": "ContactPage",
-            url: absoluteUrl(routes.contact),
-            name: fullTitle("Contact"),
+            url: absoluteUrl(withLocale(routes.contact, locale)),
+            name: fullTitle(dict.nav.contact),
             about: organizationSchema(siteDetails),
           },
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
-            { name: "Contact", path: routes.contact },
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.contact, path: routes.contact },
           ]),
         )}
       />

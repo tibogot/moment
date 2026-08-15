@@ -86,8 +86,8 @@ export default async function FaqPage({
       <JsonLd
         data={graph(
           faqSchema(entries),
-          breadcrumbSchema([
-            { name: "Home", path: routes.home },
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
             { name: dict.faq.title, path: routes.faq },
           ]),
         )}
