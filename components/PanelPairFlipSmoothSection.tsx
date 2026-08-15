@@ -5,7 +5,7 @@ import { GridLines } from "@/components/GridLines";
 import { gsap } from "@/lib/gsapConfig";
 import { routes } from "@/lib/routes";
 import { urlFor } from "@/lib/sanity/image";
-import type { SanityImage } from "@/lib/sanity/types";
+import type { SanityDecorativeImage } from "@/lib/sanity/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
@@ -70,7 +70,7 @@ type PanelCopy = {
 
 type PanelPairFlipSmoothSectionProps = {
   copy: Record<PanelKey, PanelCopy>;
-  images?: Partial<Record<PanelKey, SanityImage | null>>;
+  images?: Partial<Record<PanelKey, SanityDecorativeImage | null>>;
   className?: string;
 };
 

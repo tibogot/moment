@@ -11,4 +11,16 @@ export default defineCliConfig({
     projectId: sanityProjectId,
     dataset: sanityDataset,
   },
+  /**
+   * Left off `enabled`, which would regenerate during `sanity dev` / `sanity
+   * build` — neither of which this project runs, since Next serves the Studio.
+   * `npm run typegen` is the whole workflow. Run it after touching a schema or
+   * a query; the generated file is committed, so a fresh clone type-checks
+   * without it.
+   */
+  typegen: {
+    path: "./{app,lib,components,sanity}/**/*.{ts,tsx}",
+    schema: "schema.json",
+    generates: "./sanity.types.ts",
+  },
 });

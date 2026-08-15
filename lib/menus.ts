@@ -274,7 +274,7 @@ const PLACEHOLDER_SOURCE: PlaceholderMenu[] = [
   {
     _id: "placeholder-breakfast",
     title: "Morning table",
-    slug: { current: "morning-table" },
+    slug: { _type: "slug", current: "morning-table" },
     format: "breakfast",
     summary:
       "Viennoiserie out of our own oven, fruit cut that morning, and coffee set up on site.",
@@ -309,7 +309,7 @@ const PLACEHOLDER_SOURCE: PlaceholderMenu[] = [
   {
     _id: "placeholder-lunch",
     title: "Desk lunch",
-    slug: { current: "desk-lunch" },
+    slug: { _type: "slug", current: "desk-lunch" },
     format: "lunch",
     summary:
       "A hot plate, two salads and something sweet, delivered ready to serve at the table.",
@@ -341,7 +341,7 @@ const PLACEHOLDER_SOURCE: PlaceholderMenu[] = [
   {
     _id: "placeholder-apero",
     title: "Apéro dînatoire",
-    slug: { current: "apero-dinatoire" },
+    slug: { _type: "slug", current: "apero-dinatoire" },
     format: "apero",
     summary:
       "Standing, walking, talking. Enough of it that nobody needs dinner afterwards.",
@@ -380,7 +380,7 @@ const PLACEHOLDER_SOURCE: PlaceholderMenu[] = [
   {
     _id: "placeholder-buffet",
     title: "Long table buffet",
-    slug: { current: "long-table-buffet" },
+    slug: { _type: "slug", current: "long-table-buffet" },
     format: "buffet",
     summary:
       "Everything out at once on one long table, refilled through the evening.",
@@ -417,7 +417,7 @@ const PLACEHOLDER_SOURCE: PlaceholderMenu[] = [
   {
     _id: "placeholder-seated",
     title: "Seated dinner",
-    slug: { current: "seated-dinner" },
+    slug: { _type: "slug", current: "seated-dinner" },
     format: "seated",
     summary:
       "Four courses, plated and served. We bring the kitchen and the floor team.",

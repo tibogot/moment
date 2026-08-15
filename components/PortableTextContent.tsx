@@ -1,7 +1,9 @@
-import type { PortableTextBlock } from "@portabletext/types";
 import { PortableText, type PortableTextComponents } from "next-sanity";
 import { SanityImage } from "@/components/SanityImage";
-import type { SanityImage as SanityImageType } from "@/lib/sanity/types";
+import type {
+  NewsArticle,
+  SanityImage as SanityImageType,
+} from "@/lib/sanity/types";
 
 const components: PortableTextComponents = {
   block: {
@@ -37,7 +39,9 @@ const components: PortableTextComponents = {
         <a
           href={href}
           className="underline underline-offset-4 transition-opacity hover:opacity-60"
-          {...(isExternal ? { rel: "noreferrer noopener", target: "_blank" } : {})}
+          {...(isExternal
+            ? { rel: "noreferrer noopener", target: "_blank" }
+            : {})}
         >
           {children}
         </a>
@@ -82,7 +86,7 @@ const components: PortableTextComponents = {
 };
 
 type PortableTextContentProps = {
-  value: PortableTextBlock[];
+  value: NewsArticle["body"];
 };
 
 export function PortableTextContent({ value }: PortableTextContentProps) {

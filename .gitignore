@@ -42,3 +42,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Sanity TypeGen. `sanity.types.ts` is committed so a fresh clone type-checks
+# without running the CLI; `schema.json` is the intermediate the CLI writes on
+# the way there — 50KB of regenerable JSON that would churn on every schema
+# edit. `npm run typegen` rebuilds both.
+schema.json

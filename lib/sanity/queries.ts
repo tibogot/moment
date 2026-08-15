@@ -1,3 +1,4 @@
+import { defineQuery } from "next-sanity";
 import { sanityClient, sanityCache } from "./client";
 import type { Locale } from "../i18n/config";
 import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
@@ -28,18 +29,18 @@ const articleListFields = `
  * and an empty page until one exists. That is correct. Showing them French is
  * not a fallback, it is a different article.
  */
-export const articlesQuery = `*[_type == "article" && language == $language] | order(publishedAt desc) {
+export const articlesQuery = defineQuery(`*[_type == "article" && language == $language] | order(publishedAt desc) {
   ${articleListFields}
-}`;
+}`);
 
-export const articleBySlugQuery = `*[_type == "article" && language == $language && slug.current == $slug][0] {
+export const articleBySlugQuery = defineQuery(`*[_type == "article" && language == $language && slug.current == $slug][0] {
   ${articleListFields},
   body
-}`;
+}`);
 
-export const articleSlugsQuery = `*[_type == "article" && language == $language && defined(slug.current)]{
+export const articleSlugsQuery = defineQuery(`*[_type == "article" && language == $language && defined(slug.current)]{
   "slug": slug.current
-}`;
+}`);
 
 export async function getNewsArticles(
   language: Locale,
@@ -109,19 +110,19 @@ const menuCourses = `
   }
 `;
 
-export const menusQuery = `*[_type == "menu"] | order(pricePerPerson asc) {
+export const menusQuery = defineQuery(`*[_type == "menu"] | order(pricePerPerson asc) {
   ${menuFields},
   ${menuCourses}
-}`;
+}`);
 
-export const menuBySlugQuery = `*[_type == "menu" && slug.current == $slug][0] {
+export const menuBySlugQuery = defineQuery(`*[_type == "menu" && slug.current == $slug][0] {
   ${menuFields},
   ${menuCourses}
-}`;
+}`);
 
-export const menuSlugsQuery = `*[_type == "menu" && defined(slug.current)]{
+export const menuSlugsQuery = defineQuery(`*[_type == "menu" && defined(slug.current)]{
   "slug": slug.current
-}`;
+}`);
 
 /**
  * Every menu, sorted by format. Falls back to PLACEHOLDER_MENUS while the
@@ -191,11 +192,11 @@ export async function getMenuBySlug(slug: string): Promise<Menu | null> {
  * a second one created by accident cannot win the ordering and change the VAT
  * number on the legal page.
  */
-export const siteDetailsQuery = `*[_id == "siteSettings"][0] {
+export const siteDetailsQuery = defineQuery(`*[_id == "siteSettings"][0] {
   contact,
   legal,
   socialLinks
-}`;
+}`);
 
 type SiteDetailsResponse = {
   contact?: Partial<SiteDetails["contact"]> | null;
@@ -274,11 +275,11 @@ export async function getSiteDetails(): Promise<SiteDetails> {
  * from Next at build time, and without this a Sanity-served hero would pop in
  * grey instead.
  */
-export const homePageQuery = `*[_id == "homePage"][0] {
+export const homePageQuery = defineQuery(`*[_id == "homePage"][0] {
   heroImage { ..., "lqip": asset->metadata.lqip },
   eventsImage,
   coffeeImage
-}`;
+}`);
 
 export type HomePageImages = {
   hero: (SanityImage & { lqip?: string }) | null;

@@ -3,7 +3,7 @@ import { GridLines } from "@/components/GridLines";
 import { ParallaxImage } from "@/components/ParallaxImage";
 import { routes } from "@/lib/routes";
 import { urlFor } from "@/lib/sanity/image";
-import type { SanityImage } from "@/lib/sanity/types";
+import type { SanityDecorativeImage } from "@/lib/sanity/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -78,7 +78,7 @@ type PanelPairSectionProps = {
    * an owner who has replaced one and not the other should see exactly that,
    * not a broken panel.
    */
-  images?: Partial<Record<PanelKey, SanityImage | null>>;
+  images?: Partial<Record<PanelKey, SanityDecorativeImage | null>>;
   className?: string;
 };
 

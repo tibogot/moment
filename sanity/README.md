@@ -85,15 +85,37 @@ comes from `menuFormats` in the dictionaries — three languages, one per site
 locale. Translating the Studio list without the dictionaries would have left the
 Studio saying "Lunch de bureau" and the site saying "Office lunch".
 
-## Field names are a contract
+## Field names are a contract, and TypeGen enforces it
 
-`sanity/schemaTypes/documents/menu.ts`, the `Menu` type in `lib/menus.ts`, and
-the GROQ projection in `lib/sanity/queries.ts` all name the same fields.
-Renaming one without the others returns `undefined` rather than an error, so
-change all three together.
+`sanity/schemaTypes/documents/menu.ts` and the GROQ projection in
+`lib/sanity/queries.ts` name the same fields. Renaming one without the other
+returns `undefined` rather than an error — GROQ is a string, and Sanity answers
+a request for a field that no longer exists without complaining.
 
-Now that the schema and the queries are in one repo, TypeGen can enforce this
-instead of a paragraph asking nicely. That is worth doing next.
+This used to be a paragraph asking nicely. It is now checked:
+
+```bash
+npm run typegen
+```
+
+It reads the schema, reads every query wrapped in `defineQuery`, and writes
+`sanity.types.ts` at the repo root. `lib/sanity/types.ts` derives the site's own
+names from it — `NewsArticle`, `SanityImage` — so nothing about the shape of
+Sanity data is written by hand any more. **Run it after touching a schema or a
+query.** The generated file is committed, so a fresh clone type-checks without
+it; `schema.json`, the intermediate, is not.
+
+Two things to know:
+
+- **A query TypeGen cannot see is a query it cannot check.** It only reads
+  queries assigned through `defineQuery` (or the `groq` tag). A bare template
+  string is skipped silently.
+- **Types are generated with `--enforce-required-fields`**, so a field the
+  schema marks `required()` is typed as present. True for scalars — this client
+  reads published documents only, with no draft perspective. Not true for
+  _dereferences_: `author` and `categories` are required references, but the
+  document on the far end can be deleted while an article still points at it.
+  Keep the optional chaining on those two.
 
 ## Placeholders still in place
 
