@@ -358,9 +358,14 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         aria-hidden={!open}
         inert={!open}
       >
-        {/* Same band height + type size as the closed navbar / search overlay. */}
+        {/* Same band height + type size as the closed navbar / search overlay.
+            The rule is this row's own bottom border rather than a sibling under
+            it: as a sibling it stacked *below* a band already --grid-band tall,
+            so the panel's line sat a full line-width lower than the navbar's
+            and the two read as a step. border-box keeps the band the height it
+            claims to be, with the rule inside it. */}
         <div>
-          <div className="flex min-h-(--grid-band) items-center justify-between px-6">
+          <div className="flex min-h-(--grid-band) items-center justify-between border-b border-sky px-6">
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
               {view === "date"
                 ? t.deliveryDateTitle
@@ -376,7 +381,6 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {view === "cart" ? dict.common.close : dict.common.back}
             </button>
           </div>
-          <div className="h-(--grid-line) bg-sky" aria-hidden />
         </div>
 
         <div className="flex-1 overflow-y-auto" data-lenis-prevent>

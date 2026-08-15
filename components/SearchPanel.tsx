@@ -172,12 +172,12 @@ export function SearchPanel({
           <div className="sticky top-0 z-10 col-span-full bg-cream">
             <GridLines lineClassName="bg-sky" />
             <div
-              className="grid min-h-(--grid-band) items-center"
+              className="grid min-h-(--grid-band) items-center border-b border-sky"
               style={{ gridTemplateColumns: "var(--grid-columns)" }}
             >
               <div className="col-start-2 col-end-5 flex items-center justify-between px-(--grid-gutter) md:col-end-9">
                 <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
-                  Search
+                  {dict.search.label}
                 </p>
                 <button
                   type="button"
@@ -188,7 +188,6 @@ export function SearchPanel({
                 </button>
               </div>
             </div>
-            <div className="h-(--grid-line) bg-sky" aria-hidden />
           </div>
 
           <form
@@ -196,7 +195,7 @@ export function SearchPanel({
             className="col-start-2 col-end-5 px-(--grid-gutter) pt-[6svh] pb-[4svh] md:col-end-9 md:py-[5svh]"
           >
             <label htmlFor="site-search" className="sr-only">
-              Search products
+              {dict.search.fieldLabel}
             </label>
             <input
               ref={inputRef}

@@ -103,6 +103,26 @@ type NavAppearance = {
   immediate?: boolean;
 };
 
+/**
+ * The nav band's height, fractionally.
+ *
+ * `offsetHeight` rounds to a whole pixel, and --grid-band is 8.6svh — 77.4px on
+ * a 900px viewport, reported as 77. The background carrying the navbar's bottom
+ * rule is sized from this, so the rounding put that rule 0.4px above where the
+ * grid says the band ends, and every other band on the site drew it 0.4px
+ * lower. Sub-pixel, but it is the difference between two rules meeting and two
+ * rules nearly meeting.
+ */
+function navBandHeight(nav: HTMLElement) {
+  return nav.getBoundingClientRect().height;
+}
+
+/**
+ * Every write of the background's height carries `autoRound: false`. GSAP's
+ * CSSPlugin rounds pixel values to whole numbers by default, so the fractional
+ * band above survives being measured only to be rounded away on the way in.
+ */
+
 export function Navbar() {
   /*
    * Read rather than passed in. The collections come from the server through
@@ -260,6 +280,7 @@ export function Navbar() {
       transformOrigin: "top center",
       scaleY: clamped,
       height: navHeight,
+      autoRound: false,
     });
     gsap.set(links, {
       color: gsap.utils.interpolate(CREAM, BLACK, clamped),
@@ -275,7 +296,7 @@ export function Navbar() {
     const trigger = scrollNavTriggerRef.current;
     if (!nav || !trigger || !shouldScrollControlNav()) return;
 
-    applyScrollNavAppearance(trigger.progress, nav.offsetHeight);
+    applyScrollNavAppearance(trigger.progress, navBandHeight(nav));
   };
 
   const runNavAnimation = ({
@@ -296,7 +317,7 @@ export function Navbar() {
     gsap.killTweensOf(bg);
 
     const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
-    const navHeight = nav.offsetHeight;
+    const navHeight = navBandHeight(nav);
     const menuHeight =
       expanded && menuInner
         ? Math.max(menuInner.offsetHeight, menuInner.scrollHeight)
@@ -307,7 +328,7 @@ export function Navbar() {
     gsap.set(bg, { transformOrigin: "top center" });
 
     const tl = gsap.timeline({
-      defaults: { duration, ease: EASE, overwrite: "auto" },
+      defaults: { duration, ease: EASE, overwrite: "auto", autoRound: false },
     });
     navTweenRef.current = tl;
 
@@ -457,7 +478,8 @@ export function Navbar() {
         gsap.set(bg, {
           transformOrigin: "top center",
           scaleY: 0,
-          height: nav.offsetHeight,
+          height: navBandHeight(nav),
+          autoRound: false,
         });
       }
 
@@ -482,25 +504,25 @@ export function Navbar() {
           ? {
               onEnter: () => {
                 if (!shouldScrollControlNav()) return;
-                applyScrollNavAppearance(1, nav.offsetHeight);
+                applyScrollNavAppearance(1, navBandHeight(nav));
               },
               onLeaveBack: () => {
                 if (!shouldScrollControlNav()) return;
-                applyScrollNavAppearance(0, nav.offsetHeight);
+                applyScrollNavAppearance(0, navBandHeight(nav));
               },
             }
           : {
               scrub: true,
               onUpdate: (self) => {
                 if (!shouldScrollControlNav()) return;
-                applyScrollNavAppearance(self.progress, nav.offsetHeight);
+                applyScrollNavAppearance(self.progress, navBandHeight(nav));
               },
             }),
         onRefresh: (self) => {
           if (!shouldScrollControlNav()) return;
           applyScrollNavAppearance(
             reduceMotion ? Number(self.isActive) : self.progress,
-            nav.offsetHeight,
+            navBandHeight(nav),
           );
         },
       });
@@ -614,7 +636,7 @@ export function Navbar() {
         }
         if (!navExpandedRef.current) return;
 
-        const navHeight = nav.offsetHeight;
+        const navHeight = navBandHeight(nav);
         const menuHeight = menuInner.offsetHeight;
         const duration = MENU_DURATION * 0.5;
 
@@ -629,6 +651,7 @@ export function Navbar() {
           duration,
           ease: MENU_EASE,
           overwrite: "auto",
+          autoRound: false,
         });
       });
 
@@ -697,7 +720,7 @@ export function Navbar() {
     if (!menu || !bg || !nav) return;
 
     const menuCurrentH = Number(gsap.getProperty(menu, "height") ?? 0);
-    const navHeight = nav.offsetHeight;
+    const navHeight = navBandHeight(nav);
     const bgHeight = Number(gsap.getProperty(bg, "height") ?? 0);
 
     if (menuCurrentH <= 1 && bgHeight <= navHeight + 1) return;

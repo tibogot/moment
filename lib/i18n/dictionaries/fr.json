@@ -793,7 +793,8 @@
       "Soupe",
       "Quiche"
     ],
-    "popularSearches": "Recherches fréquentes"
+    "popularSearches": "Recherches fréquentes",
+    "fieldLabel": "Rechercher des produits"
   },
   "account": {
     "title": "Compte",

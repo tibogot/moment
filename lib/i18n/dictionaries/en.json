@@ -792,7 +792,8 @@
       "Soupe",
       "Quiche"
     ],
-    "popularSearches": "Popular searches"
+    "popularSearches": "Popular searches",
+    "fieldLabel": "Search products"
   },
   "account": {
     "title": "Account",

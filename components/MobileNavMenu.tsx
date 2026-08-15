@@ -237,8 +237,11 @@ export function MobileNavMenu({
         className="relative grid h-full"
         style={{ gridTemplateRows: "var(--grid-rows)" }}
       >
-        <div className="border-b border-sky">
-          <nav className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset)">
+        <div>
+          {/* The rule is the band's own border, not the wrapper's. On the
+              wrapper it stacked under a nav already --grid-band tall and landed
+              a line-width below the navbar's. */}
+          <nav className="relative grid min-h-(--grid-band) grid-cols-3 items-center border-b border-sky px-(--grid-inset)">
             <button
               type="button"
               onClick={handleClose}
