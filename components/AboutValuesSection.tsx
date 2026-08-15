@@ -46,7 +46,7 @@ export function AboutValuesSection({
               </span>
 
               <TextReveal blockColor={REVEAL_BLOCK} stagger={0.1}>
-                <p className="font-archivo-light mt-6 max-w-[28ch] text-[5.5vw] leading-[1.15] wrap-break-word text-black md:mt-[3svh] md:text-[min(1.85vw,2.8svh)]">
+                <p className="font-archivo-light mt-6 max-w-[28ch] text-(length:--body-text) leading-normal wrap-break-word text-black md:mt-[3svh]">
                   {copy.lead}
                 </p>
               </TextReveal>

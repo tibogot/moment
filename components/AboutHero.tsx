@@ -60,7 +60,7 @@ export function AboutHero({ copy }: { copy: Dictionary["about"]["hero"] }) {
             duration={0.6}
           >
             <p
-              className="font-archivo-light max-w-full leading-[1.43]"
+              className="font-archivo-light max-w-full text-balance leading-[1.2]"
               style={{ fontSize: "var(--hero-body)" }}
             >
               {copy.lead}
