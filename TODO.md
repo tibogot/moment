@@ -17,18 +17,18 @@ Last reviewed: **15 August 2026**, at commit `f19a404`.
 Nothing in this section can be finished by writing code. Each line names the one
 thing that unblocks it.
 
-| Blocked | Needs |
-|---|---|
-| **Delivery time slots** | Delivery hours per weekday, and collection hours at the atelier. Marked BLOCKING since the first version of `CLIENT-QUESTIONS.md` |
-| **Capacity per day / per slot** | Two numbers, not one: what the kitchen can produce in a day, and what the van can drop in a morning. See §2 of `CLIENT-QUESTIONS.md` |
-| **Correct zone pricing** | The atelier's real street address. Distances are currently measured from the centroid of 1190 Forest, so anyone near a band edge is quoted the wrong fee |
-| **Legal launch** | BCE number, VAT number, legal form. Belgian law requires them on a commercial site; the legal page prints `[to be completed]` until they arrive |
-| **Search visibility** | `moment.be` registered. The site is deliberately `noindex` until it exists — see §5 |
-| **How big the B2B work is** | How many price levels? Shopify made native B2B free on Basic/Grow/Advanced on 2 April 2026 — company profiles, net terms, saved cards and **up to 3 catalogues**. Only per-company negotiated pricing still needs Plus |
-| **VAT invoices** | Which of the three options in `CLIENT-QUESTIONS.md` §4 |
-| **Legal page copy** | The lawyer's versions, or written acceptance of the drafts |
+| Blocked                         | Needs                                                                                                                                                                                                                  |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Delivery time slots**         | Delivery hours per weekday, and collection hours at the atelier. Marked BLOCKING since the first version of `CLIENT-QUESTIONS.md`                                                                                      |
+| **Capacity per day / per slot** | Two numbers, not one: what the kitchen can produce in a day, and what the van can drop in a morning. See §2 of `CLIENT-QUESTIONS.md`                                                                                   |
+| **Correct zone pricing**        | The atelier's real street address. Distances are currently measured from the centroid of 1190 Forest, so anyone near a band edge is quoted the wrong fee                                                               |
+| **Legal launch**                | BCE number, VAT number, legal form. Belgian law requires them on a commercial site; the legal page prints `[to be completed]` until they arrive                                                                        |
+| **Search visibility**           | `moment.be` registered. The site is deliberately `noindex` until it exists — see §5                                                                                                                                    |
+| **How big the B2B work is**     | How many price levels? Shopify made native B2B free on Basic/Grow/Advanced on 2 April 2026 — company profiles, net terms, saved cards and **up to 3 catalogues**. Only per-company negotiated pricing still needs Plus |
+| **VAT invoices**                | Which of the three options in `CLIENT-QUESTIONS.md` §4                                                                                                                                                                 |
+| **Legal page copy**             | The lawyer's versions, or written acceptance of the drafts                                                                                                                                                             |
 
-**The good news since the last review:** most of the *data* the client used to
+**The good news since the last review:** most of the _data_ the client used to
 have to send us is now something they type themselves — company details, VAT,
 social accounts, delivery rules, zone fees. What is left above is decisions and
 facts about how the kitchen works, which is the part we could never have
@@ -80,7 +80,7 @@ here.
 
 **Derive them from the collections instead.** Those are the catalogue's own
 vocabulary, they already come from Shopify, they are already in the nav, and
-they cannot go stale. It means changing what a chip *does* — link to the
+they cannot go stale. It means changing what a chip _does_ — link to the
 collection rather than fill the search box — which is a better outcome anyway:
 someone clicking "Salades" wants the salads, not a text search for the word.
 
@@ -115,15 +115,15 @@ exist, and redirecting would tell Google otherwise.
 
 - `@sanity/document-internationalization`. It builds on the `language` field
   that already exists, links the trio through a metadata document, and gives the
-  client a *create the Dutch version* button that duplicates with the language
+  client a _create the Dutch version_ button that duplicates with the language
   preset. That last part is the whole point — it is the ergonomics they need.
 - Give articles their alternates back.
 - Replace the fallback in `translatedPath` with the real slug lookup. Note it
   cannot be computed: the Dutch article has a different slug, so the page has to
   supply the address. The function is where that plugs in.
 
-**Ask this in the meeting, in these words:** *will every news item be written in
-three languages, or will some stay French only?* If the answer is "French first,
+**Ask this in the meeting, in these words:** _will every news item be written in
+three languages, or will some stay French only?_ If the answer is "French first,
 we will translate the good ones" — the likelier one — then the fallback above is
 the permanent behaviour for untranslated pieces, not a stopgap.
 
@@ -149,17 +149,17 @@ Both of the client's requests shipped. Kept because they cost a browser session
 and they contradict the obvious reading.
 
 **Line weight is 2px, and 1.5 is not available.** Chrome rounds `border-width`
-to whole CSS pixels — measured at 1x *and* 2x — while the GridLines spans use
+to whole CSS pixels — measured at 1x _and_ 2x — while the GridLines spans use
 `width`, which is not rounded. At 1.5px the overlay renders at 1.5 and all 117
 borders at 1, and the two meet at every corner of the grid. `--grid-line` in
 `globals.css` is the single number for both mechanisms; if 2px reads heavy, the
 lever is contrast, not width.
 
-| Cell proportions | 1440×900 | 1920×951 | 2560×951 |
-|---|---|---|---|
-| Hero | 183×249 → **0.74** | 245×262 → **0.94** | 328×262 → **1.25** |
-| Events / Coffee panels | **0.75** at every width |||
-| Split sections | **0.75** at every width |||
+| Cell proportions       | 1440×900                | 1920×951           | 2560×951           |
+| ---------------------- | ----------------------- | ------------------ | ------------------ |
+| Hero                   | 183×249 → **0.74**      | 245×262 → **0.94** | 328×262 → **1.25** |
+| Events / Coffee panels | **0.75** at every width |                    |                    |
+| Split sections         | **0.75** at every width |                    |                    |
 
 The panels were already right and never drifted. The split sections were square
 by declaration and are now 3/4. The hero is the one still open: it is 3/4 on a
@@ -169,7 +169,7 @@ and the decision that follows from it.
 
 ### Language: done, and the earlier "done" was wrong
 
-This section previously said *no hardcoded English prose remains* — measured,
+This section previously said _no hardcoded English prose remains_ — measured,
 not assumed. It was still wrong, and **how** it was wrong is the useful part: the
 sweep looked for **sentences**. It found none, and missed three whole classes.
 
@@ -269,12 +269,12 @@ The arithmetic, once, so nobody has to redo it. Margins are `4.9vw`, bands are
 - cell height = 0.276 H
 - **ratio = 3.27 × (W/H) / N**, and 3/4 needs **N = 4.36 × (W/H)**
 
-| Screen | Aspect | Columns for 3/4 |
-|---|---|---|
-| iPad landscape | 1.33 | 6 |
-| MacBook, 1920×1200 | 1.60 | **7** — today |
-| 1920×1080, 2560×1440 | 1.78 | 8 |
-| Ultrawide 2560×1080 | 2.37 | 10 |
+| Screen               | Aspect | Columns for 3/4 |
+| -------------------- | ------ | --------------- |
+| iPad landscape       | 1.33   | 6               |
+| MacBook, 1920×1200   | 1.60   | **7** — today   |
+| 1920×1080, 2560×1440 | 1.78   | 8               |
+| Ultrawide 2560×1080  | 2.37   | 10              |
 
 **The variable is the aspect ratio, not the width.** A 1920×1200 and a 1920×1080
 are the same width and want different column counts, so any breakpoint here has
@@ -296,7 +296,7 @@ version this section used to recommend.
    margin = 9 tracks". A day of work, touching every page, to fix one section
 
 **Two dead ends, so they are not re-litigated.** Absorbing the slack in the bands
-is impossible — `--grid-band` *is* the navbar height (`min-h-(--grid-band)`, also
+is impossible — `--grid-band` _is_ the navbar height (`min-h-(--grid-band)`, also
 used by the cart panel and the mobile menu), so it would make the bar breathe
 with the viewport. Absorbing it in the margins works arithmetically (177px
 instead of 94px at 1920×1080) but `--grid-margin` is global and feeds
@@ -312,7 +312,7 @@ nothing to do.
 **Is the whole grid too much?** Asked and answered on 15 August: no. The
 infrastructure is **206 lines** — `GridLines.tsx` 138, `lib/grid.ts` 42,
 `GridSection.tsx` 26 — serving 23 sections, 8 of them `ruled` with holes. The
-`col-start-2 col-end-5` references are not a cost of *this* grid; any layout has
+`col-start-2 col-end-5` references are not a cost of _this_ grid; any layout has
 to place its blocks. What is worth knowing is that on 22 of the 23 sections
 nobody can verify a cell proportion at all — the brand asset is the drawn rule,
 not the rectangle. The 3/4 is only legible in the hero, where the whole 7 × 3
