@@ -221,7 +221,7 @@ export function ServicesSection() {
                   ).map((boundary) => (
                     <span
                       key={`column-${boundary}`}
-                      className="absolute inset-y-0 w-px bg-sky/45"
+                      className="absolute inset-y-0 w-(--grid-line) bg-sky/45"
                       style={{ left: `${(boundary / COLUMNS) * 100}%` }}
                     />
                   ))}
@@ -232,7 +232,7 @@ export function ServicesSection() {
                     (band) => (
                       <span
                         key={`band-${band}`}
-                        className="absolute right-0 h-px bg-sky/45"
+                        className="absolute right-0 h-(--grid-line) bg-sky/45"
                         style={{
                           left: `${(TYPE_COLUMNS / COLUMNS) * 100}%`,
                           top: `${(band / FRAME_ROWS) * 100}%`,

@@ -376,7 +376,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {view === "cart" ? dict.common.close : dict.common.back}
             </button>
           </div>
-          <div className="h-px bg-sky" aria-hidden />
+          <div className="h-(--grid-line) bg-sky" aria-hidden />
         </div>
 
         <div className="flex-1 overflow-y-auto" data-lenis-prevent>

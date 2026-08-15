@@ -69,7 +69,7 @@ export function CollectionsSection({
               items.push(
                 <li
                   key={`row-divider-${index}`}
-                  className="col-span-full hidden h-px list-none bg-sky md:block"
+                  className="col-span-full hidden h-(--grid-line) list-none bg-sky md:block"
                   aria-hidden
                 />,
               );
@@ -98,7 +98,7 @@ export function CollectionsSection({
 
                   {/* Runs the full column width so it meets the vertical grid
                     lines, rather than stopping at the gutter. */}
-                  <div className="collection-card__rule h-px" />
+                  <div className="collection-card__rule h-(--grid-line)" />
 
                   <div className="px-(--grid-gutter) pt-[2.5svh] pb-[1.5svh] md:pt-[4svh] md:pb-[2.5svh]">
                     <div className="collection-card__image relative aspect-4/3 w-full overflow-hidden">

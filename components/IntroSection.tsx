@@ -31,7 +31,7 @@ export function IntroSection({
   return (
     <GridSection className="pt-[10svh] pb-[14svh]">
       {/* Long sky rule setting the section off from the hero. */}
-      <div className="col-span-full mb-[6svh] h-px bg-sky" />
+      <div className="col-span-full mb-[6svh] h-(--grid-line) bg-sky" />
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
           <Heading

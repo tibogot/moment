@@ -210,7 +210,7 @@ export function ContactForm({
           {pro ? dict.proAccount.intro : t.title}
         </h2>
         <div
-          className="mt-4 h-px bg-sky"
+          className="mt-4 h-(--grid-line) bg-sky"
           style={{
             marginInline: "calc(-1 * var(--grid-gutter))",
             width: "calc(100% + 2 * var(--grid-gutter))",
@@ -312,7 +312,7 @@ export function ContactForm({
                   {t.sentTitle}
                 </p>
 
-                <div className="mt-4 mb-[4svh] h-px bg-sky" aria-hidden />
+                <div className="mt-4 mb-[4svh] h-(--grid-line) bg-sky" aria-hidden />
 
                 <div className="min-w-0 text-left">
                   <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>

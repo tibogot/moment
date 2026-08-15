@@ -188,7 +188,7 @@ export function SearchPanel({
                 </button>
               </div>
             </div>
-            <div className="h-px bg-sky" aria-hidden />
+            <div className="h-(--grid-line) bg-sky" aria-hidden />
           </div>
 
           <form
@@ -213,7 +213,7 @@ export function SearchPanel({
           </form>
 
           {/* Popular — wrap row on mobile, stacked column on desktop. */}
-          <div className="col-span-full h-px bg-sky" aria-hidden />
+          <div className="col-span-full h-(--grid-line) bg-sky" aria-hidden />
 
           <div className="relative col-start-2 col-end-5 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh] md:col-end-4">
             <p className="font-owners-medium text-[11px] uppercase tracking-wide">
@@ -241,16 +241,16 @@ export function SearchPanel({
                 </li>
               ))}
             </ul>
-            <div className="mt-[4svh] h-px bg-sky md:hidden" aria-hidden />
+            <div className="mt-[4svh] h-(--grid-line) bg-sky md:hidden" aria-hidden />
           </div>
 
           <div className="relative col-start-2 col-end-5 pb-[8svh] md:col-start-4 md:col-end-9 md:pb-0">
             <span
-              className="pointer-events-none absolute inset-y-0 left-0 hidden w-px bg-sky md:block"
+              className="pointer-events-none absolute inset-y-0 left-0 hidden w-(--grid-line) bg-sky md:block"
               aria-hidden
             />
             <span
-              className="pointer-events-none absolute inset-y-0 right-0 hidden w-px bg-sky md:block"
+              className="pointer-events-none absolute inset-y-0 right-0 hidden w-(--grid-line) bg-sky md:block"
               aria-hidden
             />
 
@@ -262,14 +262,14 @@ export function SearchPanel({
 
             {products.length === 0 ? (
               <div className="px-(--grid-gutter) pb-8">
-                <div className="mb-6 h-px bg-sky" aria-hidden />
+                <div className="mb-6 h-(--grid-line) bg-sky" aria-hidden />
                 <p className="font-archivo-light text-[14px]">
                   {dict.shop.searchEmpty}
                 </p>
               </div>
             ) : visibleProducts.length === 0 ? (
               <div className="px-(--grid-gutter) pb-8">
-                <div className="mb-6 h-px bg-sky" aria-hidden />
+                <div className="mb-6 h-(--grid-line) bg-sky" aria-hidden />
                 <p className="font-archivo-light text-[14px]">
                   {interpolate(dict.search.noResults, {
                     query: deferredQuery,
@@ -278,7 +278,7 @@ export function SearchPanel({
               </div>
             ) : (
               <>
-                <div className="h-px bg-sky" aria-hidden />
+                <div className="h-(--grid-line) bg-sky" aria-hidden />
                 <ul className="grid grid-cols-2 gap-px border-x border-sky bg-sky md:grid-cols-4 md:border-x-0">
                   {visibleProducts.map((product) => (
                     <li key={product.id} className="bg-cream">
@@ -301,7 +301,7 @@ export function SearchPanel({
             )}
           </div>
 
-          <div className="col-span-full h-px bg-sky" aria-hidden />
+          <div className="col-span-full h-(--grid-line) bg-sky" aria-hidden />
           <div className="col-span-full min-h-(--grid-band)" />
         </div>
       </div>

@@ -33,7 +33,7 @@ export function AboutAccordionSection({
   return (
     <GridSection className={cn("pt-[14svh] pb-[14svh]", className)}>
       {/* Long sky rule marking the gap after the values section. */}
-      <div className="col-span-full mb-[8svh] h-px bg-sky" />
+      <div className="col-span-full mb-[8svh] h-(--grid-line) bg-sky" />
 
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.1}>

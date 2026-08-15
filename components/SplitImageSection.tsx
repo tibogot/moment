@@ -217,7 +217,7 @@ export function SplitImageSection({
         </div>
       </div>
 
-      {fullBleedBottom && <div className="h-px w-full bg-sky" aria-hidden />}
+      {fullBleedBottom && <div className="h-(--grid-line) w-full bg-sky" aria-hidden />}
     </section>
   );
 }

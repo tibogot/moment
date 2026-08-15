@@ -87,7 +87,7 @@ export function StickyTitleSection({
         {rules.map((fraction) => (
           <span
             key={fraction}
-            className={cn("absolute inset-y-0 w-px", palette.lineMuted)}
+            className={cn("absolute inset-y-0 w-(--grid-line)", palette.lineMuted)}
             style={{ left: `${fraction * 100}%` }}
           />
         ))}
@@ -104,7 +104,7 @@ export function StickyTitleSection({
         </span>
 
         <div
-          className={cn("mt-4 mb-6 h-px", palette.line)}
+          className={cn("mt-4 mb-6 h-(--grid-line)", palette.line)}
           style={{
             marginInline: "calc(-1 * var(--grid-gutter))",
             width: "calc(100% + 2 * var(--grid-gutter))",

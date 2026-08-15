@@ -195,11 +195,11 @@ export function ShopNavMenu({
       {previewProducts.length > 0 && (
         <div className="relative col-start-4 col-end-9" style={previewMetrics}>
           <span
-            className="pointer-events-none absolute inset-y-0 left-0 w-px bg-sky"
+            className="pointer-events-none absolute inset-y-0 left-0 w-(--grid-line) bg-sky"
             aria-hidden
           />
           <span
-            className="pointer-events-none absolute inset-y-0 right-0 w-px bg-sky"
+            className="pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) bg-sky"
             aria-hidden
           />
 
@@ -209,7 +209,7 @@ export function ShopNavMenu({
           {previewProducts.slice(1).map((product, index) => (
             <span
               key={`divider-${product.id}`}
-              className="pointer-events-none absolute inset-y-0 w-px bg-sky"
+              className="pointer-events-none absolute inset-y-0 w-(--grid-line) bg-sky"
               style={{
                 left: `calc(${index + 1} * (var(--preview-card) + var(--preview-gap)))`,
               }}
@@ -234,7 +234,7 @@ export function ShopNavMenu({
         </div>
       )}
 
-      <div className="col-span-full h-px bg-sky" aria-hidden />
+      <div className="col-span-full h-(--grid-line) bg-sky" aria-hidden />
       <div className="col-span-full min-h-(--grid-band)" />
     </div>
   );

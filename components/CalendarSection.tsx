@@ -183,7 +183,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
   return (
     <section className="relative w-full bg-cream pb-[14svh] text-black">
       {/* Full-bleed sky rule separating this block from Services above. */}
-      <div className="h-px w-full bg-sky" aria-hidden />
+      <div className="h-(--grid-line) w-full bg-sky" aria-hidden />
 
       <GridLines lineClassName="bg-sky" />
 
@@ -197,7 +197,7 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
               {t.label}
             </h2>
             <div
-              className="mt-4 h-px bg-sky"
+              className="mt-4 h-(--grid-line) bg-sky"
               style={{
                 marginInline: "calc(-1 * var(--grid-gutter))",
                 width: "calc(100% + 2 * var(--grid-gutter))",

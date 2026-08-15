@@ -34,7 +34,7 @@ export function SplitStatementSection({
 
   return (
     <GridSection className={cn("pt-[10svh] pb-[14svh]", className)}>
-      {showRule && <div className="col-span-full mb-[6svh] h-px bg-sky" />}
+      {showRule && <div className="col-span-full mb-[6svh] h-(--grid-line) bg-sky" />}
 
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-start-3 md:col-end-9">
         <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
