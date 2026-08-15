@@ -264,14 +264,17 @@
     "staleDate": "{date} n'est plus disponible. Merci de choisir un autre jour.",
     "belowMinimum": "La zone {zone} a un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander, ou venez chercher à l'atelier.",
     "belowMinimumShort": "La zone {zone} a un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander.",
-    "noAddress": "Ajoutez une adresse de livraison sur une page produit pour voir les frais et le minimum de votre zone.",
-    "noAddressShort": "Ajoutez une adresse de livraison pour voir les frais et le minimum de votre zone.",
+    "noAddress": "Il nous faut une adresse de livraison pour calculer vos frais et le minimum de commande de votre zone.",
+    "noAddressShort": "Il nous faut une adresse de livraison pour calculer vos frais et votre minimum de commande.",
     "deliveryDateTitle": "Date de livraison",
     "pickDayIntro": "Choisissez le jour de livraison.",
     "note": "Précisions pour la livraison",
     "notePlaceholder": "Sonner à l'accueil, 3e étage, code 1234…",
     "noteSave": "Enregistrer",
-    "noteSaved": "Enregistré"
+    "noteSaved": "Enregistré",
+    "beforeCheckout": "Avant de commander",
+    "somethingWrong": "Un problème est survenu",
+    "addressTitle": "Adresse de livraison"
   },
   "shop": {
     "title": "Boutique",
@@ -326,7 +329,8 @@
     "traces": "Peut contenir des traces de",
     "dietary": "Régimes",
     "servingInstructions": "Conseils de service",
-    "storage": "Conservation"
+    "storage": "Conservation",
+    "orderPreferencesTitle": "Quand et comment"
   },
   "errors": {
     "not_configured": "La boutique n'est pas encore configurée. Merci de réessayer plus tard.",

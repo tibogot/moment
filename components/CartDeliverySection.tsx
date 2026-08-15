@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { setDeliveryDate, setDeliveryNote } from "@/app/actions/cart";
+import {
+  setDeliveryAddress,
+  setDeliveryDate,
+  setDeliveryNote,
+} from "@/app/actions/cart";
+import { AddressPanel } from "@/components/AddressPanel";
+import {
+  CheckoutNotice,
+  CheckoutNoticeAction,
+} from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { notifyCartUpdated } from "@/lib/cart-store";
 import { isBookable, type DeliveryAvailability } from "@/lib/delivery";
@@ -13,7 +22,12 @@ import {
   formatLongDate,
   formatMoney,
 } from "@/lib/i18n/format";
-import { zoneById, type ZoneId, type ZoneTable } from "@/lib/delivery-zones";
+import {
+  maxDeliveryDistanceKm,
+  zoneById,
+  type ZoneId,
+  type ZoneTable,
+} from "@/lib/delivery-zones";
 import {
   DELIVERY_NOTE_MAX,
   needsAddress,
@@ -62,7 +76,12 @@ export function CartDeliverySection({
   const t = dict.cart;
   const router = useRouter();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [addressOpen, setAddressOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** Reachable but not priceable — an enquiry, not a mistake. */
+  const [quote, setQuote] = useState<{ address: string; km: number } | null>(
+    null,
+  );
   const [noteSaved, setNoteSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -100,6 +119,27 @@ export function CartDeliverySection({
       }
       setNoteSaved(true);
       notifyCartUpdated();
+      router.refresh();
+    });
+  };
+
+  const chooseAddress = (value: string) => {
+    setError(null);
+    setQuote(null);
+
+    startTransition(async () => {
+      const result = await setDeliveryAddress(locale, value);
+
+      if (!result.ok) {
+        if ("needsQuote" in result) {
+          setQuote({ address: result.address, km: result.distanceKm });
+          return;
+        }
+        setError(dict.errors[result.code]);
+        return;
+      }
+      notifyCartUpdated();
+      setAddressOpen(false);
       router.refresh();
     });
   };
@@ -231,17 +271,30 @@ export function CartDeliverySection({
         )}
 
         {dateIsStale && deliveryDate && (
-          <p role="alert" className="font-archivo-light mt-2 text-[13px]">
+          <CheckoutNotice
+            tone="blocker"
+            title={t.beforeCheckout}
+            className="mt-4 max-w-105"
+            action={
+              <CheckoutNoticeAction onClick={() => setPickerOpen(true)}>
+                {t.pickAnother}
+              </CheckoutNoticeAction>
+            }
+          >
             {interpolate(t.staleDate, {
               date: formatLongDate(locale, deliveryDate),
             })}
-          </p>
+          </CheckoutNotice>
         )}
 
         {error && (
-          <p role="alert" className="font-archivo-light mt-2 text-[13px]">
+          <CheckoutNotice
+            tone="error"
+            title={t.somethingWrong}
+            className="mt-4 max-w-105"
+          >
             {error}
-          </p>
+          </CheckoutNotice>
         )}
 
         {pickerOpen && (
@@ -273,20 +326,60 @@ export function CartDeliverySection({
           hosted checkout cannot edit a cart attribute or refuse a basket, so
           every one of these has to be settled before we hand over. */}
       {blocker?.kind === "below-minimum" && (
-        <p role="alert" className="font-archivo-light mt-6 text-[13px]">
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className="mt-6 max-w-105"
+        >
           {interpolate(t.belowMinimum, {
             zone: blocker.zone.id,
             minimum: formatMoney(locale, blocker.zone.minimumOrder),
             shortfall: formatMoney(locale, blocker.shortfall),
           })}
-        </p>
+        </CheckoutNotice>
       )}
 
-      {blocker?.kind === "no-address" && (
-        <p role="alert" className="font-archivo-light mt-6 text-[13px]">
+      {blocker?.kind === "no-address" && !addressOpen && (
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className="mt-6 max-w-105"
+          action={
+            <CheckoutNoticeAction onClick={() => setAddressOpen(true)}>
+              {dict.orderBar.addAddress}
+            </CheckoutNoticeAction>
+          }
+        >
           {t.noAddress}
-        </p>
+        </CheckoutNotice>
       )}
+
+      {addressOpen &&
+        (quote ? (
+          <CheckoutNotice
+            tone="blocker"
+            title={dict.quote.heading}
+            className="mt-6 max-w-105"
+          >
+            {interpolate(dict.quote.body, {
+              address: quote.address,
+              km: quote.km,
+              max: maxDeliveryDistanceKm(zones),
+            })}
+          </CheckoutNotice>
+        ) : (
+          <div className="mt-6 max-w-105 border border-sky">
+            <p className="font-owners-medium px-4 pt-4 text-[12px] uppercase tracking-wide">
+              {dict.orderBar.whereDeliver}
+            </p>
+            <AddressPanel
+              current={deliveryAddress}
+              onSelect={chooseAddress}
+              saving={isPending}
+              t={dict.orderBar}
+            />
+          </div>
+        ))}
 
       {needsDate ? (
         <button

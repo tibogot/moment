@@ -14,6 +14,7 @@ import {
 import { gsap } from "@/lib/gsapConfig";
 import {
   removeFromCart,
+  setDeliveryAddress,
   setDeliveryDate,
   updateCartLine,
 } from "@/app/actions/cart";
@@ -27,6 +28,11 @@ import {
   setCart,
   subscribeCart,
 } from "@/lib/cart-store";
+import { AddressPanel } from "@/components/AddressPanel";
+import {
+  CheckoutNotice,
+  CheckoutNoticeAction,
+} from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { isBookable } from "@/lib/delivery";
 import { checkoutBlocker } from "@/lib/checkout";
@@ -37,6 +43,7 @@ import {
   formatLongDate,
   formatMoney,
 } from "@/lib/i18n/format";
+import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -83,7 +90,15 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const backdropRef = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [quote, setQuote] = useState<{ address: string; km: number } | null>(
+    null,
+  );
+  /**
+   * Which sub-view has taken over the panel body. A single value rather than a
+   * boolean each: two of these open at once is not a state worth being able to
+   * represent, and the header's title and back button read from it.
+   */
+  const [view, setView] = useState<"cart" | "date" | "address">("cart");
 
   // Quantities the customer has asked for but Shopify has not confirmed yet,
   // keyed by line id — 0 means the line is on its way out. These are what the
@@ -96,6 +111,12 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const queue = useRef<Promise<void>>(Promise.resolve());
 
   useOverlayScrollLock(open);
+
+  const leaveSubView = useCallback(() => {
+    setView("cart");
+    setError(null);
+    setQuote(null);
+  }, []);
 
   const closePanel = useCallback(() => {
     blurFocusWithin(panelRef.current);
@@ -120,8 +141,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     // inside a sub-view loses more than the customer asked to lose.
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      if (pickerOpen) {
-        setPickerOpen(false);
+      if (view !== "cart") {
+        leaveSubView();
         return;
       }
       closePanel();
@@ -129,7 +150,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, closePanel, pickerOpen]);
+  }, [open, closePanel, view, leaveSubView]);
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -150,7 +171,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       // customer mid-slide.
       tl.to(
         panel,
-        { xPercent: 100, onComplete: () => setPickerOpen(false) },
+        { xPercent: 100, onComplete: () => setView("cart") },
         0,
       );
       tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
@@ -279,6 +300,30 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const needsDate =
     blocker?.kind === "no-date" || blocker?.kind === "stale-date";
 
+  /**
+   * An address we can reach but cannot price — held apart from `error` because
+   * it is not a mistake to correct. Mirrors OrderPreferencesBar.
+   */
+  const chooseAddress = (value: string) => {
+    setError(null);
+    setQuote(null);
+
+    startTransition(async () => {
+      const result = await setDeliveryAddress(locale, value);
+
+      if (!result.ok) {
+        if ("needsQuote" in result) {
+          setQuote({ address: result.address, km: result.distanceKm });
+          return;
+        }
+        setError(dict.errors[result.code]);
+        return;
+      }
+      void refreshCart();
+      setView("cart");
+    });
+  };
+
   const chooseDate = (iso: string) => {
     setError(null);
     startTransition(async () => {
@@ -288,7 +333,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         return;
       }
       setCart(result.cart);
-      setPickerOpen(false);
+      setView("cart");
     });
   };
 
@@ -317,23 +362,25 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         <div>
           <div className="flex min-h-(--grid-band) items-center justify-between px-6">
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
-              {pickerOpen
+              {view === "date"
                 ? t.deliveryDateTitle
-                : `${t.title}${totalQuantity ? ` (${totalQuantity})` : ""}`}
+                : view === "address"
+                  ? t.addressTitle
+                  : `${t.title}${totalQuantity ? ` (${totalQuantity})` : ""}`}
             </p>
             <button
               type="button"
-              onClick={pickerOpen ? () => setPickerOpen(false) : closePanel}
+              onClick={view === "cart" ? closePanel : leaveSubView}
               className="font-owners-medium text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 md:text-(length:--nav-text)"
             >
-              {pickerOpen ? dict.common.back : dict.common.close}
+              {view === "cart" ? dict.common.close : dict.common.back}
             </button>
           </div>
           <div className="h-px bg-sky" aria-hidden />
         </div>
 
         <div className="flex-1 overflow-y-auto" data-lenis-prevent>
-          {pickerOpen && availability ? (
+          {view === "date" && availability ? (
             <>
               <p className="font-archivo-light px-6 pt-5 text-[15px] leading-normal">
                 {t.pickDayIntro}{" "}
@@ -358,6 +405,53 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 onSelect={chooseDate}
                 disabled={isPending}
               />
+            </>
+          ) : view === "address" ? (
+            <>
+              {error && (
+                <div className="px-6 pt-5">
+                  <CheckoutNotice tone="error" title={t.somethingWrong}>
+                    {error}
+                  </CheckoutNotice>
+                </div>
+              )}
+
+              {/* Too far to price rather than wrong: the sale is real, it just
+                  leaves the site and becomes an enquiry. Same panel as the
+                  product page raises, same wording. */}
+              {quote ? (
+                <div className="px-6 pt-5">
+                  <CheckoutNotice tone="blocker" title={dict.quote.heading}>
+                    {interpolate(dict.quote.body, {
+                      address: quote.address,
+                      km: quote.km,
+                      max: maxDeliveryDistanceKm(zones),
+                    })}
+                  </CheckoutNotice>
+                  <Link
+                    href={`${routes.contact}?occasion=Delivery&address=${encodeURIComponent(quote.address)}&km=${quote.km}`}
+                    onClick={closePanel}
+                    className="group mt-4 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+                  >
+                    <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+                      {dict.quote.cta}
+                      <span
+                        className="transition-transform duration-500 group-hover:translate-x-1.5"
+                        aria-hidden
+                      >
+                        &rarr;
+                      </span>
+                    </span>
+                  </Link>
+                </div>
+              ) : (
+                <AddressPanel
+                  current={cart?.deliveryAddress ?? null}
+                  onSelect={chooseAddress}
+                  saving={isPending}
+                  t={dict.orderBar}
+                />
+              )}
             </>
           ) : isEmpty ? (
             <p className="font-archivo-light px-6 py-10 text-[16px]">
@@ -446,7 +540,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           )}
         </div>
 
-        {!isEmpty && !pickerOpen && (
+        {!isEmpty && view === "cart" && (
           <div className="border-t border-sky">
             {/* The date has to be settled here. It travels to the order as a
                 cart attribute, and Shopify's hosted checkout gives the customer
@@ -464,7 +558,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     </span>
                     <button
                       type="button"
-                      onClick={() => setPickerOpen(true)}
+                      onClick={() => setView("date")}
                       className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
                     >
                       {t.change}
@@ -473,7 +567,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => setPickerOpen(true)}
+                    onClick={() => setView("date")}
                     className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
                   >
                     {dateIsStale ? t.pickAnother : t.pick}
@@ -482,17 +576,32 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               </div>
 
               {dateIsStale && deliveryDate && (
-                <p role="alert" className="font-archivo-light mt-2 text-[14px]">
+                <CheckoutNotice
+                  tone="blocker"
+                  title={t.beforeCheckout}
+                  className="mt-4"
+                  action={
+                    <CheckoutNoticeAction onClick={() => setView("date")}>
+                      {t.pickAnother}
+                    </CheckoutNoticeAction>
+                  }
+                >
                   {interpolate(t.staleDate, {
                     date: formatLongDate(locale, deliveryDate),
                   })}
-                </p>
+                </CheckoutNotice>
               )}
             </div>
 
             <div className="px-6 py-5">
               {error && (
-                <p className="font-archivo-light mb-3 text-[15px]">{error}</p>
+                <CheckoutNotice
+                  tone="error"
+                  title={t.somethingWrong}
+                  className="mb-4"
+                >
+                  {error}
+                </CheckoutNotice>
               )}
 
               <div className="flex items-baseline justify-between">
@@ -512,25 +621,41 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   takes the primary slot rather than disabling the button and
                   leaving the customer to work out why. */}
               {blocker?.kind === "below-minimum" && (
-                <p role="alert" className="font-archivo-light mt-3 text-[14px]">
+                <CheckoutNotice
+                  tone="blocker"
+                  title={t.beforeCheckout}
+                  className="mt-4"
+                >
                   {interpolate(t.belowMinimumShort, {
                     zone: blocker.zone.id,
                     minimum: formatMoney(locale, blocker.zone.minimumOrder),
                     shortfall: formatMoney(locale, blocker.shortfall),
                   })}
-                </p>
+                </CheckoutNotice>
               )}
 
+              {/* The remedy is the point. This used to read "add a delivery
+                  address on any product page" — a blocker the customer could
+                  only clear by leaving, on a page they had already left. */}
               {blocker?.kind === "no-address" && (
-                <p role="alert" className="font-archivo-light mt-3 text-[14px]">
+                <CheckoutNotice
+                  tone="blocker"
+                  title={t.beforeCheckout}
+                  className="mt-4"
+                  action={
+                    <CheckoutNoticeAction onClick={() => setView("address")}>
+                      {dict.orderBar.addAddress}
+                    </CheckoutNoticeAction>
+                  }
+                >
                   {t.noAddressShort}
-                </p>
+                </CheckoutNotice>
               )}
 
               {needsDate ? (
                 <button
                   type="button"
-                  onClick={() => setPickerOpen(true)}
+                  onClick={() => setView("date")}
                   className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">

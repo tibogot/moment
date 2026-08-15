@@ -14,8 +14,9 @@ import {
   setDeliveryDate,
   setDeliveryMethod,
 } from "@/app/actions/cart";
+import { AddressPanel } from "@/components/AddressPanel";
+import { CheckoutNotice } from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
-import type { AddressSearch } from "@/lib/address/provider";
 import {
   getAvailabilitySnapshot,
   getCartSnapshot,
@@ -26,11 +27,10 @@ import {
   subscribeCart,
 } from "@/lib/cart-store";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
-import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { closedWeekdaysNote, formatLongDate } from "@/lib/i18n/format";
 import {
   DELIVERY_METHODS,
-  MIN_ADDRESS_QUERY_LENGTH,
   needsAddress,
   type DeliveryMethod,
 } from "@/lib/order-preferences";
@@ -40,9 +40,6 @@ import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type Panel = "date" | "address" | "delivery";
-
-/** Long enough that typing a street does not fire a request per keystroke. */
-const SEARCH_DEBOUNCE_MS = 250;
 
 /**
  * The order preferences bar that sits at the top of a product page: the
@@ -304,38 +301,43 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
       </div>
 
       {error && (
-        <p role="alert" className="font-archivo-light mt-3 text-[18px]">
+        <CheckoutNotice
+          tone="error"
+          title={dict.cart.somethingWrong}
+          className="mt-3"
+        >
           {error}
-        </p>
+        </CheckoutNotice>
       )}
 
       {quote && (
-        <div role="alert" className="mt-3 border border-sky p-4">
-          <p className="font-owners-medium text-[12px] uppercase tracking-wide">
-            {dict.quote.heading}
-          </p>
-          <p className="font-archivo-light mt-2 text-[18px] leading-normal">
-            {interpolate(dict.quote.body, {
-              address: quote.address,
-              km: quote.km,
-              max: maxDeliveryDistanceKm(zones),
-            })}
-          </p>
-          <Link
-            href={`${routes.contact}?occasion=Delivery&address=${encodeURIComponent(quote.address)}&km=${quote.km}`}
-            className="group mt-4 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
-          >
-            <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-              {dict.quote.cta}
-              <span
-                className="transition-transform duration-500 group-hover:translate-x-1.5"
-                aria-hidden
-              >
-                &rarr;
+        <CheckoutNotice
+          tone="blocker"
+          title={dict.quote.heading}
+          className="mt-3"
+          action={
+            <Link
+              href={`${routes.contact}?occasion=Delivery&address=${encodeURIComponent(quote.address)}&km=${quote.km}`}
+              className="group mt-4 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+            >
+              <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+                {dict.quote.cta}
+                <span
+                  className="transition-transform duration-500 group-hover:translate-x-1.5"
+                  aria-hidden
+                >
+                  &rarr;
+                </span>
               </span>
-            </span>
-          </Link>
-        </div>
+            </Link>
+          }
+        >
+          {interpolate(dict.quote.body, {
+            address: quote.address,
+            km: quote.km,
+            max: maxDeliveryDistanceKm(zones),
+          })}
+        </CheckoutNotice>
       )}
     </div>
   );
@@ -418,138 +420,6 @@ function Segment({
           </p>
 
           {children}
-        </div>
-      )}
-    </div>
-  );
-}
-
-type AddressPanelProps = {
-  current: string | null;
-  onSelect: (value: string) => void;
-  saving: boolean;
-  t: Dictionary["orderBar"];
-};
-
-const NO_RESULTS: AddressSearch = { matches: [], streets: [] };
-
-function AddressPanel({ current, onSelect, saving, t }: AddressPanelProps) {
-  const [query, setQuery] = useState(current ?? "");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Results are stored with the query that produced them, so "are these still
-  // the right results?" is a comparison rather than a second piece of state
-  // that has to be cleared in step with this one.
-  const [results, setResults] = useState<{
-    query: string;
-    data: AddressSearch;
-  } | null>(null);
-
-  const trimmed = query.trim();
-  const shouldSearch =
-    trimmed.length >= MIN_ADDRESS_QUERY_LENGTH && trimmed !== current;
-
-  const data = results?.query === trimmed ? results.data : null;
-  const searching = shouldSearch && data === null;
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    if (!shouldSearch) return;
-
-    const controller = new AbortController();
-
-    const timer = setTimeout(async () => {
-      try {
-        const response = await fetch(
-          `/api/address?q=${encodeURIComponent(trimmed)}`,
-          { signal: controller.signal },
-        );
-
-        setResults({
-          query: trimmed,
-          data: response.ok
-            ? ((await response.json()) as AddressSearch)
-            : NO_RESULTS,
-        });
-      } catch {
-        // Aborted by the next keystroke — leave the state alone, the request
-        // replacing this one owns it now. Anything else settles as no results
-        // so the panel does not sit on "Checking…" forever.
-        if (!controller.signal.aborted) {
-          setResults({ query: trimmed, data: NO_RESULTS });
-        }
-      }
-    }, SEARCH_DEBOUNCE_MS);
-
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [trimmed, shouldSearch]);
-
-  const showEmpty = shouldSearch && data !== null && data.matches.length === 0;
-
-  return (
-    <div>
-      <div className="p-4">
-        {/* The overlay's own title already asks the question, so the field goes
-            without a second heading above it. */}
-        <input
-          ref={inputRef}
-          id="delivery-address"
-          type="text"
-          autoComplete="off"
-          aria-label={t.streetAndNumber}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t.addressPlaceholder}
-          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[18px] outline-none placeholder:opacity-40"
-        />
-        <p className="font-archivo-light mt-3 text-[18px] leading-normal opacity-70">
-          {t.addressHint}
-        </p>
-      </div>
-
-      {(searching || (data && data.matches.length > 0) || showEmpty) && (
-        <div
-          data-lenis-prevent
-          className="max-h-60 overflow-y-auto border-t border-sky"
-        >
-          {searching && (
-            <p className="font-archivo-light px-4 py-3 text-[18px] opacity-70">
-              {t.checking}
-            </p>
-          )}
-
-          {data?.matches.map((match) => (
-            <button
-              key={match.id}
-              type="button"
-              disabled={saving}
-              onClick={() => onSelect(match.label)}
-              className="font-archivo-light block w-full px-4 py-3 text-left text-[18px] wrap-break-word transition-colors hover:bg-sky/30 disabled:opacity-40"
-            >
-              {match.label}
-            </button>
-          ))}
-
-          {showEmpty && (
-            <div className="px-4 py-3">
-              <p className="font-archivo-light text-[18px]">
-                {t.noMatch}
-              </p>
-              {data.streets.length > 0 && (
-                <p className="font-archivo-light mt-2 text-[18px] opacity-70">
-                  {interpolate(t.didYouMean, {
-                    streets: data.streets.join(", "),
-                  })}
-                </p>
-              )}
-            </div>
-          )}
         </div>
       )}
     </div>

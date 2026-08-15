@@ -264,14 +264,17 @@
     "staleDate": "{date} is niet meer beschikbaar. Kies een andere dag.",
     "belowMinimum": "Zone {zone} heeft een minimumbedrag van {minimum}. Voeg {shortfall} toe om af te rekenen, of haal zelf op in het atelier.",
     "belowMinimumShort": "Zone {zone} heeft een minimumbedrag van {minimum}. Voeg {shortfall} toe om af te rekenen.",
-    "noAddress": "Voeg een leveradres toe op een productpagina om de kosten en het minimum van uw zone te zien.",
-    "noAddressShort": "Voeg een leveradres toe om de kosten en het minimum van uw zone te zien.",
+    "noAddress": "We hebben een bezorgadres nodig om uw kosten en het minimumbedrag van uw zone te berekenen.",
+    "noAddressShort": "We hebben een bezorgadres nodig om uw kosten en uw minimumbedrag te berekenen.",
     "deliveryDateTitle": "Leverdatum",
     "pickDayIntro": "Kies de dag van levering.",
     "note": "Aanwijzingen voor de levering",
     "notePlaceholder": "Aanbellen aan de receptie, derde verdieping, code 1234…",
     "noteSave": "Bewaren",
-    "noteSaved": "Bewaard"
+    "noteSaved": "Bewaard",
+    "beforeCheckout": "Voor u bestelt",
+    "somethingWrong": "Er ging iets mis",
+    "addressTitle": "Bezorgadres"
   },
   "shop": {
     "title": "Winkel",
@@ -326,7 +329,8 @@
     "traces": "Kan sporen bevatten van",
     "dietary": "Dieet",
     "servingInstructions": "Serveertips",
-    "storage": "Bewaren"
+    "storage": "Bewaren",
+    "orderPreferencesTitle": "Wanneer en hoe"
   },
   "errors": {
     "not_configured": "De winkel is nog niet geconfigureerd. Probeer het later opnieuw.",

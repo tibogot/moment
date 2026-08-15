@@ -104,7 +104,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             id="order-preferences"
             className="font-owners-narrow-bold text-[7vw] leading-[0.95] uppercase md:text-[min(2.2vw,3.4svh)]"
           >
-            {dict.product.orderPreferences}
+            {dict.product.orderPreferencesTitle}
           </h2>
 
           {/* No promise that the catalogue changes with these answers — it does

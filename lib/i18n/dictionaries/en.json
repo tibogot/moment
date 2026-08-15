@@ -264,14 +264,17 @@
     "staleDate": "{date} is no longer available. Please pick another day.",
     "belowMinimum": "Zone {zone} has a minimum order of {minimum}. Add {shortfall} to check out, or collect from the atelier instead.",
     "belowMinimumShort": "Zone {zone} has a minimum order of {minimum}. Add {shortfall} to check out.",
-    "noAddress": "Add a delivery address on any product page to see the fee and the minimum order for your zone.",
-    "noAddressShort": "Add a delivery address to see your zone’s fee and minimum order.",
+    "noAddress": "We need a delivery address to work out your fee and your zone's minimum order.",
+    "noAddressShort": "We need a delivery address to work out your fee and your minimum order.",
     "deliveryDateTitle": "Delivery date",
     "pickDayIntro": "Pick the day you want this delivered.",
     "note": "Delivery instructions",
     "notePlaceholder": "Ring at reception, third floor, door code 1234…",
     "noteSave": "Save",
-    "noteSaved": "Saved"
+    "noteSaved": "Saved",
+    "beforeCheckout": "Before you check out",
+    "somethingWrong": "Something went wrong",
+    "addressTitle": "Delivery address"
   },
   "shop": {
     "title": "Shop",
@@ -326,7 +329,8 @@
     "traces": "May contain traces of",
     "dietary": "Dietary",
     "servingInstructions": "Serving instructions",
-    "storage": "Storage"
+    "storage": "Storage",
+    "orderPreferencesTitle": "When and how"
   },
   "errors": {
     "not_configured": "The shop is not configured yet. Please try again later.",
