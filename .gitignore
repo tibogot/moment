@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# The template is the exception: it holds no values, and without it a fresh
+# clone has no way of knowing which variables the app reads.
+!.env.example
 
 # vercel
 .vercel
