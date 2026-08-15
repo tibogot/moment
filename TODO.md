@@ -8,7 +8,7 @@ It is not `SCOPE.md`, which argues the commercial case, and not
 built, what is stuck and on precisely what, and what can be worked on today
 without waiting for anybody.
 
-Last reviewed: **15 August 2026**, at commit `f19a404`.
+Last reviewed: **15 August 2026**, at commit `b3c81cd`.
 
 ---
 
@@ -47,9 +47,8 @@ one the client sees; the article work is last because it is the only one on this
 list that is really half-blocked on an answer.
 
 1. **The hero grid** — ½ day, decided, §4 has the arithmetic
-2. **TypeGen** — ½ day, invisible, stops the next silent `undefined`
-3. **Search suggestions from the collections** — a decision plus a small change
-4. **Articles: the link between translations** — needs one answer from the
+2. **Search suggestions from the collections** — a decision plus a small change
+3. **Articles: the link between translations** — needs one answer from the
    client first
 
 ### The hero grid
@@ -59,11 +58,24 @@ will actually see. **Half a day.** The decision is settled — see §4, which wa
 rewritten on 15 August after the arithmetic was redone and came out the other
 way round.
 
-### TypeGen
+### TypeGen: done
 
-Schema and queries are in one repo now, so it can finally enforce the schema ↔
-GROQ ↔ TypeScript contract that `sanity/README.md` describes in prose. Invisible
-to the client; it is what stops the next silent `undefined`.
+`npm run typegen` reads the schema and every query and writes
+`sanity.types.ts`; `lib/sanity/types.ts` derives the site's names from it, so no
+shape of Sanity data is hand-written any more. **Run it after touching a schema
+or a query.** `sanity/README.md` has the caveats — chiefly that a query TypeGen
+cannot see is a query it cannot check, and it only sees `defineQuery`.
+
+It found three mismatches on the first run, which is the argument for having
+done it:
+
+- **One type covered two different schemas.** The hand-written `SanityImage`
+  gave every image an optional `alt`, so `image.alt` could be read off the three
+  home page photographs, which have no such field. Harmless as it stood — those
+  panels pass `alt=""` deliberately — but only by luck.
+- **`PLACEHOLDER_MENUS` built slugs the API never returns**, `{ current }` with
+  no `_type`, in the data served when Sanity is unreachable.
+- **`PortableTextContent` claimed a stricter type than Sanity sends.**
 
 ### Search suggestions should come from the catalogue
 
