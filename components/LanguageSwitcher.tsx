@@ -3,22 +3,25 @@
 import { usePathname } from "next/navigation";
 import NextLink from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LOCALES, LOCALE_NAME, withLocale } from "@/lib/i18n/config";
+import { LOCALES, LOCALE_NAME } from "@/lib/i18n/config";
+import { translatedPath } from "@/lib/routes";
 import { rememberLocale } from "@/lib/i18n/remember-locale";
 import { useLocale, useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 
 /**
- * FR / NL / EN, each linking to the same page in that language.
+ * FR / NL / EN, each linking to the same page in that language — or to the
+ * nearest page that exists, which is not always the same thing. See
+ * `translatedPath`.
  *
  * Real links rather than a router push, so the switcher is crawlable and a
  * visitor can open a translation in a new tab. It uses `next/link` directly and
  * not `LocaleLink`: it is the one place that must target a language other than
  * the current one, which is exactly what that wrapper exists to prevent.
  *
- * `usePathname` gives the URL as the visitor sees it, prefix and all, so
- * `withLocale` swaps the language rather than stacking a second one on top.
+ * `usePathname` gives the URL as the visitor sees it, prefix and all, so the
+ * language is swapped rather than stacked a second time on top.
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
   const dict = useDictionary();
@@ -36,7 +39,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         return (
           <NextLink
             key={locale}
-            href={withLocale(pathname, locale)}
+            href={translatedPath(pathname, locale)}
             hrefLang={locale}
             lang={locale}
             onClick={() => rememberLocale(locale)}
@@ -163,7 +166,7 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
             return (
               <NextLink
                 key={locale}
-                href={withLocale(pathname, locale)}
+                href={translatedPath(pathname, locale)}
                 hrefLang={locale}
                 lang={locale}
                 onClick={() => rememberLocale(locale)}

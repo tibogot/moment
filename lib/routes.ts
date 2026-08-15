@@ -1,4 +1,4 @@
-import { withLocale, type Locale } from "@/lib/i18n/config";
+import { stripLocale, withLocale, type Locale } from "@/lib/i18n/config";
 
 /**
  * The routes below are language-agnostic: `/shop`, not `/fr/shop`. They are the
@@ -89,3 +89,28 @@ export const legalNav = [
   { key: "terms", href: routes.terms },
   { key: "shipping", href: routes.shipping },
 ] as const;
+
+/**
+ * Where the language switcher should send someone reading this path.
+ *
+ * Almost always the same page in the other language — menus carry their three
+ * languages in one document, and products and collections share a Shopify
+ * handle across all of them, so swapping the prefix lands on a real page.
+ *
+ * Articles are the exception, and it is a modelling decision rather than an
+ * oversight: long-form gets one document per language, so a French article and
+ * its Dutch counterpart are two documents with two different slugs, and nothing
+ * yet connects them. Swapping the prefix on an article URL produces a 404 every
+ * time. Until a translation reference exists the honest answer is the news
+ * index in the language asked for — we do not know where the translation is, or
+ * whether it was ever written.
+ *
+ * When that reference lands, this is where the real slug lookup replaces the
+ * fallback. See TODO.md §2.
+ */
+export function translatedPath(pathname: string, locale: Locale) {
+  const path = stripLocale(pathname);
+  const isArticle = path.startsWith(`${routes.news}/`);
+
+  return withLocale(isArticle ? routes.news : path, locale);
+}
