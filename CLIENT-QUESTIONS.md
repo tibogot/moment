@@ -210,7 +210,6 @@ invitation — the address is public, the contents are not.
 |---|---|
 | Catering menus | Menus traiteur |
 | News articles | Actualités |
-| Address, phone, email, opening hours, VAT and BCE numbers, social accounts | Coordonnées de l'entreprise |
 | The opening photograph and the two panels on the home page | Page d'accueil |
 
 **In the Shopify admin**, under Custom data → Metaobjects:
@@ -223,6 +222,23 @@ invitation — the address is public, the contents are not.
 | Zone fees, minimum orders, distance bands | `delivery_zone` |
 | The two-hour delivery windows | `delivery_slot` |
 | The kitchen's map coordinates | `delivery_settings` |
+
+**What is deliberately *not* in the Studio: your company details.** The
+address, phone, email, opening hours, VAT and BCE numbers used to be a screen in
+there called *Coordonnées de l'entreprise*. It was removed on 29 August 2026,
+once you had given us the real values.
+
+The reasoning: those facts change once every few years, and holding them in two
+places — the Studio and the site's own code — meant they could quietly drift
+apart. It also produced one genuinely bad behaviour: clearing a field in the
+Studio made the site fall back to the old value rather than showing nothing, so
+deleting a phone number did not delete it.
+
+The trade you are getting instead: **these are now a change we make, not one you
+make.** For an address or a VAT number that is the right way round — you would
+want us to look at it anyway. Send us the new value and it is live the same day.
+The Studio is now only things that genuinely change: menus, réalisations, news,
+and the home page images.
 
 Everything else — the page text, the remaining photographs, the legal pages,
 the layout — is still a code change on our side. That is a deliberate line, not
@@ -265,11 +281,11 @@ For your records. Everything below came out of the 29 August meeting.
 
 | | Where it lives now |
 |---|---|
-| Rue des Glands 21A, 1190 Forest | Studio → Coordonnées, and the built-in default |
-| 0472 35 51 53 | Studio → Coordonnées |
-| info@moment-lab.be | Studio → Coordonnées |
-| Every day 08:00–16:00 | Studio → Coordonnées → Heures d'ouverture |
-| BCE 1036.670.672 / TVA BE1036670672 | Studio → Mentions légales |
+| Rue des Glands 21A, 1190 Forest | In the code — tell us to change it |
+| 0472 35 51 53 | In the code |
+| info@moment-lab.be | In the code |
+| Every day 08:00–16:00 | In the code |
+| BCE 1036.670.672 / TVA BE1036670672 | In the code |
 | The four delivery bands | Built in; overridable in `delivery_zone` |
 | Free delivery over €300 | Built in; overridable in `delivery_settings` |
 | 48 hours' notice, 16:00 cut-off | Built in; overridable in `delivery_settings` |
@@ -277,6 +293,8 @@ For your records. Everything below came out of the 29 August meeting.
 | Collection 11:00–16:00 | Built in; overridable in `delivery_settings` |
 | The 24-hour cancellation policy | FAQ (×3 languages), terms, shipping |
 
-**Two we still need.** The **registered denomination** and the **legal form**
-(SRL, SA…). The legal notice prints "[to be completed]" for them, and Belgian
-law requires both on a commercial site.
+**Four we still need**, and all four are now "send them to us" rather than
+"type them in": the **registered denomination**, the **legal form** (SRL, SA…),
+and your **Instagram** and **Facebook** addresses. The legal notice prints
+"[to be completed]" for the first two, and Belgian law requires both on a
+commercial site.

@@ -9,10 +9,11 @@ import { DEFAULT_LOCALE, LOCALES } from "./i18n/config";
  * sitemap and the Shopify OAuth redirect, and a typo there takes the site off
  * the internet.
  *
- * `SiteDetails` is the company: address, phone, VAT, social accounts. Facts
- * about a business that its owners know and we do not, which is why they are
- * edited in the Studio and read through `getSiteDetails`. The values below are
- * what applies until they are.
+ * `SiteDetails` is the company: address, phone, VAT, social accounts. These
+ * lived in the Sanity Studio until 29 August 2026, on the reasoning that they
+ * are facts a business's owners know and we do not. They are hardcoded now —
+ * see the note on `SITE_DETAILS` for why that turned out to be the better
+ * trade.
  *
  * The languages are *not* restated here. They used to be, and the copy said
  * `defaultLocale: "en"` while `lib/i18n/config` said `fr` — so the JSON-LD told
@@ -86,7 +87,7 @@ export const siteIsIndexable =
 export type SiteLocale = (typeof siteConfig.locales)[number];
 
 /**
- * The company facts, as the owners maintain them in the Studio.
+ * The company's own facts.
  *
  * Everything is a string and everything may be empty. Empty is a real state
  * here — it means "not supplied yet" — and the places that render these already
@@ -128,24 +129,41 @@ export type SiteDetails = {
 };
 
 /**
- * What the site says about itself until the Studio says otherwise.
+ * The company's facts, as given by the owners on 29 August 2026. **The single
+ * source of truth — there is no CMS copy of any of this.**
  *
- * These stopped being placeholders on 29 August 2026: the address, phone,
- * email, enterprise number and hours below are the ones the owners gave us at
- * the first working meeting, so the fallback is now *correct* rather than
- * merely blank. The Studio still wins — these are what render before anyone has
- * opened it, and what render if a Sanity read fails.
+ * There used to be. A `siteSettings` singleton in the Studio held the same
+ * eleven fields, and `getSiteDetails` merged it over a set of defaults here.
+ * That was the right shape while the defaults were *blank* and the Studio was
+ * the only place an answer could come from. It stopped being the right shape
+ * the moment we knew the answers and wrote them down here too, because then the
+ * same fact lived in two places.
+ *
+ * It could not render two values at once — a non-empty Studio field won,
+ * otherwise this did — but that precedence rule bought one bug and no benefit:
+ * clear a phone number in the Studio and the empty string read as "not an
+ * answer", so the site went on showing the hardcoded one. An owner deleting a
+ * number and watching it stay on the site is indefensible, and it was a
+ * symptom, not the disease.
+ *
+ * So the CMS copy is gone. The cost, accepted knowingly: changing any of these
+ * is now a code change and a deploy rather than a field an owner can edit. For
+ * facts that move once every few years — an address, a VAT number, a legal
+ * form — that is the cheaper side of the trade, and the Studio is now only
+ * things that genuinely change: menus, news, the home page images.
  *
  * The BCE number 1036.670.672 is the enterprise number; the VAT number is the
  * same ten digits with `BE` in front, which is how Belgium works and why there
  * are two fields holding one fact.
  *
  * `companyName` and `legalForm` are still empty, and deliberately: nobody has
- * told us the registered denomination or whether it is an SRL. The legal page
- * prints "[to be completed]" rather than guessing, which is the correct
- * behaviour for a field the law requires to be exact.
+ * told us the registered denomination or whether it is an SRL. Same for the
+ * social accounts. The legal page prints "[to be completed]" rather than
+ * guessing, which is the correct behaviour for a field the law requires to be
+ * exact — and every consumer already drops a blank rather than printing a label
+ * with nothing after it. Fill them in here when they arrive.
  */
-export const DEFAULT_SITE_DETAILS: SiteDetails = {
+export const SITE_DETAILS: SiteDetails = {
   contact: {
     street: "Rue des Glands 21A",
     postalCode: "1190",

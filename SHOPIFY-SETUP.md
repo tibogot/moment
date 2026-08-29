@@ -79,11 +79,11 @@ new opening time against the default closing time is a window nobody chose.
 **The atelier address exists in two places, and they are not the same thing.**
 The *coordinates* below are here, in Shopify, because delivery pricing is
 measured from them. The *postal address* — street, postcode, city — is in the
-Sanity Studio under Company details, because it is printed on the legal page.
-Correcting one does not correct the other: move the atelier and both need
-changing, or the site will quote distances from the old building while printing
-the new address. There is no way to merge them without making the pricing depend
-on a second service being reachable.
+site's own code, because it is printed on the legal page and changes about as
+often as the company does. Correcting one does not correct the other: move the
+atelier and both need changing, or the site will quote distances from the old
+building while printing the new address. Tell us when you move and we will do
+both in the same sitting.
 
 **The atelier coordinates are the most important two numbers on this page.**
 Every zone from 2 outwards is a radius measured from them, so being a kilometre

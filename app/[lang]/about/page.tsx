@@ -17,8 +17,7 @@ import { StickyTitleSection } from "@/components/StickyTitleSection";
 import { toLocale, withLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary, type Dictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
-import { getSiteDetails } from "@/lib/sanity/queries";
-import type { SiteDetails } from "@/lib/site";
+import { SITE_DETAILS, type SiteDetails } from "@/lib/site";
 import { breadcrumbSchema, cateringBusinessSchema, graph } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
 
@@ -60,12 +59,9 @@ export default async function AboutPage({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const [dict, siteDetails] = await Promise.all([
-    getDictionary(locale),
-    getSiteDetails(),
-  ]);
+  const dict = await getDictionary(locale);
   const about = dict.about;
-  const jsonLd = aboutJsonLd(locale, dict, dict.meta.about, siteDetails);
+  const jsonLd = aboutJsonLd(locale, dict, dict.meta.about, SITE_DETAILS);
   return (
     <>
       <JsonLd data={jsonLd} />

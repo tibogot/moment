@@ -89,37 +89,6 @@ export type BlockContent = Array<
     }
 >;
 
-export type SiteSettings = {
-  _id: string;
-  _type: "siteSettings";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  contact?: {
-    street?: string;
-    postalCode?: string;
-    city?: string;
-    region?: string;
-    country?: string;
-    phone?: string;
-    email?: string;
-  };
-  hours?: {
-    opensAt?: string;
-    closesAt?: string;
-  };
-  legal?: {
-    companyName?: string;
-    enterpriseNumber?: string;
-    vatNumber?: string;
-    legalForm?: string;
-  };
-  socialLinks?: {
-    instagram?: string;
-    facebook?: string;
-  };
-};
-
 export type MenuReference = {
   _ref: string;
   _type: "reference";
@@ -429,7 +398,6 @@ export type AllSanitySchemaTypes =
   | ArticleReference
   | SanityImageAssetReference
   | BlockContent
-  | SiteSettings
   | MenuReference
   | PastEvent
   | SanityImageCrop
@@ -625,43 +593,6 @@ export type PastEventsQueryResult = Array<{
 }>;
 
 // Source: lib/sanity/queries.ts
-// Variable: siteDetailsQuery
-// Query: *[_id == "siteSettings"][0] {  contact,  hours,  legal,  socialLinks}
-export type SiteDetailsQueryResult =
-  | {
-      contact: null;
-      hours: null;
-      legal: null;
-      socialLinks: null;
-    }
-  | {
-      contact: {
-        street?: string;
-        postalCode?: string;
-        city?: string;
-        region?: string;
-        country?: string;
-        phone?: string;
-        email?: string;
-      } | null;
-      hours: {
-        opensAt?: string;
-        closesAt?: string;
-      } | null;
-      legal: {
-        companyName?: string;
-        enterpriseNumber?: string;
-        vatNumber?: string;
-        legalForm?: string;
-      } | null;
-      socialLinks: {
-        instagram?: string;
-        facebook?: string;
-      } | null;
-    }
-  | null;
-
-// Source: lib/sanity/queries.ts
 // Variable: homePageQuery
 // Query: *[_id == "homePage"][0] {  heroImage { ..., "lqip": asset->metadata.lqip },  eventsImage,  coffeeImage}
 export type HomePageQueryResult =
@@ -707,7 +638,6 @@ declare module "@sanity/client" {
     '*[_type == "menu" && slug.current == $slug][0] {\n  \n  _id,\n  title,\n  slug,\n  format,\n  summary,\n  pricePerPerson,\n  priceNote,\n  minGuests,\n  maxGuests,\n  leadTimeDays,\n  includes,\n  excludes,\n  dietaryNote,\n  image\n,\n  \n  courses[]{\n    _key,\n    title,\n    items\n  }\n\n}': MenuBySlugQueryResult;
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
     '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
-    '*[_id == "siteSettings"][0] {\n  contact,\n  hours,\n  legal,\n  socialLinks\n}': SiteDetailsQueryResult;
     '*[_id == "homePage"][0] {\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  eventsImage,\n  coffeeImage\n}': HomePageQueryResult;
   }
 }

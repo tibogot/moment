@@ -17,10 +17,11 @@ import {
 } from "@/lib/i18n/dictionaries";
 import { menuEnquiryMessage, resolveMenu } from "@/lib/menus";
 import { routes } from "@/lib/routes";
-import { getMenuBySlug, getSiteDetails } from "@/lib/sanity/queries";
+import { getMenuBySlug } from "@/lib/sanity/queries";
 import { getDeliveryRules } from "@/lib/shopify/zones";
 import { breadcrumbSchema, graph, organizationSchema } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
+import { SITE_DETAILS } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("contact", {
   path: routes.contact,
@@ -98,12 +99,10 @@ export default async function ContactPage({
   const { lang } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
-  const [initialValues, { availability, pickupWindow }, siteDetails] =
-    await Promise.all([
-      resolvePrefill(searchParams, dict, locale),
-      getDeliveryRules(),
-      getSiteDetails(),
-    ]);
+  const [initialValues, { availability, pickupWindow }] = await Promise.all([
+    resolvePrefill(searchParams, dict, locale),
+    getDeliveryRules(),
+  ]);
 
   return (
     <>
@@ -113,7 +112,7 @@ export default async function ContactPage({
             "@type": "ContactPage",
             url: absoluteUrl(withLocale(routes.contact, locale)),
             name: fullTitle(dict.nav.contact),
-            about: organizationSchema(siteDetails),
+            about: organizationSchema(SITE_DETAILS),
           },
           breadcrumbSchema(locale, [
             { name: dict.nav.home, path: routes.home },
@@ -135,7 +134,7 @@ export default async function ContactPage({
           were on the site only inside the legal notice and a FAQ answer. */}
       <ContactDetails
         t={dict.contact}
-        details={siteDetails}
+        details={SITE_DETAILS}
         pickupWindow={pickupWindow}
       />
 

@@ -25,7 +25,8 @@ import { routes } from "@/lib/routes";
 import { siteGraph } from "@/lib/schema";
 import { languageAlternates } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getHomePageImages, getSiteDetails } from "@/lib/sanity/queries";
+import { getHomePageImages } from "@/lib/sanity/queries";
+import { SITE_DETAILS } from "@/lib/site";
 import {
   getCollectionByHandle,
   getCollections,
@@ -71,7 +72,7 @@ export default async function Home({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const [collections, selectionCollections, availability, dict, siteDetails, images] =
+  const [collections, selectionCollections, availability, dict, images] =
     await Promise.all([
       getCollections(locale),
       Promise.all(
@@ -81,7 +82,6 @@ export default async function Home({
       ).then((items) => items.filter((item) => item !== null)),
       getDeliveryAvailability(),
       getDictionary(locale),
-      getSiteDetails(),
       getHomePageImages(),
     ]);
   const home = dict.home;
@@ -101,7 +101,7 @@ export default async function Home({
     <>
       {/* Defines the organisation, website and business nodes the rest of the
           site's structured data refers back to by @id. */}
-      <JsonLd data={siteGraph(siteDetails)} />
+      <JsonLd data={siteGraph(SITE_DETAILS)} />
 
       <Hero copy={home.hero} image={images.hero} />
       {/* The page's h1 lives here rather than in the hero — see IntroSection. */}

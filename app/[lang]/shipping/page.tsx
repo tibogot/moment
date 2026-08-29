@@ -5,10 +5,9 @@ import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
 import { toLocale } from "@/lib/i18n/config";
 import { formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
-import { getSiteDetails } from "@/lib/sanity/queries";
 import { localizedMetadata } from "@/lib/seo";
 import { getDeliveryRules } from "@/lib/shopify/zones";
-import { formatAddressLine } from "@/lib/site";
+import { formatAddressLine, SITE_DETAILS } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("shipping", {
   path: routes.shipping,
@@ -35,8 +34,7 @@ export default async function ShippingPage({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const [{ availability, zones, slots, pickupWindow }, siteDetails] =
-    await Promise.all([getDeliveryRules(), getSiteDetails()]);
+  const { availability, zones, slots, pickupWindow } = await getDeliveryRules();
 
   const cutoff = formatCutoffHour(availability.cutoffHour);
   const maxKm = maxDeliveryDistanceKm(zones);
@@ -49,7 +47,7 @@ export default async function ShippingPage({
       <LegalSection title="Delivery area and fees">
         <p>
           We deliver up to {maxKm} km from the atelier at{" "}
-          {formatAddressLine(siteDetails)}. The fee and the minimum order depend
+          {formatAddressLine(SITE_DETAILS)}. The fee and the minimum order depend
           on the distance:
         </p>
         <ul className="list-disc space-y-1 pl-5">
@@ -107,7 +105,7 @@ export default async function ShippingPage({
       <LegalSection title="Collection">
         <p>
           Orders can be collected from the atelier at{" "}
-          {formatAddressLine(siteDetails)}, free of charge and with no minimum
+          {formatAddressLine(SITE_DETAILS)}, free of charge and with no minimum
           order. Collection is available {formatWindow(pickupWindow)}.
         </p>
         <p>

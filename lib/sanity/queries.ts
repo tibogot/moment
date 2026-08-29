@@ -4,7 +4,6 @@ import type { Locale } from "../i18n/config";
 import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
 import type { PastEvent } from "../events";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
-import { DEFAULT_SITE_DETAILS, type SiteDetails } from "../site";
 
 const articleListFields = `
   _id,
@@ -255,97 +254,6 @@ export async function getPastEvents(limit?: number): Promise<PastEvent[]> {
     return typeof limit === "number" ? rows.slice(0, limit) : rows;
   } catch {
     return [];
-  }
-}
-
-/* --------------------------- Company details ----------------------------- */
-
-/**
- * The singleton company document. Pinned by id rather than matched by type, so
- * a second one created by accident cannot win the ordering and change the VAT
- * number on the legal page.
- */
-export const siteDetailsQuery = defineQuery(`*[_id == "siteSettings"][0] {
-  contact,
-  hours,
-  legal,
-  socialLinks
-}`);
-
-type SiteDetailsResponse = {
-  contact?: Partial<SiteDetails["contact"]> | null;
-  hours?: Partial<SiteDetails["hours"]> | null;
-  legal?: Partial<SiteDetails["legal"]> | null;
-  socialLinks?: Partial<SiteDetails["social"]> | null;
-};
-
-/**
- * A field the owners have actually answered.
- *
- * Sanity gives back `null` for a field that exists but was left alone, and the
- * Studio writes `""` when someone types into a box and deletes it again.
- * Neither is an answer, and neither must be allowed to blank out a default —
- * that is how "Brussels" becomes an empty line on the legal page.
- */
-function answered(value: string | undefined | null, fallback: string) {
-  const trimmed = value?.trim();
-  return trimmed ? trimmed : fallback;
-}
-
-function mergeSiteDetails(response: SiteDetailsResponse | null): SiteDetails {
-  const defaults = DEFAULT_SITE_DETAILS;
-  const { contact, hours, legal, socialLinks } = response ?? {};
-
-  return {
-    contact: {
-      street: answered(contact?.street, defaults.contact.street),
-      postalCode: answered(contact?.postalCode, defaults.contact.postalCode),
-      city: answered(contact?.city, defaults.contact.city),
-      region: answered(contact?.region, defaults.contact.region),
-      country: answered(contact?.country, defaults.contact.country),
-      phone: answered(contact?.phone, defaults.contact.phone),
-      email: answered(contact?.email, defaults.contact.email),
-    },
-    // Each half falls back on its own, unlike the atelier coordinates and the
-    // collection window. Those two are a *pair* — half a correction puts the
-    // kitchen in the wrong field — where an opening time and a closing time are
-    // independent facts, and an owner who changes only the closing time means
-    // exactly that.
-    hours: {
-      opensAt: answered(hours?.opensAt, defaults.hours.opensAt),
-      closesAt: answered(hours?.closesAt, defaults.hours.closesAt),
-    },
-    legal: {
-      companyName: answered(legal?.companyName, defaults.legal.companyName),
-      enterpriseNumber: answered(
-        legal?.enterpriseNumber,
-        defaults.legal.enterpriseNumber,
-      ),
-      vatNumber: answered(legal?.vatNumber, defaults.legal.vatNumber),
-      legalForm: answered(legal?.legalForm, defaults.legal.legalForm),
-    },
-    social: {
-      instagram: answered(socialLinks?.instagram, defaults.social.instagram),
-      facebook: answered(socialLinks?.facebook, defaults.social.facebook),
-    },
-  };
-}
-
-/**
- * Never throws. These are read by the root layout, so Sanity being unreachable
- * has to cost the site a phone number in the footer, not every page on it.
- */
-export async function getSiteDetails(): Promise<SiteDetails> {
-  try {
-    const response = await sanityClient.fetch<SiteDetailsResponse | null>(
-      siteDetailsQuery,
-      {},
-      sanityCache("siteSettings"),
-    );
-
-    return mergeSiteDetails(response);
-  } catch {
-    return DEFAULT_SITE_DETAILS;
   }
 }
 

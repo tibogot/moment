@@ -1,5 +1,4 @@
 import type { StructureResolver } from "sanity/structure";
-import { CogIcon } from "@sanity/icons/Cog";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { HomeIcon } from "@sanity/icons/Home";
 import { ImagesIcon } from "@sanity/icons/Images";
@@ -11,9 +10,16 @@ import { UsersIcon } from "@sanity/icons/Users";
  * The Studio's left-hand navigation.
  *
  * Written in the words the client uses on their own site, not in the words the
- * schema uses. "Articles / Categories / Authors / Site settings" is a list of
- * document types; "Menus / Actualités / Coordonnées" is a list of things a
- * caterer wants to change. The order is roughly how often each is touched.
+ * schema uses. "Articles / Categories / Authors" is a list of document types;
+ * "Menus / Réalisations / Actualités" is a list of things a caterer wants to
+ * change. The order is roughly how often each is touched.
+ *
+ * And that is the only test anything here has to pass. "Coordonnées de
+ * l'entreprise" used to sit at the bottom of this list, holding the address,
+ * the phone number and the VAT number. It came out on 29 August 2026: those
+ * change once every few years, they are now hardcoded in `lib/site.ts`, and a
+ * screen an owner will never open teaches them the rest of the Studio is
+ * decorative too.
  *
  * Categories and authors sit below a divider because they exist to support
  * articles rather than to be visited: someone looking for where to write a news
@@ -67,9 +73,9 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
 
       /**
-       * Both of these are pinned to a fixed document id, which is what makes
-       * them singletons: no "create new" button, no second copy competing to be
-       * read. The queries in `lib/sanity/queries.ts` look these ids up directly.
+       * Pinned to a fixed document id, which is what makes it a singleton: no
+       * "create new" button, no second copy competing to be read. The query in
+       * `lib/sanity/queries.ts` looks that id up directly.
        */
       S.listItem()
         .title("Page d'accueil")
@@ -79,15 +85,5 @@ export const structure: StructureResolver = (S) =>
             .schemaType("homePage")
             .documentId("homePage")
             .title("Page d'accueil"),
-        ),
-
-      S.listItem()
-        .title("Coordonnées de l'entreprise")
-        .icon(CogIcon)
-        .child(
-          S.document()
-            .schemaType("siteSettings")
-            .documentId("siteSettings")
-            .title("Coordonnées de l'entreprise"),
         ),
     ]);

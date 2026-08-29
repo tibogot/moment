@@ -2,14 +2,14 @@ import { Brand } from "@/components/Brand";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
-import { getSiteDetails } from "@/lib/sanity/queries";
+import { SITE_DETAILS } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("legal", {
   path: routes.legal,
 });
 
-export default async function LegalPage() {
-  const { contact, legal } = await getSiteDetails();
+export default function LegalPage() {
+  const { contact, legal } = SITE_DETAILS;
 
   return (
     <LegalDoc

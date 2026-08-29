@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import ScrollToTop from "@/components/ScrollToTop";
 import { InlineScript } from "@/components/InlineScript";
 import { LocaleProvider } from "@/components/LocaleProvider";
-import { SiteDetailsProvider } from "@/components/SiteDetailsProvider";
-import { getSiteDetails } from "@/lib/sanity/queries";
+
 import { clientDictionary, getDictionary } from "@/lib/i18n/dictionaries";
 import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -13,6 +12,7 @@ import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import { NavCatalogProvider } from "@/components/NavCatalogProvider";
 import { getCollections } from "@/lib/shopify/collections";
+import { SITE_DETAILS } from "@/lib/site";
 import { languageAlternates } from "@/lib/seo";
 import { isLocale, LOCALES, OG_LOCALE, type Locale } from "@/lib/i18n/config";
 import { siteConfig, siteIsIndexable } from "@/lib/site";
@@ -48,10 +48,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : "fr";
-  const [{ meta }, { legal }] = await Promise.all([
-    getDictionary(locale),
-    getSiteDetails(),
-  ]);
+  const { meta } = await getDictionary(locale);
+  const { legal } = SITE_DETAILS;
 
   return {
     // Lets pages declare canonical and Open Graph URLs as plain route paths.
@@ -125,10 +123,9 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [collections, dictionary, siteDetails] = await Promise.all([
+  const [collections, dictionary] = await Promise.all([
     getCollections(lang),
     getDictionary(lang),
-    getSiteDetails(),
   ]);
 
   /*
@@ -159,8 +156,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-svh flex flex-col">
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
-          <SiteDetailsProvider details={siteDetails}>
-            <SmoothScroll>
+          <SmoothScroll>
               <ScrollToTop />
               <NavCatalogProvider collections={navCollections}>
                 <Navbar />
@@ -169,8 +165,7 @@ export default async function RootLayout({
               <CookieConsent />
               <ConsentScripts />
               <PaletteToggle />
-            </SmoothScroll>
-          </SiteDetailsProvider>
+          </SmoothScroll>
         </LocaleProvider>
       </body>
     </html>

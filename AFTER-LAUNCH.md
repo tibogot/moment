@@ -74,11 +74,15 @@ yourself, in one of two places.
 
 **In the Sanity Studio** — `/studio` on the site, in French:
 
-- The catering menus, and the news articles
-- Your company details: address, phone, email, VAT and BCE numbers, social
-  accounts. These feed the legal page, the contact page and what Google is told
-  about the business — one place, everywhere at once
+- The catering menus, the réalisations, and the news articles
 - The home page's opening photograph and the two panels beneath it
+
+Your company details — address, phone, email, opening hours, VAT and BCE
+numbers — are deliberately *not* in there. They were until 29 August 2026, and
+came out once you had given us the real values: facts that change once every few
+years do not earn a screen, and holding them in the Studio *and* in the site's
+code meant the two could drift apart. Send us a change to any of them and it is
+live the same day.
 
 **In the Shopify admin:**
 

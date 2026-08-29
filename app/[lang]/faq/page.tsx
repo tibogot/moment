@@ -17,11 +17,10 @@ import {
 import { maxDeliveryDistanceKm, type ZoneTable } from "@/lib/delivery-zones";
 import { closedWeekdaysNote, formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
-import { getSiteDetails } from "@/lib/sanity/queries";
 import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/seo";
 import { getDeliveryRules } from "@/lib/shopify/zones";
-import { formatAddressLine } from "@/lib/site";
+import { formatAddressLine, SITE_DETAILS } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("faq", {
   path: routes.faq,
@@ -64,12 +63,8 @@ export default async function FaqPage({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const [dict, { availability, zones, slots, pickupWindow }, siteDetails] =
-    await Promise.all([
-      getDictionary(locale),
-      getDeliveryRules(),
-      getSiteDetails(),
-    ]);
+  const [dict, { availability, zones, slots, pickupWindow }] =
+    await Promise.all([getDictionary(locale), getDeliveryRules()]);
 
   // The notice period and the closed days are quoted here as well as applied by
   // the calendar, and a FAQ that contradicts the checkout is worse than no FAQ —
@@ -101,7 +96,7 @@ export default async function FaqPage({
       slots: slotSummary(slots),
       slotFull: dict.delivery.slotFull,
       pickupWindow: formatWindow(pickupWindow),
-      address: formatAddressLine(siteDetails),
+      address: formatAddressLine(SITE_DETAILS),
     }),
   }));
 

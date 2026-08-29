@@ -18,7 +18,7 @@ import { structure } from "@/sanity/structure";
  * one dataset while the site reads another is a failure that looks exactly like
  * "my changes are not showing up".
  */
-const SINGLETONS = ["siteSettings", "homePage"] as const;
+const SINGLETONS = ["homePage"] as const;
 
 export default defineConfig({
   name: "default",

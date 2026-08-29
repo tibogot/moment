@@ -15,7 +15,7 @@ import {
   type ContactFormState,
   type ContactValues,
 } from "@/lib/contact";
-import { useSiteDetails } from "@/components/SiteDetailsProvider";
+import { SITE_DETAILS } from "@/lib/site";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import { PRO_OCCASION, type ContactErrorCode } from "@/lib/contact";
@@ -197,9 +197,9 @@ export function ContactForm({
   const update = (field: ContactField) => (value: string) =>
     setValues((current) => ({ ...current, [field]: value }));
 
-  // Either may be empty until the owners fill the Studio in — the block that
-  // renders them is guarded on that, rather than printing an empty line.
-  const { email, phone } = useSiteDetails().contact;
+  // Either may still be empty — the block that renders them is guarded on
+  // that, rather than printing a label with nothing after it.
+  const { email, phone } = SITE_DETAILS.contact;
 
   return (
     <GridSection className="pb-[16svh]">

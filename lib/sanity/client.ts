@@ -27,7 +27,6 @@ export const sanityClient = createClient({
  * firing `author` is what tells them to.
  */
 export const SANITY_TAGS = [
-  "siteSettings",
   "homePage",
   "menu",
   "pastEvent",

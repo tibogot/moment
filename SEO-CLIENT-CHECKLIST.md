@@ -10,10 +10,16 @@ say "placeholder", and a few of them are legally required in Belgium. Every item
 below has a note on why it matters — the ones marked **BLOCKER** should be
 settled before the site goes live.
 
-**Most of this you can now fill in yourself.** The site has an editing interface
-at `/studio`, in French, and sections 1, 2, 3 and 5 are fields waiting there
-rather than things to send us. Where that is the case it says so, with the path
-to the screen. Nothing below needs technical knowledge.
+**Most of what this document used to ask for has arrived.** Sections 1, 2 and 3
+were answered at the 29 August meeting and are live on the site. What is left is
+marked as such, item by item.
+
+One change worth knowing about: your company details — address, phone, email,
+opening hours, VAT and BCE numbers — briefly had their own screen in the Studio.
+They no longer do. Facts that change once every few years do not earn a screen,
+and having them in two places meant they could drift apart. **Send us a change
+to any of them and it is live the same day.** The Studio is now menus,
+réalisations, news and the home page images.
 
 You can reply to this document inline.
 
@@ -37,10 +43,10 @@ and waiting for these values.
 > If the registered (company) address is different from the kitchen or the
 > coffee desk, we need **both**, and a note on which one the public should visit.
 
-**Where to put them:** `/studio` → **Coordonnées de l'entreprise** → the
-*Mentions légales* and *Contact* tabs. They appear on the site within a minute,
-with no deployment. Until they are filled in, the legal notice page prints
-"[to be completed]" where the numbers should be.
+**How to give them to us:** reply to this document, or email them. The BCE and
+VAT numbers and the address are already in and live. Until the denomination and
+legal form arrive, the legal notice page prints "[to be completed]" where they
+should be.
 
 **Why it matters:** without a verifiable address, Google will not rank you for
 "traiteur Brussels" or any other local search — location is the single strongest
@@ -57,7 +63,7 @@ address while pricing every delivery from the old one.
 
 ---
 
-## 2. Contact details — **received, worth entering in the Studio**
+## 2. Contact details — **received and live**
 
 | What we need | Notes | Status |
 |---|---|---|
@@ -66,19 +72,16 @@ address while pricing every delivery from the old one.
 | Opening hours | When a human answers, not when the van runs | every day 08:00–16:00, received 29 Aug |
 | Separate catering/events email? | Only if you want enquiries split | still open |
 
-**Where to put them:** `/studio` → **Coordonnées de l'entreprise** → *Contact*.
-The values above are already the site's built-in defaults, so the pages are
-correct today — entering them in the Studio is what lets you change them later
-without us.
+All three are live on the site today — the contact page, the legal notice, the
+footer, and what Google is told about the business.
 
 **Why it matters:** these are shown to Google as your official contact points and
 appear directly in search results and on Google Maps. A phone number that
 matches everywhere (site, Google, Instagram) measurably improves local ranking.
 
 These used to be blank, and a blank phone number is what the site showed rather
-than an invented one. They are no longer blank — but they are ours, in code,
-until you enter them in the Studio, and a number you cannot change without
-ringing us is not really yours.
+than an invented one. Nothing to do here any more — but if any of them changes,
+tell us rather than assuming we will notice.
 
 ---
 
@@ -87,11 +90,10 @@ ringing us is not really yours.
 **Every day, 08:00–16:00**, as given on 29 August 2026. These are on the contact
 page and declared to Google as your opening hours.
 
-Set them yourself at `/studio` → **Coordonnées de l'entreprise** → *Heures
-d'ouverture*. They are the hours a human answers the phone and the email —
-deliberately **not** the days the van runs, which change week to week and live
-in Shopify. Publishing a closure period as an opening hour is how a search result
-tells the world you are shut in August, all year.
+These are the hours a human answers the phone and the email — deliberately
+**not** the days the van runs, which change week to week and live in Shopify.
+Publishing a closure period as an opening hour is how a search result tells the
+world you are shut in August, all year. If your hours change, tell us.
 
 **What you can also set yourself**, in Shopify → Custom data → Metaobjects:
 
@@ -140,9 +142,9 @@ replace it.
 | LinkedIn (if you target companies) | |
 | Any others | |
 
-**Where to put them:** `/studio` → **Coordonnées de l'entreprise** → *Réseaux
-sociaux*. Full addresses, not handles. An account with no address is simply not
-shown, rather than linked to a dead page.
+**Send us the full addresses**, not the handles — `instagram.com/…`, not
+`@…`. An account with no address is simply not shown, rather than linked to a
+dead page, so the icons stay hidden until these arrive.
 
 **Why it matters:** these are declared to Google as officially yours, which links
 the accounts and the website into one recognised business entity.
@@ -322,10 +324,14 @@ If you can only deal with part of this now, do it in this order:
 
 ## What happens once you send this
 
-**Sections 1, 2, 3 and 5 are yours now.** They are fields in `/studio` and in
-the Shopify admin, and the site picks them up within a minute — no deployment,
-no waiting on us. That is the change since the last version of this document:
-the things you will want to correct most often are the ones you can reach.
+**Sections 1, 2 and 3 are answered and live.** What remains from them is the
+registered denomination, the legal form, and the social addresses in §5 — all
+things to send us rather than screens to fill in.
+
+**The delivery rules *are* yours**, in the Shopify admin: notice period, cut-off
+hour, closed days, zone fees, delivery windows, the free-delivery threshold.
+Those are the settings you will want to change most often, and they are the ones
+you can reach without us.
 
 **Sections 8 and 9** you have always been able to do yourselves, in Shopify and
 in the Studio.
