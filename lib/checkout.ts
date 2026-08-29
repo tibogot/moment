@@ -11,6 +11,7 @@
  */
 
 import { isBookable, type DeliveryAvailability } from "@/lib/delivery";
+import { parseSlotAttribute, type DeliverySlot } from "@/lib/delivery-slots";
 import {
   minimumOrderShortfall,
   zoneById,
@@ -25,6 +26,10 @@ export type CheckoutBlocker =
   | { kind: "no-date" }
   /** A day was chosen and has since closed, or fallen inside the lead time. */
   | { kind: "stale-date"; date: string }
+  /** Home delivery with no two-hour window chosen. */
+  | { kind: "no-slot" }
+  /** A window was chosen and the owners have since withdrawn it. */
+  | { kind: "stale-slot"; slot: string }
   /** Home delivery with nowhere to deliver to. */
   | { kind: "no-address" }
   /** The basket is short of the zone's minimum order. */
@@ -32,6 +37,8 @@ export type CheckoutBlocker =
 
 export type CheckoutState = {
   deliveryDate: string | null;
+  /** The stored label, as it came off the cart — see `Cart["deliverySlot"]`. */
+  deliverySlot: string | null;
   deliveryMethod: DeliveryMethod | null;
   deliveryAddress: string | null;
   deliveryZone: ZoneId | null;
@@ -54,6 +61,7 @@ export function checkoutBlocker(
   cart: CheckoutState,
   availability: DeliveryAvailability | null,
   zones: ZoneTable,
+  slots: DeliverySlot[],
 ): CheckoutBlocker | null {
   if (!cart.deliveryDate) return { kind: "no-date" };
 
@@ -64,7 +72,22 @@ export function checkoutBlocker(
     return { kind: "stale-date", date: cart.deliveryDate };
   }
 
+  // Collection is one long opening at the atelier rather than a booked window,
+  // so everything below — the window, the address, the fee and the floor — is
+  // about sending a van out, and none of it applies.
   if (!needsAddress(cart.deliveryMethod)) return null;
+
+  // The window is asked for before the address, matching the order the
+  // preferences bar asks in: what time on the day is a question about the
+  // order, where to is a question about the trip.
+  if (!cart.deliverySlot) return { kind: "no-slot" };
+
+  // A stored window the current table no longer holds — the owners changed
+  // their rounds while this cart sat in a cookie. Not a mistake the customer
+  // made, but not something the kitchen can honour either.
+  if (!parseSlotAttribute(slots, cart.deliverySlot)) {
+    return { kind: "stale-slot", slot: cart.deliverySlot };
+  }
 
   if (!cart.deliveryAddress) return { kind: "no-address" };
 

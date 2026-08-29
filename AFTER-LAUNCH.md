@@ -17,7 +17,7 @@ not ours.
 
 | Item | What it is | Rough cost |
 |---|---|---|
-| Domain name | `moment.be`, renewed yearly | ~€15/year |
+| Domain name | `moment-lab.be`, renewed yearly | ~€15/year |
 | Hosting | Where the site actually runs | free to ~€20/month depending on traffic |
 | Shopify plan | Products, checkout, payments, orders | your current plan |
 | Sanity | Where the editable content lives | free tier is likely enough |
@@ -189,11 +189,19 @@ included, not extra.
 
 ## 7. What we need from you to finish
 
-Some of this is already in `CLIENT-QUESTIONS.md`, and it is blocking:
+Most of this arrived at the 29 August 2026 meeting and is built. What is still
+outstanding:
 
-- The atelier's real street address — the delivery distances are currently
-  measured from the centre of 1190 Forest
-- Enterprise number, VAT number and legal form, for the legal pages
-- Public phone number and email
-- Delivery and collection hours per weekday
-- Instagram and Facebook addresses
+- **Registered denomination and legal form** (SRL, SA…), for the legal notice.
+  The BCE and VAT numbers are in
+- **Instagram and Facebook addresses** — full URLs, not account names
+- **DNS for `moment-lab.be`**, and whether you want `www` or the bare domain
+- Whether free delivery starts at **€300 or €250** — your notes say both, we
+  shipped €300
+- Which products count as **"douceurs"**, if you want the 24-hour collection
+  rule enforced rather than merely stated
+
+Already received and live: the atelier address (so delivery distances now
+measure from the real building), the phone number, the email, the opening hours,
+the delivery bands, the delivery windows, the order cut-off and the cancellation
+policy.

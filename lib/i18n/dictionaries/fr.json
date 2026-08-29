@@ -179,15 +179,23 @@
     "items": [
       {
         "q": "Où livrez-vous ?",
-        "a": "Nous livrons à Bruxelles et jusqu'à {max} km de notre atelier. Les frais et le minimum de commande dépendent de la distance : {zones}. Au-delà de {max} km, nous établissons un devis sur mesure."
+        "a": "Nous livrons jusqu'à {max} km de l'atelier, à Forest. Les frais et le minimum de commande dépendent de la distance : {zones}. À partir de {freeThreshold} de commande, la livraison est offerte, quelle que soit la zone. Au-delà de {max} km, nous établissons un devis sur mesure."
+      },
+      {
+        "q": "À quelle heure ma commande arrive-t-elle ?",
+        "a": "Vous choisissez un créneau de deux heures au moment de la commande : {slots}. {slotFull}"
       },
       {
         "q": "Combien de temps à l'avance faut-il commander ?",
-        "a": "Il nous faut {days} jours de préavis pour une livraison.{closedDays} Le calendrier du site n'affiche que les jours encore disponibles. Pour un événement, contactez-nous le plus tôt possible : les grandes dates partent vite."
+        "a": "Il nous faut {days} jours de préavis, et les commandes se clôturent à {cutoff} — passé cette heure, le préavis court à partir du lendemain.{closedDays} Le calendrier du site n'affiche que les jours encore disponibles. Pour un événement, contactez-nous le plus tôt possible : les grandes dates partent vite."
       },
       {
         "q": "Puis-je venir chercher ma commande ?",
-        "a": "Oui. Le retrait à l'atelier (1190 Forest) est proposé au moment de la commande, sans frais de livraison ni minimum. Choisissez « Click & collect » lors du choix de votre date."
+        "a": "Oui, à l'atelier, {address}, sans frais ni minimum de commande. Le retrait se fait de {pickupWindow}. Les douceurs peuvent être commandées jusqu'à {cutoff} la veille ; le reste suit le préavis habituel de {days} jours. Choisissez « Click & collect » lors du choix de votre date."
+      },
+      {
+        "q": "Puis-je annuler ma commande ?",
+        "a": "Oui, gratuitement jusqu'à 24 heures avant la date de livraison prévue : la commande est intégralement remboursée. En deçà de 24 heures, l'annulation ne peut en principe pas être remboursée, les produits étant frais et préparés spécifiquement pour votre commande. Si quelque chose ne va pas avec la livraison ou avec nos produits, appelez-nous immédiatement et nous trouverons une solution."
       },
       {
         "q": "Proposez-vous des options végétariennes, véganes ou sans gluten ?",
@@ -207,7 +215,13 @@
     "calendarNote": "Les jours en bleu sont fermés ou complets — il nous faut {days} jours de préavis.",
     "closedDays": "Nous ne livrons pas {closedDays}.",
     "dayArticle": "le ",
-    "unavailable": "Non disponible à la livraison"
+    "unavailable": "Non disponible à la livraison",
+    "slotTitle": "Créneau de livraison",
+    "slotIntro": "Choisissez le créneau de deux heures qui vous convient.",
+    "slotFull": "Créneau complet ? Contactez-nous ! Selon votre localisation et notre itinéraire, nous pourrons peut-être vous ajouter à une tournée déjà planifiée.",
+    "cutoffNote": "Les commandes se clôturent à {cutoff}. Passé cette heure, le préavis de {days} jours court à partir de demain.",
+    "pastCutoffNote": "L'heure limite de {cutoff} est passée pour aujourd'hui : la première livraison possible est décalée d'un jour.",
+    "pickupWindow": "Le retrait se fait de {window} à l'atelier."
   },
   "deliveryMethods": {
     "delivery": {
@@ -238,7 +252,11 @@
     "noMatch": "Aucune adresse belge ne correspond.",
     "didYouMean": "Vouliez-vous dire {streets} ? Ajoutez un numéro.",
     "loadingDays": "Chargement des jours disponibles…",
-    "selectedDate": "Date de livraison choisie"
+    "selectedDate": "Date de livraison choisie",
+    "slot": "Créneau",
+    "selectSlot": "Choisir un créneau",
+    "chooseSlotTitle": "Choisissez un créneau de livraison",
+    "selectedSlot": "Créneau de livraison choisi"
   },
   "cart": {
     "title": "Panier",
@@ -274,7 +292,15 @@
     "noteSaved": "Enregistré",
     "beforeCheckout": "Avant de commander",
     "somethingWrong": "Un problème est survenu",
-    "addressTitle": "Adresse de livraison"
+    "addressTitle": "Adresse de livraison",
+    "slot": "Créneau",
+    "deliverySlotTitle": "Créneau de livraison",
+    "pickSlotIntro": "Choisissez le créneau de deux heures qui vous convient.",
+    "chooseSlot": "Choisir un créneau de livraison",
+    "staleSlot": "{slot} n'est plus proposé. Merci de choisir un autre créneau.",
+    "freeDelivery": "Offerte",
+    "freeDeliveryReached": "La livraison vous est offerte — votre commande dépasse {threshold}.",
+    "freeDeliveryShortfall": "Ajoutez {shortfall} et la livraison vous est offerte."
   },
   "shop": {
     "title": "Boutique",
@@ -339,7 +365,8 @@
     "unknown_method": "Option de livraison inconnue.",
     "no_cart": "Panier introuvable.",
     "cart_failed": "Nous n'avons pas pu mettre votre panier à jour. Merci de réessayer.",
-    "generic": "Une erreur est survenue."
+    "generic": "Une erreur est survenue.",
+    "slot_unavailable": "Ce créneau n'est plus disponible. Merci d'en choisir un autre."
   },
   "quote": {
     "heading": "Au-delà de notre zone de livraison",
@@ -409,7 +436,11 @@
     "phonePlaceholder": "+32",
     "datePlaceholder": "14 mars",
     "guestsPlaceholder": "25, ou 20–30",
-    "messagePlaceholder": "Un déjeuner pour un conseil d'administration, des régimes particuliers, un budget à respecter — tout ce que vous savez déjà."
+    "messagePlaceholder": "Un déjeuner pour un conseil d'administration, des régimes particuliers, un budget à respecter — tout ce que vous savez déjà.",
+    "hoursTitle": "Nous joindre",
+    "hours": "Tous les jours, de {hours}, par téléphone et par e-mail.",
+    "addressTitle": "L'atelier",
+    "pickupNote": "Retrait sur rendez-vous, de {window}."
   },
   "proAccount": {
     "title": "Compte professionnel",
@@ -613,6 +644,24 @@
     "apero": "Apéro",
     "buffet": "Buffet",
     "seated": "Dîner assis"
+  },
+  "eventOccasions": {
+    "reception": "Réception",
+    "launch": "Lancement",
+    "seminar": "Séminaire",
+    "businessLunch": "Lunch d'entreprise",
+    "teamBuilding": "Team building",
+    "staffParty": "Fête du personnel",
+    "privateDinner": "Dîner privé",
+    "celebration": "Fête de famille",
+    "wedding": "Mariage",
+    "communion": "Communion",
+    "funeral": "Réception funéraire"
+  },
+  "events": {
+    "guestsOne": "{count} personne",
+    "guestsMany": "{count} personnes",
+    "guestRange": "de {min} à {max} personnes"
   },
   "menus": {
     "lead": "Ce que nous cuisinons, au prix par personne. Chaque formule ci-dessous est un point de départ — nous adaptons les plats à la saison, au lieu et à ceux qui mangent.",

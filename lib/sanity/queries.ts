@@ -2,6 +2,7 @@ import { defineQuery } from "next-sanity";
 import { sanityClient, sanityCache } from "./client";
 import type { Locale } from "../i18n/config";
 import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
+import type { PastEvent } from "../events";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
 import { DEFAULT_SITE_DETAILS, type SiteDetails } from "../site";
 
@@ -185,6 +186,78 @@ export async function getMenuBySlug(slug: string): Promise<Menu | null> {
   }
 }
 
+/* ----------------------------- Past events -------------------------------- */
+
+/**
+ * `images` comes back whole rather than projected field by field: the page
+ * needs `asset`, `hotspot` and `crop` for `urlFor()` to honour the crop the
+ * client set, and `alt`, and `_key` for the React key. Naming them individually
+ * would be the same list with more chances to forget one.
+ *
+ * Both references are dereferenced to the least that is useful. `language` is
+ * projected off the article because an article exists in one language only —
+ * see `articlesQuery` above — so a French write-up must not surface as a link
+ * on the Dutch page.
+ */
+const pastEventFields = `
+  _id,
+  occasion,
+  guests,
+  commune,
+  venue,
+  date,
+  client,
+  note,
+  featured,
+  images,
+  menu->{ title, "slug": slug.current },
+  article->{ title, language, "slug": slug.current }
+`;
+
+/**
+ * `coalesce(featured, false)` rather than a bare `featured desc`: GROQ's total
+ * ordering puts null after false when descending, so an event saved before the
+ * boolean had a default would jump behind every unfeatured one regardless of
+ * its date.
+ *
+ * The `defined()` guard is for the same class of problem. The schema requires a
+ * photograph, but validation lives in the Studio, and a document that reached
+ * the dataset another way would otherwise render a caption with a hole where
+ * the picture goes.
+ */
+export const pastEventsQuery = defineQuery(`*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {
+  ${pastEventFields}
+}`);
+
+/**
+ * The events we have already catered, newest first, pinned ones ahead of them.
+ *
+ * Returns `[]` when there are none and `[]` when Sanity is unreachable, and the
+ * distinction is deliberately not offered to the caller: the page renders
+ * nothing in either case. There is no placeholder set here, unlike menus — a
+ * stand-in menu shows a shape the client can correct, while a stand-in
+ * reference is a claim to have catered an event that never happened.
+ *
+ * `limit` is applied here rather than in GROQ so the count lives next to the
+ * page that chose it.
+ */
+export async function getPastEvents(limit?: number): Promise<PastEvent[]> {
+  try {
+    const events = await sanityClient.fetch<PastEvent[]>(
+      pastEventsQuery,
+      {},
+      // Tagged with what it dereferences as well as what it selects: renaming a
+      // menu has to rebuild the pages that print its name.
+      sanityCache("pastEvent", "menu", "article"),
+    );
+
+    const rows = events ?? [];
+    return typeof limit === "number" ? rows.slice(0, limit) : rows;
+  } catch {
+    return [];
+  }
+}
+
 /* --------------------------- Company details ----------------------------- */
 
 /**
@@ -194,12 +267,14 @@ export async function getMenuBySlug(slug: string): Promise<Menu | null> {
  */
 export const siteDetailsQuery = defineQuery(`*[_id == "siteSettings"][0] {
   contact,
+  hours,
   legal,
   socialLinks
 }`);
 
 type SiteDetailsResponse = {
   contact?: Partial<SiteDetails["contact"]> | null;
+  hours?: Partial<SiteDetails["hours"]> | null;
   legal?: Partial<SiteDetails["legal"]> | null;
   socialLinks?: Partial<SiteDetails["social"]> | null;
 };
@@ -219,7 +294,7 @@ function answered(value: string | undefined | null, fallback: string) {
 
 function mergeSiteDetails(response: SiteDetailsResponse | null): SiteDetails {
   const defaults = DEFAULT_SITE_DETAILS;
-  const { contact, legal, socialLinks } = response ?? {};
+  const { contact, hours, legal, socialLinks } = response ?? {};
 
   return {
     contact: {
@@ -230,6 +305,15 @@ function mergeSiteDetails(response: SiteDetailsResponse | null): SiteDetails {
       country: answered(contact?.country, defaults.contact.country),
       phone: answered(contact?.phone, defaults.contact.phone),
       email: answered(contact?.email, defaults.contact.email),
+    },
+    // Each half falls back on its own, unlike the atelier coordinates and the
+    // collection window. Those two are a *pair* — half a correction puts the
+    // kitchen in the wrong field — where an opening time and a closing time are
+    // independent facts, and an owner who changes only the closing time means
+    // exactly that.
+    hours: {
+      opensAt: answered(hours?.opensAt, defaults.hours.opensAt),
+      closesAt: answered(hours?.closesAt, defaults.hours.closesAt),
     },
     legal: {
       companyName: answered(legal?.companyName, defaults.legal.companyName),

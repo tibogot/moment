@@ -75,6 +75,38 @@ export const siteSettings = defineType({
     }),
 
     defineField({
+      name: "hours",
+      title: "Heures d'ouverture",
+      type: "object",
+      group: "contact",
+      options: { collapsible: false },
+      description:
+        "Les heures auxquelles quelqu'un répond, au téléphone et par e-mail. Ce ne sont pas les jours de livraison — ceux-là se règlent dans Shopify — ni l'horaire de retrait à l'atelier.",
+      fields: [
+        defineField({
+          name: "opensAt",
+          title: "Ouverture",
+          type: "string",
+          description: "Sur 24 heures, par exemple 08:00.",
+          validation: (rule) =>
+            rule
+              .regex(/^([01]\d|2[0-3]):[0-5]\d$/, { name: "HH:MM" })
+              .warning("Écrivez l'heure sous la forme 08:00."),
+        }),
+        defineField({
+          name: "closesAt",
+          title: "Fermeture",
+          type: "string",
+          description: "Sur 24 heures, par exemple 16:00.",
+          validation: (rule) =>
+            rule
+              .regex(/^([01]\d|2[0-3]):[0-5]\d$/, { name: "HH:MM" })
+              .warning("Écrivez l'heure sous la forme 16:00."),
+        }),
+      ],
+    }),
+
+    defineField({
       name: "legal",
       title: "Mentions légales",
       type: "object",

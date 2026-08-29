@@ -13,15 +13,19 @@ import {
   setDeliveryAddress,
   setDeliveryDate,
   setDeliveryMethod,
+  setDeliverySlot,
 } from "@/app/actions/cart";
 import { AddressPanel } from "@/components/AddressPanel";
 import { CheckoutNotice } from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
+import { DeliverySlotPicker } from "@/components/DeliverySlotPicker";
 import {
   getAvailabilitySnapshot,
   getCartSnapshot,
+  getPickupWindowSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
+  getSlotsSnapshot,
   getZonesSnapshot,
   notifyCartUpdated,
   subscribeCart,
@@ -35,11 +39,18 @@ import {
   type DeliveryMethod,
 } from "@/lib/order-preferences";
 import { LocaleLink as Link } from "@/components/LocaleLink";
+import {
+  formatSlot,
+  formatWindow,
+  parseSlotAttribute,
+  slotId,
+  type DeliverySlot,
+} from "@/lib/delivery-slots";
 import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
-type Panel = "date" | "address" | "delivery";
+type Panel = "date" | "slot" | "address" | "delivery";
 
 /**
  * The order preferences bar that sits at the top of a product page: the
@@ -78,6 +89,16 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     getZonesSnapshot,
     getZonesSnapshot,
   );
+  const slots = useSyncExternalStore(
+    subscribeCart,
+    getSlotsSnapshot,
+    getSlotsSnapshot,
+  );
+  const pickupWindow = useSyncExternalStore(
+    subscribeCart,
+    getPickupWindowSnapshot,
+    getPickupWindowSnapshot,
+  );
 
   const [panel, setPanel] = useState<Panel | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -97,6 +118,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
   // few hundred milliseconds later. Once the cart catches up the two agree.
   const [draft, setDraft] = useState<{
     date?: string;
+    slot?: string;
     method?: DeliveryMethod;
     address?: string;
   }>({});
@@ -104,6 +126,15 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
   const deliveryDate = draft.date ?? cart?.deliveryDate ?? null;
   const deliveryMethod = draft.method ?? cart?.deliveryMethod ?? null;
   const deliveryAddress = draft.address ?? cart?.deliveryAddress ?? null;
+
+  // Resolved against the windows the shop is offering *now*, not simply
+  // printed. A cart can be a fortnight old — the cookie lasts that long — and a
+  // window the owners have since withdrawn has to read as no choice made, so
+  // the customer is asked again rather than shown a slot that no longer runs.
+  const deliverySlot = parseSlotAttribute(
+    slots,
+    draft.slot ?? cart?.deliverySlot ?? null,
+  );
 
   const closePanel = useCallback(() => {
     setPanel(null);
@@ -157,13 +188,32 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     });
   };
 
+  const chooseSlot = (slot: DeliverySlot) => {
+    setError(null);
+
+    startTransition(async () => {
+      const result = await setDeliverySlot(locale, slotId(slot));
+      if (!result.ok) {
+        setDraft((current) => ({ ...current, slot: undefined }));
+        setError(dict.errors[result.code]);
+        return;
+      }
+      // The server's canonical label, not the one we guessed at: the attribute
+      // it wrote is what the cart will read back.
+      setDraft((current) => ({ ...current, slot: formatSlot(result.slot) }));
+      notifyCartUpdated();
+      closePanel();
+    });
+  };
+
   const chooseMethod = (method: DeliveryMethod) => {
     setDraft((current) => ({
       ...current,
       method,
-      // Switching to collection drops the address on the server, so the segment
-      // must not keep showing a stale one.
+      // Switching to collection drops the address *and the window* on the
+      // server, so neither segment may keep showing a stale one.
       address: method === "pickup" ? undefined : current.address,
+      slot: method === "pickup" ? undefined : current.slot,
     }));
     setError(null);
 
@@ -207,6 +257,10 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
   };
 
   const addressDisabled = !needsAddress(deliveryMethod);
+  // Collection is one long opening rather than a booked window, so the segment
+  // stops being a question and starts being an answer: it shows the atelier's
+  // hours instead of offering a choice that would mean nothing.
+  const slotDisabled = deliveryMethod === "pickup";
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
@@ -239,6 +293,34 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
               {t.loadingDays}
             </p>
           )}
+        </Segment>
+
+        <Divider />
+
+        <Segment
+          label={t.slot}
+          title={t.chooseSlotTitle}
+          value={
+            slotDisabled
+              ? formatWindow(pickupWindow)
+              : deliverySlot
+                ? formatSlot(deliverySlot)
+                : null
+          }
+          placeholder={t.selectSlot}
+          open={panel === "slot"}
+          onToggle={() => togglePanel("slot")}
+          disabled={slotDisabled}
+          disabledHint={interpolate(dict.delivery.pickupWindow, {
+            window: formatWindow(pickupWindow),
+          })}
+        >
+          <DeliverySlotPicker
+            slots={slots}
+            value={deliverySlot}
+            onSelect={chooseSlot}
+            disabled={isPending}
+          />
         </Segment>
 
         <Divider />

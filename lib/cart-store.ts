@@ -3,6 +3,12 @@
 // refreshes whenever a `cart-updated` event fires.
 
 import type { DeliveryAvailability } from "@/lib/delivery";
+import {
+  DEFAULT_DELIVERY_SLOTS,
+  DEFAULT_PICKUP_WINDOW,
+  type DeliverySlot,
+  type PickupWindow,
+} from "@/lib/delivery-slots";
 import { DEFAULT_ZONE_TABLE, type ZoneTable } from "@/lib/delivery-zones";
 import type { Cart } from "@/lib/shopify/cart";
 
@@ -14,6 +20,10 @@ let availability: DeliveryAvailability | null = null;
  * same one the server falls back to. It is replaced, not filled in.
  */
 let zones: ZoneTable = DEFAULT_ZONE_TABLE;
+/** Never null either, and for the same reason: a window picker with nothing in
+ * it is a dead end, and the built-in three are what the server falls back to. */
+let slots: DeliverySlot[] = DEFAULT_DELIVERY_SLOTS;
+let pickupWindow: PickupWindow = DEFAULT_PICKUP_WINDOW;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
 let refetchQueued = false;
@@ -51,10 +61,17 @@ function fetchCart(): Promise<void> {
         cart: Cart | null;
         availability: DeliveryAvailability | null;
         zones?: ZoneTable;
+        slots?: DeliverySlot[];
+        pickupWindow?: PickupWindow;
       };
       cart = data.cart;
       availability = data.availability;
       if (data.zones) zones = data.zones;
+      // Guarded on length as well as presence: an empty array would empty the
+      // picker, and "the shop configured no windows" is a state the server
+      // already resolves to the defaults rather than passing on.
+      if (data.slots?.length) slots = data.slots;
+      if (data.pickupWindow) pickupWindow = data.pickupWindow;
     } catch {
       // Keep the last known cart on network errors.
     } finally {
@@ -108,6 +125,16 @@ export function getServerAvailabilitySnapshot(): DeliveryAvailability | null {
  */
 export function getZonesSnapshot(): ZoneTable {
   return zones;
+}
+
+/** The delivery windows, on the same terms as the zone table above. */
+export function getSlotsSnapshot(): DeliverySlot[] {
+  return slots;
+}
+
+/** When the atelier is open for collection. Same terms again. */
+export function getPickupWindowSnapshot(): PickupWindow {
+  return pickupWindow;
 }
 
 export function refreshCart(): Promise<void> {

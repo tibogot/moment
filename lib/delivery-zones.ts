@@ -29,20 +29,21 @@ export type Coordinates = { latitude: number; longitude: number };
 /**
  * Where the trip starts.
  *
- * Every zone from 2 outwards is measured from this point, so a placeholder off
- * by a kilometre pushes customers near a band edge into the wrong fee and the
- * wrong minimum order. This is the centroid of 1190 Forest — the right commune
- * and the wrong building — and it stands until the atelier's real coordinates
- * are set in the Shopify admin.
+ * Every band is measured from this point, so a placeholder off by a kilometre
+ * pushes customers near a band edge into the wrong fee and the wrong minimum
+ * order. This is no longer a placeholder: it is Rue des Glands 21A, 1190
+ * Forest, geocoded from the address the owners gave on 29 August 2026. The
+ * Shopify admin can still override it — an atelier that moves is a settings
+ * change, not a deployment — but it no longer *has* to.
  */
 export const DEFAULT_ATELIER: Coordinates = {
-  latitude: 50.8118,
-  longitude: 4.3245,
+  latitude: 50.81976,
+  longitude: 4.32657,
 };
 
 /**
- * Not a literal union any more. The bands come from the admin, so how many
- * there are is the owners' business, not the type system's.
+ * Not a literal union. The bands come from the admin, so how many there are is
+ * the owners' business, not the type system's.
  */
 export type ZoneId = number;
 
@@ -54,7 +55,8 @@ export type DeliveryZone = {
   minimumOrder: number;
   /**
    * Upper bound of the band, inclusive, in kilometres from the atelier. Null
-   * for zone 1, which is an administrative area rather than a radius.
+   * marks an administrative zone — an area rather than a radius — which the
+   * current table does not use. See `resolveDeliveryZone`.
    */
   maxDistanceKm: number | null;
 };
@@ -66,18 +68,46 @@ export type DeliveryZone = {
  */
 export type ZoneTable = {
   atelier: Coordinates;
-  /** Ordered: the administrative zone first, then the bands, nearest out. */
+  /** Ordered: any administrative zone first, then the bands, nearest out. */
   zones: DeliveryZone[];
+  /**
+   * Basket value at which the trip stops being charged, in euros. See
+   * `freeDeliveryShortfall` for what this does and does not promise.
+   */
+  freeDeliveryThreshold: number;
 };
 
-/** The client's table, verbatim. Zone 1 is "Bruxelles" — a region, not a distance. */
+/**
+ * Spend this much and the delivery is free, whatever band the address is in.
+ *
+ * The owners' notes gave this twice and gave two different numbers — €300 under
+ * the zone table, €250 under the fees heading. €300 is the confirmed one; the
+ * €250 line was an earlier draft. It is a setting in the Shopify admin because
+ * it is exactly the sort of number a caterer moves for a season.
+ */
+export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
+
+/**
+ * The client's table, as given on 29 August 2026. Four priced bands measured
+ * from the atelier, and a fifth case — beyond the last band — quoted by hand
+ * rather than priced on the site.
+ *
+ * This replaced a table whose first zone was "Bruxelles", an administrative
+ * area rather than a radius. Worth saying out loud to the client, because it
+ * moves real customers: Forest sits in the south-west of the Region, so the
+ * north-east of Brussels — Haren, Neder-Over-Heembeek, parts of Woluwe — is now
+ * 11–14 km out and lands in band 2 at €15 with a €125 minimum, where the old
+ * table gave every Brussels address €10 and a €100 minimum. That is what a
+ * distance table does; it is not a bug, but nobody has confirmed they want it.
+ */
 export const DEFAULT_ZONE_TABLE: ZoneTable = {
   atelier: DEFAULT_ATELIER,
+  freeDeliveryThreshold: DEFAULT_FREE_DELIVERY_THRESHOLD,
   zones: [
-    { id: 1, fee: 10, minimumOrder: 100, maxDistanceKm: null },
-    { id: 2, fee: 15, minimumOrder: 125, maxDistanceKm: 15 },
-    { id: 3, fee: 25, minimumOrder: 150, maxDistanceKm: 30 },
-    { id: 4, fee: 35, minimumOrder: 200, maxDistanceKm: 50 },
+    { id: 1, fee: 10, minimumOrder: 100, maxDistanceKm: 10 },
+    { id: 2, fee: 15, minimumOrder: 125, maxDistanceKm: 25 },
+    { id: 3, fee: 30, minimumOrder: 150, maxDistanceKm: 50 },
+    { id: 4, fee: 50, minimumOrder: 200, maxDistanceKm: 70 },
   ],
 };
 
@@ -102,6 +132,13 @@ export function maxDeliveryDistanceKm(table: ZoneTable) {
  *
  * Postcode rather than the geocoder's own region field because it is offline,
  * deterministic, and does not change shape when the address provider does.
+ *
+ * Nothing in the current table exercises this — the client's bands are all
+ * radial. It stays because the administrative zone is a shape the Shopify
+ * metaobject still accepts (leave `max_distance_km` empty and this is what
+ * decides who falls in it), and a caterer asking for "one flat rate inside
+ * Brussels" would then be a settings change rather than a rebuild. Delete it
+ * the day that stops being plausible, not before.
  */
 const BRUSSELS_POSTCODE_MIN = 1000;
 const BRUSSELS_POSTCODE_MAX = 1212;
@@ -160,22 +197,16 @@ export type ZoneAddress = {
 };
 
 /**
- * Brussels first, then the radial bands.
+ * Any administrative zone first, then the radial bands, nearest out.
  *
- * The order is what resolves the overlap in the client's table: zone 1 is
- * "Bruxelles" and zone 2 is "0 à 15 km", and most of Brussels is inside 15km of
- * the atelier, so without a precedence rule half the region would match both.
- * The administrative zone is whichever band carries no radius.
+ * The precedence rule exists because the two shapes can overlap: a zone defined
+ * as "Brussels" and a band defined as "0–10 km" would both match most of the
+ * Region. Whichever band carries no radius is the administrative one, and it
+ * wins. The client's current table has none, so in practice this walks straight
+ * to the bands.
  *
- * The consequence to keep in mind — and to confirm with the client — is the
- * near periphery. Drogenbos, Linkebeek and Beersel sit a few kilometres from
- * Forest but outside the region, so they land in zone 2 and pay €15 with a €125
- * minimum, while an address twice as far away inside Brussels pays €10 with a
- * €100 minimum. That reads as intentional (Brussels gets the preferential
- * rate), but it is a sharp edge for a neighbour four kilometres down the road.
- *
- * Band bounds are inclusive of their upper edge, so exactly 15.0km is zone 2
- * rather than zone 3. The table's "0 à 15" / "15 à 30" overlaps at the
+ * Band bounds are inclusive of their upper edge, so exactly 25.0 km is band 2
+ * rather than band 3. The table's "10 – 25" / "25 – 50" overlaps at the
  * boundary; landing on the cheaper side of an arbitrary tie favours the
  * customer, which is the right way round for a number nobody can perceive.
  */
@@ -251,4 +282,46 @@ export function minimumOrderShortfall(subtotal: number, zone: DeliveryZone) {
 
 export function clearsMinimumOrder(subtotal: number, zone: DeliveryZone) {
   return minimumOrderShortfall(subtotal, zone) === 0;
+}
+
+/**
+ * Whether this basket has bought its way out of the delivery fee.
+ *
+ * Measured on the merchandise subtotal, like the minimum order and for the same
+ * reason: a threshold you can reach by being charged more for the trip is not a
+ * threshold. It applies in every band, including the €50 one — that is what
+ * "à partir de 300 € de commande, livraison gratuite" says, and a rule with an
+ * unstated exception is a complaint waiting to be filed.
+ */
+export function qualifiesForFreeDelivery(subtotal: number, table: ZoneTable) {
+  return subtotal >= table.freeDeliveryThreshold;
+}
+
+/**
+ * What the site quotes for the trip: the band's fee, or nothing once the basket
+ * clears the free-delivery threshold.
+ *
+ * The same caveat as every other number in this file — Shopify charges the
+ * shipping rate, so the free-delivery threshold has to exist *there* too, as a
+ * price-based rate of €0 above €300 on every zone. Set it here and not there
+ * and the site promises free delivery while the checkout charges €50, which is
+ * the single most expensive way these two tables can disagree.
+ */
+export function quotedDeliveryFee(
+  subtotal: number,
+  zone: DeliveryZone,
+  table: ZoneTable,
+) {
+  return qualifiesForFreeDelivery(subtotal, table) ? 0 : zone.fee;
+}
+
+/**
+ * How much more would make the delivery free, or 0 when it already is.
+ *
+ * Deliberately not shown against an empty basket — "spend €300 for free
+ * delivery" with nothing in the cart is noise rather than an offer — so callers
+ * check the subtotal before rendering it.
+ */
+export function freeDeliveryShortfall(subtotal: number, table: ZoneTable) {
+  return Math.max(0, table.freeDeliveryThreshold - subtotal);
 }

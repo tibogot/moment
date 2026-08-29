@@ -23,10 +23,14 @@ import { DEFAULT_LOCALE, LOCALES } from "./i18n/config";
  * Where this deployment actually lives.
  *
  * Every canonical URL, the sitemap, robots.txt, the Open Graph image and every
- * `@id` in the JSON-LD are built from this. It used to be the literal
- * `https://www.moment.be`, a domain the client has not bought yet — so the site
- * was telling search engines that the real version of every page was somewhere
- * that does not resolve, which is worse than saying nothing at all.
+ * `@id` in the JSON-LD are built from this. It used to be a literal — and for a
+ * while the wrong literal, a domain nobody had bought — so the site was telling
+ * search engines that the real version of every page was somewhere that does
+ * not resolve, which is worse than saying nothing at all.
+ *
+ * The domain is now decided: **moment-lab.be**, confirmed by the owners on
+ * 29 August 2026. `moment.be` was never theirs and is not coming; anything in
+ * the repo still naming it is out of date.
  *
  * `NEXT_PUBLIC_SITE_URL` is the supported way to set it, and the only one that
  * works in the browser bundle as well as on the server — this module is
@@ -35,7 +39,8 @@ import { DEFAULT_LOCALE, LOCALES } from "./i18n/config";
  * if "Automatically expose System Environment Variables" is on, the bare one
  * always exists on Vercel but is server-only.
  *
- * The day the domain is bought, this is one environment variable to change.
+ * The day the domain resolves, this is one environment variable to change:
+ * `NEXT_PUBLIC_SITE_URL=https://www.moment-lab.be`.
  */
 function resolveSiteUrl() {
   const configured =
@@ -72,7 +77,7 @@ export const siteConfig = {
  * problem to clean up on the domain it actually wants to rank on.
  *
  * So: a real domain is indexable, everything else is not, and the day
- * `NEXT_PUBLIC_SITE_URL` points at moment.be indexing switches itself on.
+ * `NEXT_PUBLIC_SITE_URL` points at moment-lab.be indexing switches itself on.
  */
 export const siteIsIndexable =
   !siteConfig.url.includes("localhost") &&
@@ -98,6 +103,16 @@ export type SiteDetails = {
     phone: string;
     email: string;
   };
+  /**
+   * When a human answers, in 24-hour `HH:MM`. Not the delivery calendar and not
+   * the pickup window — this is the reachable-by-phone-and-email hours, and it
+   * is what the `openingHoursSpecification` in the JSON-LD publishes. The
+   * kitchen's delivery days live in the Shopify admin; see `lib/delivery.ts`.
+   */
+  hours: {
+    opensAt: string;
+    closesAt: string;
+  };
   legal: {
     companyName: string;
     /** BCE enterprise number (10 digits) — required on the legal page. */
@@ -113,26 +128,41 @@ export type SiteDetails = {
 };
 
 /**
- * What the site says about itself before anyone has filled the Studio in.
+ * What the site says about itself until the Studio says otherwise.
  *
- * The three geography fields are answers, not placeholders — the kitchen is in
- * Brussels whatever else changes. The rest are blank on purpose: an invented
- * phone number renders as a real one.
+ * These stopped being placeholders on 29 August 2026: the address, phone,
+ * email, enterprise number and hours below are the ones the owners gave us at
+ * the first working meeting, so the fallback is now *correct* rather than
+ * merely blank. The Studio still wins — these are what render before anyone has
+ * opened it, and what render if a Sanity read fails.
+ *
+ * The BCE number 1036.670.672 is the enterprise number; the VAT number is the
+ * same ten digits with `BE` in front, which is how Belgium works and why there
+ * are two fields holding one fact.
+ *
+ * `companyName` and `legalForm` are still empty, and deliberately: nobody has
+ * told us the registered denomination or whether it is an SRL. The legal page
+ * prints "[to be completed]" rather than guessing, which is the correct
+ * behaviour for a field the law requires to be exact.
  */
 export const DEFAULT_SITE_DETAILS: SiteDetails = {
   contact: {
-    street: "",
-    postalCode: "",
-    city: "Brussels",
+    street: "Rue des Glands 21A",
+    postalCode: "1190",
+    city: "Forest",
     region: "Brussels-Capital",
     country: "Belgium",
-    phone: "",
-    email: "",
+    phone: "+32 472 35 51 53",
+    email: "info@moment-lab.be",
+  },
+  hours: {
+    opensAt: "08:00",
+    closesAt: "16:00",
   },
   legal: {
     companyName: "",
-    enterpriseNumber: "",
-    vatNumber: "",
+    enterpriseNumber: "1036.670.672",
+    vatNumber: "BE1036670672",
     legalForm: "",
   },
   social: {
@@ -140,3 +170,28 @@ export const DEFAULT_SITE_DETAILS: SiteDetails = {
     facebook: "",
   },
 };
+
+/**
+ * The atelier on one line — "Rue des Glands 21A, 1190 Forest".
+ *
+ * Blank parts drop out rather than leaving a stray comma, because every one of
+ * these is a Studio field an owner can empty. The country is left off on
+ * purpose: this is written into FAQ answers and collection instructions read by
+ * people who are about to drive there, and none of them need telling it is in
+ * Belgium. `postalAddress` in `lib/schema.ts` is the structured form, and that
+ * one does carry the country, because a search engine does need telling.
+ */
+export function formatAddressLine(details: SiteDetails) {
+  const { street, postalCode, city } = details.contact;
+  const locality = [postalCode, city].filter(Boolean).join(" ");
+
+  return [street, locality].filter(Boolean).join(", ");
+}
+
+/** "08:00 – 16:00", matching how the delivery windows are written. */
+export function formatOpeningHours(details: SiteDetails) {
+  const { opensAt, closesAt } = details.hours;
+  if (!opensAt || !closesAt) return "";
+
+  return `${opensAt} – ${closesAt}`;
+}

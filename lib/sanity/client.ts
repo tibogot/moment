@@ -30,6 +30,7 @@ export const SANITY_TAGS = [
   "siteSettings",
   "homePage",
   "menu",
+  "pastEvent",
   "article",
   "author",
   "category",

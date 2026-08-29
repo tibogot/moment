@@ -9,82 +9,96 @@ asked you to send us is now something you enter yourself** — see section 7 for
 where. And the questions that remain are mostly about how your kitchen actually
 works, which is the part we cannot guess.
 
+**Updated 29 August 2026, after the first working meeting.** Most of what was
+open is now answered and built. What follows is what the answers settled, and
+the smaller number of things they raised.
+
 ---
 
-## 1. Delivery zones
+## 1. Delivery zones — **answered and built**
 
-The zone table is built and live in the code. These are the edges it exposed.
+Your new table is live: measured from Rue des Glands 21A, four priced bands and
+a quote beyond the last one.
+
+| Zone | Distance | Fee | Minimum |
+|---|---|---|---|
+| 1 | 0–10 km | €10 | €100 |
+| 2 | 10–25 km | €15 | €125 |
+| 3 | 25–50 km | €30 | €150 |
+| 4 | 50–70 km | €50 | €200 |
+| — | > 70 km | quoted by hand | — |
+| — | any zone, over €300 | **free** | — |
+
+**We used €300, not €250.** Your notes gave the free-delivery threshold twice
+and gave two different numbers — €300 under the zone table, €250 under the fees
+heading. We took €300 as the later, more specific one. **If it is actually €250,
+say so** — it is one field in the Shopify admin, but it has to be changed in the
+shipping profiles too, and until both are changed the site and the checkout will
+disagree about a €50 delivery.
+
+**Brussels is no longer flat, and this moves real customers.** Your old table
+gave the whole Region €10 with a €100 minimum. The new table is radial, and
+Forest is in the south-west corner — so Haren, Neder-Over-Heembeek and parts of
+Woluwe are now 11–14 km out and pay €15 with a €125 minimum. That is what a
+distance table does, and it may be exactly what you want. It is reversible
+without a deployment if it is not.
+
+**Antwerp and Ghent are now outside.** Both are 45–50 km as the crow flies, so
+they fall in the €30 band rather than being excluded — but the drive is close to
+an hour each way. Do you want to serve them at table rates?
 
 **Distance is measured in a straight line, not by road.** Chosen so a quoted
 cart cannot be re-priced by roadworks an hour later. It under-measures the real
-drive by roughly 20–30%, so the bands are slightly generous. This needs to be
-what the terms of sale say. *Confirm.*
+drive by roughly 20–30%, so the bands are applied generously. This is now stated
+on the shipping terms page. *Confirm you are happy with it being stated.*
 
-**Antwerp falls in zone 4 (€35).** It is 45.7 km as the crow flies, but close to
-an hour's drive each way. Do you actually want to serve it at table rates?
-Ghent misses the 50 km cut-off by 400 metres.
+**Still open: is the minimum measured excluding or including VAT?** Currently
+compared against the merchandise subtotal, excluding the delivery fee.
 
-**The near periphery pays more than Brussels.** Drogenbos, Linkebeek and Beersel
-are 2–8 km from the atelier but outside the Region, so they land in zone 2:
-€15 with a €125 minimum, while Uccle at 1.6 km pays €10 with a €100 minimum.
-Intended?
-
-**Does collection have a minimum order?** We assumed **no** — no fee and no
-floor — because your table is headed *Livraison payante*. This is now stated on
-the public FAQ page.
-
-**Is the minimum measured excluding or including VAT?** Currently compared
-against the merchandise subtotal, excluding the delivery fee.
-
-**We need the atelier's real street address.** The distance origin is currently
-the centroid of 1190 Forest, which is the right commune and the wrong building.
-Being off by a kilometre moves customers near a band edge into the wrong zone.
-The FAQ also says "1190 Forest" as the collection point and should name a street.
-
-This one is now two entries you can make yourselves, and they are not the same
-thing: the **postal address** goes in the Studio under Coordonnées de
-l'entreprise, and the **map coordinates** the pricing measures from go in
-Shopify under `delivery_settings`. Right-click the front door in Google Maps and
-the first item in the menu is the pair of numbers. Set both or neither.
-
-**The fees and minimums are yours too now.** They are entries in the Shopify
-admin rather than something we deploy. One thing to hold on to: the site quotes
-the fee and Shopify charges it, and those are two separate settings that have to
-agree. Change one, change the other, same sitting.
+**Collection has no fee and no minimum.** Still our assumption, still stated on
+the FAQ. Say if it is wrong.
 
 ---
 
-## 2. Time slots — **BLOCKING**
+## 2. Time slots — **answered and built**
 
-The brief asks for *"la date, l'heure"*. The date is built; the hour cannot be
-started without these.
+Three windows, on every day the kitchen delivers:
 
-- Delivery hours, per weekday.
-- Collection hours at the atelier — the same as delivery, or different?
-- Do large or corporate orders need more notice than the standard two days?
-- Should slots close automatically once capacity is reached, or do you prefer to
-  close them by hand, the way you already close whole days?
+**09:00 – 11:00 · 11:00 – 13:00 · 13:00 – 15:00**
 
-**"Capacity" is probably two numbers, not one.** This is the question we most
-need you to think about before we build it:
+The customer picks one when they order; it is required before checkout for a
+delivery, and it lands on the order in the Shopify admin as "Delivery slot". Your
+line — *"Créneau complet ? Contactez-nous ! Selon votre localisation et notre
+itinéraire, nous pourrons peut-être vous ajouter à une tournée déjà planifiée"* —
+sits under the picker, in all three languages.
 
-- **The kitchen** has a ceiling — how many covers can come out of it in a day,
-  whether they are delivered or collected. That is one shared limit.
-- **The van** has a different one — how many drops fit in a morning. That
-  constrains delivery only.
+**The 16:00 cut-off is built as a second rule alongside the 48 hours.** Your
+wording carries both: an order placed at 15:59 on Monday can be delivered
+Wednesday, one placed at 16:01 counts as Tuesday's and goes to Thursday. Without
+that, "48 hours" could be satisfied by ordering at 23:50.
 
-A Saturday where you could happily prepare thirty orders but only drive eight is
-completely normal, and one number cannot describe it. Tell us both, or tell us
-we are overcomplicating it and one is enough.
+**Windows still have no capacity limit — this is the one piece not built.** The
+site offers all three on every open day and does not count how many orders
+already exist for one. Counting them means reading orders back out of Shopify,
+which is a larger piece of work than the settings you already control, and worth
+quoting on its own. Until then a full window is closed by hand — which is what
+the "contactez-nous" line is for.
 
-**Note on what this costs.** Counting how many orders already exist for a given
-day means reading them back out of Shopify, which is a different and larger
-piece of work than the settings you can already change yourself. Worth knowing
-before it is quoted.
+When you do want it, the question from the last version still stands and is
+still the one to think about first: **capacity is probably two numbers, not
+one.** The kitchen has a ceiling on covers per day, delivered or collected; the
+van has a different one on drops per morning. A Saturday where you could prepare
+thirty orders but only drive eight is normal, and one number cannot describe it.
 
-**The rest of the calendar is already yours.** Notice period, the weekdays you
-never deliver, whole closure periods and how far ahead the calendar goes are all
-settings in the Shopify admin now — see SEO-CLIENT-CHECKLIST.md §3.
+**Collection is a window, not a slot.** 11:00–16:00 at the atelier, as you said,
+so click & collect shows the opening rather than offering a choice.
+
+**One thing we could not build from what you gave us.** You said collection can
+be ordered *"la veille avant 16 h (pour les douceurs seulement)"*. The site
+cannot tell a douceur from a lunch platter — that needs those products tagged in
+Shopify — so the calendar still applies the standard 48 hours to everything,
+and the shorter rule is stated in words on the FAQ and the shipping page. **If
+you want it enforced, tell us which products count and we will tag them.**
 
 ---
 
@@ -154,8 +168,10 @@ reaching Halle, Vilvoorde and Leuven; English by corporate Brussels.
 written to carry the tone, not just the meaning. They should correct it.
 
 **Legal pages are deliberately untranslated.** Terms, privacy, cookies and
-shipping are binding, and they now carry the zone fees and minimums. These want
-a professional translator — budget for it.
+shipping are binding, and they now carry the zone fees, the minimums, the
+delivery windows and your cancellation policy. These want a professional
+translator — budget for it, and it is more urgent than it was, because there is
+now real money and a refund rule in them.
 
 **"Un moment, simplement." stays in French in all three languages**, on the
 grounds that it echoes the company name and reads as a signature rather than a
@@ -168,6 +184,13 @@ sentence. Confirm.
 Written from how the code behaves, now publicly visible on the FAQ:
 
 - Collection has no delivery fee and no minimum order.
+- The 24-hour cancellation policy is quoted almost verbatim from your note, in
+  three languages on the FAQ and in English on the terms and shipping pages.
+  Read it once — it is the paragraph most likely to be quoted back at you.
+- You are described as reachable **every day, 08:00–16:00**, and those hours are
+  published to search engines as your opening hours. Note this is *not* the same
+  as delivering every day: the calendar still treats **Sunday as closed**. If you
+  do deliver on Sundays, that is one setting to change.
 - More than one delivery address can be kept on file for a company. *(True of
   the intent; saved addresses are not built yet.)*
 - Vegetarian, vegan and gluten-free versions are labelled and boxed separately.
@@ -187,16 +210,18 @@ invitation — the address is public, the contents are not.
 |---|---|
 | Catering menus | Menus traiteur |
 | News articles | Actualités |
-| Address, phone, email, VAT and BCE numbers, social accounts | Coordonnées de l'entreprise |
+| Address, phone, email, opening hours, VAT and BCE numbers, social accounts | Coordonnées de l'entreprise |
 | The opening photograph and the two panels on the home page | Page d'accueil |
 
 **In the Shopify admin**, under Custom data → Metaobjects:
 
 | | Where |
 |---|---|
-| Notice period, weekdays you never deliver, how far ahead bookings open | `delivery_settings` |
+| Notice period, order cut-off hour, weekdays you never deliver, how far ahead bookings open | `delivery_settings` |
+| Free-delivery threshold and collection hours | `delivery_settings` |
 | Days and whole periods you are closed | `delivery_closure` |
 | Zone fees, minimum orders, distance bands | `delivery_zone` |
+| The two-hour delivery windows | `delivery_slot` |
 | The kitchen's map coordinates | `delivery_settings` |
 
 Everything else — the page text, the remaining photographs, the legal pages,
@@ -209,20 +234,49 @@ having clicked the buttons once.
 
 ---
 
-## 8. The domain — **BLOCKING for search**
+## 8. The domain — **name settled, connection outstanding**
 
-`moment.be` is not registered. Until it is, the site is deliberately not indexed
-by Google: letting search engines list the temporary address would leave results
-pointing at somewhere you are about to leave, and a duplicate-content problem on
-the domain you actually want to rank on.
+The domain is **`moment-lab.be`**. Everything in the code and the docs that used
+to say `moment.be` has been corrected.
 
-The site is online and can be shown to anyone. It is simply not competing in
-search yet, and "online" and "findable" are not the same thing.
+The site is still deliberately not indexed by Google, and stays that way until
+the domain is pointed at it: letting search engines list the temporary address
+would leave results pointing at somewhere you are about to leave, and a
+duplicate-content problem on the domain you actually want to rank on. The site
+is online and can be shown to anyone — "online" and "findable" are not the same
+thing.
 
-- Register `moment.be`, and check `.brussels` while you are there.
-- Tell us which form you want, `www.moment.be` or `moment.be`. We redirect the
-  other; running both halves your ranking.
+Two things still needed from you:
 
-Opening the site to Google afterwards takes minutes on our side. Search Console,
-the Google Business Profile and analytics should all wait until then, so nothing
-has to be set up twice.
+- **Confirm `moment-lab.be` is registered and give us access to its DNS**, or
+  tell us who holds it. Worth checking `.brussels` while you are there.
+- **Tell us which form you want, `www.moment-lab.be` or `moment-lab.be`.** We
+  redirect the other; running both halves your ranking.
+
+Opening the site to Google afterwards takes minutes on our side — one environment
+variable. Search Console, the Google Business Profile and analytics should all
+wait until then, so nothing has to be set up twice.
+
+---
+
+## 9. What we now hold, and where it went
+
+For your records. Everything below came out of the 29 August meeting.
+
+| | Where it lives now |
+|---|---|
+| Rue des Glands 21A, 1190 Forest | Studio → Coordonnées, and the built-in default |
+| 0472 35 51 53 | Studio → Coordonnées |
+| info@moment-lab.be | Studio → Coordonnées |
+| Every day 08:00–16:00 | Studio → Coordonnées → Heures d'ouverture |
+| BCE 1036.670.672 / TVA BE1036670672 | Studio → Mentions légales |
+| The four delivery bands | Built in; overridable in `delivery_zone` |
+| Free delivery over €300 | Built in; overridable in `delivery_settings` |
+| 48 hours' notice, 16:00 cut-off | Built in; overridable in `delivery_settings` |
+| The three delivery windows | Built in; overridable in `delivery_slot` |
+| Collection 11:00–16:00 | Built in; overridable in `delivery_settings` |
+| The 24-hour cancellation policy | FAQ (×3 languages), terms, shipping |
+
+**Two we still need.** The **registered denomination** and the **legal form**
+(SRL, SA…). The legal notice prints "[to be completed]" for them, and Belgian
+law requires both on a commercial site.

@@ -5,6 +5,7 @@ import {
   setDeliveryAddress,
   setDeliveryDate,
   setDeliveryNote,
+  setDeliverySlot,
 } from "@/app/actions/cart";
 import { AddressPanel } from "@/components/AddressPanel";
 import {
@@ -12,8 +13,19 @@ import {
   CheckoutNoticeAction,
 } from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
+import { DeliverySlotPicker } from "@/components/DeliverySlotPicker";
 import { notifyCartUpdated } from "@/lib/cart-store";
-import { isBookable, type DeliveryAvailability } from "@/lib/delivery";
+import {
+  formatCutoffHour,
+  isBookable,
+  type DeliveryAvailability,
+} from "@/lib/delivery";
+import {
+  formatSlot,
+  parseSlotAttribute,
+  slotId,
+  type DeliverySlot,
+} from "@/lib/delivery-slots";
 import { checkoutBlocker } from "@/lib/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
@@ -23,7 +35,9 @@ import {
   formatMoney,
 } from "@/lib/i18n/format";
 import {
+  freeDeliveryShortfall,
   maxDeliveryDistanceKm,
+  qualifiesForFreeDelivery,
   zoneById,
   type ZoneId,
   type ZoneTable,
@@ -38,7 +52,9 @@ import { useRouter } from "next/navigation";
 type CartDeliverySectionProps = {
   availability: DeliveryAvailability;
   zones: ZoneTable;
+  slots: DeliverySlot[];
   deliveryDate: string | null;
+  deliverySlot: string | null;
   deliveryMethod: DeliveryMethod | null;
   deliveryAddress: string | null;
   deliveryNote: string | null;
@@ -57,7 +73,9 @@ type CartDeliverySectionProps = {
 export function CartDeliverySection({
   availability,
   zones,
+  slots,
   deliveryDate,
+  deliverySlot,
   deliveryMethod,
   deliveryAddress,
   deliveryNote,
@@ -76,6 +94,7 @@ export function CartDeliverySection({
   const t = dict.cart;
   const router = useRouter();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [slotOpen, setSlotOpen] = useState(false);
   const [addressOpen, setAddressOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   /** Reachable but not priceable — an enquiry, not a mistake. */
@@ -89,9 +108,14 @@ export function CartDeliverySection({
     deliveryDate && !isBookable(deliveryDate, availability),
   );
 
+  // Resolved against the windows the shop offers now, so a cart holding one the
+  // owners have withdrawn reads as no choice rather than as a booking.
+  const slot = parseSlotAttribute(slots, deliverySlot);
+
   const blocker = checkoutBlocker(
     {
       deliveryDate,
+      deliverySlot,
       deliveryMethod,
       deliveryAddress,
       deliveryZone,
@@ -99,6 +123,7 @@ export function CartDeliverySection({
     },
     availability,
     zones,
+    slots,
   );
 
   // The two date blockers are the ones this section can fix in place, by
@@ -107,6 +132,8 @@ export function CartDeliverySection({
     blocker?.kind === "no-date" || blocker?.kind === "stale-date";
 
   const zone = deliveryZone ? zoneById(zones, deliveryZone) : null;
+  const deliveryIsFree = qualifiesForFreeDelivery(subtotal, zones);
+  const toFreeDelivery = freeDeliveryShortfall(subtotal, zones);
 
   const saveNote = (value: string) => {
     if (value.trim() === (deliveryNote ?? "").trim()) return;
@@ -140,6 +167,20 @@ export function CartDeliverySection({
       }
       notifyCartUpdated();
       setAddressOpen(false);
+      router.refresh();
+    });
+  };
+
+  const chooseSlot = (choice: DeliverySlot) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await setDeliverySlot(locale, slotId(choice));
+      if (!result.ok) {
+        setError(dict.errors[result.code]);
+        return;
+      }
+      notifyCartUpdated();
+      setSlotOpen(false);
       router.refresh();
     });
   };
@@ -194,8 +235,34 @@ export function CartDeliverySection({
           )}
         </div>
 
-        {/* Read-only: these are chosen on the product page, and repeating the
-            editors here would be a third place to keep in step. Showing them
+        {/* Editable here as well as on the product page: unlike the method,
+            the window is a thing customers change once the day is settled, and
+            Shopify's hosted checkout cannot edit a cart attribute — so if it
+            cannot be fixed here it cannot be fixed at all. */}
+        {needsAddress(deliveryMethod) && (
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+              {t.slot}
+            </span>
+            <span className="flex items-baseline gap-4">
+              {slot && (
+                <span className="font-archivo-light text-[13px]">
+                  {formatSlot(slot)}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setSlotOpen((open) => !open)}
+                className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
+              >
+                {slotOpen ? t.done : slot ? t.change : t.chooseSlot}
+              </button>
+            </span>
+          </div>
+        )}
+
+        {/* Read-only: the method is chosen on the product page, and repeating
+            the editor here would be a third place to keep in step. Showing it
             still matters — the customer has to be able to check what they
             picked before handing over to Shopify's checkout. */}
         {deliveryMethod && (
@@ -254,7 +321,9 @@ export function CartDeliverySection({
         )}
 
         {/* The fee is what Shopify will charge at checkout, shown here so it
-            is not a surprise on the last screen. */}
+            is not a surprise on the last screen. Once the basket clears the
+            free-delivery threshold the band still shows — the minimum order
+            still applies — but the fee reads as waived rather than as €50. */}
         {zone && needsAddress(deliveryMethod) && (
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
             <span className="font-owners-medium text-[12px] uppercase tracking-wide">
@@ -262,12 +331,28 @@ export function CartDeliverySection({
             </span>
             <span className="font-archivo-light text-[13px]">
               {interpolate(t.zoneLine, {
-                fee: formatMoney(locale, zone.fee),
+                fee: deliveryIsFree
+                  ? t.freeDelivery
+                  : formatMoney(locale, zone.fee),
                 zone: zone.id,
                 minimum: formatMoney(locale, zone.minimumOrder),
               })}
             </span>
           </div>
+        )}
+
+        {/* Only once there is something in the basket to measure against:
+            "spend €300 for free delivery" against an empty cart is noise. */}
+        {needsAddress(deliveryMethod) && subtotal > 0 && (
+          <p className="font-archivo-light mt-3 text-[13px] opacity-70">
+            {deliveryIsFree
+              ? interpolate(t.freeDeliveryReached, {
+                  threshold: formatMoney(locale, zones.freeDeliveryThreshold),
+                })
+              : interpolate(t.freeDeliveryShortfall, {
+                  shortfall: formatMoney(locale, toFreeDelivery),
+                })}
+          </p>
         )}
 
         {dateIsStale && deliveryDate && (
@@ -304,6 +389,13 @@ export function CartDeliverySection({
                 days: availability.leadTimeDays,
               })}
               {closedDays ? ` ${closedDays}` : ""}
+              {/* Only after the cut-off, and only then: the rest of the day it
+                  would be a rule stated against nothing that had happened. */}
+              {availability.pastCutoff
+                ? ` ${interpolate(dict.delivery.pastCutoffNote, {
+                    cutoff: formatCutoffHour(availability.cutoffHour),
+                  })}`
+                : ""}
             </p>
             <DeliveryDatePicker
               availability={availability}
@@ -312,6 +404,16 @@ export function CartDeliverySection({
               disabled={isPending}
             />
           </div>
+        )}
+
+        {slotOpen && (
+          <DeliverySlotPicker
+            slots={slots}
+            value={slot}
+            onSelect={chooseSlot}
+            disabled={isPending}
+            className="mt-5 max-w-105 border border-sky"
+          />
         )}
       </div>
 
@@ -338,6 +440,24 @@ export function CartDeliverySection({
           })}
         </CheckoutNotice>
       )}
+
+      {(blocker?.kind === "no-slot" || blocker?.kind === "stale-slot") &&
+        !slotOpen && (
+          <CheckoutNotice
+            tone="blocker"
+            title={t.beforeCheckout}
+            className="mt-6 max-w-105"
+            action={
+              <CheckoutNoticeAction onClick={() => setSlotOpen(true)}>
+                {t.chooseSlot}
+              </CheckoutNoticeAction>
+            }
+          >
+            {blocker.kind === "stale-slot"
+              ? interpolate(t.staleSlot, { slot: blocker.slot })
+              : t.pickSlotIntro}
+          </CheckoutNotice>
+        )}
 
       {blocker?.kind === "no-address" && !addressOpen && (
         <CheckoutNotice

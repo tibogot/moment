@@ -11,11 +11,19 @@ import {
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import { isShopifyConfigured } from "@/lib/shopify/client";
-import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import {
+  getDeliveryAvailability,
+  getDeliverySlots,
+} from "@/lib/shopify/delivery";
 import { getZoneTable } from "@/lib/shopify/zones";
 import type { Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
+import {
+  DELIVERY_SLOT_ATTRIBUTE,
+  findSlot,
+  slotAttributeValue,
+} from "@/lib/delivery-slots";
 import {
   DELIVERY_ZONE_ATTRIBUTE,
   formatZoneAttribute,
@@ -155,6 +163,29 @@ export async function setDeliveryDate(locale: Locale, isoDate: string) {
 }
 
 /**
+ * The two-hour window, checked against the live slot table for the same reason
+ * the date is checked against live availability: the picker's options are only
+ * as fresh as the page they were rendered into, and a tab left open across a
+ * change to the windows must not be able to book one that has been withdrawn.
+ *
+ * The *canonical* window is stored, not the id that arrived — so an order can
+ * never carry a label the owners did not write.
+ */
+export async function setDeliverySlot(locale: Locale, slotId: string) {
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
+
+  const slot = findSlot(await getDeliverySlots(), slotId);
+  if (!slot) return orderFailure("slot_unavailable");
+
+  const saved = await saveOrderPreferences(locale, {
+    [DELIVERY_SLOT_ATTRIBUTE]: slotAttributeValue(slot),
+  });
+  if (!saved.ok) return saved;
+
+  return { ok: true as const, slot, cart: saved.cart };
+}
+
+/**
  * Trimmed and capped here, not only in the input: the value arrives from the
  * client as a string like any other, and this one is printed on a kitchen
  * ticket. An empty note clears the attribute rather than storing "".
@@ -182,7 +213,14 @@ export async function setDeliveryMethod(locale: Locale, method: DeliveryMethod) 
     // address is cleared rather than left on the order contradicting it — and
     // the zone with it, since a zone without an address prices nothing.
     ...(method === "pickup"
-      ? { [DELIVERY_ADDRESS_ATTRIBUTE]: null, [DELIVERY_ZONE_ATTRIBUTE]: null }
+      ? {
+          [DELIVERY_ADDRESS_ATTRIBUTE]: null,
+          [DELIVERY_ZONE_ATTRIBUTE]: null,
+          // Collection is one long opening, not a booked window. Leaving a
+          // delivery slot on the order would tell the kitchen to have it at the
+          // door at 09:00 for someone who is coming to fetch it at 15:00.
+          [DELIVERY_SLOT_ATTRIBUTE]: null,
+        }
       : {}),
   });
   if (!saved.ok) return saved;

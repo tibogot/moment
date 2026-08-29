@@ -179,15 +179,23 @@
     "items": [
       {
         "q": "Where do you deliver?",
-        "a": "We deliver across Brussels and up to {max} km from our kitchen. The fee and the minimum order depend on the distance: {zones}. Beyond {max} km we quote by hand."
+        "a": "We deliver up to {max} km from the atelier in Forest, and the fee and the minimum order depend on the distance: {zones}. Order more than {freeThreshold} and the delivery is free, whichever band you are in. Beyond {max} km we quote by hand."
+      },
+      {
+        "q": "What time will my order arrive?",
+        "a": "You pick a two-hour window when you order: {slots}. {slotFull}"
       },
       {
         "q": "How far in advance should I order?",
-        "a": "We need {days} days' notice for a delivery.{closedDays} The calendar on the site only shows days that are still open. For an event, get in touch as early as you can — busy dates go quickly."
+        "a": "We need {days} days' notice, and orders for a given day close at {cutoff} — order after that and the notice starts counting from the next day.{closedDays} The calendar on the site only shows days that are still open. For an event, get in touch as early as you can: busy dates go quickly."
       },
       {
         "q": "Can I collect my order?",
-        "a": "Yes. Collection from the kitchen (1190 Forest) is offered when you order, with no delivery fee and no minimum. Choose “Click & collect” when you pick your date."
+        "a": "Yes, from the atelier at {address}, free and with no minimum order. Collection runs {pickupWindow}. Sweet things can be ordered for collection as late as {cutoff} the day before; anything else follows the usual {days} days' notice. Choose “Click & collect” when you pick your date."
+      },
+      {
+        "q": "Can I cancel my order?",
+        "a": "Yes, free of charge up to 24 hours before the delivery date, and we refund the order in full. Inside 24 hours we cannot normally refund, because the food is fresh and made for your order specifically. If anything is wrong with what arrives, or with our service, call us straight away and we will put it right."
       },
       {
         "q": "Do you cater for vegetarian, vegan or gluten-free diets?",
@@ -207,7 +215,13 @@
     "calendarNote": "Blue days are closed or already full — we need {days} days’ notice.",
     "closedDays": "We do not deliver on {closedDays}.",
     "dayArticle": "",
-    "unavailable": "Not available for delivery"
+    "unavailable": "Not available for delivery",
+    "slotTitle": "Delivery window",
+    "slotIntro": "Choose the two-hour window you would like it in.",
+    "slotFull": "Window full? Get in touch — depending on where you are and the route we are already driving, we may be able to add you to a round.",
+    "cutoffNote": "Orders close at {cutoff}. After that, the {days} days' notice starts counting from tomorrow.",
+    "pastCutoffNote": "Today's {cutoff} cut-off has passed, so the earliest we can deliver has moved out by a day.",
+    "pickupWindow": "Collection is from {window} at the atelier."
   },
   "deliveryMethods": {
     "delivery": {
@@ -238,7 +252,11 @@
     "noMatch": "No Belgian address matches that.",
     "didYouMean": "Did you mean {streets}? Add a house number.",
     "loadingDays": "Loading available days…",
-    "selectedDate": "Selected delivery date"
+    "selectedDate": "Selected delivery date",
+    "slot": "Window",
+    "selectSlot": "Choose a window",
+    "chooseSlotTitle": "Choose a delivery window",
+    "selectedSlot": "Selected delivery window"
   },
   "cart": {
     "title": "Cart",
@@ -274,7 +292,15 @@
     "noteSaved": "Saved",
     "beforeCheckout": "Before you check out",
     "somethingWrong": "Something went wrong",
-    "addressTitle": "Delivery address"
+    "addressTitle": "Delivery address",
+    "slot": "Window",
+    "deliverySlotTitle": "Delivery window",
+    "pickSlotIntro": "Pick the two-hour window you want it in.",
+    "chooseSlot": "Choose a delivery window",
+    "staleSlot": "{slot} is no longer offered. Please pick another delivery window.",
+    "freeDelivery": "Free",
+    "freeDeliveryReached": "Delivery is on us — your order is over {threshold}.",
+    "freeDeliveryShortfall": "Add {shortfall} and the delivery is free."
   },
   "shop": {
     "title": "Shop",
@@ -339,7 +365,8 @@
     "unknown_method": "Unknown delivery option.",
     "no_cart": "No cart found.",
     "cart_failed": "We could not update your cart. Please try again.",
-    "generic": "Something went wrong."
+    "generic": "Something went wrong.",
+    "slot_unavailable": "That delivery window is no longer available. Please choose another."
   },
   "quote": {
     "heading": "Beyond our delivery area",
@@ -409,7 +436,11 @@
     "phonePlaceholder": "+32",
     "datePlaceholder": "14 March",
     "guestsPlaceholder": "25, or 20–30",
-    "messagePlaceholder": "Lunch for a board meeting, dietary requirements, a budget to work to — whatever you already know."
+    "messagePlaceholder": "Lunch for a board meeting, dietary requirements, a budget to work to — whatever you already know.",
+    "hoursTitle": "Reaching us",
+    "hours": "Every day, {hours}, by phone and email.",
+    "addressTitle": "The atelier",
+    "pickupNote": "Collection by arrangement, {window}."
   },
   "proAccount": {
     "title": "Professional account",
@@ -612,6 +643,24 @@
     "apero": "Apéro",
     "buffet": "Buffet",
     "seated": "Seated dinner"
+  },
+  "eventOccasions": {
+    "reception": "Reception",
+    "launch": "Launch",
+    "seminar": "Seminar",
+    "businessLunch": "Business lunch",
+    "teamBuilding": "Team building",
+    "staffParty": "Staff party",
+    "privateDinner": "Private dinner",
+    "celebration": "Family celebration",
+    "wedding": "Wedding",
+    "communion": "Communion",
+    "funeral": "Funeral reception"
+  },
+  "events": {
+    "guestsOne": "{count} guest",
+    "guestsMany": "{count} guests",
+    "guestRange": "from {min} to {max} guests"
   },
   "menus": {
     "lead": "What we cook, by the head. Every format below is a starting point — we change the dishes to the season, the room and whoever is eating.",

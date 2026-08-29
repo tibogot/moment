@@ -12,7 +12,14 @@
 
 import { interpolate, type Dictionary } from "./i18n/dictionaries";
 import { formatMoney } from "./i18n/format";
-import { DEFAULT_LOCALE, type Locale } from "./i18n/config";
+import { type Locale } from "./i18n/config";
+import {
+  pick,
+  pickList,
+  type Legacy,
+  type LocaleString,
+  type LocaleStringList,
+} from "./sanity/locale";
 import type { SanityImage, SanitySlug } from "./sanity/types";
 
 /** The menus page's own copy, in the language the page is being read in. */
@@ -33,51 +40,12 @@ export const MENU_FORMATS = [
 export type MenuFormat = (typeof MENU_FORMATS)[number];
 
 /**
- * A field translated in the Studio, in one document, three languages side by
- * side. Only French is required — see `sanity/schemaTypes/objects/locale.ts`.
- */
-export type LocaleString = Partial<Record<Locale, string>>;
-export type LocaleStringList = Partial<Record<Locale, string[]>>;
-
-/**
- * Documents written before these fields were translatable hold a bare string
- * where the object now goes. Sanity does not rewrite existing documents when a
- * schema changes, so both shapes are live until every menu has been opened and
- * re-saved in the Studio.
- *
- * Delete this and the two `typeof` branches below once that has happened —
+ * `Legacy` is the shim for menus written before their fields were translatable:
+ * a bare string where the `localeString` object now goes. Delete the wrappers
+ * below once every menu has been opened and re-saved in the Studio —
  * `getMenus()` returning a menu with no title is the symptom it is still
- * needed.
+ * needed. See `lib/sanity/locale.ts`.
  */
-type Legacy<T> = T | string | string[];
-
-/**
- * The value for one language, falling back to French.
- *
- * A fallback rather than a blank: a Dutch reader who meets an untranslated
- * course sees the French dish names, which on a Belgian catering menu is what
- * they would read on paper anyway. A blank section would just look broken, and
- * the gap belongs where it can be fixed — visible in the Studio, beside the
- * language that is filled in.
- */
-export function pick(
-  value: Legacy<LocaleString> | undefined,
-  locale: Locale,
-) {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return undefined;
-  return value?.[locale] ?? value?.[DEFAULT_LOCALE];
-}
-
-export function pickList(
-  value: Legacy<LocaleStringList> | undefined,
-  locale: Locale,
-): string[] {
-  if (Array.isArray(value)) return value.filter(Boolean);
-  if (typeof value === "string") return [value];
-  const list = value?.[locale] ?? value?.[DEFAULT_LOCALE];
-  return list?.filter(Boolean) ?? [];
-}
 
 /** A named part of the menu — "To start", "From the oven", "To finish". */
 export type MenuCourse = {

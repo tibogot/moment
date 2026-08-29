@@ -1,4 +1,5 @@
 import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery";
+import { DELIVERY_SLOT_ATTRIBUTE } from "@/lib/delivery-slots";
 import {
   DELIVERY_ZONE_ATTRIBUTE,
   parseZoneAttribute,
@@ -53,6 +54,17 @@ export type Cart = {
   lines: CartLine[];
   /** The day picked on the calendar, `YYYY-MM-DD`, or null if none yet. */
   deliveryDate: string | null;
+  /**
+   * The window picked on that day, as it was stored — `"09:00 – 11:00"`.
+   *
+   * Kept raw rather than resolved to a `DeliverySlot`, because resolving it
+   * means holding the live slot table and this parser is deliberately
+   * synchronous and settings-free. Whoever needs the structured window runs it
+   * through `parseSlotAttribute` against the table they are already holding,
+   * and gets null for a window the owners have since withdrawn — which is the
+   * correct answer, and one this function could not give.
+   */
+  deliverySlot: string | null;
   /** Home delivery or click & collect, or null while the customer has not said. */
   deliveryMethod: DeliveryMethod | null;
   /** The canonical register address, only ever set for home delivery. */
@@ -315,6 +327,7 @@ function mapCartNode(locale: Locale, node: RawCart): Cart {
     subtotal: Number.isFinite(subtotal) ? subtotal : 0,
     lines,
     deliveryDate: attribute(DELIVERY_DATE_ATTRIBUTE),
+    deliverySlot: attribute(DELIVERY_SLOT_ATTRIBUTE),
     deliveryMethod: parseDeliveryMethod(attribute(DELIVERY_METHOD_ATTRIBUTE)),
     deliveryAddress: attribute(DELIVERY_ADDRESS_ATTRIBUTE),
     deliveryNote: attribute(DELIVERY_NOTE_ATTRIBUTE),

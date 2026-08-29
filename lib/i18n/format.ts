@@ -75,6 +75,27 @@ export function formatShortDate(locale: Locale, value: string | Date) {
   });
 }
 
+/**
+ * "mars 2025" — the form a past event is dated in.
+ *
+ * No day, deliberately. Nobody choosing a caterer cares that the reception was
+ * on the 14th, and a full date makes a reference read as expired the moment it
+ * is a year old.
+ *
+ * Parsed through `parseISODate` rather than `new Date(iso)`, which reads a bare
+ * `YYYY-MM-DD` as UTC midnight: on a server west of Greenwich that lands the
+ * first of the month in the month before.
+ */
+export function formatMonthYear(locale: Locale, iso: string) {
+  const date = parseISODate(iso);
+  if (!date) return "";
+
+  return date.toLocaleDateString(INTL_LOCALE[locale], {
+    month: "long",
+    year: "numeric",
+  });
+}
+
 /** Month name for the calendar's heading. */
 export function formatMonth(locale: Locale, date: Date) {
   return date.toLocaleDateString(INTL_LOCALE[locale], { month: "long" });

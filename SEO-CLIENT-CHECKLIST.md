@@ -26,13 +26,13 @@ Google uses the same details to decide whether you are a real, trustworthy
 business. Both the legal notice page and the site's structured data are wired up
 and waiting for these values.
 
-| What we need | Example | Where it appears |
-|---|---|---|
-| Registered company name | `Moment SRL` | Legal notice, terms, Google |
-| Legal form | `SRL / BV`, `SA / NV`, sole trader… | Legal notice |
-| BCE / KBO enterprise number | `0123.456.789` | Legal notice — **legally required** |
-| VAT number | `BE0123456789` | Legal notice, invoices, terms |
-| Registered address | street, number, postcode, city | Legal notice, Google, maps |
+| What we need | Example | Where it appears | Status |
+|---|---|---|---|
+| Registered company name | `Moment SRL` | Legal notice, terms, Google | **still needed** |
+| Legal form | `SRL / BV`, `SA / NV`, sole trader… | Legal notice | **still needed** |
+| BCE / KBO enterprise number | `1036.670.672` | Legal notice — **legally required** | received 29 Aug |
+| VAT number | `BE1036670672` | Legal notice, invoices, terms | received 29 Aug |
+| Registered address | Rue des Glands 21A, 1190 Forest | Legal notice, Google, maps | received 29 Aug |
 
 > If the registered (company) address is different from the kitchen or the
 > coffee desk, we need **both**, and a note on which one the public should visit.
@@ -49,53 +49,71 @@ signal for that kind of query. This is the highest-value item on the list.
 **One address, two places, and they are not the same thing.** The postal address
 above is what gets printed. Separately, the delivery pricing measures distance
 from the kitchen's map coordinates, set in Shopify → Custom data → Metaobjects →
-`delivery_settings`. They are currently the centre of 1190 Forest, which is the
-right commune and the wrong building — so anyone near the edge of a delivery band
-is being quoted the wrong fee. Moving premises means changing both.
+`delivery_settings`. Since 29 August 2026 those are `50.81976, 4.32657`,
+geocoded from Rue des Glands 21A — the real building, not the commune — so this
+is no longer a blocker. It stays on the list because **moving premises means
+changing both**, and changing only one is silent: the site would print the new
+address while pricing every delivery from the old one.
 
 ---
 
-## 2. Contact details — **BLOCKER**
+## 2. Contact details — **received, worth entering in the Studio**
 
-| What we need | Notes |
-|---|---|
-| Public phone number | In international format, e.g. `+32 2 123 45 67` |
-| General email address | The one clients should write to for orders and quotes |
-| Separate catering/events email? | Only if you want enquiries split |
+| What we need | Notes | Status |
+|---|---|---|
+| Public phone number | In international format | `+32 472 35 51 53`, received 29 Aug |
+| General email address | The one clients should write to for orders and quotes | `info@moment-lab.be`, received 29 Aug |
+| Opening hours | When a human answers, not when the van runs | every day 08:00–16:00, received 29 Aug |
+| Separate catering/events email? | Only if you want enquiries split | still open |
 
 **Where to put them:** `/studio` → **Coordonnées de l'entreprise** → *Contact*.
+The values above are already the site's built-in defaults, so the pages are
+correct today — entering them in the Studio is what lets you change them later
+without us.
 
 **Why it matters:** these are shown to Google as your official contact points and
 appear directly in search results and on Google Maps. A phone number that
 matches everywhere (site, Google, Instagram) measurably improves local ranking.
 
-Until you do, the site shows no phone number at all — which is the right
-behaviour, and the reason it is worth doing this week.
+These used to be blank, and a blank phone number is what the site showed rather
+than an invented one. They are no longer blank — but they are ours, in code,
+until you enter them in the Studio, and a number you cannot change without
+ringing us is not really yours.
 
 ---
 
-## 3. Opening hours
+## 3. Opening hours — **received, and now published**
 
-We need the hours for anything the public can walk into — the coffee desk in
-particular.
+**Every day, 08:00–16:00**, as given on 29 August 2026. These are on the contact
+page and declared to Google as your opening hours.
 
-- Days and hours you are open
-- Any days you are closed (public holidays, annual closure)
-- Is the kitchen open to the public at all, or is it order-only?
+Set them yourself at `/studio` → **Coordonnées de l'entreprise** → *Heures
+d'ouverture*. They are the hours a human answers the phone and the email —
+deliberately **not** the days the van runs, which change week to week and live
+in Shopify. Publishing a closure period as an opening hour is how a search result
+tells the world you are shut in August, all year.
 
-**What you can already set yourself**, in Shopify → Custom data → Metaobjects:
+**What you can also set yourself**, in Shopify → Custom data → Metaobjects:
 
-- `delivery_settings` — how many days' notice you need, which weekdays you never
-  deliver, how far ahead the calendar takes bookings
+- `delivery_settings` — how many days' notice you need, the 16:00 order cut-off,
+  which weekdays you never deliver, how far ahead the calendar takes bookings,
+  the €300 free-delivery threshold, and the collection window
+- `delivery_slot` — the two-hour delivery windows (09:00–11:00, 11:00–13:00,
+  13:00–15:00)
 - `delivery_closure` — days and whole periods you are shut. One entry covers a
   fortnight; there is deliberately no built-in list of public holidays, because
   a caterer's best days are the ones everyone else takes off
 
-**What we still need from you** is the coffee desk's opening hours, which are a
-different thing from delivery availability and are not yet anywhere on the site.
+**One thing to check.** You said you are reachable every day — but the delivery
+calendar still treats **Sunday as closed**, which is what it did before. Those
+are different questions, and if you do deliver on Sundays it is one setting.
 
-**Why it matters:** Google shows "Open now / Closes at 17:00" directly in search
-results for businesses that publish hours. Without them, that slot stays empty.
+**Still open:** the coffee desk's opening hours, if they differ from the above.
+A place the public can walk into is a different fact from a phone somebody
+answers, and it is not yet anywhere on the site.
+
+**Why it matters:** Google shows "Open now / Closes at 16:00" directly in search
+results for businesses that publish hours. That slot is now filled.
 
 ---
 
@@ -173,14 +191,14 @@ We need either:
 - **Confirmation in writing** that you accept the draft copy as-is and take
   responsibility for it.
 
-For the shipping and returns page specifically, we need the operational facts:
+The shipping and returns page no longer needs operational facts from you — you
+gave them all on 29 August, and the page now writes itself from the same tables
+the checkout prices against: the four distance bands, the minimums, free delivery
+over EUR 300, the 48-hour notice and 16:00 cut-off, the three delivery windows,
+collection at the atelier 11:00-16:00, and your 24-hour cancellation policy.
 
-- Which postcodes/communes do you deliver to?
-- Order cut-off time (e.g. "order before 16:00 for next-day delivery")
-- Delivery fee, and any free-delivery threshold
-- Minimum order value
-- Is pickup possible? From where, and at what times?
-- Return / cancellation policy for food orders
+What it still needs is a **read-through**, because it is now a binding document
+with real money in it, and a **professional translation** into French and Dutch.
 
 **Why it matters:** distance selling to consumers in Belgium has mandatory
 disclosure rules. Separately, Google will not show shipping and return details in
@@ -239,11 +257,11 @@ we can see exactly which pages and search terms perform, and improve from there.
 
 ---
 
-## 11. The domain — **BLOCKER, and the one holding up Google**
+## 11. The domain — **name settled, still holding up Google**
 
-The site is live and working, at a temporary Vercel address. **`moment.be` is
-not registered.** Until it is, three things are true and worth understanding
-together:
+The site is live and working, at a temporary Vercel address. The domain is
+**`moment-lab.be`**, confirmed on 29 August 2026 — but until it points at this
+deployment, three things are true and worth understanding together:
 
 **The site is deliberately invisible to Google.** Not broken — closed on
 purpose. Every page tells search engines not to index it. If you search for
@@ -261,9 +279,10 @@ anyone you send the link to, today. It simply is not competing in search yet.
 
 What we need:
 
-- **Register the domain.** `moment.be` if it is free. Check `.brussels` too, and
-  any variant a competitor could take.
-- **Tell us the exact form you want** — `www.moment.be` or `moment.be`. Pick one
+- **Confirm the domain is registered, and give us access to its DNS** — or tell
+  us who holds it and we will send them the two records. Worth checking
+  `.brussels` too, and any variant a competitor could take.
+- **Tell us the exact form you want** — `www.moment-lab.be` or `moment-lab.be`. Pick one
   and we make the other redirect; running both splits your ranking in half.
 - **Any old domains** from a previous site that should redirect here.
 

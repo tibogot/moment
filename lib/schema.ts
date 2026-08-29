@@ -68,6 +68,42 @@ function socialProfiles(details: SiteDetails) {
   return Object.values(details.social).filter(Boolean);
 }
 
+/**
+ * When someone answers, as one specification covering all seven days.
+ *
+ * The owners are reachable every day on the same hours, so this is one entry
+ * rather than seven — `dayOfWeek` takes a list, and repeating the same times
+ * under each day says nothing extra to a parser and invites the seven to drift
+ * apart the first time somebody edits one.
+ *
+ * These are the hours a human answers the phone, not the days the van runs.
+ * Those are the Shopify delivery settings, they change week to week, and
+ * publishing them as opening hours would put a closure period into a search
+ * result and leave it there.
+ *
+ * Empty when either end is unset: a business that opens and never closes is a
+ * worse claim than one that says nothing.
+ */
+function openingHours(details: SiteDetails) {
+  const { opensAt, closesAt } = details.hours;
+  if (!opensAt || !closesAt) return undefined;
+
+  return {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
+    opens: opensAt,
+    closes: closesAt,
+  };
+}
+
 export function organizationSchema(details: SiteDetails) {
   return compact({
     "@type": "Organization",
@@ -115,6 +151,7 @@ export function cateringBusinessSchema(details: SiteDetails) {
     telephone: details.contact.phone,
     servesCuisine: ["Seasonal", "Belgian", "European"],
     address: postalAddress(details),
+    openingHoursSpecification: openingHours(details),
     areaServed: {
       "@type": "AdministrativeArea",
       name: "Brussels-Capital Region",

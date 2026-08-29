@@ -2,18 +2,34 @@ import {
   DEFAULT_BOOKING_WINDOW_DAYS,
   DEFAULT_CLOSED_WEEKDAYS,
   DEFAULT_LEAD_TIME_DAYS,
+  DEFAULT_ORDER_CUTOFF_HOUR,
+  effectiveLeadTimeDays,
   expandClosureRange,
   firstBookableDate,
+  isPastOrderCutoff,
   lastBookableDate,
   todayInDeliveryTimeZone,
   type DeliveryAvailability,
 } from "@/lib/delivery";
-import { DEFAULT_ATELIER, type Coordinates } from "@/lib/delivery-zones";
+import {
+  DEFAULT_DELIVERY_SLOTS,
+  DEFAULT_PICKUP_WINDOW,
+  isValidTime,
+  orderSlots,
+  type DeliverySlot,
+  type PickupWindow,
+} from "@/lib/delivery-slots";
+import {
+  DEFAULT_ATELIER,
+  DEFAULT_FREE_DELIVERY_THRESHOLD,
+  type Coordinates,
+} from "@/lib/delivery-zones";
 import {
   metaobjectReader,
   parseDecimalField,
   parseIntegerField,
   parseListField,
+  type MetaobjectFields,
 } from "./metaobjects";
 
 /**
@@ -48,9 +64,28 @@ const CLOSED_WEEKDAYS_FIELD = "closed_weekdays";
 const BOOKING_WINDOW_FIELD = "booking_window_days";
 const ATELIER_LATITUDE_FIELD = "atelier_latitude";
 const ATELIER_LONGITUDE_FIELD = "atelier_longitude";
+const CUTOFF_HOUR_FIELD = "order_cutoff_hour";
+const FREE_DELIVERY_FIELD = "free_delivery_threshold";
+const PICKUP_START_FIELD = "pickup_start_time";
+const PICKUP_END_FIELD = "pickup_end_time";
+
+/**
+ * The delivery windows, one entry per slot. Two fields, both `HH:MM`:
+ *
+ *   `start_time`  09:00
+ *   `end_time`    11:00
+ *
+ * Order does not matter in the admin — `orderSlots` sorts them by start time,
+ * because metaobject entries come back in whatever order Shopify holds them and
+ * a picker offering 13:00–15:00 above 09:00–11:00 reads as a bug.
+ */
+const SLOT_METAOBJECT_TYPE = "delivery_slot";
+const SLOT_START_FIELD = "start_time";
+const SLOT_END_FIELD = "end_time";
 
 const readClosures = metaobjectReader(CLOSURE_METAOBJECT_TYPE);
 const readSettings = metaobjectReader(SETTINGS_METAOBJECT_TYPE, 1);
+const readSlots = metaobjectReader(SLOT_METAOBJECT_TYPE);
 
 /** `0` is Sunday, matching `Date#getDay`. */
 const WEEKDAY_NUMBERS: Record<string, number> = {
@@ -83,11 +118,26 @@ function parseClosedWeekdays(raw: string | undefined): number[] | null {
   return days.length === entries.length ? [...new Set(days)] : null;
 }
 
+/**
+ * An `HH:MM` an owner typed, or null.
+ *
+ * Deliberately strict — no "9h", no "9:00", no "09.00". A time that half-parses
+ * is how a collection window becomes 09:00–16:00 when it was meant to be
+ * 11:00–16:00, and the fallback is a correct default, so refusing is cheap.
+ */
+function parseTimeField(raw: string | undefined): string | null {
+  const value = raw?.trim();
+  return value && isValidTime(value) ? value : null;
+}
+
 type DeliverySettings = {
   leadTimeDays: number;
+  cutoffHour: number;
   closedWeekdays: number[];
   bookingWindowDays: number;
   atelier: Coordinates;
+  freeDeliveryThreshold: number;
+  pickupWindow: PickupWindow;
 };
 
 async function getDeliverySettings(): Promise<DeliverySettings> {
@@ -105,10 +155,22 @@ async function getDeliverySettings(): Promise<DeliverySettings> {
     max: 180,
   });
 
+  // Both halves of the collection window or neither, for the same reason as the
+  // coordinates: a new opening time against the default closing time is a
+  // window nobody chose.
+  const pickupStart = parseTimeField(entry?.[PICKUP_START_FIELD]);
+  const pickupEnd = parseTimeField(entry?.[PICKUP_END_FIELD]);
+
   return {
     leadTimeDays:
       parseIntegerField(entry?.[LEAD_TIME_FIELD], { min: 0, max: 90 }) ??
       DEFAULT_LEAD_TIME_DAYS,
+    // 0–23. A cut-off of 24 would mean "never", which is what leaving the field
+    // empty already means, and 0 means "today never counts" — both are sayable,
+    // neither is a typo we have to guess at.
+    cutoffHour:
+      parseIntegerField(entry?.[CUTOFF_HOUR_FIELD], { min: 0, max: 23 }) ??
+      DEFAULT_ORDER_CUTOFF_HOUR,
     closedWeekdays:
       parseClosedWeekdays(entry?.[CLOSED_WEEKDAYS_FIELD]) ??
       DEFAULT_CLOSED_WEEKDAYS,
@@ -121,12 +183,55 @@ async function getDeliverySettings(): Promise<DeliverySettings> {
       latitude !== null && longitude !== null
         ? { latitude, longitude }
         : DEFAULT_ATELIER,
+    freeDeliveryThreshold:
+      parseDecimalField(entry?.[FREE_DELIVERY_FIELD], {
+        min: 0,
+        max: 100_000,
+      }) ?? DEFAULT_FREE_DELIVERY_THRESHOLD,
+    pickupWindow:
+      pickupStart && pickupEnd
+        ? { start: pickupStart, end: pickupEnd }
+        : DEFAULT_PICKUP_WINDOW,
   };
 }
 
 /** Where the van leaves from, for the zone table to measure against. */
 export async function getAtelier(): Promise<Coordinates> {
   return (await getDeliverySettings()).atelier;
+}
+
+/** The basket value at which the trip stops being charged, for the zone table. */
+export async function getFreeDeliveryThreshold(): Promise<number> {
+  return (await getDeliverySettings()).freeDeliveryThreshold;
+}
+
+export async function getPickupWindow(): Promise<PickupWindow> {
+  return (await getDeliverySettings()).pickupWindow;
+}
+
+/**
+ * The windows the van runs, in the order it runs them.
+ *
+ * Falls back to the built-in three whenever the admin has nothing usable —
+ * including an empty definition, which is the state a shop is in before anyone
+ * creates the entries. A cart with no slots to choose from cannot be completed,
+ * so this is the one delivery setting that must never resolve to nothing.
+ */
+export async function getDeliverySlots(): Promise<DeliverySlot[]> {
+  const entries: MetaobjectFields[] = await readSlots();
+
+  const slots = entries.flatMap((fields) => {
+    const start = parseTimeField(fields[SLOT_START_FIELD]);
+    const end = parseTimeField(fields[SLOT_END_FIELD]);
+
+    // A window that ends before it starts is a slip in the admin, and there is
+    // no safe reading of it — dropping the entry leaves the customer two good
+    // choices rather than one impossible one.
+    if (!start || !end || end <= start) return [];
+    return [{ start, end }];
+  });
+
+  return slots.length > 0 ? orderSlots(slots) : DEFAULT_DELIVERY_SLOTS;
 }
 
 /**
@@ -158,10 +263,22 @@ async function getDeliveryClosures(bounds: {
 }
 
 export async function getDeliveryAvailability(): Promise<DeliveryAvailability> {
-  const today = todayInDeliveryTimeZone();
+  // One `now` for the whole resolution. Read the clock twice and a request that
+  // lands on 15:59:59.9 can decide the day from one reading and the cut-off from
+  // the next, producing an availability object that contradicts itself.
+  const now = new Date();
+  const today = todayInDeliveryTimeZone(now);
   const settings = await getDeliverySettings();
 
-  const firstBookable = firstBookableDate(today, settings.leadTimeDays);
+  // The cut-off does not shorten the notice period, it moves when the notice
+  // period starts counting — so it is folded in here, once, rather than left for
+  // every caller to remember. `leadTimeDays` on the way out stays nominal; see
+  // the note on `DeliveryAvailability`.
+  const pastCutoff = isPastOrderCutoff(settings.cutoffHour, now);
+  const firstBookable = firstBookableDate(
+    today,
+    effectiveLeadTimeDays(settings.leadTimeDays, settings.cutoffHour, now),
+  );
   const lastBookable = lastBookableDate(today, settings.bookingWindowDays);
   const closedDates = await getDeliveryClosures({
     from: today,
@@ -173,6 +290,8 @@ export async function getDeliveryAvailability(): Promise<DeliveryAvailability> {
     firstBookable,
     lastBookable,
     leadTimeDays: settings.leadTimeDays,
+    cutoffHour: settings.cutoffHour,
+    pastCutoff,
     closedWeekdays: settings.closedWeekdays,
     closedDates,
   };

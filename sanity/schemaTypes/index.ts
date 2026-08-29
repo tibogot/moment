@@ -3,6 +3,7 @@ import { author } from "./documents/author";
 import { category } from "./documents/category";
 import { homePage } from "./documents/homePage";
 import { menu } from "./documents/menu";
+import { pastEvent } from "./documents/pastEvent";
 import { siteSettings } from "./documents/siteSettings";
 import { blockContent } from "./objects/blockContent";
 import { localeString, localeStringList, localeText } from "./objects/locale";
@@ -21,6 +22,7 @@ export const schemaTypes = [
   category,
   homePage,
   menu,
+  pastEvent,
   siteSettings,
   blockContent,
   localeString,

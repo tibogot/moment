@@ -16,6 +16,7 @@ import {
   removeFromCart,
   setDeliveryAddress,
   setDeliveryDate,
+  setDeliverySlot,
   updateCartLine,
 } from "@/app/actions/cart";
 import {
@@ -23,6 +24,7 @@ import {
   getCartSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
+  getSlotsSnapshot,
   getZonesSnapshot,
   refreshCart,
   setCart,
@@ -34,7 +36,14 @@ import {
   CheckoutNoticeAction,
 } from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
-import { isBookable } from "@/lib/delivery";
+import { DeliverySlotPicker } from "@/components/DeliverySlotPicker";
+import { formatCutoffHour, isBookable } from "@/lib/delivery";
+import {
+  formatSlot,
+  parseSlotAttribute,
+  slotId,
+  type DeliverySlot,
+} from "@/lib/delivery-slots";
 import { checkoutBlocker } from "@/lib/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
@@ -43,7 +52,12 @@ import {
   formatLongDate,
   formatMoney,
 } from "@/lib/i18n/format";
-import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
+import {
+  freeDeliveryShortfall,
+  maxDeliveryDistanceKm,
+  qualifiesForFreeDelivery,
+} from "@/lib/delivery-zones";
+import { needsAddress } from "@/lib/order-preferences";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -86,6 +100,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     getZonesSnapshot,
     getZonesSnapshot,
   );
+  const slots = useSyncExternalStore(
+    subscribeCart,
+    getSlotsSnapshot,
+    getSlotsSnapshot,
+  );
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -98,7 +117,9 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
    * boolean each: two of these open at once is not a state worth being able to
    * represent, and the header's title and back button read from it.
    */
-  const [view, setView] = useState<"cart" | "date" | "address">("cart");
+  const [view, setView] = useState<"cart" | "date" | "slot" | "address">(
+    "cart",
+  );
 
   // Quantities the customer has asked for but Shopify has not confirmed yet,
   // keyed by line id — 0 means the line is on its way out. These are what the
@@ -272,6 +293,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const isEmpty = !cart || lines.length === 0;
   const totalQuantity = lines.reduce((sum, line) => sum + line.quantity, 0);
   const deliveryDate = cart?.deliveryDate ?? null;
+  // Against the windows the shop offers now, not simply printed: a cart can sit
+  // in its cookie for a fortnight, and a window withdrawn in the meantime has to
+  // read as no choice made rather than as a booking the kitchen never took.
+  const slot = parseSlotAttribute(slots, cart?.deliverySlot ?? null);
 
   // A date saved days ago can go stale while the cart sits — the owners may
   // have closed it since. Shopify's hosted checkout will not let anyone edit a
@@ -287,6 +312,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     ? checkoutBlocker(
         {
           deliveryDate,
+          deliverySlot: cart.deliverySlot,
           deliveryMethod: cart.deliveryMethod,
           deliveryAddress: cart.deliveryAddress,
           deliveryZone: cart.deliveryZone,
@@ -294,6 +320,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         },
         availability,
         zones,
+        slots,
       )
     : { kind: "no-date" as const };
 
@@ -337,6 +364,19 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     });
   };
 
+  const chooseSlot = (choice: DeliverySlot) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await setDeliverySlot(locale, slotId(choice));
+      if (!result.ok) {
+        setError(dict.errors[result.code]);
+        return;
+      }
+      setCart(result.cart);
+      setView("cart");
+    });
+  };
+
   return (
     <>
       <div
@@ -369,9 +409,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
               {view === "date"
                 ? t.deliveryDateTitle
-                : view === "address"
-                  ? t.addressTitle
-                  : `${t.title}${totalQuantity ? ` (${totalQuantity})` : ""}`}
+                : view === "slot"
+                  ? t.deliverySlotTitle
+                  : view === "address"
+                    ? t.addressTitle
+                    : `${t.title}${totalQuantity ? ` (${totalQuantity})` : ""}`}
             </p>
             <button
               type="button"
@@ -391,7 +433,14 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 {interpolate(dict.delivery.calendarNote, {
                   days: availability.leadTimeDays,
                 })}{" "}
-                {closedWeekdaysNote(locale, dict, availability.closedWeekdays)}
+                {closedWeekdaysNote(locale, dict, availability.closedWeekdays)}{" "}
+                {/* Only after the cut-off has gone: the rest of the day this
+                    would be a rule stated against nothing that had happened. */}
+                {availability.pastCutoff
+                  ? interpolate(dict.delivery.pastCutoffNote, {
+                      cutoff: formatCutoffHour(availability.cutoffHour),
+                    })
+                  : ""}
               </p>
 
               {error && (
@@ -407,6 +456,23 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 availability={availability}
                 value={deliveryDate}
                 onSelect={chooseDate}
+                disabled={isPending}
+              />
+            </>
+          ) : view === "slot" ? (
+            <>
+              {error && (
+                <div className="px-6 pt-5">
+                  <CheckoutNotice tone="error" title={t.somethingWrong}>
+                    {error}
+                  </CheckoutNotice>
+                </div>
+              )}
+
+              <DeliverySlotPicker
+                slots={slots}
+                value={slot}
+                onSelect={chooseSlot}
                 disabled={isPending}
               />
             </>
@@ -579,6 +645,32 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 )}
               </div>
 
+              {/* The window sits under the day it belongs to, and only for
+                  delivery: collection is one long opening at the atelier, not a
+                  booked window. Editable here because Shopify's checkout cannot
+                  change a cart attribute either. */}
+              {needsAddress(cart.deliveryMethod) && (
+                <div className="mt-3 flex items-baseline justify-between gap-3">
+                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                    {t.slot}
+                  </span>
+                  <span className="flex items-baseline gap-3">
+                    {slot && (
+                      <span className="font-archivo-light text-[15px]">
+                        {formatSlot(slot)}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setView("slot")}
+                      className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                    >
+                      {slot ? t.change : t.pick}
+                    </button>
+                  </span>
+                </div>
+              )}
+
               {dateIsStale && deliveryDate && (
                 <CheckoutNotice
                   tone="blocker"
@@ -621,6 +713,27 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 {t.taxesNote}
               </p>
 
+              {/* Only for delivery, and only with something in the basket to
+                  measure against — collection has no fee to waive, and
+                  "spend €300" against an empty cart is noise, not an offer. */}
+              {needsAddress(cart.deliveryMethod) && cart.subtotal > 0 && (
+                <p className="font-archivo-light mt-1 text-[14px] opacity-70">
+                  {qualifiesForFreeDelivery(cart.subtotal, zones)
+                    ? interpolate(t.freeDeliveryReached, {
+                        threshold: formatMoney(
+                          locale,
+                          zones.freeDeliveryThreshold,
+                        ),
+                      })
+                    : interpolate(t.freeDeliveryShortfall, {
+                        shortfall: formatMoney(
+                          locale,
+                          freeDeliveryShortfall(cart.subtotal, zones),
+                        ),
+                      })}
+                </p>
+              )}
+
               {/* Without a day there is nothing to check out to, so the picker
                   takes the primary slot rather than disabling the button and
                   leaving the customer to work out why. */}
@@ -635,6 +748,26 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     minimum: formatMoney(locale, blocker.zone.minimumOrder),
                     shortfall: formatMoney(locale, blocker.shortfall),
                   })}
+                </CheckoutNotice>
+              )}
+
+              {/* The window, on the same terms as the address below: a
+                  blocker the customer can clear without leaving the panel. */}
+              {(blocker?.kind === "no-slot" ||
+                blocker?.kind === "stale-slot") && (
+                <CheckoutNotice
+                  tone="blocker"
+                  title={t.beforeCheckout}
+                  className="mt-4"
+                  action={
+                    <CheckoutNoticeAction onClick={() => setView("slot")}>
+                      {t.chooseSlot}
+                    </CheckoutNoticeAction>
+                  }
+                >
+                  {blocker.kind === "stale-slot"
+                    ? interpolate(t.staleSlot, { slot: blocker.slot })
+                    : t.pickSlotIntro}
                 </CheckoutNotice>
               )}
 

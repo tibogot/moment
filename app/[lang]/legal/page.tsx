@@ -14,7 +14,7 @@ export default async function LegalPage() {
   return (
     <LegalDoc
       title="Legal notice"
-      lead="Company identity required under Belgian law. Details below are placeholders until the final company information is confirmed."
+      lead="Company identity required under Belgian law. The registered denomination and legal form are the last two fields still to be confirmed."
     >
       <LegalSection title="Publisher">
         <p>

@@ -21,6 +21,21 @@ export const DELIVERY_TIMEZONE = "Europe/Brussels";
 /** Deliveries need notice. Overridden from the Shopify admin. */
 export const DEFAULT_LEAD_TIME_DAYS = 2;
 
+/**
+ * The hour, in Brussels, after which today stops counting towards the notice
+ * period.
+ *
+ * The owners' rule is "minimum 48 h à l'avance avant 16 h", which is two rules
+ * wearing one coat: two days of notice, *and* a daily cut-off. Without the
+ * cut-off the lead time alone lets someone order at 23:50 on Monday for
+ * Wednesday and call it 48 hours, when the kitchen got 34 of them.
+ *
+ * So an order placed at or after this hour is treated as having been placed
+ * tomorrow: the lead time is unchanged, but it starts counting a day later.
+ * See `effectiveLeadTimeDays`.
+ */
+export const DEFAULT_ORDER_CUTOFF_HOUR = 16;
+
 /** Sunday, until the owners say otherwise. `0` is Sunday in `Date#getDay`. */
 export const DEFAULT_CLOSED_WEEKDAYS = [0];
 
@@ -56,8 +71,24 @@ export type DeliveryAvailability = {
   firstBookable: string;
   /** The far edge of the booking window. */
   lastBookable: string;
-  /** Notice required, in days. Shown to the customer as well as applied. */
+  /**
+   * Notice required, in days. Shown to the customer as well as applied.
+   *
+   * Deliberately the *nominal* figure — "we need two days" — not the effective
+   * one. When an order is placed after the cut-off the earliest bookable day
+   * moves out by one, and `firstBookable` already reflects that; saying "we
+   * need three days' notice" at 16:01 and "two" at 15:59 would make the site
+   * look like it was making the rule up.
+   */
   leadTimeDays: number;
+  /** The hour, in Brussels, after which today stops counting. 24-hour clock. */
+  cutoffHour: number;
+  /**
+   * Whether the visitor is reading this *after* today's cut-off — in which case
+   * `firstBookable` is already a day further out than the lead time alone would
+   * put it, and the copy can explain why rather than leaving them to notice.
+   */
+  pastCutoff: boolean;
   /** Weekdays the kitchen never delivers on, `0` = Sunday. */
   closedWeekdays: number[];
   /** Individual days the owners closed in the Shopify admin. */
@@ -102,6 +133,58 @@ export function todayInDeliveryTimeZone(now = new Date()) {
     month: "2-digit",
     day: "2-digit",
   }).format(now);
+}
+
+/**
+ * The hour of the day in Brussels, 0–23.
+ *
+ * `hourCycle: "h23"` rather than `hour12: false`, which some ICU builds render
+ * as "24" at midnight — a number that would quietly put every midnight order
+ * past a 16:00 cut-off.
+ */
+export function hourInDeliveryTimeZone(now = new Date()) {
+  const hour = new Intl.DateTimeFormat("en-GB", {
+    timeZone: DELIVERY_TIMEZONE,
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).format(now);
+
+  return Number(hour);
+}
+
+/**
+ * The cut-off as a clock time — `16` becomes `16:00`.
+ *
+ * The same 24-hour form the delivery windows use, and for the same reason: it
+ * reads identically in French, Dutch and English, so a rule the customer is
+ * being held to does not change shape with the language they read it in.
+ */
+export function formatCutoffHour(hour: number) {
+  return `${String(hour).padStart(2, "0")}:00`;
+}
+
+export function isPastOrderCutoff(
+  cutoffHour = DEFAULT_ORDER_CUTOFF_HOUR,
+  now = new Date(),
+) {
+  return hourInDeliveryTimeZone(now) >= cutoffHour;
+}
+
+/**
+ * The lead time as it actually applies right now: the nominal notice period,
+ * plus a day if today's cut-off has already gone.
+ *
+ * Kept separate from `leadTimeDays` so the two audiences get the right number —
+ * the calendar needs the effective one to decide what to grey out, the copy
+ * needs the nominal one to state the rule. Conflating them is how a FAQ ends up
+ * announcing a different notice period depending on the time of day.
+ */
+export function effectiveLeadTimeDays(
+  leadTimeDays = DEFAULT_LEAD_TIME_DAYS,
+  cutoffHour = DEFAULT_ORDER_CUTOFF_HOUR,
+  now = new Date(),
+) {
+  return isPastOrderCutoff(cutoffHour, now) ? leadTimeDays + 1 : leadTimeDays;
 }
 
 /** `today` shifted by `days`, or `today` unchanged if it will not parse. */

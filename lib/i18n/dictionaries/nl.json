@@ -179,27 +179,35 @@
     "items": [
       {
         "q": "Waar leveren jullie?",
-        "a": "Wij leveren in Brussel en tot {max} km van ons atelier. De kosten en het minimumbedrag hangen af van de afstand: {zones}. Voorbij {max} km maken wij een offerte op maat."
+        "a": "We leveren tot {max} km van het atelier in Vorst. De kosten en het minimumbedrag hangen af van de afstand: {zones}. Vanaf {freeThreshold} is de levering gratis, in welke zone u ook ligt. Verder dan {max} km maken we een offerte op maat."
+      },
+      {
+        "q": "Hoe laat komt mijn bestelling aan?",
+        "a": "U kiest bij het bestellen een tijdvak van twee uur: {slots}. {slotFull}"
       },
       {
         "q": "Hoe lang op voorhand moet ik bestellen?",
-        "a": "Wij hebben {days} dagen op voorhand nodig voor een levering.{closedDays} De kalender op de site toont enkel de dagen die nog vrij zijn. Voor een evenement neemt u het best zo vroeg mogelijk contact op: drukke data zijn snel weg."
+        "a": "We hebben {days} dagen op voorhand nodig, en bestellingen sluiten om {cutoff} — daarna telt de termijn vanaf de volgende dag.{closedDays} De kalender op de site toont alleen dagen die nog vrij zijn. Voor een evenement: neem zo vroeg mogelijk contact op, drukke data gaan snel."
       },
       {
-        "q": "Kan ik mijn bestelling zelf ophalen?",
-        "a": "Ja. Afhalen in het atelier (1190 Vorst) kan bij het bestellen, zonder leveringskosten en zonder minimumbedrag. Kies « Click & collect » wanneer u uw datum selecteert."
+        "q": "Kan ik mijn bestelling zelf afhalen?",
+        "a": "Ja, in het atelier op {address}, gratis en zonder minimumbedrag. Afhalen kan van {pickupWindow}. Zoetigheden kunt u tot {cutoff} de dag ervoor bestellen; voor de rest geldt de gewone termijn van {days} dagen. Kies « Click & collect » wanneer u uw datum selecteert."
+      },
+      {
+        "q": "Kan ik mijn bestelling annuleren?",
+        "a": "Ja, kosteloos tot 24 uur voor de voorziene leverdatum: het volledige bedrag wordt terugbetaald. Binnen 24 uur is terugbetaling in principe niet mogelijk, omdat de producten vers zijn en speciaal voor uw bestelling bereid worden. Klopt er iets niet aan de levering of aan onze producten, bel ons dan meteen — dan zoeken we een oplossing."
       },
       {
         "q": "Hebben jullie vegetarische, veganistische of glutenvrije opties?",
-        "a": "Ja. Wij maken vegetarische, veganistische en glutenvrije versies van hetzelfde gerecht, apart geëtiketteerd en verpakt. Geef diëten en allergieën door bij uw bestelling."
+        "a": "Ja. We maken vegetarische, veganistische en glutenvrije versies van hetzelfde gerecht, apart geëtiketteerd en verpakt. Laat ons weten welke diëten en allergieën er zijn wanneer u bestelt."
       },
       {
         "q": "Hoe verloopt een offerte voor een evenement?",
-        "a": "Evenementmenu's worden geoffreerd, niet online besteld. Laat ons de datum, het aantal personen en de locatie weten, en wij komen terug met het menu volledig gecalculeerd, bediening en materiaal inbegrepen."
+        "a": "Evenementmenu's worden geoffreerd, niet online besteld. Geef ons de datum, het aantal personen en de locatie, en wij komen terug met het menu, service en materiaal inbegrepen."
       },
       {
         "q": "Werken jullie met bedrijven?",
-        "a": "Ja, een groot deel van onze activiteit. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. Wij factureren met uw btw-nummer en kunnen meerdere leveradressen bewaren."
+        "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. We factureren op uw btw-nummer en kunnen meerdere leveradressen bewaren."
       }
     ]
   },
@@ -207,7 +215,13 @@
     "calendarNote": "Blauwe dagen zijn gesloten of volzet — wij hebben {days} dagen op voorhand nodig.",
     "closedDays": "Wij leveren niet op {closedDays}.",
     "dayArticle": "",
-    "unavailable": "Niet beschikbaar voor levering"
+    "unavailable": "Niet beschikbaar voor levering",
+    "slotTitle": "Leveringsmoment",
+    "slotIntro": "Kies het tijdvak van twee uur dat u het beste uitkomt.",
+    "slotFull": "Tijdvak vol? Neem contact op — afhankelijk van uw locatie en de route die we al rijden, kunnen we u misschien toevoegen aan een geplande ronde.",
+    "cutoffNote": "Bestellingen sluiten om {cutoff}. Daarna telt de termijn van {days} dagen vanaf morgen.",
+    "pastCutoffNote": "De sluitingstijd van {cutoff} is vandaag voorbij, dus de vroegst mogelijke levering schuift een dag op.",
+    "pickupWindow": "Afhalen kan van {window} in het atelier."
   },
   "deliveryMethods": {
     "delivery": {
@@ -238,7 +252,11 @@
     "noMatch": "Geen Belgisch adres komt overeen.",
     "didYouMean": "Bedoelde u {streets}? Voeg een huisnummer toe.",
     "loadingDays": "Beschikbare dagen laden…",
-    "selectedDate": "Gekozen leverdatum"
+    "selectedDate": "Gekozen leverdatum",
+    "slot": "Tijdvak",
+    "selectSlot": "Kies een tijdvak",
+    "chooseSlotTitle": "Kies een leveringsmoment",
+    "selectedSlot": "Gekozen leveringsmoment"
   },
   "cart": {
     "title": "Winkelmand",
@@ -274,7 +292,15 @@
     "noteSaved": "Bewaard",
     "beforeCheckout": "Voor u bestelt",
     "somethingWrong": "Er ging iets mis",
-    "addressTitle": "Bezorgadres"
+    "addressTitle": "Bezorgadres",
+    "slot": "Tijdvak",
+    "deliverySlotTitle": "Leveringsmoment",
+    "pickSlotIntro": "Kies het tijdvak van twee uur dat u het beste uitkomt.",
+    "chooseSlot": "Kies een leveringsmoment",
+    "staleSlot": "{slot} wordt niet meer aangeboden. Kies een ander tijdvak.",
+    "freeDelivery": "Gratis",
+    "freeDeliveryReached": "De levering is gratis — uw bestelling ligt boven {threshold}.",
+    "freeDeliveryShortfall": "Voeg {shortfall} toe en de levering is gratis."
   },
   "shop": {
     "title": "Winkel",
@@ -339,7 +365,8 @@
     "unknown_method": "Onbekende leveringsoptie.",
     "no_cart": "Winkelmand niet gevonden.",
     "cart_failed": "Wij konden uw winkelmand niet bijwerken. Probeer het opnieuw.",
-    "generic": "Er is iets misgegaan."
+    "generic": "Er is iets misgegaan.",
+    "slot_unavailable": "Dit tijdvak is niet meer beschikbaar. Kies er een ander."
   },
   "quote": {
     "heading": "Buiten ons leveringsgebied",
@@ -409,7 +436,11 @@
     "phonePlaceholder": "+32",
     "datePlaceholder": "14 maart",
     "guestsPlaceholder": "25, of 20–30",
-    "messagePlaceholder": "Een lunch voor een bestuursvergadering, dieetwensen, een budget om rekening mee te houden — alles wat u al weet."
+    "messagePlaceholder": "Een lunch voor een bestuursvergadering, dieetwensen, een budget om rekening mee te houden — alles wat u al weet.",
+    "hoursTitle": "Ons bereiken",
+    "hours": "Elke dag, van {hours}, telefonisch en per e-mail.",
+    "addressTitle": "Het atelier",
+    "pickupNote": "Afhalen na afspraak, van {window}."
   },
   "proAccount": {
     "title": "Zakelijk account",
@@ -613,6 +644,24 @@
     "apero": "Apéro",
     "buffet": "Buffet",
     "seated": "Zittend diner"
+  },
+  "eventOccasions": {
+    "reception": "Receptie",
+    "launch": "Lancering",
+    "seminar": "Seminarie",
+    "businessLunch": "Bedrijfslunch",
+    "teamBuilding": "Teambuilding",
+    "staffParty": "Personeelsfeest",
+    "privateDinner": "Privédiner",
+    "celebration": "Familiefeest",
+    "wedding": "Huwelijk",
+    "communion": "Communiefeest",
+    "funeral": "Koffietafel"
+  },
+  "events": {
+    "guestsOne": "{count} gast",
+    "guestsMany": "{count} gasten",
+    "guestRange": "van {min} tot {max} gasten"
   },
   "menus": {
     "lead": "Wat wij koken, per persoon. Elke formule hieronder is een vertrekpunt — wij passen de gerechten aan het seizoen aan, aan de locatie en aan wie er mee-eet.",

@@ -19,6 +19,7 @@
 export type OrderErrorCode =
   | "not_configured"
   | "date_unavailable"
+  | "slot_unavailable"
   | "address_not_found"
   | "unknown_method"
   | "no_cart"

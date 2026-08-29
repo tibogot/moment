@@ -2,6 +2,7 @@ import type { StructureResolver } from "sanity/structure";
 import { CogIcon } from "@sanity/icons/Cog";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { HomeIcon } from "@sanity/icons/Home";
+import { ImagesIcon } from "@sanity/icons/Images";
 import { TagIcon } from "@sanity/icons/Tag";
 import { UlistIcon } from "@sanity/icons/Ulist";
 import { UsersIcon } from "@sanity/icons/Users";
@@ -27,6 +28,21 @@ export const structure: StructureResolver = (S) =>
         .icon(UlistIcon)
         .schemaType("menu")
         .child(S.documentTypeList("menu").title("Menus traiteur")),
+
+      /**
+       * Ordered by date rather than by Sanity's default, which is last-edited.
+       * These are added in bursts after a busy fortnight, so "the one I touched
+       * most recently" is never the one being looked for.
+       */
+      S.listItem()
+        .title("Réalisations")
+        .icon(ImagesIcon)
+        .schemaType("pastEvent")
+        .child(
+          S.documentTypeList("pastEvent")
+            .title("Réalisations")
+            .defaultOrdering([{ field: "date", direction: "desc" }]),
+        ),
 
       S.listItem()
         .title("Actualités")

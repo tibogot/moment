@@ -104,6 +104,10 @@ export type SiteSettings = {
     phone?: string;
     email?: string;
   };
+  hours?: {
+    opensAt?: string;
+    closesAt?: string;
+  };
   legal?: {
     companyName?: string;
     enterpriseNumber?: string;
@@ -114,6 +118,67 @@ export type SiteSettings = {
     instagram?: string;
     facebook?: string;
   };
+};
+
+export type MenuReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "menu";
+};
+
+export type PastEvent = {
+  _id: string;
+  _type: "pastEvent";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  occasion:
+    | "launch"
+    | "reception"
+    | "seminar"
+    | "teamBuilding"
+    | "staffParty"
+    | "businessLunch"
+    | "privateDinner"
+    | "celebration"
+    | "wedding"
+    | "communion"
+    | "funeral";
+  guests: number;
+  commune: string;
+  venue?: string;
+  date: string;
+  client?: string;
+  note?: LocaleString;
+  images: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    _key: string;
+  }>;
+  menu?: MenuReference;
+  article?: ArticleReference;
+  featured?: boolean;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type Menu = {
@@ -148,22 +213,6 @@ export type Menu = {
   includes?: LocaleStringList;
   excludes?: LocaleStringList;
   dietaryNote?: LocaleText;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
 };
 
 export type Slug = {
@@ -381,9 +430,11 @@ export type AllSanitySchemaTypes =
   | SanityImageAssetReference
   | BlockContent
   | SiteSettings
-  | Menu
+  | MenuReference
+  | PastEvent
   | SanityImageCrop
   | SanityImageHotspot
+  | Menu
   | Slug
   | HomePage
   | Category
@@ -530,11 +581,56 @@ export type MenuSlugsQueryResult = Array<{
 }>;
 
 // Source: lib/sanity/queries.ts
+// Variable: pastEventsQuery
+// Query: *[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {    _id,  occasion,  guests,  commune,  venue,  date,  client,  note,  featured,  images,  menu->{ title, "slug": slug.current },  article->{ title, language, "slug": slug.current }}
+export type PastEventsQueryResult = Array<{
+  _id: string;
+  occasion:
+    | "businessLunch"
+    | "celebration"
+    | "communion"
+    | "funeral"
+    | "launch"
+    | "privateDinner"
+    | "reception"
+    | "seminar"
+    | "staffParty"
+    | "teamBuilding"
+    | "wedding";
+  guests: number;
+  commune: string;
+  venue: string | null;
+  date: string;
+  client: string | null;
+  note: LocaleString | null;
+  featured: boolean | null;
+  images: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    _key: string;
+  }>;
+  menu: {
+    title: LocaleString | null;
+    slug: string;
+  } | null;
+  article: {
+    title: string;
+    language: "en" | "fr" | "nl";
+    slug: string;
+  } | null;
+}>;
+
+// Source: lib/sanity/queries.ts
 // Variable: siteDetailsQuery
-// Query: *[_id == "siteSettings"][0] {  contact,  legal,  socialLinks}
+// Query: *[_id == "siteSettings"][0] {  contact,  hours,  legal,  socialLinks}
 export type SiteDetailsQueryResult =
   | {
       contact: null;
+      hours: null;
       legal: null;
       socialLinks: null;
     }
@@ -547,6 +643,10 @@ export type SiteDetailsQueryResult =
         country?: string;
         phone?: string;
         email?: string;
+      } | null;
+      hours: {
+        opensAt?: string;
+        closesAt?: string;
       } | null;
       legal: {
         companyName?: string;
@@ -606,7 +706,8 @@ declare module "@sanity/client" {
     '*[_type == "menu"] | order(pricePerPerson asc) {\n  \n  _id,\n  title,\n  slug,\n  format,\n  summary,\n  pricePerPerson,\n  priceNote,\n  minGuests,\n  maxGuests,\n  leadTimeDays,\n  includes,\n  excludes,\n  dietaryNote,\n  image\n,\n  \n  courses[]{\n    _key,\n    title,\n    items\n  }\n\n}': MenusQueryResult;
     '*[_type == "menu" && slug.current == $slug][0] {\n  \n  _id,\n  title,\n  slug,\n  format,\n  summary,\n  pricePerPerson,\n  priceNote,\n  minGuests,\n  maxGuests,\n  leadTimeDays,\n  includes,\n  excludes,\n  dietaryNote,\n  image\n,\n  \n  courses[]{\n    _key,\n    title,\n    items\n  }\n\n}': MenuBySlugQueryResult;
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
-    '*[_id == "siteSettings"][0] {\n  contact,\n  legal,\n  socialLinks\n}': SiteDetailsQueryResult;
+    '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
+    '*[_id == "siteSettings"][0] {\n  contact,\n  hours,\n  legal,\n  socialLinks\n}': SiteDetailsQueryResult;
     '*[_id == "homePage"][0] {\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  eventsImage,\n  coffeeImage\n}': HomePageQueryResult;
   }
 }

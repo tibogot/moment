@@ -11,7 +11,7 @@ export default function TermsPage() {
   return (
     <LegalDoc
       title="Terms of sale"
-      lead="General terms of sale for products and catering services. Draft — to be aligned with Belgian consumer and distance-selling rules before launch."
+      lead="General terms of sale for products and catering services. Delivery fees, minimum orders and lead times are set out under Shipping & returns."
     >
       <LegalSection title="Scope">
         <p>
@@ -36,12 +36,30 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title="Cancellation">
+        <p>
+          Any order may be cancelled free of charge up to 24 hours before the
+          scheduled delivery date. In that case the full amount of the order is
+          refunded.
+        </p>
+        <p>
+          A cancellation made less than 24 hours before delivery cannot, as a
+          rule, be refunded, as the products are fresh and prepared specifically
+          for each order.
+        </p>
+        <p>
+          Where there is a problem with our service, or products do not match
+          the order, please contact us immediately so that an appropriate
+          solution can be found.
+        </p>
+      </LegalSection>
+
       <LegalSection title="Withdrawal">
         <p>
-          For sealed food products and perishable goods, the legal right of
-          withdrawal may not apply once delivery constraints or hygiene rules
-          are engaged. Specific rules for catering cancellations will be set out
-          here.
+          For sealed food products and perishable goods, the statutory right of
+          withdrawal for distance selling does not generally apply, as provided
+          for under Belgian consumer law. The cancellation terms above apply
+          instead.
         </p>
       </LegalSection>
 

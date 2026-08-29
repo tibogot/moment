@@ -8,12 +8,20 @@ import {
   interpolate,
   type Dictionary,
 } from "@/lib/i18n/dictionaries";
+import { formatCutoffHour } from "@/lib/delivery";
+import {
+  formatSlot,
+  formatWindow,
+  type DeliverySlot,
+} from "@/lib/delivery-slots";
 import { maxDeliveryDistanceKm, type ZoneTable } from "@/lib/delivery-zones";
 import { closedWeekdaysNote, formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
+import { getSiteDetails } from "@/lib/sanity/queries";
 import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";
 import { localizedMetadata } from "@/lib/seo";
 import { getDeliveryRules } from "@/lib/shopify/zones";
+import { formatAddressLine } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("faq", {
   path: routes.faq,
@@ -44,6 +52,11 @@ function zoneSummary(locale: Locale, dict: Dictionary, zones: ZoneTable) {
     .join(" · ");
 }
 
+/** The delivery windows, from the same table the picker offers. */
+function slotSummary(slots: DeliverySlot[]) {
+  return slots.map(formatSlot).join(" · ");
+}
+
 export default async function FaqPage({
   params,
 }: {
@@ -51,10 +64,12 @@ export default async function FaqPage({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const [dict, { availability, zones }] = await Promise.all([
-    getDictionary(locale),
-    getDeliveryRules(),
-  ]);
+  const [dict, { availability, zones, slots, pickupWindow }, siteDetails] =
+    await Promise.all([
+      getDictionary(locale),
+      getDeliveryRules(),
+      getSiteDetails(),
+    ]);
 
   // The notice period and the closed days are quoted here as well as applied by
   // the calendar, and a FAQ that contradicts the checkout is worse than no FAQ —
@@ -69,13 +84,24 @@ export default async function FaqPage({
     availability.closedWeekdays,
   );
 
+  // Every number in these answers is read from the tables the checkout prices
+  // against — the bands, the windows, the cut-off, the free-delivery threshold,
+  // the atelier's own address. None of it is typed into the dictionary, which
+  // holds only the words between them. A FAQ is the first page to go stale after
+  // a settings change, and one quoting last month's fee is worse than no page.
   const entries = dict.faq.items.map(({ q, a }) => ({
     question: q,
     answer: interpolate(a, {
       days: availability.leadTimeDays,
+      cutoff: formatCutoffHour(availability.cutoffHour),
       closedDays: closedDays ? ` ${closedDays}` : "",
       max: maxDeliveryDistanceKm(zones),
       zones: zoneSummary(locale, dict, zones),
+      freeThreshold: formatMoney(locale, zones.freeDeliveryThreshold),
+      slots: slotSummary(slots),
+      slotFull: dict.delivery.slotFull,
+      pickupWindow: formatWindow(pickupWindow),
+      address: formatAddressLine(siteDetails),
     }),
   }));
 

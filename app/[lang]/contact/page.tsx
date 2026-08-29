@@ -1,4 +1,5 @@
 import { ContactForm } from "@/components/ContactForm";
+import { ContactDetails } from "@/components/ContactDetails";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
@@ -17,7 +18,7 @@ import {
 import { menuEnquiryMessage, resolveMenu } from "@/lib/menus";
 import { routes } from "@/lib/routes";
 import { getMenuBySlug, getSiteDetails } from "@/lib/sanity/queries";
-import { getDeliveryAvailability } from "@/lib/shopify/delivery";
+import { getDeliveryRules } from "@/lib/shopify/zones";
 import { breadcrumbSchema, graph, organizationSchema } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
 
@@ -97,11 +98,12 @@ export default async function ContactPage({
   const { lang } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
-  const [initialValues, availability, siteDetails] = await Promise.all([
-    resolvePrefill(searchParams, dict, locale),
-    getDeliveryAvailability(),
-    getSiteDetails(),
-  ]);
+  const [initialValues, { availability, pickupWindow }, siteDetails] =
+    await Promise.all([
+      resolvePrefill(searchParams, dict, locale),
+      getDeliveryRules(),
+      getSiteDetails(),
+    ]);
 
   return (
     <>
@@ -125,6 +127,16 @@ export default async function ContactPage({
       <ContactForm
         initialValues={initialValues}
         leadTimeDays={availability.leadTimeDays}
+      />
+
+      {/* The form is the primary path, so the standing facts sit under it
+          rather than competing with it — but they do have to be *somewhere*.
+          Until this block existed, the phone number and the atelier's address
+          were on the site only inside the legal notice and a FAQ answer. */}
+      <ContactDetails
+        t={dict.contact}
+        details={siteDetails}
+        pickupWindow={pickupWindow}
       />
 
       <Footer />

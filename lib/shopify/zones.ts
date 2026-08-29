@@ -1,11 +1,18 @@
 import type { DeliveryAvailability } from "@/lib/delivery";
+import type { DeliverySlot, PickupWindow } from "@/lib/delivery-slots";
 import {
   DEFAULT_ZONE_TABLE,
   type Coordinates,
   type DeliveryZone,
   type ZoneTable,
 } from "@/lib/delivery-zones";
-import { getAtelier, getDeliveryAvailability } from "./delivery";
+import {
+  getAtelier,
+  getDeliveryAvailability,
+  getDeliverySlots,
+  getFreeDeliveryThreshold,
+  getPickupWindow,
+} from "./delivery";
 import {
   metaobjectReader,
   parseDecimalField,
@@ -30,14 +37,21 @@ import {
  *        `zone_id`         Integer  — 1, 2, 3 … as the customer sees it
  *        `fee`             Decimal  — euros
  *        `minimum_order`   Decimal  — euros
- *        `max_distance_km` Decimal  — the band's outer edge. Leave **empty** on
- *                                     the Brussels zone, which is a region
- *                                     rather than a radius.
+ *        `max_distance_km` Decimal  — the band's outer edge. Leave **empty**
+ *                                     only for an administrative zone (an area
+ *                                     rather than a radius); the client's
+ *                                     current table has none.
  *   4. Enable Storefront API access on the definition
  *   5. One entry per band
  *
- * The atelier the distances are measured from lives on `delivery_settings`, next
- * to the lead time — see `lib/shopify/delivery.ts`.
+ * As given by the owners on 29 August 2026, that is four entries: 10 km / €10 /
+ * €100, 25 km / €15 / €125, 50 km / €30 / €150, 70 km / €50 / €200. There is no
+ * fifth entry for "> 70 km" — a band with no price is not a band, it is the
+ * absence of one, and the site sends those addresses to the quote form.
+ *
+ * The atelier the distances are measured from, and the free-delivery threshold
+ * that overrides every fee here, both live on `delivery_settings` next to the
+ * lead time — see `lib/shopify/delivery.ts`.
  */
 const ZONE_METAOBJECT_TYPE = "delivery_zone";
 const ZONE_ID_FIELD = "zone_id";
@@ -88,6 +102,7 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
 function parseZoneTable(
   entries: MetaobjectFields[],
   atelier: Coordinates,
+  freeDeliveryThreshold: number,
 ): ZoneTable | null {
   if (entries.length === 0) return null;
 
@@ -109,32 +124,54 @@ function parseZoneTable(
   // one it belongs in. The radius-less zone leads, as it does in the defaults.
   zones.sort((a, b) => (a.maxDistanceKm ?? -1) - (b.maxDistanceKm ?? -1));
 
-  return { atelier, zones };
-}
-
-export async function getZoneTable(): Promise<ZoneTable> {
-  const [entries, atelier] = await Promise.all([
-    readZoneEntries(),
-    getAtelier(),
-  ]);
-
-  return parseZoneTable(entries, atelier) ?? { ...DEFAULT_ZONE_TABLE, atelier };
+  return { atelier, zones, freeDeliveryThreshold };
 }
 
 /**
- * Both halves of the delivery rules, for the pages that gate a cart on them —
- * which is most of the pages that need either. Fetched together because they
- * are read together and both are cached; nothing here is a second round trip
- * the caller could have avoided by asking for one.
+ * The free-delivery threshold rides on the table rather than on the bands, and
+ * it comes from `delivery_settings` rather than from a `delivery_zone` entry:
+ * it is one number that applies across every band, and putting it on each band
+ * would mean four places to change it and three chances to leave one behind.
+ *
+ * It survives a broken zone table on purpose. A typo'd fee sends the bands back
+ * to the built-in defaults, but the threshold the owners set is still the
+ * threshold they set, and quietly reverting it to €300 alongside would be a
+ * second, silent pricing change nobody asked for.
+ */
+export async function getZoneTable(): Promise<ZoneTable> {
+  const [entries, atelier, freeDeliveryThreshold] = await Promise.all([
+    readZoneEntries(),
+    getAtelier(),
+    getFreeDeliveryThreshold(),
+  ]);
+
+  return (
+    parseZoneTable(entries, atelier, freeDeliveryThreshold) ?? {
+      ...DEFAULT_ZONE_TABLE,
+      atelier,
+      freeDeliveryThreshold,
+    }
+  );
+}
+
+/**
+ * Every delivery rule the pages that gate a cart need: which days, which
+ * windows, and what the trip costs. Fetched together because they are read
+ * together and all three are cached; nothing here is a round trip the caller
+ * could have avoided by asking for one.
  */
 export async function getDeliveryRules(): Promise<{
   availability: DeliveryAvailability;
   zones: ZoneTable;
+  slots: DeliverySlot[];
+  pickupWindow: PickupWindow;
 }> {
-  const [availability, zones] = await Promise.all([
+  const [availability, zones, slots, pickupWindow] = await Promise.all([
     getDeliveryAvailability(),
     getZoneTable(),
+    getDeliverySlots(),
+    getPickupWindow(),
   ]);
 
-  return { availability, zones };
+  return { availability, zones, slots, pickupWindow };
 }
