@@ -234,6 +234,18 @@ zone fees and minimums, and they want a professional translator. See §4.
 Things that are working, understood, and not worth fixing yet — recorded so
 nobody rediscovers them as bugs.
 
+**The checkout rules are enforced by the site, not by Shopify.** Both checkout
+buttons go through `beginCheckout` (`app/actions/cart.ts`), which re-reads the
+cart and the live rules — date, cut-off, window, zone, minimum — before handing
+over Shopify's checkout address, and the page never holds that address itself.
+What it cannot see is what happens on Shopify's pages: an address changed at
+checkout, a discount code that takes the basket under the zone minimum or the
+free-delivery threshold, or a checkout reopened days later from an
+abandoned-cart email. Closing those needs a **Cart & Checkout Validation
+Function** in a Shopify app, reading the cart attributes. Build it when the
+client's own store is connected; until then, staff check each order's
+attributes against the zone table.
+
 **The delivery fee lives in two places.** The site quotes it from the
 `delivery_zone` metaobject; Shopify charges it from Settings → Shipping. Both
 are in the Shopify admin now, a few clicks apart, which is the most that can be

@@ -93,6 +93,17 @@ export type DeliveryAvailability = {
   closedWeekdays: number[];
   /** Individual days the owners closed in the Shopify admin. */
   closedDates: string[];
+  /**
+   * The closures could not be read, so `closedDates` is empty for want of an
+   * answer rather than because nothing is closed.
+   *
+   * The calendars still paint from it — a page cached through a Shopify blip
+   * should not show a month of closed days until the next revalidation — but
+   * the server refuses to book or check out against it. The customer is asked
+   * to try again in a moment; the alternative is selling a day the owners took
+   * off.
+   */
+  closuresUnavailable: boolean;
 };
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;

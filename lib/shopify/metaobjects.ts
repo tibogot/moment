@@ -110,20 +110,39 @@ async function fetchMetaobjects(
  * that reason.
  */
 export function metaobjectReader(type: string, first = METAOBJECT_PAGE_SIZE) {
+  const readOrNull = strictMetaobjectReader(type, first);
+
+  return async function readEntries(): Promise<MetaobjectFields[]> {
+    return (await readOrNull()) ?? [];
+  };
+}
+
+/**
+ * The same read, but a failure comes back as null instead of as "no entries".
+ *
+ * For the one setting where the default is the dangerous answer. Every other
+ * metaobject falls back to a value somebody chose on purpose, but an empty list
+ * of closures means "open every day", and a Shopify hiccup on a cold cache would
+ * otherwise put the owners' holidays back on sale without anyone knowing.
+ */
+export function strictMetaobjectReader(
+  type: string,
+  first = METAOBJECT_PAGE_SIZE,
+) {
   const read = unstable_cache(
     () => fetchMetaobjects(type, first),
     [`shopify-metaobject-${type}`],
     { revalidate: DELIVERY_REVALIDATE, tags: [DELIVERY_CACHE_TAG] },
   );
 
-  return async function readEntries(): Promise<MetaobjectFields[]> {
+  return async function readEntries(): Promise<MetaobjectFields[] | null> {
     if (!isShopifyConfigured()) return [];
 
     try {
       return await read();
     } catch (error) {
       console.error(`[shopify] reading metaobject "${type}" failed`, error);
-      return [];
+      return null;
     }
   };
 }

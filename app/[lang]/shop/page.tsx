@@ -1,9 +1,11 @@
+import { Suspense } from "react";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ProductGrid } from "@/components/ProductGrid";
+import { ShopSearchGrid } from "@/components/ShopSearchGrid";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
@@ -37,7 +39,16 @@ export default async function ShopPage({
       <PageIntro title={dict.shop.title} lead={dict.shop.lead} />
 
       <GridSection className="pb-[14svh]">
-        <ProductGrid products={products} collections={visibleCollections} />
+        <Suspense
+          fallback={
+            <ProductGrid products={products} collections={visibleCollections} />
+          }
+        >
+          <ShopSearchGrid
+            products={products}
+            collections={visibleCollections}
+          />
+        </Suspense>
       </GridSection>
 
       <Footer />

@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
   addVariantToCart,
-  getCartById,
   getCartCookieOptions,
+  lookupCart,
   removeCartLines,
   setCartAttributes,
   updateCartLineQuantity,
@@ -15,7 +15,8 @@ import {
   getDeliveryAvailability,
   getDeliverySlots,
 } from "@/lib/shopify/delivery";
-import { getZoneTable } from "@/lib/shopify/zones";
+import { getDeliveryRules, getZoneTable } from "@/lib/shopify/zones";
+import { checkoutBlocker } from "@/lib/checkout";
 import type { Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
@@ -72,13 +73,13 @@ export async function getCart(locale: Locale) {
   const cartId = await getCartIdFromCookies();
   if (!cartId) return null;
 
-  const cart = await getCartById(locale, cartId);
-  if (!cart) {
-    await clearCartCookie();
-    return null;
-  }
+  const lookup = await lookupCart(locale, cartId);
 
-  return cart;
+  // Only a cart Shopify says is gone loses its cookie. On a failed read the
+  // badge shows empty for one render, and the basket is still there on the next.
+  if (lookup.kind === "missing") await clearCartCookie();
+
+  return lookup.kind === "found" ? lookup.cart : null;
 }
 
 export async function addToCart(
@@ -88,20 +89,16 @@ export async function addToCart(
 ) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
+  // A cart Shopify no longer has (expired, or already checked out) is replaced
+  // inside `addVariantToCart`; any other failure leaves the cookie alone, so a
+  // timeout costs one click rather than the basket.
   const existingCartId = await getCartIdFromCookies();
-  let result = await addVariantToCart(
+  const result = await addVariantToCart(
     locale,
     variantId,
     quantity,
     existingCartId,
   );
-
-  // A stale cart id (expired or already completed) makes cartLinesAdd fail —
-  // drop the cookie and start a fresh cart rather than surfacing the error.
-  if (!result.ok && existingCartId) {
-    await clearCartCookie();
-    result = await addVariantToCart(locale, variantId, quantity);
-  }
 
   if (!result.ok) return orderFailure("cart_failed");
 
@@ -117,20 +114,15 @@ export async function addToCart(
 
 /**
  * Merges a patch of order preferences onto the cart, with the same stale-cart
- * recovery as addToCart: an expired or completed cart id fails the update, so
- * drop the cookie and open a fresh one.
+ * recovery as addToCart — which lives in `setCartAttributes`, and only fires
+ * when Shopify says the cart is gone.
  */
 async function saveOrderPreferences(
   locale: Locale,
   patch: Record<string, string | null>,
 ) {
   const existingCartId = await getCartIdFromCookies();
-  let result = await setCartAttributes(locale, patch, existingCartId);
-
-  if (!result.ok && existingCartId) {
-    await clearCartCookie();
-    result = await setCartAttributes(locale, patch);
-  }
+  const result = await setCartAttributes(locale, patch, existingCartId);
 
   if (!result.ok) return orderFailure("cart_failed");
 
@@ -150,6 +142,9 @@ export async function setDeliveryDate(locale: Locale, isoDate: string) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const availability = await getDeliveryAvailability();
+  if (availability.closuresUnavailable) {
+    return orderFailure("rules_unavailable");
+  }
   if (!isBookable(isoDate, availability)) {
     return orderFailure("date_unavailable");
   }
@@ -294,6 +289,10 @@ export async function updateCartLine(
   lineId: string,
   quantity: number,
 ) {
+  if (!Number.isInteger(quantity) || quantity < 0 || quantity > 999) {
+    return orderFailure("cart_failed");
+  }
+
   const cartId = await getCartIdFromCookies();
   if (!cartId) return orderFailure("no_cart");
 
@@ -311,4 +310,57 @@ export async function removeFromCart(locale: Locale, lineId: string) {
   if (!result.ok) return orderFailure("cart_failed");
 
   return { ok: true as const, cart: result.cart };
+}
+
+/**
+ * The only way to Shopify's checkout.
+ *
+ * The cart page and the panel both decide whether to draw a Checkout button,
+ * but they decide it from rules loaded when the page was — and the page can be
+ * hours old. So the button asks here, and this reads the cart and the rules
+ * afresh: a basket that fell below its zone's minimum, a date that slipped past
+ * the 16:00 cut-off, a window the owners withdrew, all stop here instead of
+ * reaching an order.
+ *
+ * A refusal does not say which rule. The caller re-reads the cart, and the
+ * blocker it then computes from fresh data is the instruction the customer
+ * sees — the same wording they would have seen had the page been current.
+ *
+ * What this cannot do is stop someone who reaches Shopify another way, or who
+ * changes the address or adds a discount on Shopify's own pages. That needs a
+ * Cart & Checkout Validation Function running inside Shopify — see TODO.md.
+ */
+export async function beginCheckout(locale: Locale) {
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
+
+  const cartId = await getCartIdFromCookies();
+  if (!cartId) return orderFailure("no_cart");
+
+  const [lookup, rules] = await Promise.all([
+    lookupCart(locale, cartId),
+    getDeliveryRules(),
+  ]);
+
+  if (lookup.kind === "missing") {
+    await clearCartCookie();
+    return orderFailure("no_cart");
+  }
+  if (lookup.kind === "error") return orderFailure("cart_failed");
+
+  const { cart, checkoutUrl } = lookup;
+  if (cart.totalQuantity === 0) return orderFailure("no_cart");
+
+  if (rules.availability.closuresUnavailable) {
+    return orderFailure("rules_unavailable");
+  }
+
+  const blocker = checkoutBlocker(
+    cart,
+    rules.availability,
+    rules.zones,
+    rules.slots,
+  );
+  if (blocker) return orderFailure("checkout_changed");
+
+  return { ok: true as const, url: checkoutUrl };
 }

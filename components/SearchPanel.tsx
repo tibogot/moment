@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useDictionary } from "@/components/LocaleProvider";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
   FormEvent,
@@ -16,7 +16,8 @@ import {
 import { gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
 import { ProductCard } from "@/components/ProductCard";
-import { routes } from "@/lib/routes";
+import { href, routes } from "@/lib/routes";
+import { matchesSearch } from "@/lib/shopify/filters";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -33,22 +34,13 @@ const CLOSE_EASE = "power3.inOut";
 const POPULAR_COUNT = 4;
 const LIVE_RESULTS_COUNT = 8;
 
-function matchesQuery(product: ShopifyProduct, query: string) {
-  const q = query.toLowerCase();
-  return (
-    product.title.toLowerCase().includes(q) ||
-    product.productType.toLowerCase().includes(q) ||
-    product.tags.some((tag) => tag.toLowerCase().includes(q)) ||
-    product.description.toLowerCase().includes(q)
-  );
-}
-
 export function SearchPanel({
   open,
   onClose,
   products = [],
 }: SearchPanelProps) {
   const dict = useDictionary();
+  const locale = useLocale();
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -124,7 +116,7 @@ export function SearchPanel({
     if (!isSearching) return products.slice(0, POPULAR_COUNT);
 
     return products
-      .filter((product) => matchesQuery(product, deferredQuery))
+      .filter((product) => matchesSearch(product, deferredQuery))
       .slice(0, LIVE_RESULTS_COUNT);
   }, [deferredQuery, isSearching, products]);
 
@@ -132,7 +124,9 @@ export function SearchPanel({
     const trimmed = value.trim();
     closePanel();
     if (!trimmed) return;
-    router.push(`${routes.shop}?q=${encodeURIComponent(trimmed)}`);
+    // Through `href`: a bare /shop is redirected by the proxy, and the proxy
+    // only knows the default language, so EN and NL readers landed in French.
+    router.push(`${href(locale, routes.shop)}?q=${encodeURIComponent(trimmed)}`);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

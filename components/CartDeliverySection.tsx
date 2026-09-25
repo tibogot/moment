@@ -8,6 +8,7 @@ import {
   setDeliverySlot,
 } from "@/app/actions/cart";
 import { AddressPanel } from "@/components/AddressPanel";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import {
   CheckoutNotice,
   CheckoutNoticeAction,
@@ -61,7 +62,6 @@ type CartDeliverySectionProps = {
   deliveryZone: ZoneId | null;
   subtotal: number;
   totalPrice: string;
-  checkoutUrl: string;
 };
 
 /**
@@ -82,7 +82,6 @@ export function CartDeliverySection({
   deliveryZone,
   subtotal,
   totalPrice,
-  checkoutUrl,
 }: CartDeliverySectionProps) {
   const dict = useDictionary();
   const locale = useLocale();
@@ -525,20 +524,14 @@ export function CartDeliverySection({
           {t.checkout}
         </span>
       ) : (
-        <a
-          href={checkoutUrl}
-          className="group mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
-        >
-          <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-            {t.checkout}
-            <span
-              className="transition-transform duration-500 group-hover:translate-x-1.5"
-              aria-hidden
-            >
-              &rarr;
-            </span>
-          </span>
-        </a>
+        <CheckoutButton
+          className="mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+          onRefused={(message) => {
+            setError(message);
+            notifyCartUpdated();
+            router.refresh();
+          }}
+        />
       )}
     </>
   );

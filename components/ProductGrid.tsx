@@ -1,6 +1,7 @@
 "use client";
 
 import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -13,6 +14,7 @@ import {
   EMPTY_FILTERS,
   filterProducts,
   hasActiveFilters,
+  matchesSearch,
   presentTags,
   type FilterGroup,
   type FilterTag,
@@ -104,6 +106,8 @@ type ProductGridProps = {
    * loses the validation React uses to know it isn't an unkeyed list item.
    */
   collections?: ShopifyCollection[];
+  /** What was typed in the search panel, from `?q=` — see `ShopSearchGrid`. */
+  query?: string;
 };
 
 /**
@@ -116,6 +120,7 @@ export function ProductGrid({
   products,
   emptyMessage,
   collections = [],
+  query = "",
 }: ProductGridProps) {
   const dict = useDictionary();
   // Falls back to the dictionary rather than defaulting in the signature: a
@@ -125,11 +130,20 @@ export function ProductGrid({
   const [sort, setSort] = useState<Sort>("featured");
   const [filters, setFilters] = useState<SelectedFilters>(EMPTY_FILTERS);
   const [openGroups, setOpenGroups] = useState<AccordionId[]>([]);
+  const searchQuery = query.trim();
   const visibleProducts = useMemo(
-    () => sortProducts(filterProducts(products, filters), sort),
-    [products, filters, sort],
+    () =>
+      sortProducts(
+        filterProducts(
+          products.filter((product) => matchesSearch(product, searchQuery)),
+          filters,
+        ),
+        sort,
+      ),
+    [products, searchQuery, filters, sort],
   );
   const filterKey = [
+    searchQuery,
     filters.type.join(","),
     filters.diet.join(","),
     filters.occasion.join(","),
@@ -428,9 +442,27 @@ export function ProductGrid({
         </div>
       </div>
 
+      {searchQuery && (
+        <p className="font-archivo-light flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-sky px-(--grid-gutter) py-4 text-[15px]">
+          <span>
+            {interpolate(dict.shop.searchResults, { query: searchQuery })}
+          </span>
+          <Link
+            href={routes.shop}
+            className="font-owners-medium text-[11px] uppercase tracking-wide underline underline-offset-4"
+          >
+            {dict.shop.clearSearch}
+          </Link>
+        </p>
+      )}
+
       {visibleProducts.length === 0 ? (
         <p className="font-archivo-light border-t border-sky px-(--grid-gutter) py-[6svh] text-[15px]">
-          {hasActiveFilters(filters) ? dict.shop.filters.empty : emptyText}
+          {hasActiveFilters(filters)
+            ? dict.shop.filters.empty
+            : searchQuery
+              ? interpolate(dict.search.noResults, { query: searchQuery })
+              : emptyText}
         </p>
       ) : (
         <div ref={wrapperRef}>

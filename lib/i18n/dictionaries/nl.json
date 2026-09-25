@@ -160,7 +160,8 @@
       "formLabel": "Word lid van de nieuwsbrief",
       "placeholder": "E-mailadres",
       "submit": "Inschrijven",
-      "success": "Dank u — wij schrijven wanneer er iets nieuws is."
+      "success": "Dank u — wij schrijven wanneer er iets nieuws is.",
+      "error": "Dat is niet gelukt. Controleer het adres en probeer het opnieuw."
     }
   },
   "footer": {
@@ -304,6 +305,8 @@
   },
   "shop": {
     "title": "Winkel",
+    "searchResults": "Resultaten voor “{query}”",
+    "clearSearch": "Zoekopdracht wissen",
     "index": "Index",
     "layout": "Weergave",
     "unavailable": "De catalogus is momenteel niet beschikbaar. Probeer het later opnieuw.",
@@ -366,7 +369,9 @@
     "no_cart": "Winkelmand niet gevonden.",
     "cart_failed": "Wij konden uw winkelmand niet bijwerken. Probeer het opnieuw.",
     "generic": "Er is iets misgegaan.",
-    "slot_unavailable": "Dit tijdvak is niet meer beschikbaar. Kies er een ander."
+    "slot_unavailable": "Dit tijdvak is niet meer beschikbaar. Kies er een ander.",
+    "rules_unavailable": "Wij konden de leveringskalender nu niet controleren. Probeer het zo meteen opnieuw.",
+    "checkout_changed": "Er is iets in uw bestelling veranderd sinds deze pagina werd geladen. Controleer ze voordat u verdergaat."
   },
   "quote": {
     "heading": "Buiten ons leveringsgebied",

@@ -23,7 +23,9 @@ export type OrderErrorCode =
   | "address_not_found"
   | "unknown_method"
   | "no_cart"
-  | "cart_failed";
+  | "cart_failed"
+  | "rules_unavailable"
+  | "checkout_changed";
 
 export type OrderFailure = { ok: false; code: OrderErrorCode };
 

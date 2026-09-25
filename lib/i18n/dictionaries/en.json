@@ -160,7 +160,8 @@
       "formLabel": "Join our newsletter",
       "placeholder": "Email address",
       "submit": "Sign up",
-      "success": "Thank you — we will write when there is something new."
+      "success": "Thank you — we will write when there is something new.",
+      "error": "That did not go through. Check the address and try again."
     }
   },
   "footer": {
@@ -304,6 +305,8 @@
   },
   "shop": {
     "title": "Shop",
+    "searchResults": "Results for “{query}”",
+    "clearSearch": "Clear search",
     "index": "Index",
     "layout": "Product layout",
     "unavailable": "The catalogue is not available right now. Please try again later.",
@@ -366,7 +369,9 @@
     "no_cart": "No cart found.",
     "cart_failed": "We could not update your cart. Please try again.",
     "generic": "Something went wrong.",
-    "slot_unavailable": "That delivery window is no longer available. Please choose another."
+    "slot_unavailable": "That delivery window is no longer available. Please choose another.",
+    "rules_unavailable": "We could not check the delivery calendar just now. Please try again in a moment.",
+    "checkout_changed": "Something in your order has changed since this page loaded. Please check it before continuing."
   },
   "quote": {
     "heading": "Beyond our delivery area",

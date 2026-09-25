@@ -67,6 +67,30 @@ export function presentTags<G extends FilterGroup>(
   return FILTER_GROUPS[group].filter((tag) => present.has(tag));
 }
 
+function foldText(value: string): string {
+  return value.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+}
+
+/**
+ * The search box's matching, shared by the live results in the search panel
+ * and the shop page it submits to — so pressing Enter shows the same products
+ * the panel was already showing.
+ *
+ * Accent-blind as well as case-blind: the catalogue is written in French, and
+ * someone typing "cafe" on a phone keyboard means "Café".
+ */
+export function matchesSearch(product: ShopifyProduct, query: string) {
+  const q = foldText(query.trim());
+  if (!q) return true;
+
+  return (
+    foldText(product.title).includes(q) ||
+    foldText(product.productType).includes(q) ||
+    product.tags.some((tag) => foldText(tag).includes(q)) ||
+    foldText(product.description).includes(q)
+  );
+}
+
 export function hasActiveFilters(selected: SelectedFilters): boolean {
   return (
     selected.type.length > 0 ||

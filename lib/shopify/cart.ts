@@ -36,9 +36,17 @@ export type CartLine = {
   variantId: string;
 };
 
+/**
+ * The cart as the browser sees it.
+ *
+ * No `checkoutUrl`, on purpose. The way to Shopify's checkout is through
+ * `beginCheckout`, which re-checks the date, window, zone and minimum against
+ * live rules before handing the address over. A link rendered into the page
+ * would be the same link hours later — after the cut-off, after the basket fell
+ * below the minimum, after the owners closed the day.
+ */
 export type Cart = {
   id: string;
-  checkoutUrl: string;
   totalQuantity: number;
   totalPrice: string;
   /**
@@ -321,7 +329,6 @@ function mapCartNode(locale: Locale, node: RawCart): Cart {
 
   return {
     id: node.id,
-    checkoutUrl: node.checkoutUrl,
     totalQuantity: node.totalQuantity,
     totalPrice: formatPrice(locale, amount, currencyCode),
     subtotal: Number.isFinite(subtotal) ? subtotal : 0,
@@ -353,10 +360,17 @@ async function runCartMutation(
   key: keyof NonNullable<CartMutationResponse["data"]>,
   fallbackError: string,
 ) {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(mutation, {
-    variables: { ...variables, language: shopifyLanguage(locale) },
-  })) as CartMutationResponse;
+  let response: CartMutationResponse;
+  try {
+    response = (await getShopifyClient().request(mutation, {
+      variables: { ...variables, language: shopifyLanguage(locale) },
+    })) as CartMutationResponse;
+  } catch (error) {
+    console.error(`[shopify] ${key} failed`, error);
+    return { ok: false as const, error: fallbackError };
+  }
+
+  const { data, errors } = response;
 
   if (errors?.length) {
     console.error(`[shopify] ${key} errors:`, errors);
@@ -379,17 +393,30 @@ async function runCartMutation(
   return {
     ok: true as const,
     cartId: payload.cart.id,
-    checkoutUrl: payload.cart.checkoutUrl,
     totalQuantity: payload.cart.totalQuantity,
     cart: mapCartNode(locale, payload.cart),
   };
 }
 
-export async function getCartById(
+/**
+ * Three answers, not two, and the difference is someone's basket.
+ *
+ * Shopify answers `cart: null` for a cart that has expired or been checked out,
+ * and that is the only case in which the cookie should be dropped and a new
+ * cart started. A timeout, a throttled request or an outage says nothing about
+ * the cart — and treating it as "gone" used to replace a full basket with an
+ * empty one on the next click.
+ */
+export type CartLookup =
+  | { kind: "found"; cart: Cart; checkoutUrl: string }
+  | { kind: "missing" }
+  | { kind: "error" };
+
+export async function lookupCart(
   locale: Locale,
   cartId: string,
-): Promise<Cart | null> {
-  if (!isShopifyConfigured()) return null;
+): Promise<CartLookup> {
+  if (!isShopifyConfigured()) return { kind: "error" };
 
   try {
     const client = getShopifyClient();
@@ -399,13 +426,19 @@ export async function getCartById(
 
     if (errors?.length) {
       console.error("[shopify] getCart errors:", errors);
-      return null;
+      return { kind: "error" };
     }
 
-    return data?.cart ? mapCartNode(locale, data.cart) : null;
+    if (!data?.cart) return { kind: "missing" };
+
+    return {
+      kind: "found",
+      cart: mapCartNode(locale, data.cart),
+      checkoutUrl: data.cart.checkoutUrl,
+    };
   } catch (error) {
-    console.error("[shopify] getCartById failed", error);
-    return null;
+    console.error("[shopify] lookupCart failed", error);
+    return { kind: "error" };
   }
 }
 
@@ -432,6 +465,12 @@ export async function addVariantToCart(
     );
 
     if (added.ok) return added;
+
+    // Only a cart Shopify no longer has is replaced. Any other failure — the
+    // variant sold out, a timeout — is reported, and the basket stays put.
+    if ((await readCartAttributes(existingCartId)).kind !== "missing") {
+      return added;
+    }
   }
 
   return runCartMutation(
@@ -453,18 +492,27 @@ type AttributeQueryResponse = {
 /**
  * Whatever is already on the cart. A failure here has to be distinguishable
  * from "no attributes", because merging into an empty set on a read error would
- * quietly wipe the customer's other choices — hence null rather than `{}`.
+ * quietly wipe the customer's other choices — and from "no cart", because only
+ * that one justifies starting a new basket. See `CartLookup`.
  */
 async function readCartAttributes(
   cartId: string,
-): Promise<Record<string, string> | null> {
+): Promise<
+  | { kind: "found"; attributes: Record<string, string> }
+  | { kind: "missing" }
+  | { kind: "error" }
+> {
   try {
     const client = getShopifyClient();
     const { data, errors } = (await client.request(CART_ATTRIBUTES_QUERY, {
       variables: { cartId },
     })) as AttributeQueryResponse;
 
-    if (errors?.length || !data?.cart) return null;
+    if (errors?.length) {
+      console.error("[shopify] readCartAttributes errors:", errors);
+      return { kind: "error" };
+    }
+    if (!data?.cart) return { kind: "missing" };
 
     const entries = data.cart.attributes
       .filter((attribute): attribute is { key: string; value: string } =>
@@ -472,10 +520,10 @@ async function readCartAttributes(
       )
       .map(({ key, value }) => [key, value] as const);
 
-    return Object.fromEntries(entries);
+    return { kind: "found", attributes: Object.fromEntries(entries) };
   } catch (error) {
     console.error("[shopify] readCartAttributes failed", error);
-    return null;
+    return { kind: "error" };
   }
 }
 
@@ -511,21 +559,24 @@ export async function setCartAttributes(
   if (existingCartId) {
     const existing = await readCartAttributes(existingCartId);
 
-    // A read failure usually means the cart id is stale, which the caller
-    // recovers from by starting a fresh cart. Merging blindly would be worse.
-    if (existing) {
-      const updated = await runCartMutation(
+    // Merging blindly on a failed read would wipe the other choices, and
+    // starting a new cart would empty the basket. Neither is worth one saved
+    // preference: say it failed, and let them click again.
+    if (existing.kind === "error") {
+      return { ok: false as const, error: "Could not read the cart." };
+    }
+
+    if (existing.kind === "found") {
+      return runCartMutation(
         locale,
         CART_ATTRIBUTES_UPDATE_MUTATION,
         {
           cartId: existingCartId,
-          attributes: toAttributeInput({ ...existing, ...patch }),
+          attributes: toAttributeInput({ ...existing.attributes, ...patch }),
         },
         "cartAttributesUpdate",
         "Could not save your order preferences.",
       );
-
-      if (updated.ok) return updated;
     }
   }
 

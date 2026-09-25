@@ -26,6 +26,7 @@ import {
 } from "@/lib/delivery-zones";
 import {
   metaobjectReader,
+  strictMetaobjectReader,
   parseDecimalField,
   parseIntegerField,
   parseListField,
@@ -83,7 +84,7 @@ const SLOT_METAOBJECT_TYPE = "delivery_slot";
 const SLOT_START_FIELD = "start_time";
 const SLOT_END_FIELD = "end_time";
 
-const readClosures = metaobjectReader(CLOSURE_METAOBJECT_TYPE);
+const readClosures = strictMetaobjectReader(CLOSURE_METAOBJECT_TYPE);
 const readSettings = metaobjectReader(SETTINGS_METAOBJECT_TYPE, 1);
 const readSlots = metaobjectReader(SLOT_METAOBJECT_TYPE);
 
@@ -240,12 +241,15 @@ export async function getDeliverySlots(): Promise<DeliverySlot[]> {
  * Clipped to the booking window on the way out. Past closures are noise the
  * calendar can never show — the owners are not expected to tidy up old entries
  * — and a period reaching past the far edge only matters up to that edge.
+ *
+ * Null when Shopify could not be read, which is not the same as no closures.
  */
 async function getDeliveryClosures(bounds: {
   from: string;
   to: string;
-}): Promise<string[]> {
+}): Promise<string[] | null> {
   const entries = await readClosures();
+  if (!entries) return null;
 
   const dates = entries.flatMap((fields) => {
     const start = fields[CLOSURE_DATE_FIELD];
@@ -293,6 +297,7 @@ export async function getDeliveryAvailability(): Promise<DeliveryAvailability> {
     cutoffHour: settings.cutoffHour,
     pastCutoff,
     closedWeekdays: settings.closedWeekdays,
-    closedDates,
+    closedDates: closedDates ?? [],
+    closuresUnavailable: closedDates === null,
   };
 }

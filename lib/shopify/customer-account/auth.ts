@@ -131,6 +131,28 @@ export async function refreshAndPersistCustomerSession() {
   return nextSession;
 }
 
+/**
+ * Where to land after signing in — a path on this site, or the account page.
+ *
+ * "Starts with a slash" is not enough, and was the whole check: `//evil.com`
+ * and `/\evil.com` both start with one, and browsers read both as another
+ * host. A phishing link through the real Shopify login would then deliver the
+ * customer, freshly signed in and trusting it, to someone else's page. So the
+ * value is resolved against a placeholder origin and must stay on it.
+ */
+export function safeReturnPath(value: string | null | undefined): string {
+  if (!value || !value.startsWith("/")) return routes.account;
+
+  try {
+    const base = "https://return.invalid";
+    const url = new URL(value, base);
+    if (url.origin !== base) return routes.account;
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return routes.account;
+  }
+}
+
 export async function buildAuthorizationUrl(returnTo: string) {
   const config = await getOpenIdConfiguration();
   const codeVerifier = generateCodeVerifier();
@@ -202,7 +224,7 @@ export async function completeAuthorizationCallback(
   const tokens = await exchangeAuthorizationCode(code, codeVerifier);
   await setCustomerSession(toCustomerSession(tokens));
 
-  return returnTo.startsWith("/") ? returnTo : routes.account;
+  return safeReturnPath(returnTo);
 }
 
 export async function buildLogoutUrl() {

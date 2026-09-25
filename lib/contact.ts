@@ -105,6 +105,10 @@ const SHORT_MAX = 120;
 /** Deliberately loose — this catches typos, it does not police addresses. */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+export function isEmailAddress(value: string) {
+  return value.length <= 254 && EMAIL.test(value);
+}
+
 /**
  * Belgian VAT: BE followed by ten digits, the first of which is 0 or 1. Spaces
  * and dots are how people actually type it, so they are stripped before the

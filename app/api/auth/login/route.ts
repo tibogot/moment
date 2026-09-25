@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buildAuthorizationUrl } from "@/lib/shopify/customer-account/auth";
+import {
+  buildAuthorizationUrl,
+  safeReturnPath,
+} from "@/lib/shopify/customer-account/auth";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
 import { routes } from "@/lib/routes";
 
@@ -8,9 +11,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL(routes.signIn, request.url));
   }
 
-  const returnTo =
-    request.nextUrl.searchParams.get("return_to") ?? routes.account;
-  const safeReturnTo = returnTo.startsWith("/") ? returnTo : routes.account;
+  const safeReturnTo = safeReturnPath(
+    request.nextUrl.searchParams.get("return_to"),
+  );
 
   return NextResponse.redirect(await buildAuthorizationUrl(safeReturnTo));
 }

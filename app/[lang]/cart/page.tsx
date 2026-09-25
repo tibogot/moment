@@ -102,7 +102,6 @@ export default async function CartPage({
                 deliveryZone={cart.deliveryZone}
                 subtotal={cart.subtotal}
                 totalPrice={cart.totalPrice}
-                checkoutUrl={cart.checkoutUrl}
               />
             </>
           )}

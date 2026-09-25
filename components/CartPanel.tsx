@@ -31,6 +31,7 @@ import {
   subscribeCart,
 } from "@/lib/cart-store";
 import { AddressPanel } from "@/components/AddressPanel";
+import { CheckoutButton } from "@/components/CheckoutButton";
 import {
   CheckoutNotice,
   CheckoutNoticeAction,
@@ -813,20 +814,14 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   {t.checkout}
                 </span>
               ) : (
-                <a
-                  href={cart.checkoutUrl}
-                  className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
-                >
-                  <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
-                    {t.checkout}
-                    <span
-                      className="transition-transform duration-500 group-hover:translate-x-1.5"
-                      aria-hidden
-                    >
-                      &rarr;
-                    </span>
-                  </span>
-                </a>
+                <CheckoutButton
+                  className="mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
+                  labelClassName="justify-center"
+                  onRefused={(message) => {
+                    setError(message);
+                    void refreshCart();
+                  }}
+                />
               )}
             </div>
           </div>

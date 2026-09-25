@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useActionState } from "react";
+import { subscribeToNewsletter } from "@/app/actions/newsletter";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK_ON_SKY } from "@/lib/colors";
+import { HONEYPOT_FIELD } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
 const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
@@ -16,23 +18,20 @@ type NewsletterSectionProps = {
     placeholder: string;
     submit: string;
     success: string;
+    error: string;
   };
   className?: string;
 };
 
 /**
  * Sky band before the footer: statement on the left, email join on the right.
- * Submit is local for now — wiring to a list provider comes later.
+ * Each sign-up goes to the kitchen's inbox — see `subscribeToNewsletter`.
  */
 export function NewsletterSection({ copy, className }: NewsletterSectionProps) {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!email.trim()) return;
-    setDone(true);
-  }
+  const [state, formAction, isPending] = useActionState(
+    subscribeToNewsletter,
+    "idle",
+  );
 
   return (
     <section className={cn("relative w-full bg-sky", className)}>
@@ -66,15 +65,25 @@ export function NewsletterSection({ copy, className }: NewsletterSectionProps) {
               {copy.formLabel}
             </p>
 
-            {done ? (
+            {state === "success" ? (
               <p className="font-archivo-light mt-4 text-(length:--body-text) leading-normal">
                 {copy.success}
               </p>
             ) : (
+              <>
               <form
-                onSubmit={handleSubmit}
+                action={formAction}
                 className="mt-3 flex w-full items-stretch bg-cream p-1.5"
               >
+                {/* Off-screen and out of the tab order — see HONEYPOT_FIELD. */}
+                <input
+                  type="text"
+                  name={HONEYPOT_FIELD}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="sr-only"
+                  aria-hidden
+                />
                 <label className="sr-only" htmlFor="newsletter-email">
                   {copy.placeholder}
                 </label>
@@ -84,18 +93,31 @@ export function NewsletterSection({ copy, className }: NewsletterSectionProps) {
                   name="email"
                   required
                   autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
+                  aria-invalid={state === "error" || undefined}
+                  aria-describedby={
+                    state === "error" ? "newsletter-error" : undefined
+                  }
                   placeholder={copy.placeholder}
                   className="font-archivo-light min-w-0 flex-1 bg-transparent px-3 py-3 text-[15px] uppercase tracking-wide text-black outline-none placeholder:text-black/35 md:px-4 md:text-[16px]"
                 />
                 <button
                   type="submit"
-                  className="font-owners-medium shrink-0 bg-sky px-4 py-3 text-[11px] uppercase tracking-wide text-black transition-opacity duration-500 hover:opacity-80 md:px-5"
+                  disabled={isPending}
+                  className="font-owners-medium shrink-0 bg-sky px-4 py-3 text-[11px] uppercase tracking-wide text-black transition-opacity duration-500 hover:opacity-80 disabled:cursor-wait disabled:opacity-60 md:px-5"
                 >
                   {copy.submit}
                 </button>
               </form>
+              {state === "error" && (
+                <p
+                  id="newsletter-error"
+                  role="alert"
+                  className="font-archivo-light mt-3 text-[14px] leading-normal"
+                >
+                  {copy.error}
+                </p>
+              )}
+              </>
             )}
           </div>
         </div>

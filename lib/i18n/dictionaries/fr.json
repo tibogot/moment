@@ -160,7 +160,8 @@
       "formLabel": "Rejoindre la newsletter",
       "placeholder": "Adresse e-mail",
       "submit": "S'inscrire",
-      "success": "Merci — on vous écrit dès qu'il y a du nouveau."
+      "success": "Merci — on vous écrit dès qu'il y a du nouveau.",
+      "error": "L'inscription n'a pas abouti. Vérifiez l'adresse et réessayez."
     }
   },
   "footer": {
@@ -304,6 +305,8 @@
   },
   "shop": {
     "title": "Boutique",
+    "searchResults": "Résultats pour « {query} »",
+    "clearSearch": "Effacer la recherche",
     "index": "Index",
     "layout": "Affichage",
     "unavailable": "Le catalogue n'est pas disponible pour le moment. Merci de réessayer plus tard.",
@@ -366,7 +369,9 @@
     "no_cart": "Panier introuvable.",
     "cart_failed": "Nous n'avons pas pu mettre votre panier à jour. Merci de réessayer.",
     "generic": "Une erreur est survenue.",
-    "slot_unavailable": "Ce créneau n'est plus disponible. Merci d'en choisir un autre."
+    "slot_unavailable": "Ce créneau n'est plus disponible. Merci d'en choisir un autre.",
+    "rules_unavailable": "Nous n'avons pas pu vérifier le calendrier de livraison. Merci de réessayer dans un instant.",
+    "checkout_changed": "Votre commande a changé depuis le chargement de cette page. Merci de la vérifier avant de continuer."
   },
   "quote": {
     "heading": "Au-delà de notre zone de livraison",
