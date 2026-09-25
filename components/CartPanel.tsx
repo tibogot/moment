@@ -11,7 +11,7 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
-import { gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
 import {
   removeFromCart,
   setDeliveryAddress,
@@ -62,6 +62,7 @@ import { needsAddress } from "@/lib/order-preferences";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/useDialogFocus";
 
 type CartPanelProps = {
   open: boolean;
@@ -133,6 +134,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const queue = useRef<Promise<void>>(Promise.resolve());
 
   useOverlayScrollLock(open);
+  useDialogFocus(panelRef, open);
 
   const leaveSubView = useCallback(() => {
     setView("cart");
@@ -198,6 +200,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       );
       tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
     }
+
+    finishIfReducedMotion(tl);
 
     return () => {
       tl.kill();

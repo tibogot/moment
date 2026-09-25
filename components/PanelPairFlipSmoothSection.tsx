@@ -7,7 +7,8 @@ import { routes } from "@/lib/routes";
 import { urlFor } from "@/lib/sanity/image";
 import type { SanityDecorativeImage } from "@/lib/sanity/types";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+// Sanity URLs skip Next's optimiser; see CdnImage.
+import { CdnImage as Image } from "@/components/CdnImage";
 import { useEffect, useRef } from "react";
 
 /**

@@ -1,7 +1,7 @@
 "use client";
 
 import { LocaleLink as Link } from "@/components/LocaleLink";
-import { useState, useSyncExternalStore, type ReactNode } from "react";
+import { useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { OPTIONAL_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import { useDictionary } from "@/components/LocaleProvider";
 import {
@@ -19,6 +19,7 @@ import type { ConsentChoices } from "@/lib/consent/types";
 import { routes } from "@/lib/routes";
 import { useIsClient } from "@/lib/useIsClient";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/useDialogFocus";
 import { cn } from "@/lib/utils";
 
 function CookieCtaButton({
@@ -67,6 +68,10 @@ function CookiePreferencesPanel({
 }) {
   const t = useDictionary().cookies;
   const [draft, setDraft] = useState(() => choicesFromConsent(consent));
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Mounted only while open, so "open" is simply true for its lifetime.
+  useDialogFocus(dialogRef, true, { onEscape: onClose });
 
   return (
     <div className="fixed inset-0 z-95 flex items-end justify-center md:items-center md:p-6">
@@ -78,6 +83,7 @@ function CookiePreferencesPanel({
       />
 
       <div
+        ref={dialogRef}
         className="relative max-h-[90svh] w-full overflow-y-auto border-t border-sky bg-cream md:max-w-lg md:border"
         role="dialog"
         aria-modal="true"

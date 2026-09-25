@@ -13,7 +13,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
 import { ProductCard } from "@/components/ProductCard";
 import { href, routes } from "@/lib/routes";
@@ -21,6 +21,7 @@ import { matchesSearch } from "@/lib/shopify/filters";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/useDialogFocus";
 
 type SearchPanelProps = {
   open: boolean;
@@ -50,6 +51,8 @@ export function SearchPanel({
   const deferredQuery = useDeferredValue(query.trim());
 
   useOverlayScrollLock(open);
+  // The panel focuses its own field once it has slid in.
+  useDialogFocus(panelRef, open, { autoFocus: false });
 
   const closePanel = useCallback(() => {
     blurFocusWithin(panelRef.current);
@@ -104,6 +107,8 @@ export function SearchPanel({
       tl.to(panel, { yPercent: -100 }, 0);
       tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
     }
+
+    finishIfReducedMotion(tl);
 
     return () => {
       tl.kill();

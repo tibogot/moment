@@ -1,7 +1,8 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import Image from "next/image";
+// Sanity URLs skip Next's optimiser; see CdnImage.
+import { CdnImage as Image } from "@/components/CdnImage";
 import { useRef, type CSSProperties } from "react";
 import { gsap } from "@/lib/gsapConfig";
 import { cn } from "@/lib/utils";
@@ -81,7 +82,7 @@ export function ParallaxImage({
           src={src}
           alt={alt}
           fill
-          priority={priority}
+          preload={priority}
           sizes={sizes}
           className="object-cover"
         />

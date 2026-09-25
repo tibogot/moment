@@ -50,4 +50,28 @@ export function scheduleScrollTriggerRefresh() {
   });
 }
 
+/**
+ * The visitor asked their system for less motion. Read at the moment of use
+ * rather than once, so turning the setting on mid-visit applies to the next
+ * panel that opens.
+ */
+export function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+/**
+ * For the panels and bars that slide: with reduced motion, jump a freshly built
+ * animation to its end state. Its callbacks still fire, so whatever runs "once
+ * the panel is closed" still runs — it simply happens at once.
+ */
+export function finishIfReducedMotion<T extends gsap.core.Animation>(
+  animation: T,
+): T {
+  if (prefersReducedMotion()) animation.progress(1);
+  return animation;
+}
+
 export { gsap, ScrollTrigger };

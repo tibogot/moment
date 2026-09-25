@@ -7,7 +7,7 @@ import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { monthCells } from "@/lib/calendar";
 import { notifyCartUpdated } from "@/lib/cart-store";
-import { gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import {
   dayState,
@@ -166,12 +166,14 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
     const bar = barRef.current;
     if (!bar) return;
 
-    const tween = gsap.to(bar, {
-      yPercent: barOpen ? 0 : 100,
-      duration: BAR_DURATION,
-      ease: barOpen ? "power3.out" : "power3.in",
-      overwrite: "auto",
-    });
+    const tween = finishIfReducedMotion(
+      gsap.to(bar, {
+        yPercent: barOpen ? 0 : 100,
+        duration: BAR_DURATION,
+        ease: barOpen ? "power3.out" : "power3.in",
+        overwrite: "auto",
+      }),
+    );
 
     return () => {
       tween.kill();

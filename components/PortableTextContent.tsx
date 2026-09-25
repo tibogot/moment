@@ -25,12 +25,17 @@ const components: PortableTextComponents = {
       </p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="font-archivo-light mt-6 border-l border-sky pl-4 text-[18px] leading-normal text-black/70 italic">
+      // The real italic face rather than `italic` on the upright one, which
+      // the browser fakes by slanting the letters.
+      <blockquote className="font-archivo-light-italic mt-6 border-l border-sky pl-4 text-[18px] leading-normal text-black/70">
         {children}
       </blockquote>
     ),
   },
   marks: {
+    em: ({ children }) => (
+      <em className="font-archivo-light-italic not-italic">{children}</em>
+    ),
     link: ({ children, value }) => {
       const href = typeof value?.href === "string" ? value.href : "#";
       const isExternal = href.startsWith("http");

@@ -19,6 +19,11 @@ const BLACK = "#000000";
  * Satori only supports flexbox, so the ruled grid is drawn as absolutely
  * positioned hairlines rather than the CSS grid the site itself uses.
  */
+/*
+ * Satori reads TTF, OTF and WOFF but not WOFF2, which is why the Archivo TTF is
+ * still in app/fonts beside the woff2 the pages load. Only this file uses it;
+ * it never reaches a browser.
+ */
 async function font(file: string) {
   return readFile(join(process.cwd(), "app", "fonts", file));
 }

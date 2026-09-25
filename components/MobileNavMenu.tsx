@@ -12,7 +12,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { Handbag } from "lucide-react";
-import { gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
 import { GridLines } from "@/components/GridLines";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
@@ -27,6 +27,7 @@ import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { SITE_DETAILS, type SiteDetails } from "@/lib/site";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/useDialogFocus";
 
 /**
  * The accounts the owners have given us, and only those.
@@ -110,6 +111,7 @@ export function MobileNavMenu({
   }, [onClose]);
 
   useOverlayScrollLock(open);
+  useDialogFocus(panelRef, open);
 
   // Park off-screen + reveal after the CSS overlay guard. Same pattern as
   // SearchPanel / CartPanel so a refresh never flashes the links.
@@ -192,6 +194,8 @@ export function MobileNavMenu({
         },
       });
     }
+
+    finishIfReducedMotion(tl);
 
     return () => {
       tl.kill();

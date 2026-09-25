@@ -349,6 +349,12 @@ button:not(:disabled),
   .reveal-js [data-nav-intro] {
     animation: none;
   }
+
+  /* TextReveal does not run with reduced motion, so nothing would ever lift
+     the hiding rule above — the copy is simply shown. */
+  .reveal-js [data-text-reveal] {
+    visibility: visible;
+  }
 }
 
 /*

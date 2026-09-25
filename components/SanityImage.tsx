@@ -1,4 +1,5 @@
-import Image from "next/image";
+// Sanity URLs skip Next's optimiser; see CdnImage.
+import { CdnImage as Image } from "@/components/CdnImage";
 import { urlFor } from "@/lib/sanity/image";
 import type { SanityImage } from "@/lib/sanity/types";
 
@@ -28,7 +29,7 @@ export function SanityImage({
       fill
       className={className}
       sizes={sizes}
-      priority={priority}
+      preload={priority}
     />
   );
 }

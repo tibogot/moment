@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import {
   gsap,
+  prefersReducedMotion,
   ScrollTrigger,
   scheduleScrollTriggerRefresh,
 } from "@/lib/gsapConfig";
@@ -106,6 +107,14 @@ export default function TextReveal({
     () => {
       if (!armed) return;
       if (!containerRef.current) return;
+
+      // Reduced motion: the copy is simply there — no split, no blocks sweeping
+      // across every heading on the site. globals.css already shows it under
+      // the same media query; this covers the case where the two disagree.
+      if (prefersReducedMotion()) {
+        gsap.set(containerRef.current, { visibility: "visible" });
+        return;
+      }
 
       // Ensure element is in the DOM and has content
       if (!containerRef.current.isConnected) return;
