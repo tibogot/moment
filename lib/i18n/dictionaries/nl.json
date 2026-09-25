@@ -43,6 +43,12 @@
       "lead": "Deze pagina bestaat niet meer, of heeft nooit bestaan. De rest van het huis staat er nog.",
       "back": "Terug naar de startpagina"
     },
+    "error": {
+      "eyebrow": "Er is iets misgegaan",
+      "lead": "Deze pagina kon niet worden geladen. Meestal is dat van korte duur — probeer het opnieuw, en als het blijft gebeuren, schrijf ons.",
+      "retry": "Opnieuw proberen",
+      "back": "Terug naar home"
+    },
     "back": "Terug",
     "dismiss": "Sluiten"
   },

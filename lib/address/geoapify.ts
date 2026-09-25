@@ -21,6 +21,7 @@ import {
 } from "./provider";
 import { DEFAULT_ATELIER } from "@/lib/delivery-zones";
 import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
+import { urbisProvider } from "./urbis";
 
 const GEOAPIFY_ENDPOINT = "https://api.geoapify.com/v1/geocode/autocomplete";
 
@@ -131,8 +132,12 @@ function toMatch(properties: GeoapifyProperties): AddressMatch | null {
   };
 }
 
-/** Never throws: the address field degrades to "we cannot check that right now". */
-async function query(text: string): Promise<GeoapifyProperties[]> {
+/**
+ * Never throws. Null when Geoapify could not answer — quota spent, key revoked,
+ * timeout — which is different from an answer with nothing in it: the first
+ * falls back to UrbIS, the second is a real "no such address".
+ */
+async function query(text: string): Promise<GeoapifyProperties[] | null> {
   const url = new URL(GEOAPIFY_ENDPOINT);
 
   url.searchParams.set("text", text);
@@ -160,7 +165,7 @@ async function query(text: string): Promise<GeoapifyProperties[]> {
 
     if (!response.ok) {
       console.error(`[geoapify] lookup returned ${response.status}`);
-      return [];
+      return null;
     }
 
     const data = (await response.json()) as GeoapifyResponse;
@@ -172,7 +177,7 @@ async function query(text: string): Promise<GeoapifyProperties[]> {
       );
   } catch (error) {
     console.error("[geoapify] lookup failed", error);
-    return [];
+    return null;
   }
 }
 
@@ -182,6 +187,12 @@ async function search(input: string): Promise<AddressSearch> {
   if (!isGeoapifyConfigured()) return EMPTY;
 
   const results = await query(trimmed);
+
+  // Geoapify down or out of quota: Brussels can still be served from the
+  // regional register, which needs no key. Addresses outside the region stop
+  // resolving until it recovers, but the kitchen's main zone keeps taking
+  // orders instead of every delivery failing at the address step.
+  if (results === null) return urbisProvider.search(trimmed);
 
   const matches: AddressMatch[] = [];
   const seen = new Set<string>();

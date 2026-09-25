@@ -2,8 +2,12 @@
 
 import { HONEYPOT_FIELD, isEmailAddress } from "@/lib/contact";
 import { siteConfig } from "@/lib/site";
+import { headers } from "next/headers";
+import { clientAddress, takeToken } from "@/lib/rate-limit";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+
+const SUBMIT_LIMIT = { limit: 5, windowMs: 10 * 60_000 };
 
 export type NewsletterState = "idle" | "success" | "error";
 
@@ -31,6 +35,10 @@ export async function subscribeToNewsletter(
 
   const email = read("email");
   if (!isEmailAddress(email)) return "error";
+
+  if (!takeToken(`newsletter:${clientAddress(await headers())}`, SUBMIT_LIMIT)) {
+    return "error";
+  }
 
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.CONTACT_EMAIL_FROM;

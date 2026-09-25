@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { completeAuthorizationCallback } from "@/lib/shopify/customer-account/auth";
-import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
-import { routes } from "@/lib/routes";
+import {
+  OAUTH_RETURN_TO_COOKIE,
+  isCustomerAccountConfigured,
+} from "@/lib/shopify/customer-account/config";
+import { requestLocale } from "@/lib/i18n/request-locale";
+import { href, routes } from "@/lib/routes";
 
 export async function GET(request: NextRequest) {
+  // Read off the incoming request, before the callback clears the cookie: if
+  // the sign-in fails, the customer is sent back to the sign-in page in the
+  // language they left it in.
+  const locale = requestLocale(
+    request,
+    request.cookies.get(OAUTH_RETURN_TO_COOKIE)?.value,
+  );
+  const signIn = new URL(href(locale, routes.signIn), request.url);
+
   if (!isCustomerAccountConfigured()) {
-    return NextResponse.redirect(new URL(routes.signIn, request.url));
+    return NextResponse.redirect(signIn);
   }
 
   try {
@@ -14,8 +27,7 @@ export async function GET(request: NextRequest) {
     );
     return NextResponse.redirect(new URL(returnTo, request.url));
   } catch {
-    const errorUrl = new URL(routes.signIn, request.url);
-    errorUrl.searchParams.set("error", "auth_failed");
-    return NextResponse.redirect(errorUrl);
+    signIn.searchParams.set("error", "auth_failed");
+    return NextResponse.redirect(signIn);
   }
 }

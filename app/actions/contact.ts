@@ -8,8 +8,13 @@ import {
   type ContactValues,
 } from "@/lib/contact";
 import { siteConfig } from "@/lib/site";
+import { headers } from "next/headers";
+import { clientAddress, takeToken } from "@/lib/rate-limit";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+
+/** More than anyone sends by hand, far fewer than a script filling the inbox. */
+const SUBMIT_LIMIT = { limit: 5, windowMs: 10 * 60_000 };
 
 function readField(formData: FormData, name: string) {
   const value = formData.get(name);
@@ -56,6 +61,11 @@ export async function sendContactRequest(
 
   if (Object.keys(errors).length > 0) {
     return { status: "invalid", errors };
+  }
+
+  // After validation, so fixing a typo does not spend the budget.
+  if (!takeToken(`contact:${clientAddress(await headers())}`, SUBMIT_LIMIT)) {
+    return { status: "error", errors: {} };
   }
 
   const apiKey = process.env.RESEND_API_KEY;

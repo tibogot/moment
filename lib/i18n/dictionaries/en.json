@@ -43,6 +43,12 @@
       "lead": "This page no longer exists, or never did. The rest of the house is still standing.",
       "back": "Back to home"
     },
+    "error": {
+      "eyebrow": "Something went wrong",
+      "lead": "This page could not load just now. It is usually a moment's hiccup — try again, and if it keeps happening, write to us.",
+      "retry": "Try again",
+      "back": "Back to home"
+    },
     "back": "Back",
     "dismiss": "Dismiss"
   },

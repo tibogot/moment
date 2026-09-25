@@ -56,6 +56,13 @@ change to the two-day notice: each is a code change.
 **Payment and address providers change their terms.** Keys expire, quotas move,
 endpoints get deprecated.
 
+**The rate limits in the code are a first line, not the wall.** The address
+lookup, the contact form and the newsletter each count requests per visitor,
+but in the memory of whichever server instance answers, so a determined attack
+spread across addresses gets through. A rate-limit rule in Vercel's firewall on
+`/api/address` is the real protection for the Geoapify quota, and it is a
+dashboard setting, not code. Set it up on launch day.
+
 **Nobody is watching unless someone is watching.** The failure mode that costs
 you real money is not the site going down loudly — it is the checkout quietly
 failing on a Saturday in December while the phone doesn't ring and nobody knows

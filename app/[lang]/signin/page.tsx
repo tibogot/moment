@@ -5,7 +5,7 @@ import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { routes } from "@/lib/routes";
+import { href, routes, signInHref } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
 import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
@@ -54,10 +54,11 @@ export default async function SignInPage({
 }: SignInPageProps) {
   const { lang } = await params;
   const { error } = await searchParams;
+  const locale = toLocale(lang);
 
-  if (await isCustomerLoggedIn()) redirect(routes.account);
+  if (await isCustomerLoggedIn()) redirect(href(locale, routes.account));
 
-  const dict = await getDictionary(toLocale(lang));
+  const dict = await getDictionary(locale);
   const t = dict.signIn;
   const configured = isCustomerAccountConfigured();
 
@@ -84,7 +85,7 @@ export default async function SignInPage({
                 </p>
 
                 <a
-                  href={routes.authLogin}
+                  href={signInHref(locale)}
                   className="group mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
@@ -105,7 +106,7 @@ export default async function SignInPage({
                 {/* The same OAuth. An approved company is a Shopify customer
                     like any other; the tag is what changes their account. */}
                 <a
-                  href={routes.authLogin}
+                  href={signInHref(locale)}
                   className="group mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">

@@ -14,6 +14,23 @@ export function href(locale: Locale, path: string) {
   return withLocale(path, locale);
 }
 
+/**
+ * The Shopify sign-in, told where to come back to.
+ *
+ * The API routes sit outside `app/[lang]` and have no language of their own, so
+ * without this a Dutch customer came back from Shopify to `/account`, which the
+ * proxy sends to French. The return path carries the language, and the auth
+ * routes read it back out when they need to redirect anywhere else.
+ */
+export function signInHref(locale: Locale) {
+  return `/api/auth/login?return_to=${encodeURIComponent(href(locale, "/account"))}`;
+}
+
+/** Sign-out, carrying the language so the home page after it is in the same one. */
+export function signOutHref(locale: Locale) {
+  return `/api/auth/logout?lang=${locale}`;
+}
+
 export const routes = {
   home: "/",
   shop: "/shop",

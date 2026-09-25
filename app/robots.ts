@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { routes } from "@/lib/routes";
+import { LOCALES } from "@/lib/i18n/config";
+import { href, routes } from "@/lib/routes";
 import { siteConfig, siteIsIndexable } from "@/lib/site";
 
 /**
@@ -27,14 +28,17 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: [
         "/api/",
-        routes.cart,
-        routes.account,
-        routes.signIn,
+        // Per language: these pages live at /fr/cart and so on, and robots
+        // rules match by prefix, so a bare /cart matched nothing at all.
+        ...LOCALES.flatMap((locale) =>
+          [routes.cart, routes.account, routes.signIn].map((path) =>
+            href(locale, path),
+          ),
+        ),
         // Not for secrecy — the Studio asks for a Sanity login on its own. This
         // is so a CMS sign-in screen never turns up in the results for the
         // client's own name.
         "/studio",
-        "/testtextreveal",
       ],
     },
     sitemap: `${siteConfig.url}/sitemap.xml`,

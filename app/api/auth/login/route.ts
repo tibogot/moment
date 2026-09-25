@@ -4,16 +4,20 @@ import {
   safeReturnPath,
 } from "@/lib/shopify/customer-account/auth";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
-import { routes } from "@/lib/routes";
+import { requestLocale } from "@/lib/i18n/request-locale";
+import { href, routes } from "@/lib/routes";
 
 export async function GET(request: NextRequest) {
+  const returnTo = request.nextUrl.searchParams.get("return_to");
+
   if (!isCustomerAccountConfigured()) {
-    return NextResponse.redirect(new URL(routes.signIn, request.url));
+    const locale = requestLocale(request, returnTo);
+    return NextResponse.redirect(
+      new URL(href(locale, routes.signIn), request.url),
+    );
   }
 
-  const safeReturnTo = safeReturnPath(
-    request.nextUrl.searchParams.get("return_to"),
+  return NextResponse.redirect(
+    await buildAuthorizationUrl(safeReturnPath(returnTo)),
   );
-
-  return NextResponse.redirect(await buildAuthorizationUrl(safeReturnTo));
 }

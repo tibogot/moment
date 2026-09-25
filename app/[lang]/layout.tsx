@@ -152,7 +152,10 @@ export default async function RootLayout({
             hidden without ever flashing. If JS is off or this fails, the class
             is never set and the copy simply stays visible. */}
         <InlineScript html={REVEAL_GUARD} />
-        <InlineScript html={PALETTE_GUARD} />
+        {/* The palette switch is a review tool for the client, not a feature:
+            it goes, with the stored choice it restores, the day the real
+            domain does — the same switch that opens the site to Google. */}
+        {!siteIsIndexable && <InlineScript html={PALETTE_GUARD} />}
       </head>
       <body className="min-h-svh flex flex-col">
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
@@ -164,7 +167,7 @@ export default async function RootLayout({
               <div className="relative flex flex-1 flex-col">{children}</div>
               <CookieConsent />
               <ConsentScripts />
-              <PaletteToggle />
+              {!siteIsIndexable && <PaletteToggle />}
           </SmoothScroll>
         </LocaleProvider>
       </body>

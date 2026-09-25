@@ -5,7 +5,7 @@ import { PageIntro } from "@/components/PageIntro";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { formatPriceAmount, formatShortDate } from "@/lib/i18n/format";
-import { routes } from "@/lib/routes";
+import { href, routes, signOutHref } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { getCustomerProfile } from "@/lib/shopify/customer-account/customer";
 import { getCustomerDisplayName } from "@/lib/shopify/customer-account/display-name";
@@ -21,15 +21,19 @@ export default async function AccountPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
-  if (!(await isCustomerLoggedIn())) redirect(routes.signIn);
-
   const locale = toLocale((await params).lang);
+
+  // Through `href`: a bare /signin goes via the proxy, which only knows French.
+  if (!(await isCustomerLoggedIn())) redirect(href(locale, routes.signIn));
+
   const [profile, dict] = await Promise.all([
     getCustomerProfile(),
     getDictionary(locale),
   ]);
 
-  if (!profile.ok || !profile.customer) redirect(routes.signIn);
+  if (!profile.ok || !profile.customer) {
+    redirect(href(locale, routes.signIn));
+  }
 
   const { customer, orders } = profile;
   const t = dict.account;
@@ -77,7 +81,7 @@ export default async function AccountPage({
           )}
 
           <a
-            href={routes.authLogout}
+            href={signOutHref(locale)}
             className="font-owners-medium mt-10 inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
           >
             {t.signOut}

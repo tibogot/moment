@@ -43,6 +43,12 @@
       "lead": "Cette page n'existe plus, ou n'a jamais existé. Le reste de la maison est toujours là.",
       "back": "Retour à l'accueil"
     },
+    "error": {
+      "eyebrow": "Une erreur est survenue",
+      "lead": "Cette page n'a pas pu se charger. C'est souvent passager — réessayez, et si cela continue, écrivez-nous.",
+      "retry": "Réessayer",
+      "back": "Retour à l'accueil"
+    },
     "back": "Retour",
     "dismiss": "Fermer"
   },

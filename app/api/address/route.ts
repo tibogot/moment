@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 import { searchAddresses } from "@/lib/address";
 import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
+import { clientAddress, takeToken } from "@/lib/rate-limit";
+
+/** A street, a number and a town fit comfortably; anything longer is not an address. */
+const MAX_QUERY_LENGTH = 120;
+
+/**
+ * Generous for a person — the field is debounced, and nobody types sixty
+ * addresses a minute — and far below what a script needs to spend the day's
+ * Geoapify quota in an afternoon.
+ */
+const LOOKUP_LIMIT = { limit: 60, windowMs: 60_000 };
 
 /**
  * Proxies the address lookup instead of letting the browser call it directly.
@@ -15,8 +26,18 @@ import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
 export async function GET(request: Request) {
   const query = new URL(request.url).searchParams.get("q")?.trim() ?? "";
 
-  if (query.length < MIN_ADDRESS_QUERY_LENGTH) {
+  if (
+    query.length < MIN_ADDRESS_QUERY_LENGTH ||
+    query.length > MAX_QUERY_LENGTH
+  ) {
     return NextResponse.json({ matches: [], streets: [] });
+  }
+
+  if (!takeToken(`address:${clientAddress(request.headers)}`, LOOKUP_LIMIT)) {
+    return NextResponse.json(
+      { matches: [], streets: [] },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
   }
 
   return NextResponse.json(await searchAddresses(query));

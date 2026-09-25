@@ -1,6 +1,35 @@
 import type { NextConfig } from "next";
 
+/**
+ * The baseline every response carries.
+ *
+ * Deliberately not a full Content-Security-Policy. A script policy worth having
+ * needs a per-request nonce, and in Next a nonce makes every page render on
+ * request — the whole site loses its static HTML to guard against an injection
+ * nobody has found. `frame-ancestors` is the part that pays for itself: it stops
+ * another site framing the cart or the Studio under a fake page and steering
+ * the clicks (clickjacking). X-Frame-Options says the same to older browsers.
+ */
+const SECURITY_HEADERS = [
+  { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), payment=()",
+  },
+];
+
 const nextConfig: NextConfig = {
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
+
   experimental: {
     /**
      * Turns on `app/global-not-found.tsx`.
