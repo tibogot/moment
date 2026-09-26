@@ -5,12 +5,13 @@ import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
 import { toLocale } from "@/lib/i18n/config";
 import { formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
-import { localizedMetadata } from "@/lib/seo";
+import { LEGAL_CONTENT_LOCALE, localizedMetadata } from "@/lib/seo";
 import { getDeliveryRules } from "@/lib/shopify/zones";
 import { formatAddressLine, SITE_DETAILS } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("shipping", {
   path: routes.shipping,
+  contentLocale: LEGAL_CONTENT_LOCALE,
 });
 
 /**

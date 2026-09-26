@@ -1,11 +1,12 @@
 import { Brand } from "@/components/Brand";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
-import { localizedMetadata } from "@/lib/seo";
+import { LEGAL_CONTENT_LOCALE, localizedMetadata } from "@/lib/seo";
 import { SITE_DETAILS } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("privacy", {
   path: routes.privacy,
+  contentLocale: LEGAL_CONTENT_LOCALE,
 });
 
 export default function PrivacyPage() {

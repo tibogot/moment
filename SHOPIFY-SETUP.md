@@ -106,6 +106,7 @@ Read the section on shipping rates below before changing a fee.
 | `fee` | Decimal | yes | Delivery fee in euros |
 | `minimum_order` | Decimal | yes | Basket minimum in euros |
 | `max_distance_km` | Decimal | no | The band's outer edge |
+| `brussels_region` | Boolean | no | Tick only on a zone with no radius — see below |
 
 The built-in table is the one you gave us on 29 August 2026, so **you do not
 need to create these entries unless you want to change something**:
@@ -121,11 +122,16 @@ There is deliberately **no fifth entry for "> 70 km"**. A band with no price is
 not a band — past the last one the site stops quoting and sends the customer to
 the enquiry form, which is your "sur devis".
 
-`max_distance_km` should be filled in on every band. Leaving it **empty** marks
-a zone as administrative rather than radial — any Brussels postcode takes it
-whatever the distance — which is how your *previous* table worked and how a
-"one flat rate inside Brussels" rule could be set up again without a
-deployment. Nothing in the current table uses it.
+`max_distance_km` should be filled in on every band. Leaving it **empty** and
+ticking `brussels_region` marks a zone as administrative rather than radial —
+any Brussels postcode takes it whatever the distance — which is how your
+*previous* table worked and how a "one flat rate inside Brussels" rule could be
+set up again without a deployment. Nothing in the current table uses it.
+
+Both are needed, on purpose. An empty radius on its own is treated as a mistake
+and the entry is rejected (which sends the site back to the built-in table,
+below): otherwise clearing one band's distance by accident would charge every
+Brussels address that band's fee and minimum.
 
 **One thing worth knowing about the change from the old table.** The old zone 1
 was "Bruxelles" — the whole Region for €10 with a €100 minimum. The new zone 1

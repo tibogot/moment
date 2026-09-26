@@ -41,6 +41,8 @@ import {
  *                                     only for an administrative zone (an area
  *                                     rather than a radius); the client's
  *                                     current table has none.
+ *        `brussels_region` Boolean  — optional. Must be ticked for an empty
+ *                                     radius to count as the Brussels zone.
  *   4. Enable Storefront API access on the definition
  *   5. One entry per band
  *
@@ -58,6 +60,7 @@ const ZONE_ID_FIELD = "zone_id";
 const FEE_FIELD = "fee";
 const MINIMUM_ORDER_FIELD = "minimum_order";
 const MAX_DISTANCE_FIELD = "max_distance_km";
+const BRUSSELS_REGION_FIELD = "brussels_region";
 
 const readZoneEntries = metaobjectReader(ZONE_METAOBJECT_TYPE);
 
@@ -76,9 +79,8 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
 
   if (id === null || fee === null || minimumOrder === null) return null;
 
-  // Empty is meaningful here — it is what marks the administrative zone — so an
-  // absent field is null rather than a failure. A *present* but unreadable one
-  // still is: "abc" km must not quietly become "the Brussels zone".
+  // A *present* but unreadable radius is a failure: "abc" km must not quietly
+  // become "the Brussels zone".
   const rawDistance = fields[MAX_DISTANCE_FIELD];
   const maxDistanceKm =
     rawDistance === undefined
@@ -86,6 +88,19 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
       : parseDecimalField(rawDistance, DISTANCE_RANGE);
 
   if (rawDistance !== undefined && maxDistanceKm === null) return null;
+
+  // An *empty* one is how the administrative zone is written, and that zone
+  // outranks every band — so an empty radius alone is not enough to make one.
+  // It used to be: a band whose radius was cleared by accident became "all of
+  // Brussels", and every address in the Region was charged its fee and its
+  // minimum. The owners now have to say so, with a tick, and a band that lost
+  // its radius without one is a bad entry like any other.
+  if (
+    maxDistanceKm === null &&
+    fields[BRUSSELS_REGION_FIELD]?.trim().toLowerCase() !== "true"
+  ) {
+    return null;
+  }
 
   return { id, fee, minimumOrder, maxDistanceKm };
 }

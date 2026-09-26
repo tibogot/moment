@@ -1,9 +1,10 @@
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
-import { localizedMetadata } from "@/lib/seo";
+import { LEGAL_CONTENT_LOCALE, localizedMetadata } from "@/lib/seo";
 
 export const generateMetadata = localizedMetadata("cookies", {
   path: routes.cookies,
+  contentLocale: LEGAL_CONTENT_LOCALE,
 });
 
 export default function CookiesPage() {

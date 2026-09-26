@@ -1,6 +1,7 @@
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
+import { LEGAL_CONTENT_LOCALE } from "@/lib/seo";
 
 type LegalDocProps = {
   title: string;
@@ -15,12 +16,17 @@ type LegalDocProps = {
 export function LegalDoc({ title, lead, children }: LegalDocProps) {
   return (
     <>
-      <PageIntro title={title} lead={lead} />
-      <GridSection className="pb-[14svh]">
-        <div className="col-start-2 col-end-5 space-y-8 border-t border-sky px-(--grid-gutter) pt-[6svh] md:col-end-8">
-          {children}
-        </div>
-      </GridSection>
+      {/* Marked up as English whatever the URL says, or a French screen
+          reader reads it aloud with French pronunciation. The navbar and
+          footer stay in the page language. See LEGAL_CONTENT_LOCALE. */}
+      <div lang={LEGAL_CONTENT_LOCALE} className="contents">
+        <PageIntro title={title} lead={lead} />
+        <GridSection className="pb-[14svh]">
+          <div className="col-start-2 col-end-5 space-y-8 border-t border-sky px-(--grid-gutter) pt-[6svh] md:col-end-8">
+            {children}
+          </div>
+        </GridSection>
+      </div>
       <Footer />
     </>
   );

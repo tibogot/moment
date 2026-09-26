@@ -251,6 +251,22 @@ export async function setDeliveryAddress(locale: Locale, value: string) {
   // caller sends them to the quote form instead of saving a cart that can never
   // reach checkout.
   if (zone.kind === "quote") {
+    // Whatever address was on the cart before is no longer where this order is
+    // going. Left in place, the cart could still check out against it, priced
+    // for somewhere the customer has just said they are not. Only an existing
+    // cart is touched — this must not open one — and a failure here is not the
+    // customer's to see: the quote form still works, and the checkout gate
+    // still has the final word.
+    if (await getCartIdFromCookies()) {
+      const cleared = await saveOrderPreferences(locale, {
+        [DELIVERY_ADDRESS_ATTRIBUTE]: null,
+        [DELIVERY_ZONE_ATTRIBUTE]: null,
+      });
+      if (!cleared.ok) {
+        console.error("[cart] could not clear the address after a quote");
+      }
+    }
+
     return {
       ok: false as const,
       needsQuote: true as const,

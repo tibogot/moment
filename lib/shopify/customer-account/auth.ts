@@ -102,23 +102,32 @@ function toCustomerSession(tokens: TokenResponse): CustomerSession {
   };
 }
 
+/** Within a minute of expiry, which is too close to start a request on. */
+export function sessionIsExpiring(session: CustomerSession) {
+  return session.expiresAt - Date.now() < 60_000;
+}
+
+/**
+ * The session, if it can be used as it is — never refreshed here.
+ *
+ * This is called while rendering, and a render cannot write a cookie. It used
+ * to refresh anyway and throw the result away, so every render after the first
+ * hour paid for a token exchange, and if Shopify retires a refresh token once
+ * it has been used, the next one failed and the customer bounced between the
+ * account page and sign-in. An expiring session is now the caller's cue to go
+ * through `/api/auth/refresh`, which can save what it gets.
+ */
 export async function getValidCustomerSession() {
   const session = await getCustomerSession();
-  if (!session) return null;
-
-  const expiresSoon = session.expiresAt - Date.now() < 60_000;
-  if (!expiresSoon) return session;
-
-  const refreshed = await refreshAccessToken(session.refreshToken);
-  return refreshed ? toCustomerSession(refreshed) : null;
+  if (!session || sessionIsExpiring(session)) return null;
+  return session;
 }
 
 export async function refreshAndPersistCustomerSession() {
   const session = await getCustomerSession();
   if (!session) return null;
 
-  const expiresSoon = session.expiresAt - Date.now() < 60_000;
-  if (!expiresSoon) return session;
+  if (!sessionIsExpiring(session)) return session;
 
   const refreshed = await refreshAccessToken(session.refreshToken);
   if (!refreshed) {
@@ -261,17 +270,28 @@ export async function customerAccountQuery<TData>(
     return { ok: false as const, error: "config_unavailable" as const };
   }
 
-  const response = await fetch(apiConfig.graphql_api, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: session.accessToken,
-      origin: getAppUrl(),
-      "user-agent": USER_AGENT,
-    },
-    body: JSON.stringify({ query, variables }),
-    cache: "no-store",
-  });
+  let response: Response;
+  try {
+    response = await fetch(apiConfig.graphql_api, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: session.accessToken,
+        origin: getAppUrl(),
+        "user-agent": USER_AGENT,
+      },
+      body: JSON.stringify({ query, variables }),
+      cache: "no-store",
+    });
+  } catch {
+    return { ok: false as const, error: "request_failed" as const };
+  }
+
+  // A token Shopify refuses before it has expired has been revoked — signed
+  // out on another device, or the account closed. Not a retryable failure.
+  if (response.status === 401) {
+    return { ok: false as const, error: "not_authenticated" as const };
+  }
 
   if (!response.ok) {
     return { ok: false as const, error: "request_failed" as const };

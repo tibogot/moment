@@ -1,10 +1,11 @@
 import { Brand } from "@/components/Brand";
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { routes } from "@/lib/routes";
-import { localizedMetadata } from "@/lib/seo";
+import { LEGAL_CONTENT_LOCALE, localizedMetadata } from "@/lib/seo";
 
 export const generateMetadata = localizedMetadata("terms", {
   path: routes.terms,
+  contentLocale: LEGAL_CONTENT_LOCALE,
 });
 
 export default function TermsPage() {

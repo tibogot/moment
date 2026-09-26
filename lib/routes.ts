@@ -26,6 +26,19 @@ export function signInHref(locale: Locale) {
   return `/api/auth/login?return_to=${encodeURIComponent(href(locale, "/account"))}`;
 }
 
+/**
+ * Through the one place that can save a refreshed login, then back to `path`.
+ * With `reset`, the session is dropped instead — see /api/auth/refresh.
+ */
+export function refreshSessionHref(
+  locale: Locale,
+  path: string,
+  { reset = false } = {},
+) {
+  const returnTo = encodeURIComponent(href(locale, path));
+  return `/api/auth/refresh?return_to=${returnTo}${reset ? "&reset=1" : ""}`;
+}
+
 /** Sign-out, carrying the language so the home page after it is in the same one. */
 export function signOutHref(locale: Locale) {
   return `/api/auth/logout?lang=${locale}`;

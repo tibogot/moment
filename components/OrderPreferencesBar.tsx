@@ -241,6 +241,9 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         // than telling the customer their address is a problem.
         if ("needsQuote" in result) {
           setQuote({ address: result.address, km: result.distanceKm });
+          // The previous address was cleared from the cart; show that.
+          setDraft((current) => ({ ...current, address: undefined }));
+          notifyCartUpdated();
           return;
         }
         setError(dict.errors[result.code]);

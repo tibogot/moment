@@ -346,6 +346,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       if (!result.ok) {
         if ("needsQuote" in result) {
           setQuote({ address: result.address, km: result.distanceKm });
+          // The previous address was cleared from the cart; show that.
+          void refreshCart();
           return;
         }
         setError(dict.errors[result.code]);

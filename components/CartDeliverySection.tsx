@@ -159,6 +159,9 @@ export function CartDeliverySection({
       if (!result.ok) {
         if ("needsQuote" in result) {
           setQuote({ address: result.address, km: result.distanceKm });
+          // The previous address was cleared from the cart; show that.
+          notifyCartUpdated();
+          router.refresh();
           return;
         }
         setError(dict.errors[result.code]);

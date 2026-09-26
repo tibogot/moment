@@ -101,6 +101,15 @@ const DEFAULT_OG_IMAGE = {
   ...OG_IMAGE_SIZE,
 };
 
+/**
+ * The language the legal pages are written in, whatever the URL says. They
+ * wait on a professional translation (TODO.md), and until then every copy
+ * points at the English one — in the metadata, in the sitemap, and in the
+ * `lang` the text is marked up with. Delete this, and every use of it, the
+ * day the translations land.
+ */
+export const LEGAL_CONTENT_LOCALE: Locale = "en";
+
 type PageSeo = {
   /** Bare page title. The root layout appends " — Moment" to it. */
   title: string;
@@ -131,6 +140,15 @@ type PageSeo = {
    * og:locale both claim the page is French.
    */
   locale?: Locale;
+  /**
+   * The language the page's *content* is actually written in, when it is not
+   * the language of the URL. The legal pages are English under /fr and /nl
+   * until they are professionally translated: claiming three translations of
+   * one text would tell Google three different things, so every copy points
+   * at the English one as the original instead. Drop it when the translations
+   * land and the pages go back to the ordinary alternates.
+   */
+  contentLocale?: Locale;
 };
 
 /**
@@ -149,9 +167,12 @@ export function pageMetadata({
   modifiedTime,
   singleLanguage = false,
   locale = DEFAULT_LOCALE,
+  contentLocale,
 }: PageSeo): Metadata {
   const heading = fullTitle(title);
-  const url = absoluteUrl(withLocale(stripLocale(path), locale));
+  const url = absoluteUrl(
+    withLocale(stripLocale(path), contentLocale ?? locale),
+  );
 
   const ogImage = image
     ? { url: image.url, alt: image.alt }
@@ -164,9 +185,11 @@ export function pageMetadata({
     title,
     description,
     ...(keywords ? { keywords: [...keywords] } : {}),
-    alternates: singleLanguage
-      ? selfAlternate(path, locale)
-      : languageAlternates(path, locale),
+    alternates: contentLocale
+      ? selfAlternate(path, contentLocale)
+      : singleLanguage
+        ? selfAlternate(path, locale)
+        : languageAlternates(path, locale),
     // Crawlers still follow the links out of a noindex page — that's how they
     // reach the catalogue from a shared cart URL.
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
@@ -211,7 +234,7 @@ export function pageMetadata({
 export function localizedMetadata(
   key: MetaKey,
   options: Pick<PageSeo, "path"> &
-    Partial<Pick<PageSeo, "noindex" | "image" | "type">>,
+    Partial<Pick<PageSeo, "noindex" | "image" | "type" | "contentLocale">>,
 ) {
   return async function generateMetadata({
     params,
