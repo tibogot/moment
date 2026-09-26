@@ -1,22 +1,21 @@
 import localFont from "next/font/local";
 
 export const ownersMedium = localFont({
-  src: "./fonts/Owners_Medium.otf",
+  src: "./fonts/Owners_Medium.woff2",
   variable: "--font-face-owners-medium",
   display: "swap",
 });
 
 export const ownersNarrowBold = localFont({
-  src: "./fonts/Owners_Narrow_Bold.otf",
+  src: "./fonts/Owners_Narrow_Bold.woff2",
   variable: "--font-face-owners-narrow-bold",
   display: "swap",
 });
 
 /*
- * Archivo ships as woff2, converted from the TTFs: a quarter of the size, and
- * the Open Font License it carries allows the format change. Owners stays OTF
- * until its licence is checked — a commercial font's EULA can forbid
- * converting it, and that is not ours to decide.
+ * Every face ships as woff2, converted from the desktop files at well under
+ * half the size. Archivo's Open Font License allows the format change, and the
+ * client confirmed Owners' licence does too (26 September 2026).
  */
 export const archivoLight = localFont({
   src: "./fonts/Archivo_Condensed-Light.woff2",

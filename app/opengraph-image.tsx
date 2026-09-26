@@ -20,9 +20,9 @@ const BLACK = "#000000";
  * positioned hairlines rather than the CSS grid the site itself uses.
  */
 /*
- * Satori reads TTF, OTF and WOFF but not WOFF2, which is why the Archivo TTF is
- * still in app/fonts beside the woff2 the pages load. Only this file uses it;
- * it never reaches a browser.
+ * Satori reads TTF, OTF and WOFF but not WOFF2, which is why
+ * Owners_Narrow_Bold.otf and the Archivo TTF are still in app/fonts beside the
+ * woff2 the pages load. Only this file uses them; they never reach a browser.
  */
 async function font(file: string) {
   return readFile(join(process.cwd(), "app", "fonts", file));
