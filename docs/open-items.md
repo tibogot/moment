@@ -63,7 +63,7 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [ ] **Page Collaborations** avec formulaire — attend la question 7
 - [x] **Partenaires dans le Studio** (rubrique « Partenaires » : nom, type, adresse, lien, visible ; le point est placé automatiquement depuis l'adresse)
 - [ ] **Page et carte « Où nous trouver »** — les partenaires peuvent déjà être saisis ; reste la page, la carte et l'onglet
-- [ ] **Webhook Sanity** : ajouter `"partner"` au filtre du webhook de revalidation dans sanity.io/manage (`_type in [...]`), sinon un partenaire ajouté met jusqu'à 24 h à apparaître
+- [x] **Webhook Sanity** : `"partner"` ajouté au filtre de revalidation (5 nov.)
 
 ---
 
@@ -81,6 +81,12 @@ Dans le périmètre convenu. Les cases cochées sont faites.
   `/events`). Les afficher, ou retirer l'entrée du Studio.
 - **Actualités** : écrites dans les trois langues, ou en français d'abord ?
 - **Relecture** des textes français et néerlandais du site par Moment.
+- **Crédit Rond Carré Studio** (au moment du SEO, après le domaine) : « Design :
+  Rond Carré Studio » en bas de page et/ou dans les mentions légales, avec lien,
+  et Rond Carré déclaré comme `designer` dans les données structurées. **À faire
+  valider par Moment.** En retour : étude de cas « Moment » sur le nouveau site
+  de Rond Carré, et un post sur leur fiche Google, avec lien vers moment-lab.be.
+  Pas sur la carte « Où nous trouver », qui ne liste que les points de vente.
 - **Pages légales** : réécrites en FR/NL/EN le 5 novembre 2026. À confirmer :
   la division du tribunal de l'entreprise (francophone supposée, `lib/legal.ts`),
   les durées de conservation, la liste des sous-traitants, et une relecture par
