@@ -2,7 +2,7 @@
 
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { OPTIONAL_CONSENT_CATEGORIES } from "@/lib/consent/categories";
+import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import { useDictionary } from "@/components/LocaleProvider";
 import {
   acceptAllConsent,
@@ -116,7 +116,7 @@ function CookiePreferencesPanel({
             </div>
           </li>
 
-          {OPTIONAL_CONSENT_CATEGORIES.map((id) => (
+          {ENABLED_CONSENT_CATEGORIES.map((id) => (
             <li key={id} className="px-(--grid-gutter) py-5">
               <label className="flex cursor-pointer items-start justify-between gap-4">
                 <span>
@@ -179,7 +179,9 @@ export function CookieConsent() {
 
   useOverlayScrollLock(preferencesOpen);
 
-  if (!isClient) return null;
+  // Nothing optional is installed, so there is nothing to consent to: only
+  // strictly necessary cookies are set, and those need no banner.
+  if (!isClient || ENABLED_CONSENT_CATEGORIES.length === 0) return null;
 
   const showBanner = consent === null && !preferencesOpen;
 
@@ -242,6 +244,10 @@ export function CookieConsent() {
 /** Footer control — reopens the preferences panel at any time. */
 export function CookiePreferencesButton({ className }: { className?: string }) {
   const t = useDictionary().cookies;
+
+  // No optional category, no preferences to reopen — the footer still links
+  // to the cookies page through legalNav.
+  if (ENABLED_CONSENT_CATEGORIES.length === 0) return null;
 
   return (
     <button

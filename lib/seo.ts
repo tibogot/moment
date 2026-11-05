@@ -101,15 +101,6 @@ const DEFAULT_OG_IMAGE = {
   ...OG_IMAGE_SIZE,
 };
 
-/**
- * The language the legal pages are written in, whatever the URL says. They
- * wait on a professional translation (TODO.md), and until then every copy
- * points at the English one — in the metadata, in the sitemap, and in the
- * `lang` the text is marked up with. Delete this, and every use of it, the
- * day the translations land.
- */
-export const LEGAL_CONTENT_LOCALE: Locale = "en";
-
 type PageSeo = {
   /** Bare page title. The root layout appends " — Moment" to it. */
   title: string;

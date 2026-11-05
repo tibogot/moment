@@ -8,7 +8,7 @@ import {
   type Locale,
 } from "@/lib/i18n/config";
 import { routes } from "@/lib/routes";
-import { absoluteUrl, LEGAL_CONTENT_LOCALE } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
 
@@ -67,7 +67,7 @@ const staticRoutes: {
   path: string;
   changeFrequency: Entry["changeFrequency"];
   priority: number;
-  /** Listed in this language only — see LEGAL_CONTENT_LOCALE. */
+  /** Listed in this language only. */
   contentLocale?: Locale;
 }[] = [
   { path: routes.home, changeFrequency: "weekly", priority: 1 },
@@ -85,31 +85,26 @@ const staticRoutes: {
     path: routes.legal,
     changeFrequency: "yearly",
     priority: 0.2,
-    contentLocale: LEGAL_CONTENT_LOCALE,
   },
   {
     path: routes.privacy,
     changeFrequency: "yearly",
     priority: 0.2,
-    contentLocale: LEGAL_CONTENT_LOCALE,
   },
   {
     path: routes.cookies,
     changeFrequency: "yearly",
     priority: 0.2,
-    contentLocale: LEGAL_CONTENT_LOCALE,
   },
   {
     path: routes.terms,
     changeFrequency: "yearly",
     priority: 0.2,
-    contentLocale: LEGAL_CONTENT_LOCALE,
   },
   {
     path: routes.shipping,
     changeFrequency: "yearly",
     priority: 0.3,
-    contentLocale: LEGAL_CONTENT_LOCALE,
   },
 ];
 

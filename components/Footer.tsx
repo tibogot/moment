@@ -10,6 +10,7 @@ import { CookiePreferencesButton } from "@/components/CookieConsent";
 import { FooterGridCells } from "@/components/FooterGridCells";
 import { GridLines } from "@/components/GridLines";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
+import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import { legalNav, routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site";
 
@@ -106,11 +107,13 @@ export function Footer() {
             © {new Date().getFullYear()} <Brand />
           </p>
           <ul className="flex flex-wrap gap-x-3 gap-y-1.5 md:justify-end md:gap-x-4 md:gap-y-2">
-            <li>
-              <CookiePreferencesButton
-                className={`pointer-events-auto ${legalLinkClassName}`}
-              />
-            </li>
+            {ENABLED_CONSENT_CATEGORIES.length > 0 && (
+              <li>
+                <CookiePreferencesButton
+                  className={`pointer-events-auto ${legalLinkClassName}`}
+                />
+              </li>
+            )}
             {legalNav.map(({ key, href }) => (
               <li key={href}>
                 <Link

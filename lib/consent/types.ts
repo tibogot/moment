@@ -1,7 +1,11 @@
 export const CONSENT_COOKIE_NAME = "moment_consent";
 export const CONSENT_VERSION = 1;
-/** One year — re-confirm if the policy version bumps. */
-export const CONSENT_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
+/**
+ * Six months — the duration the APD's cookie checklist recommends for keeping
+ * a visitor's choice before asking again. Listed on the cookies page; change
+ * both together.
+ */
+export const CONSENT_MAX_AGE_SECONDS = 60 * 60 * 24 * 183;
 
 export type ConsentCategory = "analytics" | "marketing";
 
