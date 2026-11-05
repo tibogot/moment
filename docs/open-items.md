@@ -39,7 +39,7 @@ Business (créée par Moment), Google Analytics.
 5. **Dimanche** : livraisons **et** retraits ?
 6. **Adresse** 21 ou 21A (voir §1).
 7. **Collaborations** : fusion avec la page Pro, ou page séparée ?
-8. **Où nous trouver** : liste des partenaires (nom, adresse, lien).
+8. **Où nous trouver** : ils peuvent saisir eux-mêmes leurs partenaires dans le Studio (rubrique « Partenaires »), plus besoin de nous envoyer la liste.
 9. **Pages légales** : accord écrit (voir §1).
 
 ---
@@ -61,7 +61,9 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [ ] **Minimum 4 pièces par produit** — attend la question 1
 - [ ] **Retrait la veille** : produits concernés (cookies, banana bread, cake citron-pavot, carrot cake, healthy snacks, épicerie, jus), commande avant 15 h, 8 créneaux de 30 min, 1 commande chacun, minimum 50 € — attend les questions 2 à 4
 - [ ] **Page Collaborations** avec formulaire — attend la question 7
-- [ ] **Carte « Où nous trouver »**, partenaires gérés dans le Studio — attend la question 8
+- [x] **Partenaires dans le Studio** (rubrique « Partenaires » : nom, type, adresse, lien, visible ; le point est placé automatiquement depuis l'adresse)
+- [ ] **Page et carte « Où nous trouver »** — les partenaires peuvent déjà être saisis ; reste la page, la carte et l'onglet
+- [ ] **Webhook Sanity** : ajouter `"partner"` au filtre du webhook de revalidation dans sanity.io/manage (`_type in [...]`), sinon un partenaire ajouté met jusqu'à 24 h à apparaître
 
 ---
 

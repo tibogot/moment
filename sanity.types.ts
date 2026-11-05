@@ -150,6 +150,29 @@ export type SanityImageHotspot = {
   width: number;
 };
 
+export type Partner = {
+  _id: string;
+  _type: "partner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  kind: "cafe" | "restaurant" | "shop" | "hotel" | "office" | "other";
+  street: string;
+  postalCode: string;
+  city: string;
+  url?: string;
+  visible?: boolean;
+  location?: Geopoint;
+};
+
+export type Geopoint = {
+  _type: "geopoint";
+  lat?: number;
+  lng?: number;
+  alt?: number;
+};
+
 export type Menu = {
   _id: string;
   _type: "menu";
@@ -384,13 +407,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
-};
-
 export type AllSanitySchemaTypes =
   | LocaleStringList
   | LocaleText
@@ -402,6 +418,8 @@ export type AllSanitySchemaTypes =
   | PastEvent
   | SanityImageCrop
   | SanityImageHotspot
+  | Partner
+  | Geopoint
   | Menu
   | Slug
   | HomePage
@@ -416,8 +434,7 @@ export type AllSanitySchemaTypes =
   | SanityImageMetadata
   | SanityFileAsset
   | SanityAssetSourceData
-  | SanityImageAsset
-  | Geopoint;
+  | SanityImageAsset;
 
 // Source: lib/sanity/queries.ts
 // Variable: articlesQuery
@@ -627,9 +644,22 @@ export type HomePageQueryResult =
     }
   | null;
 
+// Source: lib/sanity/queries.ts
+// Variable: partnersQuery
+// Query: *[_type == "partner" && visible != false] | order(name asc) {  _id,  name,  kind,  street,  postalCode,  city,  url,  location}
+export type PartnersQueryResult = Array<{
+  _id: string;
+  name: string;
+  kind: "cafe" | "hotel" | "office" | "other" | "restaurant" | "shop";
+  street: string;
+  postalCode: string;
+  city: string;
+  url: string | null;
+  location: Geopoint | null;
+}>;
+
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+declare global {
   interface SanityQueries {
     '*[_type == "article" && language == $language] | order(publishedAt desc) {\n  \n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  author->{ name },\n  categories[]->{ title }\n\n}': ArticlesQueryResult;
     '*[_type == "article" && language == $language && slug.current == $slug][0] {\n  \n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  author->{ name },\n  categories[]->{ title }\n,\n  body\n}': ArticleBySlugQueryResult;
@@ -639,5 +669,10 @@ declare module "@sanity/client" {
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
     '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
     '*[_id == "homePage"][0] {\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  eventsImage,\n  coffeeImage\n}': HomePageQueryResult;
+    '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }

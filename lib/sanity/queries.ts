@@ -320,3 +320,23 @@ export async function getHomePageImages(): Promise<HomePageImages> {
     return NO_HOME_IMAGES;
   }
 }
+
+/**
+ * Every partner the owners have left visible, by name. The coordinates are
+ * resolved from the address afterwards, in `lib/partners.ts` — the query only
+ * returns what was typed.
+ */
+export const partnersQuery = defineQuery(`*[_type == "partner" && visible != false] | order(name asc) {
+  _id,
+  name,
+  kind,
+  street,
+  postalCode,
+  city,
+  url,
+  location
+}`);
+
+export async function getPartnerDocuments() {
+  return sanityClient.fetch(partnersQuery, {}, sanityCache("partner"));
+}

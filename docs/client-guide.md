@@ -13,12 +13,19 @@ pièges à connaître. Mise à jour : 5 novembre 2026.
 |---|---|
 | Menus traiteur | Menus traiteur |
 | Actualités | Actualités |
+| Partenaires (carte « Où nous trouver ») | Partenaires |
 | Photo d'ouverture et les deux panneaux de la page d'accueil | Page d'accueil |
 
 **Actualités** : ne mettez que le titre dans le champ titre, sans « \| Moment » —
 le site ajoute le nom tout seul. L'onglet *Référencement* → « Titre pour Google »
 permet un titre différent dans Google uniquement ; laissé vide, le titre normal
 est utilisé.
+
+**Partenaires** : Nouveau → nom, type, adresse, lien éventuel. Le site place
+le point sur la carte tout seul à partir de l'adresse. Pour masquer un
+partenaire sans le supprimer, décochez « Afficher sur la carte ». Si un point
+tombe au mauvais endroit, remplissez « Position sur la carte » (clic droit sur
+l'établissement dans Google Maps, puis copier les coordonnées).
 
 ### Dans l'admin Shopify
 

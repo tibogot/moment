@@ -2,6 +2,7 @@ import type { StructureResolver } from "sanity/structure";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { HomeIcon } from "@sanity/icons/Home";
 import { ImagesIcon } from "@sanity/icons/Images";
+import { PinIcon } from "@sanity/icons/Pin";
 import { TagIcon } from "@sanity/icons/Tag";
 import { UlistIcon } from "@sanity/icons/Ulist";
 import { UsersIcon } from "@sanity/icons/Users";
@@ -55,6 +56,20 @@ export const structure: StructureResolver = (S) =>
         .icon(DocumentTextIcon)
         .schemaType("article")
         .child(S.documentTypeList("article").title("Actualités")),
+
+      /**
+       * Alphabetical: this is a directory people scan for one name ("is Café X
+       * already in?"), not a feed.
+       */
+      S.listItem()
+        .title("Partenaires")
+        .icon(PinIcon)
+        .schemaType("partner")
+        .child(
+          S.documentTypeList("partner")
+            .title("Partenaires")
+            .defaultOrdering([{ field: "name", direction: "asc" }]),
+        ),
 
       S.divider(),
 
