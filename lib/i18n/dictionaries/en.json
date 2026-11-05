@@ -224,6 +224,7 @@
     "dayArticle": "",
     "unavailable": "Not available for delivery",
     "slotTitle": "Delivery window",
+    "slotFullBadge": "Full",
     "slotIntro": "Choose the two-hour window you would like it in.",
     "slotFull": "Window full? Get in touch — depending on where you are and the route we are already driving, we may be able to add you to a round.",
     "cutoffNote": "Orders close at {cutoff}. After that, the {days} days' notice starts counting from tomorrow.",

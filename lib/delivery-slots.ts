@@ -25,6 +25,13 @@
 export type DeliverySlot = {
   start: string;
   end: string;
+  /**
+   * How many orders the window takes before it stops being offered. Optional:
+   * absent means `DEFAULT_SLOT_CAPACITY` (see `lib/delivery-capacity.ts`). Not
+   * part of the window's identity — `slotId` and the stored attribute ignore
+   * it, so raising a window from 2 to 3 does not orphan the carts holding it.
+   */
+  capacity?: number;
 };
 
 /**

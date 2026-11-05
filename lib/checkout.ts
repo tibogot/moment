@@ -62,6 +62,13 @@ export function checkoutBlocker(
   availability: DeliveryAvailability | null,
   zones: ZoneTable,
   slots: DeliverySlot[],
+  /**
+   * Windows at capacity on the cart's day, as stored attribute values — from
+   * `getFullSlots` on the server, `useFullSlots` in the browser. A cart that
+   * chose a window before it filled is sent back to choose again, with the same
+   * message as a withdrawn one: either way, the van is not coming at that hour.
+   */
+  fullSlots: readonly string[] = [],
 ): CheckoutBlocker | null {
   if (!cart.deliveryDate) return { kind: "no-date" };
 
@@ -85,7 +92,10 @@ export function checkoutBlocker(
   // A stored window the current table no longer holds — the owners changed
   // their rounds while this cart sat in a cookie. Not a mistake the customer
   // made, but not something the kitchen can honour either.
-  if (!parseSlotAttribute(slots, cart.deliverySlot)) {
+  if (
+    !parseSlotAttribute(slots, cart.deliverySlot) ||
+    fullSlots.includes(cart.deliverySlot)
+  ) {
     return { kind: "stale-slot", slot: cart.deliverySlot };
   }
 

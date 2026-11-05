@@ -46,6 +46,7 @@ import {
   slotId,
   type DeliverySlot,
 } from "@/lib/delivery-slots";
+import { useFullSlots } from "@/lib/useFullSlots";
 import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
@@ -135,6 +136,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     slots,
     draft.slot ?? cart?.deliverySlot ?? null,
   );
+  const fullSlotIds = useFullSlots(deliveryDate);
 
   const closePanel = useCallback(() => {
     setPanel(null);
@@ -321,6 +323,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
           <DeliverySlotPicker
             slots={slots}
             value={deliverySlot}
+            fullSlotIds={fullSlotIds}
             onSelect={chooseSlot}
             disabled={isPending}
           />

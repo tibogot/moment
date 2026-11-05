@@ -224,6 +224,7 @@
     "dayArticle": "le ",
     "unavailable": "Non disponible à la livraison",
     "slotTitle": "Créneau de livraison",
+    "slotFullBadge": "Complet",
     "slotIntro": "Choisissez le créneau de deux heures qui vous convient.",
     "slotFull": "Créneau complet ? Contactez-nous ! Selon votre localisation et notre itinéraire, nous pourrons peut-être vous ajouter à une tournée déjà planifiée.",
     "cutoffNote": "Les commandes se clôturent à {cutoff}. Passé cette heure, le préavis de {days} jours court à partir de demain.",

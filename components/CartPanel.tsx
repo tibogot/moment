@@ -45,6 +45,8 @@ import {
   slotId,
   type DeliverySlot,
 } from "@/lib/delivery-slots";
+import { slotValuesForIds } from "@/lib/delivery-capacity";
+import { useFullSlots } from "@/lib/useFullSlots";
 import { checkoutBlocker } from "@/lib/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
@@ -302,6 +304,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   // in its cookie for a fortnight, and a window withdrawn in the meantime has to
   // read as no choice made rather than as a booking the kitchen never took.
   const slot = parseSlotAttribute(slots, cart?.deliverySlot ?? null);
+  const fullSlotIds = useFullSlots(deliveryDate);
 
   // A date saved days ago can go stale while the cart sits — the owners may
   // have closed it since. Shopify's hosted checkout will not let anyone edit a
@@ -326,6 +329,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         availability,
         zones,
         slots,
+        slotValuesForIds(slots, fullSlotIds),
       )
     : { kind: "no-date" as const };
 
@@ -479,6 +483,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               <DeliverySlotPicker
                 slots={slots}
                 value={slot}
+                fullSlotIds={fullSlotIds}
                 onSelect={chooseSlot}
                 disabled={isPending}
               />

@@ -16,6 +16,7 @@ import {
   getDeliverySlots,
 } from "@/lib/shopify/delivery";
 import { getDeliveryRules, getZoneTable } from "@/lib/shopify/zones";
+import { getFullSlots } from "@/lib/shopify/capacity";
 import { checkoutBlocker } from "@/lib/checkout";
 import type { Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
@@ -169,8 +170,19 @@ export async function setDeliveryDate(locale: Locale, isoDate: string) {
 export async function setDeliverySlot(locale: Locale, slotId: string) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
-  const slot = findSlot(await getDeliverySlots(), slotId);
+  const slots = await getDeliverySlots();
+  const slot = findSlot(slots, slotId);
   if (!slot) return orderFailure("slot_unavailable");
+
+  // Full on the day the cart already holds. A cart with no day yet is let
+  // through — there is nothing to count against — and checkout counts again.
+  const deliveryDate = (await getCart(locale))?.deliveryDate;
+  if (deliveryDate) {
+    const full = await getFullSlots(deliveryDate, slots);
+    if (full.includes(slotAttributeValue(slot))) {
+      return orderFailure("slot_unavailable");
+    }
+  }
 
   const saved = await saveOrderPreferences(locale, {
     [DELIVERY_SLOT_ATTRIBUTE]: slotAttributeValue(slot),
@@ -370,11 +382,20 @@ export async function beginCheckout(locale: Locale) {
     return orderFailure("rules_unavailable");
   }
 
+  // Counted last and live: this is the moment two customers racing for the
+  // last place in a window are separated. It cannot close the race entirely —
+  // both can be on Shopify's payment page at once — but it narrows it to the
+  // minutes a payment takes.
+  const fullSlots = cart.deliveryDate
+    ? await getFullSlots(cart.deliveryDate, rules.slots)
+    : [];
+
   const blocker = checkoutBlocker(
     cart,
     rules.availability,
     rules.zones,
     rules.slots,
+    fullSlots,
   );
   if (blocker) return orderFailure("checkout_changed");
 

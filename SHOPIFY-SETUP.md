@@ -153,6 +153,7 @@ The two-hour windows the customer picks when they order. One entry per window.
 |---|---|---|---|
 | `start_time` | Single line text | yes | `HH:MM`, e.g. `09:00` |
 | `end_time` | Single line text | yes | `HH:MM`, e.g. `11:00` |
+| `capacity` | Integer | no | Orders the window takes before it shows as full. Empty = 2. `0` closes it |
 
 The built-in windows are yours — 09:00–11:00, 11:00–13:00, 13:00–15:00 — so
 again, entries are only needed to change them. Order in the admin does not
@@ -160,12 +161,34 @@ matter; the site sorts them by start time. An entry that will not read is
 dropped and the rest still show, unlike the zone table: a missing window costs
 the customer a choice, where a missing band costs them the right price.
 
-**Windows are not capacity.** The site offers all three on every open day and
-does not count how many orders already exist for one — that needs reading orders
-back out of Shopify, which is a separate and larger piece of work. Until it is
-built, a full window is closed by hand: the picker carries your own line, "Créneau
-complet ? Contactez-nous !", so a customer whose window is full rings you rather
-than giving up.
+**Windows close themselves when full.** Two deliveries per window by default
+(the owners' figure, 3 November 2026). How it works:
+
+1. When an order is created, the `orders/create` webhook (same endpoint as the
+   others, `/api/revalidate/shopify`) tags it `livraison-YYYY-MM-DD` and
+   `creneau-HHMM` from its cart attributes.
+2. The pickers and the checkout gate count the non-cancelled orders carrying
+   that day's tag, and grey out windows at capacity. Collections are not
+   counted.
+3. **A phone order takes a window when you add the same two tags by hand**,
+   e.g. `livraison-2026-11-07` and `creneau-0900`. Removing them, or cancelling
+   the order, frees the window.
+
+It needs:
+
+- An app with Admin API access — scopes `read_orders`, `write_orders`,
+  `read_all_orders` (without the last, orders older than 60 days are invisible
+  and far-ahead bookings stop counting). Either a custom app made in the admin
+  (`SHOPIFY_ADMIN_ACCESS_TOKEN`) or a Dev Dashboard app in the shop's
+  organisation (`SHOPIFY_ADMIN_CLIENT_ID` + `SHOPIFY_ADMIN_CLIENT_SECRET`).
+- Webhook subscriptions for `orders/create`, `orders/updated` and
+  `orders/cancelled`.
+
+Without the Admin credentials every window is offered, as before. The known
+gap: two customers can both be on Shopify's payment page for the last place at
+once, and both will get it. The site re-counts at "checkout", so the window is
+minutes wide; your "Créneau complet ? Contactez-nous !" line stays under the
+picker for the rest.
 
 Storefront API access has to be enabled on every one of these definitions.
 
@@ -260,6 +283,9 @@ Whoever approves an application sets it. Nothing else marks a customer as B2B.
   on. Setting this to `https://www.moment-lab.be` is what opens the site to Google,
   and it is the only change needed to do it.
 
+- `SHOPIFY_ADMIN_ACCESS_TOKEN`, or `SHOPIFY_ADMIN_CLIENT_ID` +
+  `SHOPIFY_ADMIN_CLIENT_SECRET` — Admin API, used only to count orders per
+  delivery window. Unset, capacity is off and every window is offered.
 - `GEOAPIFY_API_KEY` — without it the address lookup silently falls back to the
   Brussels-only register and no address outside the Region resolves.
 - `.gitignore` contains `.env*`, which also excludes `.env.example` itself, so

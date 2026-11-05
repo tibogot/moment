@@ -75,6 +75,8 @@ const PICKUP_END_FIELD = "pickup_end_time";
  *
  *   `start_time`  09:00
  *   `end_time`    11:00
+ *   `capacity`    2       optional integer — orders the window takes before it
+ *                         is shown as full. Empty means 2.
  *
  * Order does not matter in the admin — `orderSlots` sorts them by start time,
  * because metaobject entries come back in whatever order Shopify holds them and
@@ -83,6 +85,7 @@ const PICKUP_END_FIELD = "pickup_end_time";
 const SLOT_METAOBJECT_TYPE = "delivery_slot";
 const SLOT_START_FIELD = "start_time";
 const SLOT_END_FIELD = "end_time";
+const SLOT_CAPACITY_FIELD = "capacity";
 
 const readClosures = strictMetaobjectReader(CLOSURE_METAOBJECT_TYPE);
 const readSettings = metaobjectReader(SETTINGS_METAOBJECT_TYPE, 1);
@@ -229,7 +232,16 @@ export async function getDeliverySlots(): Promise<DeliverySlot[]> {
     // no safe reading of it — dropping the entry leaves the customer two good
     // choices rather than one impossible one.
     if (!start || !end || end <= start) return [];
-    return [{ start, end }];
+
+    // A capacity that does not parse is dropped back to the default rather
+    // than the window being dropped: a typo must not withdraw a delivery hour.
+    // Zero is allowed — it is how a window is closed for a while without
+    // deleting it.
+    const capacity = parseIntegerField(fields[SLOT_CAPACITY_FIELD], {
+      min: 0,
+      max: 100,
+    });
+    return [capacity === null ? { start, end } : { start, end, capacity }];
   });
 
   return slots.length > 0 ? orderSlots(slots) : DEFAULT_DELIVERY_SLOTS;

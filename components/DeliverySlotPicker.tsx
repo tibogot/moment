@@ -9,6 +9,13 @@ type DeliverySlotPickerProps = {
   /** The window already chosen, or null. */
   value: DeliverySlot | null;
   onSelect: (slot: DeliverySlot) => void;
+  /**
+   * Windows already at capacity on the chosen day, as slot ids — from
+   * `useFullSlots`. Shown, greyed and labelled rather than hidden: a window
+   * that vanishes reads as one the kitchen does not run, and the line below the
+   * picker is the owners' answer to a full one.
+   */
+  fullSlotIds?: string[];
   disabled?: boolean;
   className?: string;
 };
@@ -30,6 +37,7 @@ export function DeliverySlotPicker({
   slots,
   value,
   onSelect,
+  fullSlotIds = [],
   disabled = false,
   className,
 }: DeliverySlotPickerProps) {
@@ -47,12 +55,15 @@ export function DeliverySlotPicker({
       <div className="py-2">
         {slots.map((slot) => {
           const id = slotId(slot);
+          // The window already held stays selectable-looking but is not
+          // re-submittable; the checkout gate explains what to do about it.
+          const full = fullSlotIds.includes(id);
 
           return (
             <button
               key={id}
               type="button"
-              disabled={disabled}
+              disabled={disabled || full}
               aria-pressed={id === selectedId}
               onClick={() => onSelect(slot)}
               className={cn(
@@ -60,8 +71,13 @@ export function DeliverySlotPicker({
                 id === selectedId && "bg-sky/40",
               )}
             >
-              <span className="font-archivo-light block text-[15px] leading-normal">
-                {formatSlot(slot)}
+              <span className="font-archivo-light flex items-baseline justify-between gap-4 text-[15px] leading-normal">
+                <span>{formatSlot(slot)}</span>
+                {full && (
+                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                    {dict.delivery.slotFullBadge}
+                  </span>
+                )}
               </span>
             </button>
           );

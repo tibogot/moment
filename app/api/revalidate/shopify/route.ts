@@ -17,6 +17,11 @@
  *   inventory_levels/update          (sold out / back in stock)
  *   metaobjects/create, metaobjects/update, metaobjects/delete
  *                                    (delivery zones, closures, atelier hours)
+ *   orders/create, orders/updated, orders/cancelled
+ *                                    (delivery window capacity — a new order
+ *                                    is tagged with its day and window, and
+ *                                    the counts are re-read; see
+ *                                    lib/shopify/capacity.ts)
  *
  * Shopify shows the signing secret once, when the first webhook is created —
  * it is one secret for the whole shop, not one per topic. Put it in
@@ -26,6 +31,10 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  DELIVERY_CAPACITY_TAG,
+  tagOrderBooking,
+} from "@/lib/shopify/capacity";
 import { DELIVERY_CACHE_TAG } from "@/lib/shopify/metaobjects";
 import { SHOPIFY_CACHE_TAG } from "@/lib/shopify/products";
 
@@ -42,7 +51,40 @@ const TAGS_BY_TOPIC_PREFIX: Record<string, string> = {
   inventory_levels: SHOPIFY_CACHE_TAG,
   inventory_items: SHOPIFY_CACHE_TAG,
   metaobjects: DELIVERY_CACHE_TAG,
+  orders: DELIVERY_CAPACITY_TAG,
 };
+
+/** The parts of a REST order webhook payload the capacity tagging reads. */
+type OrderWebhookPayload = {
+  admin_graphql_api_id?: string;
+  tags?: string;
+  note_attributes?: { name: string; value: string | null }[];
+};
+
+/**
+ * Tags the order with its day and window, then lets the caller clear the
+ * counts. A failure is logged and swallowed: the webhook must still answer 200,
+ * or Shopify retries for two days and then disables the subscription — and the
+ * order is not lost, it is only uncounted until someone tags it by hand.
+ */
+async function tagBooking(rawBody: string) {
+  try {
+    const order = JSON.parse(rawBody) as OrderWebhookPayload;
+    if (!order.admin_graphql_api_id) return;
+
+    await tagOrderBooking({
+      id: order.admin_graphql_api_id,
+      tags: (order.tags ?? "").split(",").filter(Boolean),
+      attributes: Object.fromEntries(
+        (order.note_attributes ?? [])
+          .filter((attribute) => attribute.value)
+          .map((attribute) => [attribute.name, attribute.value as string]),
+      ),
+    });
+  } catch (error) {
+    console.error("[revalidate] could not tag order booking", error);
+  }
+}
 
 /**
  * Shopify signs the raw body with HMAC-SHA256 and sends it base64 in
@@ -98,6 +140,12 @@ export async function POST(request: NextRequest) {
   // so an unrecognised topic must not look like an outage.
   if (!tag) {
     return NextResponse.json({ revalidated: [], topic, now: Date.now() });
+  }
+
+  // Tagged before the counts are cleared, so the re-read that follows already
+  // sees this order. Cancellations need no tag, only the re-read.
+  if (topic === "orders/create" || topic === "orders/updated") {
+    await tagBooking(rawBody);
   }
 
   revalidateTag(tag, { expire: 0 });

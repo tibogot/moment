@@ -27,6 +27,8 @@ import {
   slotId,
   type DeliverySlot,
 } from "@/lib/delivery-slots";
+import { slotValuesForIds } from "@/lib/delivery-capacity";
+import { useFullSlots } from "@/lib/useFullSlots";
 import { checkoutBlocker } from "@/lib/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
@@ -110,6 +112,7 @@ export function CartDeliverySection({
   // Resolved against the windows the shop offers now, so a cart holding one the
   // owners have withdrawn reads as no choice rather than as a booking.
   const slot = parseSlotAttribute(slots, deliverySlot);
+  const fullSlotIds = useFullSlots(deliveryDate);
 
   const blocker = checkoutBlocker(
     {
@@ -123,6 +126,7 @@ export function CartDeliverySection({
     availability,
     zones,
     slots,
+    slotValuesForIds(slots, fullSlotIds),
   );
 
   // The two date blockers are the ones this section can fix in place, by
@@ -412,6 +416,7 @@ export function CartDeliverySection({
           <DeliverySlotPicker
             slots={slots}
             value={slot}
+            fullSlotIds={fullSlotIds}
             onSelect={chooseSlot}
             disabled={isPending}
             className="mt-5 max-w-105 border border-sky"
