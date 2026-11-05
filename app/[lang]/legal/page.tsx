@@ -15,7 +15,7 @@ export default function LegalPage() {
   return (
     <LegalDoc
       title="Legal notice"
-      lead="Company identity required under Belgian law. The registered denomination and legal form are the last two fields still to be confirmed."
+      lead="Company identity required under Belgian law."
     >
       <LegalSection title="Publisher">
         <p>

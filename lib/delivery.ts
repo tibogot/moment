@@ -36,8 +36,13 @@ export const DEFAULT_LEAD_TIME_DAYS = 2;
  */
 export const DEFAULT_ORDER_CUTOFF_HOUR = 16;
 
-/** Sunday, until the owners say otherwise. `0` is Sunday in `Date#getDay`. */
-export const DEFAULT_CLOSED_WEEKDAYS = [0];
+/**
+ * No weekday is closed by default: the owners confirmed on 3 November 2026 that
+ * they work Sundays "pour l'instant". When that changes it is `sunday` in the
+ * `closed_weekdays` field of `delivery_settings`, not a deployment. `0` is
+ * Sunday in `Date#getDay`.
+ */
+export const DEFAULT_CLOSED_WEEKDAYS: number[] = [];
 
 /**
  * How far ahead the calendar will take a booking.

@@ -156,12 +156,10 @@ export type SiteDetails = {
  * same ten digits with `BE` in front, which is how Belgium works and why there
  * are two fields holding one fact.
  *
- * `companyName` and `legalForm` are still empty, and deliberately: nobody has
- * told us the registered denomination or whether it is an SRL. Same for the
- * social accounts. The legal page prints "[to be completed]" rather than
- * guessing, which is the correct behaviour for a field the law requires to be
- * exact — and every consumer already drops a blank rather than printing a label
- * with nothing after it. Fill them in here when they arrive.
+ * The registered denomination (MOMENT LAB SRL) and the social accounts
+ * (@moment.brussels on both) arrived with the client's answers of 3 November
+ * 2026. Every consumer still drops a blank rather than printing a label with
+ * nothing after it, so emptying one of these is safe.
  */
 export const SITE_DETAILS: SiteDetails = {
   contact: {
@@ -178,14 +176,14 @@ export const SITE_DETAILS: SiteDetails = {
     closesAt: "16:00",
   },
   legal: {
-    companyName: "",
+    companyName: "MOMENT LAB",
     enterpriseNumber: "1036.670.672",
     vatNumber: "BE1036670672",
-    legalForm: "",
+    legalForm: "SRL",
   },
   social: {
-    instagram: "",
-    facebook: "",
+    instagram: "https://www.instagram.com/moment.brussels/",
+    facebook: "https://www.facebook.com/moment.brussels/",
   },
 };
 

@@ -88,7 +88,9 @@ export type ZoneTable = {
 export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
 
 /**
- * The client's table, as given on 29 August 2026. Four priced bands measured
+ * The client's table, as revised on 3 November 2026 (fees and minimums; the
+ * per-band free-delivery thresholds they also gave are not modelled yet — see
+ * `freeDeliveryThreshold`, still one number). Four priced bands measured
  * from the atelier, and a fifth case — beyond the last band — quoted by hand
  * rather than priced on the site.
  *
@@ -96,7 +98,7 @@ export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
  * area rather than a radius. Worth saying out loud to the client, because it
  * moves real customers: Forest sits in the south-west of the Region, so the
  * north-east of Brussels — Haren, Neder-Over-Heembeek, parts of Woluwe — is now
- * 11–14 km out and lands in band 2 at €15 with a €125 minimum, where the old
+ * 11–14 km out and lands in band 2 at €20 with a €150 minimum, where the old
  * table gave every Brussels address €10 and a €100 minimum. That is what a
  * distance table does; it is not a bug, but nobody has confirmed they want it.
  */
@@ -105,9 +107,9 @@ export const DEFAULT_ZONE_TABLE: ZoneTable = {
   freeDeliveryThreshold: DEFAULT_FREE_DELIVERY_THRESHOLD,
   zones: [
     { id: 1, fee: 10, minimumOrder: 100, maxDistanceKm: 10 },
-    { id: 2, fee: 15, minimumOrder: 125, maxDistanceKm: 25 },
-    { id: 3, fee: 30, minimumOrder: 150, maxDistanceKm: 50 },
-    { id: 4, fee: 50, minimumOrder: 200, maxDistanceKm: 70 },
+    { id: 2, fee: 20, minimumOrder: 150, maxDistanceKm: 25 },
+    { id: 3, fee: 35, minimumOrder: 250, maxDistanceKm: 50 },
+    { id: 4, fee: 50, minimumOrder: 350, maxDistanceKm: 70 },
   ],
 };
 

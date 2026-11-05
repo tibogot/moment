@@ -46,8 +46,8 @@ import {
  *   4. Enable Storefront API access on the definition
  *   5. One entry per band
  *
- * As given by the owners on 29 August 2026, that is four entries: 10 km / €10 /
- * €100, 25 km / €15 / €125, 50 km / €30 / €150, 70 km / €50 / €200. There is no
+ * As revised by the owners on 3 November 2026, that is four entries: 10 km /
+ * €10 / €100, 25 km / €20 / €150, 50 km / €35 / €250, 70 km / €50 / €350. There is no
  * fifth entry for "> 70 km" — a band with no price is not a band, it is the
  * absence of one, and the site sends those addresses to the quote form.
  *
