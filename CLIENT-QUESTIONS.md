@@ -9,7 +9,16 @@ asked you to send us is now something you enter yourself** — see section 7 for
 where. And the questions that remain are mostly about how your kitchen actually
 works, which is the part we cannot guess.
 
-**Updated 29 August 2026, after the first working meeting.** Most of what was
+**Updated 5 November 2026, after your written answers of 3 November.** Built
+since: MOMENT LAB SRL on the legal notice, Instagram and Facebook
+@moment.brussels, open on Sundays, and your new fees and minimums (table in §1).
+The capacities you gave — 2 deliveries per window, 1 collection per half-hour
+slot — are being built now. The new requests (4 pieces minimum, free delivery
+per zone, road distance, day-before collection, Google Analytics,
+Collaborations, the partner map) are quoted separately. The questions still
+open are in the email of 5 November.
+
+**Earlier update, 29 August 2026, after the first working meeting.** Most of what was
 open is now answered and built. What follows is what the answers settled, and
 the smaller number of things they raised.
 
@@ -23,9 +32,9 @@ a quote beyond the last one.
 | Zone | Distance | Fee | Minimum |
 |---|---|---|---|
 | 1 | 0–10 km | €10 | €100 |
-| 2 | 10–25 km | €15 | €125 |
-| 3 | 25–50 km | €30 | €150 |
-| 4 | 50–70 km | €50 | €200 |
+| 2 | 10–25 km | €20 | €150 |
+| 3 | 25–50 km | €35 | €250 |
+| 4 | 50–70 km | €50 | €350 |
 | — | > 70 km | quoted by hand | — |
 | — | any zone, over €300 | **free** | — |
 
@@ -189,8 +198,8 @@ Written from how the code behaves, now publicly visible on the FAQ:
   Read it once — it is the paragraph most likely to be quoted back at you.
 - You are described as reachable **every day, 08:00–16:00**, and those hours are
   published to search engines as your opening hours. Note this is *not* the same
-  as delivering every day: the calendar still treats **Sunday as closed**. If you
-  do deliver on Sundays, that is one setting to change.
+  as delivering every day. *Since 3 November the calendar is open on Sundays
+  too, as you confirmed.*
 - More than one delivery address can be kept on file for a company. *(True of
   the intent; saved addresses are not built yet.)*
 - Vegetarian, vegan and gluten-free versions are labelled and boxed separately.
@@ -293,8 +302,5 @@ For your records. Everything below came out of the 29 August meeting.
 | Collection 11:00–16:00 | Built in; overridable in `delivery_settings` |
 | The 24-hour cancellation policy | FAQ (×3 languages), terms, shipping |
 
-**Four we still need**, and all four are now "send them to us" rather than
-"type them in": the **registered denomination**, the **legal form** (SRL, SA…),
-and your **Instagram** and **Facebook** addresses. The legal notice prints
-"[to be completed]" for the first two, and Belgian law requires both on a
-commercial site.
+**All four received on 3 November** and live: MOMENT LAB, SRL, and
+@moment.brussels on Instagram and Facebook.

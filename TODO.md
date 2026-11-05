@@ -8,7 +8,41 @@ It is not `SCOPE.md`, which argues the commercial case, and not
 built, what is stuck and on precisely what, and what can be worked on today
 without waiting for anybody.
 
-Last reviewed: **29 August 2026**, after the first working meeting with the
+Last reviewed: **5 November 2026**, after the client's written answers of 3
+November. What those settled, and what they opened, is the block directly
+below; the rest of the page is the 29 August review, corrected where it is now
+wrong.
+
+### 3 November answers
+
+**Built (commit `7376770`):** MOMENT LAB SRL on the legal notice, Instagram and
+Facebook `@moment.brussels`, no weekday closed by default (they work Sundays
+"pour l'instant"), and the revised fees and minimums — 0–10 km €10 / €100,
+10–25 km €20 / €150, 25–50 km €35 / €250, 50–70 km €50 / €350, quote beyond. The
+legal pages are accepted (written confirmation requested).
+
+**In the €2 400, now unblocked:** capacity. Delivery: 2 orders per window, 3
+windows, 6 a day. Collection: 8 half-hour slots, 1 order each.
+
+**New, quoted as an addendum (not started — waiting on their go-ahead):**
+
+| Item | Notes |
+|---|---|
+| Minimum 4 identical pieces per product | Min or multiples of 4? Épicerie included? |
+| Free delivery per band | €250 / €300 / €400 / €450 instead of one €300 threshold. Model + metaobject + Shopify profiles |
+| Road distance | Client asks for driving distance, not straight line. Routing API, distance frozen on the cart |
+| Day-before collection | Tagged products (cookies, 3 cakes, healthy snacks, épicerie, juices), 15:00 cut-off, 8 slots 11:30–15:00, €50 minimum |
+| Google Analytics G-43F991WPBG | Consent Mode v2, ecommerce events, purchase via Shopify's Google app / custom pixel, cross-domain |
+| Collaborations page | Form; overlaps `/pro` — merge or separate? |
+| "Où nous trouver" map | Partners in Sanity, Leaflet/MapLibre; needs the partner list |
+
+**Still open with them:** atelier at 21 or 21A, minimum for standard collection
+(€100?), mixed basket rule, whether the 8 slots apply to standard collection,
+Sunday for collection too.
+
+---
+
+Earlier review: **29 August 2026**, after the first working meeting with the
 client. That meeting answered most of what §1 was blocked on — the address, the
 zone table, the delivery windows, the cut-off, the cancellation policy, the
 domain — and all of it is built. What is left below is genuinely still open.
@@ -22,14 +56,12 @@ thing that unblocks it.
 
 | Blocked                         | Needs                                                                                                                                                                                                                  |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Capacity per day / per window** | Two numbers, not one: what the kitchen can produce in a day, and what the van can drop in a morning. See §2 of `CLIENT-QUESTIONS.md`. The windows themselves are built; nothing counts orders against them yet        |
-| **Free-delivery threshold**     | €300 or €250 — the client's notes say both. We shipped €300. It is a one-field change, but it has to be made in the Shopify shipping profiles at the same time                                                          |
-| **24h collection for douceurs** | Which products count as "douceurs". The rule is stated in copy; enforcing it needs those products tagged in Shopify, and the calendar applies the standard 48 hours to everything until they are                        |
-| **Legal launch**                | Registered denomination and legal form. BCE `1036.670.672` and VAT `BE1036670672` arrived on 29 August and are in; the legal page still prints `[to be completed]` for the other two                                  |
+| **Free-delivery threshold**     | Answered 3 Nov: one threshold per band (€250 / €300 / €400 / €450). Addendum item; the site still applies a single €300 until it is built                                                                              |
+| **Day-before collection**       | Product list answered 3 Nov. Addendum item; open questions on mixed baskets and the collection minimum                                                                                                                 |
 | **Search visibility**           | `moment-lab.be` pointed at the deployment, and a decision on `www` vs bare. The name is settled; the site is deliberately `noindex` until DNS resolves — see §5                                                       |
 | **How big the B2B work is**     | How many price levels? Shopify made native B2B free on Basic/Grow/Advanced on 2 April 2026 — company profiles, net terms, saved cards and **up to 3 catalogues**. Only per-company negotiated pricing still needs Plus |
 | **VAT invoices**                | Which of the three options in `CLIENT-QUESTIONS.md` §4                                                                                                                                                                 |
-| **Legal page copy**             | The lawyer's versions, or written acceptance of the drafts                                                                                                                                                             |
+| **Legal page copy**             | Accepted in principle on 3 Nov; waiting on the written OK                                                                                                                                                              |
 
 **What the 29 August meeting closed.** The atelier address (Rue des Glands 21A,
 1190 Forest — geocoded, so zone pricing now measures from the real building),
