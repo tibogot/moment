@@ -630,3 +630,76 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
     center / contain no-repeat;
   cursor: pointer;
 }
+
+/* "Où nous trouver" map (components/PartnerMap.tsx). Leaflet's own stylesheet
+   is imported by the component; these bring its chrome into the design. */
+.partner-map {
+  background: var(--color-cream);
+  font-family: var(--font-archivo-light), sans-serif;
+  /* Leaflet's panes go up to z-index 1000; isolating them keeps the map
+     under the navbar (z-40) and the cart panel instead of over them. */
+  isolation: isolate;
+}
+
+.partner-marker {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-sky);
+  border: 2px solid var(--color-black);
+}
+
+.partner-marker--primary {
+  background: var(--color-black);
+  border-color: var(--color-cream);
+  box-shadow: 0 0 0 2px var(--color-black);
+}
+
+.partner-map .leaflet-popup-content-wrapper,
+.partner-map .leaflet-popup-tip {
+  border-radius: 0;
+  background: var(--color-cream);
+  color: var(--color-black);
+  box-shadow: none;
+  border: 1px solid var(--color-black);
+}
+
+.partner-map .leaflet-popup-content {
+  margin: 14px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.partner-map .leaflet-popup-content p {
+  margin: 0;
+}
+
+.partner-popup__kind {
+  font-family: var(--font-owners-medium), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.partner-popup__name {
+  font-family: var(--font-owners-medium), sans-serif;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-bottom: 4px !important;
+}
+
+.partner-popup__links {
+  margin-top: 8px !important;
+}
+
+.partner-map .leaflet-popup-content a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.partner-map .leaflet-bar a {
+  border-radius: 0 !important;
+  color: var(--color-black);
+}

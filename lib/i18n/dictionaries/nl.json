@@ -176,7 +176,8 @@
   "aboutNav": {
     "story": "Ons verhaal",
     "news": "Nieuws",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "findUs": "Waar vindt u ons"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -648,6 +649,16 @@
       "collection": "{title} bij Moment — elke ochtend bereid in Brussel en in heel de stad geleverd.",
       "article": "{title} — uit de keuken van Moment in Brussel.",
       "menu": "Cateringmenu"
+    },
+    "findUs": {
+      "title": "Waar vindt u ons",
+      "description": "De cafés, delicatessenzaken en adressen in Brussel en België waar u de producten van Moment vindt: cookies, cakes, koudgeperste sappen en kruidenierswaren.",
+      "keywords": [
+        "Moment kopen Brussel",
+        "verkooppunten Moment",
+        "cookies Brussel",
+        "koudgeperste sappen Brussel"
+      ]
     }
   },
   "menuFormats": {
@@ -870,5 +881,26 @@
     "reorderNothingLeft": "Geen enkel product uit deze bestelling is nog beschikbaar.",
     "reorderFailed": "Deze bestelling kon niet aan uw winkelmand worden toegevoegd. Probeer het opnieuw.",
     "goToCart": "Naar winkelmand"
+  },
+  "findUs": {
+    "title": "Waar vindt u ons",
+    "lead": "Onze cookies, cakes, sappen en kruidenierswaren vindt u ook bij partners die we graag zien. Hier vindt u ze.",
+    "atelier": "Atelier Moment",
+    "atelierKind": "Afhalen van bestellingen",
+    "listTitle": "Onze partners",
+    "empty": "De lijst van onze partners volgt binnenkort. Bestel ondertussen online of kom langs in het atelier.",
+    "directions": "Routebeschrijving",
+    "website": "Website",
+    "mapLabel": "Kaart van de verkooppunten van Moment",
+    "kinds": {
+      "cafe": "Café",
+      "restaurant": "Restaurant",
+      "shop": "Kruidenier",
+      "hotel": "Hotel",
+      "office": "Bedrijf",
+      "other": "Partner"
+    },
+    "partnerCta": "Wilt u de producten van Moment in uw zaak aanbieden?",
+    "partnerLink": "Neem contact op"
   }
 }

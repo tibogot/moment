@@ -176,7 +176,8 @@
   "aboutNav": {
     "story": "Our story",
     "news": "News",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "findUs": "Find us"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -647,6 +648,16 @@
       "collection": "{title} from Moment — cooked each morning in Brussels and delivered across the city.",
       "article": "{title} — from the Moment kitchen in Brussels.",
       "menu": "Catering menu"
+    },
+    "findUs": {
+      "title": "Find us",
+      "description": "The cafés, delis and addresses in Brussels and Belgium where you can find Moment products: cookies, cakes, cold-pressed juices and pantry goods.",
+      "keywords": [
+        "where to buy Moment Brussels",
+        "Moment stockists",
+        "cookies Brussels",
+        "cold-pressed juice Brussels"
+      ]
     }
   },
   "menuFormats": {
@@ -869,5 +880,26 @@
     "reorderNothingLeft": "None of the products in this order are available any more.",
     "reorderFailed": "This order could not be added to your basket. Please try again.",
     "goToCart": "View basket"
+  },
+  "findUs": {
+    "title": "Find us",
+    "lead": "Our cookies, cakes, juices and pantry goods are also stocked by partners we love. Here is where.",
+    "atelier": "Moment atelier",
+    "atelierKind": "Order collection",
+    "listTitle": "Our partners",
+    "empty": "Our list of partners is coming soon. In the meantime, order online or come by the atelier.",
+    "directions": "Directions",
+    "website": "Website",
+    "mapLabel": "Map of Moment stockists",
+    "kinds": {
+      "cafe": "Café",
+      "restaurant": "Restaurant",
+      "shop": "Deli",
+      "hotel": "Hotel",
+      "office": "Office",
+      "other": "Partner"
+    },
+    "partnerCta": "Would you like to offer Moment products in your venue?",
+    "partnerLink": "Get in touch"
   }
 }

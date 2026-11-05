@@ -176,7 +176,8 @@
   "aboutNav": {
     "story": "Notre histoire",
     "news": "Actualités",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "findUs": "Où nous trouver"
   },
   "faq": {
     "title": "Questions fréquentes",
@@ -648,6 +649,16 @@
       "collection": "{title} chez Moment — cuisiné chaque matin à Bruxelles et livré dans toute la ville.",
       "article": "{title} — depuis la cuisine de Moment à Bruxelles.",
       "menu": "Menu traiteur"
+    },
+    "findUs": {
+      "title": "Où nous trouver",
+      "description": "Les cafés, épiceries et adresses à Bruxelles et en Belgique où trouver les produits Moment : cookies, cakes, jus pressés à froid et épicerie.",
+      "keywords": [
+        "où acheter Moment Bruxelles",
+        "points de vente Moment",
+        "cookies Bruxelles",
+        "jus pressés à froid Bruxelles"
+      ]
     }
   },
   "menuFormats": {
@@ -870,5 +881,26 @@
     "reorderNothingLeft": "Plus aucun produit de cette commande n'est disponible.",
     "reorderFailed": "Impossible d'ajouter cette commande au panier. Merci de réessayer.",
     "goToCart": "Voir le panier"
+  },
+  "findUs": {
+    "title": "Où nous trouver",
+    "lead": "Nos cookies, cakes, jus et produits d'épicerie se trouvent aussi chez des partenaires que nous aimons. Voici où.",
+    "atelier": "Atelier Moment",
+    "atelierKind": "Retrait des commandes",
+    "listTitle": "Nos partenaires",
+    "empty": "La liste de nos partenaires arrive bientôt. En attendant, commandez en ligne ou passez à l'atelier.",
+    "directions": "Itinéraire",
+    "website": "Site web",
+    "mapLabel": "Carte des points de vente Moment",
+    "kinds": {
+      "cafe": "Café",
+      "restaurant": "Restaurant",
+      "shop": "Épicerie",
+      "hotel": "Hôtel",
+      "office": "Entreprise",
+      "other": "Partenaire"
+    },
+    "partnerCta": "Vous souhaitez proposer les produits Moment dans votre établissement ?",
+    "partnerLink": "Contactez-nous"
   }
 }

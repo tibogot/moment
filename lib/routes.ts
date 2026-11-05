@@ -54,6 +54,7 @@ export const routes = {
   about: "/about",
   faq: "/faq",
   proAccount: "/pro",
+  findUs: "/find-us",
   contact: "/contact",
   news: "/news",
   cart: "/cart",
@@ -109,6 +110,7 @@ export const aboutNav = [
   { key: "story", href: routes.about },
   { key: "news", href: routes.news },
   { key: "faq", href: routes.faq },
+  { key: "findUs", href: routes.findUs },
 ] as const;
 
 /** Footer legal strip — required for a Belgian ecommerce site. */

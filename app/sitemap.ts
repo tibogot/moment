@@ -81,6 +81,7 @@ const staticRoutes: {
   { path: routes.news, changeFrequency: "weekly", priority: 0.6 },
   { path: routes.faq, changeFrequency: "monthly", priority: 0.6 },
   { path: routes.proAccount, changeFrequency: "yearly", priority: 0.7 },
+  { path: routes.findUs, changeFrequency: "monthly", priority: 0.6 },
   {
     path: routes.legal,
     changeFrequency: "yearly",

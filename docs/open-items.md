@@ -62,7 +62,8 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [ ] **Retrait la veille** : produits concernés (cookies, banana bread, cake citron-pavot, carrot cake, healthy snacks, épicerie, jus), commande avant 15 h, 8 créneaux de 30 min, 1 commande chacun, minimum 50 € — attend les questions 2 à 4
 - [ ] **Page Collaborations** avec formulaire — attend la question 7
 - [x] **Partenaires dans le Studio** (rubrique « Partenaires » : nom, type, adresse, lien, visible ; le point est placé automatiquement depuis l'adresse)
-- [ ] **Page et carte « Où nous trouver »** — les partenaires peuvent déjà être saisis ; reste la page, la carte et l'onglet
+- [x] **Page « Où nous trouver »** (`/find-us`, dans le menu « À propos ») : carte, atelier, liste des partenaires par commune, lien vers le contact
+- [ ] **Clé Geoapify pour la carte** (`GEOAPIFY_MAP_KEY`, limitée au domaine) en production — sans elle, la page montre la liste sans carte
 - [x] **Webhook Sanity** : `"partner"` ajouté au filtre de revalidation (5 nov.)
 
 ---

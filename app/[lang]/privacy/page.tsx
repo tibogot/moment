@@ -291,9 +291,9 @@ const PROCESSORS: Processor[] = [
   {
     name: "Geoapify GmbH (Allemagne / Duitsland / Germany) — UrbIS, Région de Bruxelles-Capitale / Brussels Hoofdstedelijk Gewest",
     role: {
-      fr: "recherche et vérification d’adresses",
-      nl: "opzoeken en controleren van adressen",
-      en: "address search and verification",
+      fr: "recherche et vérification d’adresses, et fonds de carte de la page « Où nous trouver » (votre navigateur leur transmet alors votre adresse IP, sans cookie)",
+      nl: "opzoeken en controleren van adressen, en de kaartachtergrond van de pagina ‘Waar vindt u ons’ (uw browser geeft daarbij uw IP-adres door, zonder cookie)",
+      en: "address search and verification, and the map tiles on the ‘Find us’ page (your browser then sends them your IP address, with no cookie)",
     },
   },
 ];

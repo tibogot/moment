@@ -32,6 +32,8 @@ export type Partner = {
   kind: PartnerKind;
   /** One line, as printed: "Chaussée de Waterloo 123, 1180 Uccle". */
   address: string;
+  /** The commune on its own, for grouping the list. */
+  city: string;
   url: string | null;
   /** Null when the address could not be placed — listed, but not on the map. */
   coordinates: Coordinates | null;
@@ -84,6 +86,7 @@ export async function getPartners(): Promise<Partner[]> {
           name: doc.name!.trim(),
           kind,
           address,
+          city: doc.city!.trim(),
           url: doc.url ?? null,
           coordinates: manual ?? (await geocode(address)),
         }))(),
