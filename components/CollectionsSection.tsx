@@ -88,12 +88,6 @@ export function CollectionsSection({
                     <h3 className="font-owners-narrow-bold text-[7vw] leading-[0.95] wrap-break-word uppercase md:text-[min(2.4vw,4svh)]">
                       {collection.title}
                     </h3>
-
-                    {/* {collection.description && (
-                    <p className="font-archivo-light mt-3 line-clamp-3 text-[16px] leading-normal md:text-[18px]">
-                      {collection.description}
-                    </p>
-                  )} */}
                   </div>
 
                   {/* Runs the full column width so it meets the vertical grid

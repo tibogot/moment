@@ -12,10 +12,11 @@ import { CdnImage as Image } from "@/components/CdnImage";
 import { useEffect, useRef } from "react";
 
 /**
- * Comparison build of the tiled flip, sitting under PanelPairFlipSection.
+ * The home page's two panels as a tiled flip.
  *
- * The hinge above kills eight timelines on every hover and swaps faces at 90°.
- * This one keeps a single paused timeline per card and reverses it, uses a
+ * An earlier hinge build killed eight timelines on every hover and swapped
+ * faces at 90°, which jittered. This one keeps a single paused timeline per
+ * card and reverses it, uses a
  * real 0→180 card (both faces live, backface hidden), and puts perspective on
  * the board so the mosaic shares one camera.
  *

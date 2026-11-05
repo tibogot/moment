@@ -19,7 +19,7 @@
  *
  *    Moving the table into the admin does not remove that duplication; it puts
  *    the two copies in the same building, so whoever changes one is standing in
- *    front of the other. SHOPIFY-SETUP.md says so on the page where it matters.
+ *    front of the other. docs/shopify-setup.md says so on the page where it matters.
  *
  * 2. It is not a road router. See `distanceFromAtelierKm`.
  */
@@ -282,10 +282,6 @@ export function minimumOrderShortfall(subtotal: number, zone: DeliveryZone) {
   return Math.max(0, zone.minimumOrder - subtotal);
 }
 
-export function clearsMinimumOrder(subtotal: number, zone: DeliveryZone) {
-  return minimumOrderShortfall(subtotal, zone) === 0;
-}
-
 /**
  * Whether this basket has bought its way out of the delivery fee.
  *
@@ -294,14 +290,6 @@ export function clearsMinimumOrder(subtotal: number, zone: DeliveryZone) {
  * threshold. It applies in every band, including the €50 one — that is what
  * "à partir de 300 € de commande, livraison gratuite" says, and a rule with an
  * unstated exception is a complaint waiting to be filed.
- */
-export function qualifiesForFreeDelivery(subtotal: number, table: ZoneTable) {
-  return subtotal >= table.freeDeliveryThreshold;
-}
-
-/**
- * What the site quotes for the trip: the band's fee, or nothing once the basket
- * clears the free-delivery threshold.
  *
  * The same caveat as every other number in this file — Shopify charges the
  * shipping rate, so the free-delivery threshold has to exist *there* too, as a
@@ -309,12 +297,8 @@ export function qualifiesForFreeDelivery(subtotal: number, table: ZoneTable) {
  * and the site promises free delivery while the checkout charges €50, which is
  * the single most expensive way these two tables can disagree.
  */
-export function quotedDeliveryFee(
-  subtotal: number,
-  zone: DeliveryZone,
-  table: ZoneTable,
-) {
-  return qualifiesForFreeDelivery(subtotal, table) ? 0 : zone.fee;
+export function qualifiesForFreeDelivery(subtotal: number, table: ZoneTable) {
+  return subtotal >= table.freeDeliveryThreshold;
 }
 
 /**

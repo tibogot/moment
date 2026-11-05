@@ -39,5 +39,3 @@ export function LocaleLink({ href, ...props }: LocaleLinkProps) {
     />
   );
 }
-
-export default LocaleLink;

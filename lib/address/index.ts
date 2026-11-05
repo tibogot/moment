@@ -24,11 +24,6 @@ export function getAddressProvider(): AddressProvider {
   return isGeoapifyConfigured() ? geoapifyProvider : urbisProvider;
 }
 
-/** Whether the lookup can currently see past the Brussels regional border. */
-export function coversAllOfBelgium() {
-  return isGeoapifyConfigured();
-}
-
 export function searchAddresses(query: string) {
   return getAddressProvider().search(query);
 }

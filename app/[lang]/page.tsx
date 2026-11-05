@@ -8,8 +8,6 @@ import { IntroSection } from "@/components/IntroSection";
 import { JsonLd } from "@/components/JsonLd";
 import { NewsletterSection } from "@/components/NewsletterSection";
 import { PanelPairFlipSmoothSection } from "@/components/PanelPairFlipSmoothSection";
-// import { PanelPairFlipSection } from "@/components/PanelPairFlipSection";
-// import { PanelPairSection } from "@/components/PanelPairSection";
 import { SelectionCollectionsSection } from "@/components/SelectionCollectionsSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { SplitStatementSection } from "@/components/SplitStatementSection";
@@ -111,21 +109,8 @@ export default async function Home({
         headingAs="h1"
       />
 
-      {/* The two rooms of the business, side by side on identical 3 x 3 grids.
-      <PanelPairSection
-        copy={home.panels}
-        images={{ events: images.events, coffee: images.coffee }}
-      />
-      */}
-
-      {/* Hinge flip — kept for comparison. The 90° face-swap jittered on hover.
-      <PanelPairFlipSection
-        copy={home.panels}
-        images={{ events: images.events, coffee: images.coffee }}
-      />
-      */}
-
-      {/* Solid 3D flip — one reversible timeline, shared perspective. */}
+      {/* The two rooms of the business, side by side on identical 3 x 3 grids:
+          a solid 3D flip, one reversible timeline, shared perspective. */}
       <PanelPairFlipSmoothSection
         copy={home.panels}
         images={{ events: images.events, coffee: images.coffee }}

@@ -62,7 +62,3 @@ export function writeConsentCookie(record: ConsentRecord) {
 
   document.cookie = `${CONSENT_COOKIE_NAME}=${value}; Path=/; Max-Age=${CONSENT_MAX_AGE_SECONDS}; SameSite=Lax${secure}`;
 }
-
-export function hasConsentDecision(): boolean {
-  return readConsentCookie() !== null;
-}
