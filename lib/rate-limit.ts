@@ -6,7 +6,7 @@
  * cheap case, one script in a loop, which is the one that would otherwise
  * spend Geoapify's 3,000 free lookups a day or fill the kitchen's inbox.
  * The durable answer is a rate-limit rule in Vercel's firewall, in front of
- * all of this — see AFTER-LAUNCH.md.
+ * all of this — worth adding on the production project before launch.
  */
 
 type Bucket = { count: number; resetAt: number };

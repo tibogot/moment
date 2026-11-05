@@ -126,12 +126,13 @@ Delete the array once that has happened.
 
 ## The atelier address is in two places
 
-The **postal address** — street, postcode, city — is here, in Company details,
+The **postal address** — street, postcode, city — is in `lib/site.ts`, in the
+code (the Studio's Company details screen was removed on 29 August 2026),
 because it is what the legal page prints and what search engines are given.
 
 The **coordinates** are in Shopify, on the `delivery_settings` metaobject,
 because every delivery zone past Brussels is a radius measured from them. See
-SHOPIFY-SETUP.md.
+`docs/shopify-setup.md`.
 
 They are not duplicates of each other — one is text, the other is arithmetic —
 but they describe the same building. **Move the atelier and both need

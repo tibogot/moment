@@ -424,7 +424,7 @@ export async function removeFromCart(locale: Locale, lineId: string) {
  *
  * What this cannot do is stop someone who reaches Shopify another way, or who
  * changes the address or adds a discount on Shopify's own pages. That needs a
- * Cart & Checkout Validation Function running inside Shopify — see TODO.md.
+ * Cart & Checkout Validation Function running inside Shopify — see docs/dev-notes.md.
  */
 export async function beginCheckout(locale: Locale) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");

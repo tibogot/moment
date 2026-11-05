@@ -1,123 +1,34 @@
-# Where the work stands
+# Developer notes
 
-A working document, for whoever picks this up next — most likely you, after the
-client meeting, having forgotten half of it.
+For whoever works on this codebase next. Not a backlog of client requests —
+those are in `open-items.md` — but the things the code cannot tell you: debt
+that is known and accepted, decisions already argued out, and measurements that
+cost a browser session to take.
 
-It is not `SCOPE.md`, which argues the commercial case, and not
-`CLIENT-QUESTIONS.md`, which asks the client for things. This one says what is
-built, what is stuck and on precisely what, and what can be worked on today
-without waiting for anybody.
-
-Last reviewed: **5 November 2026**, after the client's written answers of 3
-November. What those settled, and what they opened, is the block directly
-below; the rest of the page is the 29 August review, corrected where it is now
-wrong.
-
-### 3 November answers
-
-**Built (commit `7376770`):** MOMENT LAB SRL on the legal notice, Instagram and
-Facebook `@moment.brussels`, no weekday closed by default (they work Sundays
-"pour l'instant"), and the revised fees and minimums — 0–10 km €10 / €100,
-10–25 km €20 / €150, 25–50 km €35 / €250, 50–70 km €50 / €350, quote beyond. The
-legal pages are accepted (written confirmation requested).
-
-**In the €2 400, now unblocked:** capacity. Delivery: 2 orders per window, 3
-windows, 6 a day. Collection: 8 half-hour slots, 1 order each.
-
-**New, quoted as an addendum (not started — waiting on their go-ahead):**
-
-| Item | Notes |
-|---|---|
-| Minimum 4 identical pieces per product | Min or multiples of 4? Épicerie included? |
-| Free delivery per band | €250 / €300 / €400 / €450 instead of one €300 threshold. Model + metaobject + Shopify profiles |
-| Road distance | Client asks for driving distance, not straight line. Routing API, distance frozen on the cart |
-| Day-before collection | Tagged products (cookies, 3 cakes, healthy snacks, épicerie, juices), 15:00 cut-off, 8 slots 11:30–15:00, €50 minimum |
-| Google Analytics G-43F991WPBG | Consent Mode v2, ecommerce events, purchase via Shopify's Google app / custom pixel, cross-domain |
-| Collaborations page | Form; overlaps `/pro` — merge or separate? |
-| "Où nous trouver" map | Partners in Sanity, Leaflet/MapLibre; needs the partner list |
-
-**Still open with them:** atelier at 21 or 21A, minimum for standard collection
-(€100?), mixed basket rule, whether the 8 slots apply to standard collection,
-Sunday for collection too.
+Last reviewed **5 November 2026**.
 
 ---
 
-Earlier review: **29 August 2026**, after the first working meeting with the
-client. That meeting answered most of what §1 was blocked on — the address, the
-zone table, the delivery windows, the cut-off, the cancellation policy, the
-domain — and all of it is built. What is left below is genuinely still open.
+## Conventions worth knowing
+
+- **TypeGen.** `npm run typegen` reads the Sanity schema and every
+  `defineQuery` and writes `sanity.types.ts`; `lib/sanity/types.ts` derives the
+  site's names from it. Run it after touching a schema or a query.
+  `sanity/README.md` has the caveats.
+- **Language checks.** To find untranslated strings, fetch the rendered HTML in
+  all three languages and diff the visible text — single words, `aria-label`s
+  and Shopify data all slip past a grep for sentences. The legal pages are
+  trilingual since 5 November 2026 (see "Decisions already taken").
+- **Delivery rules are data.** Days, windows, zones, fees and capacity are read
+  from Shopify metaobjects with built-in defaults (`lib/delivery*.ts`). Field
+  reference: `shopify-setup.md`.
+- **Caching.** Nothing revalidates on a clock; every cached read is tagged and
+  cleared by `/api/revalidate/*` webhooks, with a 24 h backstop
+  (`lib/cache.ts` explains the ISR-write bill that led here).
 
 ---
 
-## 1. Blocked on the client
-
-Nothing in this section can be finished by writing code. Each line names the one
-thing that unblocks it.
-
-| Blocked                         | Needs                                                                                                                                                                                                                  |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Free-delivery threshold**     | Answered 3 Nov: one threshold per band (€250 / €300 / €400 / €450). Addendum item; the site still applies a single €300 until it is built                                                                              |
-| **Day-before collection**       | Product list answered 3 Nov. Addendum item; open questions on mixed baskets and the collection minimum                                                                                                                 |
-| **Search visibility**           | `moment-lab.be` pointed at the deployment, and a decision on `www` vs bare. The name is settled; the site is deliberately `noindex` until DNS resolves — see §5                                                       |
-| **How big the B2B work is**     | How many price levels? Shopify made native B2B free on Basic/Grow/Advanced on 2 April 2026 — company profiles, net terms, saved cards and **up to 3 catalogues**. Only per-company negotiated pricing still needs Plus |
-| **VAT invoices**                | Which of the three options in `CLIENT-QUESTIONS.md` §4                                                                                                                                                                 |
-| **Legal page copy**             | Accepted in principle on 3 Nov; waiting on the written OK                                                                                                                                                              |
-
-**What the 29 August meeting closed.** The atelier address (Rue des Glands 21A,
-1190 Forest — geocoded, so zone pricing now measures from the real building),
-the phone, the email, the opening hours, the BCE and VAT numbers, the new
-four-band zone table, free delivery over €300, the three delivery windows, the
-16:00 order cut-off, the collection window, the cancellation policy and the
-domain name. All built, all overridable from the Shopify admin or the Studio.
-
-**The good news since the last review:** most of the _data_ the client used to
-have to send us is now something they type themselves — company details, VAT,
-opening hours, social accounts, delivery rules, zone fees, delivery windows.
-What is left above is decisions and facts about how the kitchen works, which is
-the part we could never have guessed. `CLIENT-QUESTIONS.md` §7 lists the screens.
-
-**Capacity is not a small job.** Counting how many orders already exist for a
-given date means reading them back through Shopify's Admin API — a different and
-larger piece of work than the metaobject settings. Quote it separately.
-
----
-
-## 2. Free to do now
-
-In the order I would take them. The hero grid is first because it is the only
-one the client sees; the article work is last because it is the only one on this
-list that is really half-blocked on an answer.
-
-1. **The hero grid** — ½ day, decided, §4 has the arithmetic
-2. **Search suggestions from the collections** — a decision plus a small change
-3. **Articles: the link between translations** — needs one answer from the
-   client first
-
-### The hero grid
-
-The one design request still open, and the only item on this list the client
-will actually see. **Half a day.** The decision is settled — see §4, which was
-rewritten on 15 August after the arithmetic was redone and came out the other
-way round.
-
-### TypeGen: done
-
-`npm run typegen` reads the schema and every query and writes
-`sanity.types.ts`; `lib/sanity/types.ts` derives the site's names from it, so no
-shape of Sanity data is hand-written any more. **Run it after touching a schema
-or a query.** `sanity/README.md` has the caveats — chiefly that a query TypeGen
-cannot see is a query it cannot check, and it only sees `defineQuery`.
-
-It found three mismatches on the first run, which is the argument for having
-done it:
-
-- **One type covered two different schemas.** The hand-written `SanityImage`
-  gave every image an optional `alt`, so `image.alt` could be read off the three
-  home page photographs, which have no such field. Harmless as it stood — those
-  panels pass `alt=""` deliberately — but only by luck.
-- **`PLACEHOLDER_MENUS` built slugs the API never returns**, `{ current }` with
-  no `_type`, in the data served when Sanity is unreachable.
-- **`PortableTextContent` claimed a stricter type than Sanity sends.**
+## Open technical work
 
 ### Search suggestions should come from the catalogue
 
@@ -176,92 +87,14 @@ exist, and redirecting would tell Google otherwise.
   cannot be computed: the Dutch article has a different slug, so the page has to
   supply the address. The function is where that plugs in.
 
-**Ask this in the meeting, in these words:** _will every news item be written in
-three languages, or will some stay French only?_ If the answer is "French first,
-we will translate the good ones" — the likelier one — then the fallback above is
-the permanent behaviour for untranslated pieces, not a stopgap.
-
-There is currently **one published article, in English**. Zero French, zero
-Dutch. Building the translation link before the client has written anything is
-guessing at how they work.
-
-### Autonomy, whenever
-
-All of these cost nothing in translation, which is what makes them cheap:
-
-- **The six remaining home page photographs.** The `homePage` schema takes them
-  one at a time and each falls back independently.
-- **The About page photographs**, same shape.
-- **The team** — names, photos, roles. Names do not translate and a role is two
-  words.
-- **The Presentation tool**, where the client edits by clicking the site itself.
-  The biggest autonomy lever left, and the one to quote rather than absorb.
-
-### Design measurements, for reference
-
-Both of the client's requests shipped. Kept because they cost a browser session
-and they contradict the obvious reading.
-
-**Line weight is 2px, and 1.5 is not available.** Chrome rounds `border-width`
-to whole CSS pixels — measured at 1x _and_ 2x — while the GridLines spans use
-`width`, which is not rounded. At 1.5px the overlay renders at 1.5 and all 117
-borders at 1, and the two meet at every corner of the grid. `--grid-line` in
-`globals.css` is the single number for both mechanisms; if 2px reads heavy, the
-lever is contrast, not width.
-
-| Cell proportions       | 1440×900                | 1920×951           | 2560×951           |
-| ---------------------- | ----------------------- | ------------------ | ------------------ |
-| Hero                   | 183×249 → **0.74**      | 245×262 → **0.94** | 328×262 → **1.25** |
-| Events / Coffee panels | **0.75** at every width |                    |                    |
-| Split sections         | **0.75** at every width |                    |                    |
-
-The panels were already right and never drifted. The split sections were square
-by declaration and are now 3/4. The hero is the one still open: it is 3/4 on a
-1440 laptop, which is where the design was calibrated, and that is why it looks
-correct to us and square to the client. §4 has the arithmetic behind that drift
-and the decision that follows from it.
-
-### Language: done, and the earlier "done" was wrong
-
-This section previously said _no hardcoded English prose remains_ — measured,
-not assumed. It was still wrong, and **how** it was wrong is the useful part: the
-sweep looked for **sentences**. It found none, and missed three whole classes.
-
-1. **Single words.** Close, Back, All, Sold out, View all, Placeholder content,
-   Back to news, Pick another day. A prose sweep does not find a button.
-2. **Attributes.** Nine `aria-label`s across the navbar, the mobile menu, the
-   shop menu, the language switcher, the cookie banner and the calendar, plus
-   four contact-form placeholders. Invisible to the eye, read aloud to anyone on
-   a screen reader.
-3. **Data from Shopify.** The catalogue queries had no `@inContext(language:)`,
-   so the shop answered in the store's default language whatever the reader
-   asked for — and the cart kept doing it after the catalogue was fixed, because
-   the cart's own six operations were a separate set of queries.
-
-All fixed. `formatPrice`, `getCart` and the five cart actions now take the locale
-as their first argument; `/api/cart` reads it from a `lang` query parameter,
-since it sits outside `app/[lang]` and has no segment to read. Verified against
-the Storefront API in all three languages, not assumed.
-
-**Structured data was the last of it** (15 August). Every JSON-LD node named a
-language-less URL: on `/nl/menus` the breadcrumb pointed at `/` and `/menus`,
-addresses that only resolve through a 307, under English names, while the
-canonical said `/nl/menus`. Structured data contradicting the canonical is worse
-than none. Page-level nodes now take the locale; the organisation, website and
-business nodes deliberately do not — one company, not three, and their `@id`s
-anchor everything else. `inLanguage` was pinned to the default locale too, so a
-Dutch menu declared itself French.
-
-**How to check this properly next time:** fetch the rendered HTML in all three
-languages and diff the visible strings, rather than grepping the source for
-sentences. That is what caught every one of the above.
-
-The legal pages stay English deliberately: they are binding text carrying the
-zone fees and minimums, and they want a professional translator. See §4.
+**Still to ask the client:** will every news item be written in three
+languages, or will some stay French only? If "French first, we translate the
+good ones", the news-index fallback in `translatedPath` is the permanent
+behaviour, not a stopgap.
 
 ---
 
-## 3. Known debt
+## Known debt
 
 Things that are working, understood, and not worth fixing yet — recorded so
 nobody rediscovers them as bugs.
@@ -285,12 +118,13 @@ done without giving up on quoting a fee before checkout. Removing it entirely
 would mean reading Shopify's own rates through `cart.deliveryGroups` — but
 Shopify's zones are postcode-based and ours are radial, so we would quote the
 right fee against the wrong band's minimum order. That trades a visible
-divergence for a subtler one. `SHOPIFY-SETUP.md` says so where it matters.
+divergence for a subtler one. `shopify-setup.md` says so where it matters.
 
 **Shopify's shipping profiles are still built by hand.** Translating the radial
 bands into postcode lists is documented but manual. It is automatable — compute
 every Belgian postcode's distance from the atelier and bucket it — and that
-script is worth writing, but only once the atelier's real address is known.
+script is worth writing now that the atelier's address is confirmed (21 vs 21A
+still to check — see `open-items.md`).
 
 **Menus written before the schema changed hold the old shape.** Sanity does not
 rewrite documents when a schema changes, so a menu published before translation
@@ -321,9 +155,12 @@ merge them.
 
 ---
 
-## 4. Decisions waiting on us, not the client
+---
 
-**The hero grid: full height, or locked cell proportion?** Settled on 15 August.
+## Decisions already taken
+
+**The hero grid: full height, or locked cell proportion?** Settled on 15 August,
+**not yet implemented** (about half a day).
 **Option 2**, below. The earlier answer here was option 3, and it was wrong —
 the reasoning is kept because the wrong version is the intuitive one and will be
 re-derived by whoever reads this next.
@@ -385,9 +222,15 @@ not the rectangle. The 3/4 is only legible in the hero, where the whole 7 × 3
 field is visible at once. Treat it as a property of the hero, not an invariant of
 the system.
 
-**The legal pages stay English for now.** They are binding text, they carry the
-zone fees and minimums, and they want a professional translator rather than us.
-Budget it rather than doing it.
+**The legal pages are trilingual but unreviewed.** Rewritten on 5 November
+2026 in FR/NL/EN: register and host on the legal notice, a full art. 13 GDPR
+privacy policy, an exact cookie list, and terms with withdrawal by product type,
+legal guarantee, mediation, governing law and the model withdrawal form. Still
+to confirm: the register division (French-speaking assumed, `lib/legal.ts`),
+the retention periods, the processors list (Resend's legal entity), that every
+newsletter email will carry an unsubscribe link, and a lawyer's read. The
+cookie banner is off because nothing optional is installed — see
+`ENABLED_CONSENT_CATEGORIES` in `lib/consent/categories.ts`.
 
 **Delivery rules stay in Shopify, not Sanity.** Asked and answered: settings
 live where their twin lives. The zone fees must agree with Shopify's shipping
@@ -397,23 +240,28 @@ delivery domain across two admins costs more than the nicer form is worth.
 
 ---
 
-## 5. Deployment
+---
 
-Production is `main`, deployed by Vercel to `moment-drab-ten.vercel.app`.
+## Reference: design measurements
 
-**The site is deliberately not indexed.** `siteConfig.url` resolves from
-`NEXT_PUBLIC_SITE_URL`, and any `.vercel.app` or localhost address serves
-`Disallow: /` plus `noindex` on every page. Indexing the temporary address would
-leave results pointing at somewhere the business is about to leave, and a
-duplicate-content problem on the domain it actually wants to rank on.
+Both of the client's requests shipped. Kept because they cost a browser session
+and they contradict the obvious reading.
 
-**The day the domain is bought**, in this order:
+**Line weight is 2px, and 1.5 is not available.** Chrome rounds `border-width`
+to whole CSS pixels — measured at 1x _and_ 2x — while the GridLines spans use
+`width`, which is not rounded. At 1.5px the overlay renders at 1.5 and all 117
+borders at 1, and the two meet at every corner of the grid. `--grid-line` in
+`globals.css` is the single number for both mechanisms; if 2px reads heavy, the
+lever is contrast, not width.
 
-1. Connect it in Vercel
-2. Set `NEXT_PUBLIC_SITE_URL` to `https://www.moment-lab.be` and redeploy — this is
-   what opens the site to Google
-3. Add the domain to Sanity's CORS origins, or the Studio stops connecting
-4. Only then: Search Console, Google Business Profile, analytics
+| Cell proportions       | 1440×900                | 1920×951           | 2560×951           |
+| ---------------------- | ----------------------- | ------------------ | ------------------ |
+| Hero                   | 183×249 → **0.74**      | 245×262 → **0.94** | 328×262 → **1.25** |
+| Events / Coffee panels | **0.75** at every width |                    |                    |
+| Split sections         | **0.75** at every width |                    |                    |
 
-**Still to do by hand:** invite the client to the Sanity project as **Editor**,
-not Administrator.
+The panels were already right and never drifted. The split sections were square
+by declaration and are now 3/4. The hero is the one still open: it is 3/4 on a
+1440 laptop, which is where the design was calibrated, and that is why it looks
+correct to us and square to the client. "Decisions already taken" has the arithmetic behind that drift
+and the decision that follows from it.

@@ -42,7 +42,7 @@ import {
  * `lib/delivery.ts`, which are the values that used to be hard-coded. A shop
  * with neither definition behaves exactly as it did before they existed.
  *
- * See SHOPIFY-SETUP.md for the field-by-field setup.
+ * See docs/shopify-setup.md for the field-by-field setup.
  */
 
 /**

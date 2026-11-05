@@ -10,7 +10,7 @@
  *
  * The one thing that catches everybody setting these up: **Storefront API access
  * has to be enabled on each definition**, or the query comes back empty and the
- * defaults apply with nothing to say they did. See SHOPIFY-SETUP.md.
+ * defaults apply with nothing to say they did. See docs/shopify-setup.md.
  */
 
 import { unstable_cache } from "next/cache";

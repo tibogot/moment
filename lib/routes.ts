@@ -136,7 +136,7 @@ export const legalNav = [
  * whether it was ever written.
  *
  * When that reference lands, this is where the real slug lookup replaces the
- * fallback. See TODO.md §2.
+ * fallback. See docs/dev-notes.md.
  */
 export function translatedPath(pathname: string, locale: Locale) {
   const path = stripLocale(pathname);

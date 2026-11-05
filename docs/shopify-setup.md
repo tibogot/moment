@@ -1,8 +1,8 @@
 # Shopify admin setup
 
 Work that happens in the Shopify admin rather than in this codebase. Some of it
-the site already depends on; some is needed before launch. Kept separate from
-`CLIENT-QUESTIONS.md` because these are tasks, not decisions.
+the site already depends on; some is needed before launch. Decisions still
+waiting on the client are in `open-items.md`, not here.
 
 ---
 
@@ -39,7 +39,7 @@ value in brackets, which is what the site did before this existed.
 |---|---|---|
 | `lead_time_days` | Integer | Notice required before a delivery (2) |
 | `order_cutoff_hour` | Integer | Hour after which today stops counting, 0–23 (16) |
-| `closed_weekdays` | List of single line text | Weekdays you never deliver (sunday) |
+| `closed_weekdays` | List of single line text | Weekdays you never deliver (none) |
 | `booking_window_days` | Integer | How far ahead the calendar takes bookings (365) |
 | `free_delivery_threshold` | Decimal | Basket value above which delivery is free, in euros (300) |
 | `pickup_start_time` | Single line text | Collection opens, `HH:MM` (11:00) |
@@ -49,8 +49,8 @@ value in brackets, which is what the site did before this existed.
 
 `closed_weekdays` takes lowercase English day names — `monday` … `sunday`. Add
 them as **choices** on the field definition and the admin gives you a checklist
-instead of a text box. An empty list means you deliver every day; a value the
-site cannot read falls back to Sunday rather than opening the week.
+instead of a text box. An empty list means you deliver every day, which is
+also the built-in default since 3 November 2026 (open on Sundays).
 
 `lead_time_days` is quoted to customers on the FAQ, the contact page and under
 both calendars, all from this one field — change it here and every page that
@@ -108,15 +108,19 @@ Read the section on shipping rates below before changing a fee.
 | `max_distance_km` | Decimal | no | The band's outer edge |
 | `brussels_region` | Boolean | no | Tick only on a zone with no radius — see below |
 
-The built-in table is the one you gave us on 29 August 2026, so **you do not
+The built-in table is the one you gave us on 3 November 2026, so **you do not
 need to create these entries unless you want to change something**:
 
 | Zone | Distance | Fee | Minimum |
 |---|---|---|---|
 | 1 | 0–10 km | €10 | €100 |
-| 2 | 10–25 km | €15 | €125 |
-| 3 | 25–50 km | €30 | €150 |
-| 4 | 50–70 km | €50 | €200 |
+| 2 | 10–25 km | €20 | €150 |
+| 3 | 25–50 km | €35 | €250 |
+| 4 | 50–70 km | €50 | €350 |
+
+Free delivery is still **one** threshold for every zone (€300). The per-zone
+thresholds in the 3 November answer (€250 / €300 / €400 / €450) are not built
+yet — see `open-items.md`.
 
 There is deliberately **no fifth entry for "> 70 km"**. A band with no price is
 not a band — past the last one the site stops quoting and sends the customer to
@@ -137,7 +141,7 @@ Brussels address that band's fee and minimum.
 was "Bruxelles" — the whole Region for €10 with a €100 minimum. The new zone 1
 is a 10 km radius, and Forest is in the south-west corner of the Region, so the
 north-east of Brussels (Haren, Neder-Over-Heembeek, parts of Woluwe) is now
-11–14 km out and pays €15 with a €125 minimum. That is what a distance table
+11–14 km out and pays €20 with a €150 minimum. That is what a distance table
 does. If you would rather Brussels stayed flat, that is the empty
 `max_distance_km` above — tell us and we will walk you through it.
 
@@ -192,8 +196,17 @@ picker for the rest.
 
 Storefront API access has to be enabled on every one of these definitions.
 
-All the delivery metaobjects are cached for five minutes. To make a change
-appear immediately, call `revalidateTag("shopify-delivery")` from a webhook.
+All the delivery metaobjects are cached until the `metaobjects/*` webhook says
+they changed, with a 24-hour backstop. **Without the webhook, a change can take
+a day to appear** — see "Webhooks" below.
+
+**Webhooks.** Settings → Notifications → Webhooks, all pointing at
+`https://<domain>/api/revalidate/shopify`, signing secret in
+`SHOPIFY_WEBHOOK_SECRET`:
+
+- `products/*`, `collections/*`, `inventory_levels/update` — catalogue
+- `metaobjects/create`, `metaobjects/update`, `metaobjects/delete` — delivery rules
+- `orders/create`, `orders/updated`, `orders/cancelled` — window capacity
 
 **Guest checkout.** Settings → Checkout → Accounts must be **optional**. The
 brief is explicit that a first order must not require an account.
@@ -217,14 +230,14 @@ a few clicks apart. **Whenever you change a delivery fee, change it twice** —
 in the metaobject and in the shipping profile — in the same sitting.
 
 Shopify's shipping zones are postcode-based, not radial, so the table has to be
-translated into postcode lists. What the site quotes, as of 29 August 2026:
+translated into postcode lists. What the site quotes, as of 3 November 2026:
 
 | Zone | Rule | Fee | Minimum |
 |---|---|---|---|
 | 1 | 0–10 km from the atelier | €10 | €100 |
-| 2 | 10–25 km | €15 | €125 |
-| 3 | 25–50 km | €30 | €150 |
-| 4 | 50–70 km | €50 | €200 |
+| 2 | 10–25 km | €20 | €150 |
+| 3 | 25–50 km | €35 | €250 |
+| 4 | 50–70 km | €50 | €350 |
 | — | beyond 70 km | quote by hand | — |
 | — | **any zone, basket over €300** | **free** | — |
 
@@ -250,9 +263,10 @@ is worse than not translating at all. Same for the order confirmation emails.
 
 ### Product content
 
-Product titles and descriptions come from Shopify and are **not** translated by
-this codebase. That needs **Translate & Adapt** (free Shopify app), and the
-Storefront queries then need the `@inContext` locale directive. Not done yet.
+Product titles and descriptions come from Shopify. The site already asks for
+the reader's language (`@inContext(language:)` on every catalogue and cart
+query); the translations themselves are entered in **Translate & Adapt** (free
+Shopify app). Untranslated products show in the shop's primary language.
 
 ### Shop Pay
 
@@ -268,7 +282,7 @@ Whoever approves an application sets it. Nothing else marks a customer as B2B.
 
 ## Environment variables
 
-`.env.example` lists them all. Three notes:
+`.env.example` lists them all. Notes on the ones that bite:
 
 - `NEXT_PUBLIC_SITE_URL` — the address this deployment answers on, with the
   protocol and no trailing slash. Every canonical URL, the sitemap, robots.txt,
@@ -288,5 +302,3 @@ Whoever approves an application sets it. Nothing else marks a customer as B2B.
   delivery window. Unset, capacity is off and every window is offered.
 - `GEOAPIFY_API_KEY` — without it the address lookup silently falls back to the
   Brussels-only register and no address outside the Region resolves.
-- `.gitignore` contains `.env*`, which also excludes `.env.example` itself, so
-  it is not in the repo. Worth a `!.env.example` negation.
