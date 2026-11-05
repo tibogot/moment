@@ -861,6 +861,13 @@
     "signedInAs": "Signed in as {name}.",
     "orders": "Orders",
     "noOrders": "No orders yet.",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "orderDetails": "Details",
+    "reorder": "Order again",
+    "reordering": "Adding to basket…",
+    "reorderSkipped": "Added to your basket. {count} product(s) from this order are no longer available.",
+    "reorderNothingLeft": "None of the products in this order are available any more.",
+    "reorderFailed": "This order could not be added to your basket. Please try again.",
+    "goToCart": "View basket"
   }
 }

@@ -3,7 +3,9 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
+  addLinesToCart,
   addVariantToCart,
+  availableVariantIds,
   getCartCookieOptions,
   lookupCart,
   removeCartLines,
@@ -17,6 +19,7 @@ import {
 } from "@/lib/shopify/delivery";
 import { getDeliveryRules, getZoneTable } from "@/lib/shopify/zones";
 import { getFullSlots } from "@/lib/shopify/capacity";
+import { getCustomerOrder } from "@/lib/shopify/customer-account/customer";
 import { checkoutBlocker } from "@/lib/checkout";
 import type { Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
@@ -111,6 +114,71 @@ export async function addToCart(
     totalQuantity: result.totalQuantity,
     cart: result.cart,
   };
+}
+
+/**
+ * "Recommander": a past order's lines, back in the basket.
+ *
+ * The order is re-read from the Customer Account API by id rather than taking
+ * lines from the browser, so nobody can submit a basket and call it an order —
+ * and the API only returns the signed-in customer's own orders, so an id from
+ * someone else's comes back as nothing.
+ *
+ * Added to the existing basket rather than replacing it: someone halfway
+ * through a new order who taps "recommander" on last month's wants both.
+ * Lines that can no longer be bought are skipped and counted, so the page can
+ * say "2 products are no longer available" rather than failing the lot. The
+ * day, window and address are not copied — those are a new decision.
+ */
+export async function reorder(locale: Locale, orderId: string) {
+  if (!isShopifyConfigured()) return orderFailure("not_configured");
+
+  const result = await getCustomerOrder(orderId);
+  if (!result.ok || !result.order) return orderFailure("cart_failed");
+
+  // The same variant can appear on two lines (a discount splits it); one line
+  // per variant keeps the basket tidy and the quantities right.
+  const quantities = new Map<string, number>();
+  let skipped = 0;
+  for (const line of result.order.lineItems.nodes) {
+    if (!line.variantId || line.quantity <= 0) {
+      skipped += 1;
+      continue;
+    }
+    quantities.set(
+      line.variantId,
+      (quantities.get(line.variantId) ?? 0) + line.quantity,
+    );
+  }
+
+  let available: Set<string>;
+  try {
+    available = await availableVariantIds([...quantities.keys()]);
+  } catch {
+    return orderFailure("cart_failed");
+  }
+
+  const lines = [...quantities].flatMap(([merchandiseId, quantity]) => {
+    if (available.has(merchandiseId)) return [{ merchandiseId, quantity }];
+    skipped += 1;
+    return [];
+  });
+
+  if (lines.length === 0) {
+    return { ok: true as const, added: 0, skipped };
+  }
+
+  const added = await addLinesToCart(
+    locale,
+    lines,
+    await getCartIdFromCookies(),
+  );
+  if (!added.ok) return orderFailure("cart_failed");
+
+  await setCartCookie(added.cartId);
+  revalidatePath(routes.cart);
+
+  return { ok: true as const, added: lines.length, skipped };
 }
 
 /**

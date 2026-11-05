@@ -448,6 +448,25 @@ export async function addVariantToCart(
   quantity: number,
   existingCartId?: string,
 ) {
+  return addLinesToCart(
+    locale,
+    [{ merchandiseId: variantId, quantity }],
+    existingCartId,
+  );
+}
+
+export type CartLineInput = { merchandiseId: string; quantity: number };
+
+/**
+ * Several lines in one mutation, with the same stale-cart recovery as a single
+ * add. One mutation rather than a loop because Shopify applies it atomically:
+ * a reorder either lands whole or not at all, never half a basket.
+ */
+export async function addLinesToCart(
+  locale: Locale,
+  lines: CartLineInput[],
+  existingCartId?: string,
+) {
   if (!isShopifyConfigured()) {
     return { ok: false as const, error: "The shop is not configured." };
   }
@@ -458,7 +477,7 @@ export async function addVariantToCart(
       CART_LINES_ADD_MUTATION,
       {
         cartId: existingCartId,
-        lines: [{ merchandiseId: variantId, quantity }],
+        lines,
       },
       "cartLinesAdd",
       "Could not add this item to your cart.",
@@ -476,7 +495,7 @@ export async function addVariantToCart(
   return runCartMutation(
     locale,
     CART_CREATE_MUTATION,
-    { input: { lines: [{ merchandiseId: variantId, quantity }] } },
+    { input: { lines } },
     "cartCreate",
     "Could not create a cart. Check that the Storefront token has write_checkouts access.",
   );
@@ -625,5 +644,47 @@ export async function updateCartLineQuantity(
     { cartId, lines: [{ id: lineId, quantity }] },
     "cartLinesUpdate",
     "Could not update your cart.",
+  );
+}
+
+const VARIANT_AVAILABILITY_QUERY = `
+  query VariantAvailability($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on ProductVariant {
+        id
+        availableForSale
+      }
+    }
+  }
+`;
+
+type VariantAvailabilityResponse = {
+  data?: { nodes: ({ id: string; availableForSale: boolean } | null)[] };
+  errors?: unknown;
+};
+
+/**
+ * Which of these variants can still be bought. A deleted or unpublished one
+ * comes back null, a sold-out one `availableForSale: false`; both are left
+ * out, because a single unbuyable line makes Shopify refuse the whole add.
+ * Throws on a failed read — the caller must not mistake an outage for an
+ * empty shop.
+ */
+export async function availableVariantIds(ids: string[]): Promise<Set<string>> {
+  if (ids.length === 0) return new Set();
+
+  const response = (await getShopifyClient().request(
+    VARIANT_AVAILABILITY_QUERY,
+    { variables: { ids } },
+  )) as VariantAvailabilityResponse;
+
+  if (!response.data) throw new Error("Variant availability unavailable");
+
+  return new Set(
+    response.data.nodes
+      .filter((node): node is { id: string; availableForSale: boolean } =>
+        Boolean(node?.availableForSale),
+      )
+      .map((node) => node.id),
   );
 }

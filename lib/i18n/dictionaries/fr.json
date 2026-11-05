@@ -862,6 +862,13 @@
     "signedInAs": "Connecté en tant que {name}.",
     "orders": "Commandes",
     "noOrders": "Aucune commande pour l'instant.",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "orderDetails": "Détails",
+    "reorder": "Recommander",
+    "reordering": "Ajout au panier…",
+    "reorderSkipped": "Ajouté au panier. {count} produit(s) de cette commande ne sont plus disponibles.",
+    "reorderNothingLeft": "Plus aucun produit de cette commande n'est disponible.",
+    "reorderFailed": "Impossible d'ajouter cette commande au panier. Merci de réessayer.",
+    "goToCart": "Voir le panier"
   }
 }

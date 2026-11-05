@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
+import { ReorderButton } from "@/components/ReorderButton";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { formatPriceAmount, formatShortDate } from "@/lib/i18n/format";
@@ -56,6 +57,14 @@ export default async function AccountPage({
 
   const { customer, orders } = profile;
   const t = dict.account;
+  const reorderLabels = {
+    reorder: t.reorder,
+    reordering: t.reordering,
+    skipped: t.reorderSkipped,
+    nothingLeft: t.reorderNothingLeft,
+    failed: t.reorderFailed,
+    goToCart: t.goToCart,
+  };
 
   return (
     <>
@@ -77,23 +86,44 @@ export default async function AccountPage({
           ) : (
             <ul className="mt-5">
               {orders.map((order) => (
-                <li
-                  key={order.id}
-                  className="flex flex-wrap items-baseline justify-between gap-3 border-t border-sky py-4"
-                >
-                  <span className="font-owners-medium text-[13px] uppercase tracking-wide">
-                    {order.name}
-                  </span>
-                  <span className="font-archivo-light text-[13px]">
-                    {formatShortDate(locale, order.processedAt)}
-                  </span>
-                  <span className="font-archivo-light text-[13px]">
-                    {formatPriceAmount(
-                      locale,
-                      order.totalPrice.amount,
-                      order.totalPrice.currencyCode,
+                <li key={order.id} className="border-t border-sky py-4">
+                  <div className="flex flex-wrap items-baseline justify-between gap-3">
+                    <span className="font-owners-medium text-[13px] uppercase tracking-wide">
+                      {order.name}
+                    </span>
+                    <span className="font-archivo-light text-[13px]">
+                      {formatShortDate(locale, order.processedAt)}
+                    </span>
+                    <span className="font-archivo-light text-[13px]">
+                      {formatPriceAmount(
+                        locale,
+                        order.totalPrice.amount,
+                        order.totalPrice.currencyCode,
+                      )}
+                    </span>
+                  </div>
+
+                  {order.lineItems.nodes.length > 0 && (
+                    <p className="font-archivo-light mt-2 text-[13px] opacity-70">
+                      {order.lineItems.nodes
+                        .map((line) => `${line.quantity} × ${line.name}`)
+                        .join(" · ")}
+                    </p>
+                  )}
+
+                  <div className="mt-3 flex flex-wrap items-start gap-5">
+                    <ReorderButton orderId={order.id} labels={reorderLabels} />
+                    {order.statusPageUrl && (
+                      <a
+                        href={order.statusPageUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-owners-medium py-2.5 text-[11px] uppercase tracking-wide underline transition-opacity hover:opacity-60"
+                      >
+                        {t.orderDetails}
+                      </a>
                     )}
-                  </span>
+                  </div>
                 </li>
               ))}
             </ul>

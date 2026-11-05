@@ -862,6 +862,13 @@
     "signedInAs": "Aangemeld als {name}.",
     "orders": "Bestellingen",
     "noOrders": "Nog geen bestellingen.",
-    "signOut": "Afmelden"
+    "signOut": "Afmelden",
+    "orderDetails": "Details",
+    "reorder": "Opnieuw bestellen",
+    "reordering": "Toevoegen aan winkelmand…",
+    "reorderSkipped": "Toegevoegd aan uw winkelmand. {count} product(en) uit deze bestelling zijn niet meer beschikbaar.",
+    "reorderNothingLeft": "Geen enkel product uit deze bestelling is nog beschikbaar.",
+    "reorderFailed": "Deze bestelling kon niet aan uw winkelmand worden toegevoegd. Probeer het opnieuw.",
+    "goToCart": "Naar winkelmand"
   }
 }
