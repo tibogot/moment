@@ -199,6 +199,33 @@ const ACTIVITIES: Activity[] = [
   },
   {
     title: {
+      fr: "Mesure d’audience (Google Analytics)",
+      nl: "Bezoekersmeting (Google Analytics)",
+      en: "Audience measurement (Google Analytics)",
+    },
+    data: {
+      fr: "Identifiant pseudonyme du navigateur (cookie), pages consultées, provenance de la visite, type d’appareil et de navigateur, localisation approximative (ville, pays), et pour une commande : son numéro, son montant et les produits commandés. Google Analytics ne conserve pas l’adresse IP. Aucun signal publicitaire n’est activé.",
+      nl: "Pseudonieme identificatie van de browser (cookie), bekeken pagina’s, herkomst van het bezoek, type toestel en browser, geschatte locatie (stad, land), en bij een bestelling: het nummer, het bedrag en de bestelde producten. Google Analytics bewaart het IP-adres niet. Er zijn geen reclamesignalen ingeschakeld.",
+      en: "A pseudonymous browser identifier (cookie), pages viewed, where the visit came from, device and browser type, approximate location (city, country), and for an order: its number, amount and the products ordered. Google Analytics does not store the IP address. No advertising signals are enabled.",
+    },
+    purpose: {
+      fr: "Comprendre la fréquentation du site, les sources de trafic et le parcours jusqu’à la commande, pour améliorer le site et l’offre.",
+      nl: "Het bezoek aan de website, de verkeersbronnen en het traject tot de bestelling begrijpen, om de website en het aanbod te verbeteren.",
+      en: "To understand visits to the site, traffic sources and the path to an order, in order to improve the site and the offer.",
+    },
+    basis: {
+      fr: "Votre consentement, donné via le bandeau cookies (art. 6.1.a RGPD), que vous pouvez retirer à tout moment.",
+      nl: "Uw toestemming, gegeven via de cookiebanner (art. 6.1.a AVG), die u op elk moment kunt intrekken.",
+      en: "Your consent, given through the cookie banner (art. 6(1)(a) GDPR), which you can withdraw at any time.",
+    },
+    retention: {
+      fr: "Cookies : 13 mois. Données dans Google Analytics : 14 mois, puis suppression automatique.",
+      nl: "Cookies: 13 maanden. Gegevens in Google Analytics: 14 maanden, daarna automatisch gewist.",
+      en: "Cookies: 13 months. Data in Google Analytics: 14 months, then deleted automatically.",
+    },
+  },
+  {
+    title: {
       fr: "Sécurité du site",
       nl: "Beveiliging van de website",
       en: "Site security",
@@ -254,6 +281,14 @@ const PROCESSORS: Processor[] = [
     },
   },
   {
+    name: "Google Ireland Ltd (Irlande / Ierland / Ireland)",
+    role: {
+      fr: "mesure d’audience (Google Analytics), uniquement si vous l’acceptez",
+      nl: "bezoekersmeting (Google Analytics), alleen als u dat aanvaardt",
+      en: "audience measurement (Google Analytics), only if you accept it",
+    },
+  },
+  {
     name: "Geoapify GmbH (Allemagne / Duitsland / Germany) — UrbIS, Région de Bruxelles-Capitale / Brussels Hoofdstedelijk Gewest",
     role: {
       fr: "recherche et vérification d’adresses",
@@ -287,7 +322,7 @@ const COPY = {
       "Elles peuvent aussi être communiquées à notre comptable, à la personne qui livre votre commande (uniquement le nom, l’adresse, le téléphone et le créneau), et aux autorités lorsque la loi l’impose.",
     transfers: "Transferts hors de l’Union européenne",
     transfersBody:
-      "Certains prestataires (Shopify, Vercel, Resend) peuvent traiter des données au Canada ou aux États-Unis. Ces transferts reposent sur une décision d’adéquation de la Commission européenne — pour le Canada, et pour les entreprises américaines certifiées au titre du cadre de protection des données UE–États-Unis (Data Privacy Framework) — ou, à défaut, sur les clauses contractuelles types adoptées par la Commission européenne.",
+      "Certains prestataires (Shopify, Vercel, Resend, Google) peuvent traiter des données au Canada ou aux États-Unis. Ces transferts reposent sur une décision d’adéquation de la Commission européenne — pour le Canada, et pour les entreprises américaines certifiées au titre du cadre de protection des données UE–États-Unis (Data Privacy Framework) — ou, à défaut, sur les clauses contractuelles types adoptées par la Commission européenne.",
     rights: "Vos droits",
     rightsIntro: "Vous disposez à tout moment des droits suivants :",
     rightsList: [
@@ -337,7 +372,7 @@ const COPY = {
       "Ze kunnen ook worden meegedeeld aan onze boekhouder, aan de persoon die uw bestelling levert (alleen naam, adres, telefoonnummer en tijdvak), en aan de overheid wanneer de wet dat oplegt.",
     transfers: "Doorgifte buiten de Europese Unie",
     transfersBody:
-      "Sommige dienstverleners (Shopify, Vercel, Resend) kunnen gegevens verwerken in Canada of de Verenigde Staten. Die doorgiften steunen op een adequaatheidsbesluit van de Europese Commissie — voor Canada, en voor Amerikaanse bedrijven die gecertificeerd zijn onder het EU-VS-kader voor gegevensbescherming (Data Privacy Framework) — of, bij gebrek daaraan, op de door de Europese Commissie goedgekeurde modelcontractbepalingen.",
+      "Sommige dienstverleners (Shopify, Vercel, Resend, Google) kunnen gegevens verwerken in Canada of de Verenigde Staten. Die doorgiften steunen op een adequaatheidsbesluit van de Europese Commissie — voor Canada, en voor Amerikaanse bedrijven die gecertificeerd zijn onder het EU-VS-kader voor gegevensbescherming (Data Privacy Framework) — of, bij gebrek daaraan, op de door de Europese Commissie goedgekeurde modelcontractbepalingen.",
     rights: "Uw rechten",
     rightsIntro: "U hebt op elk moment de volgende rechten:",
     rightsList: [
@@ -387,7 +422,7 @@ const COPY = {
       "It may also be shared with our accountant, with the person delivering your order (only the name, address, phone number and time slot), and with the authorities where the law requires it.",
     transfers: "Transfers outside the European Union",
     transfersBody:
-      "Some providers (Shopify, Vercel, Resend) may process data in Canada or the United States. These transfers rely on an adequacy decision of the European Commission — for Canada, and for US companies certified under the EU–US Data Privacy Framework — or, failing that, on the standard contractual clauses adopted by the European Commission.",
+      "Some providers (Shopify, Vercel, Resend, Google) may process data in Canada or the United States. These transfers rely on an adequacy decision of the European Commission — for Canada, and for US companies certified under the EU–US Data Privacy Framework — or, failing that, on the standard contractual clauses adopted by the European Commission.",
     rights: "Your rights",
     rightsIntro: "You have the following rights at any time:",
     rightsList: [

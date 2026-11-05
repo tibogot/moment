@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { TrackViewItem } from "@/components/TrackViewItem";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
@@ -74,6 +75,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
         ? [{ url: product.imageUrl, altText: product.imageAlt }]
         : [];
 
+  // Analytics names products by handle: stable across languages and readable
+  // in GA reports, where a Shopify gid is neither.
+  const analyticsItem = {
+    item_id: product.handle,
+    item_name: product.title,
+    price: Number(product.priceAmount) || 0,
+  };
+
   return (
     <>
       {/* Price, availability and images — what a rich result needs to show the
@@ -143,8 +152,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <AddToCartButton
             variantId={product.variantId}
             available={product.availableForSale}
+            analyticsItem={analyticsItem}
             className="mt-8"
           />
+          <TrackViewItem item={analyticsItem} />
 
           {product.details && (
             <ProductDetails details={product.details} copy={dict.product} />

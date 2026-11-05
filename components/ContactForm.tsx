@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { trackGenerateLead } from "@/lib/analytics";
 import { sendContactRequest } from "@/app/actions/contact";
 import { GridSection } from "@/components/GridSection";
 import TextReveal from "@/components/TextReveal";
@@ -179,6 +180,12 @@ export function ContactForm({
    */
   const [dismissed, setDismissed] = useState<ContactFormState | null>(null);
   const sent = state.status === "success" && dismissed !== state;
+
+  // One `generate_lead` per successful send — keyed on the state object, which
+  // is new for each submission and unchanged by re-renders.
+  useEffect(() => {
+    if (state.status === "success") trackGenerateLead(variant);
+  }, [state, variant]);
 
   // Back to the prefill, not to blank: someone sending a second request from a
   // menu page is still asking about that menu.

@@ -4,18 +4,22 @@ import { useDictionary, useLocale } from "@/components/LocaleProvider";
 
 import { useState, useTransition } from "react";
 import { addToCart } from "@/app/actions/cart";
+import { trackAddToCart, type AnalyticsItem } from "@/lib/analytics";
 import { setCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
 
 type AddToCartButtonProps = {
   variantId: string | null;
   available: boolean;
+  /** What analytics calls this product; omitted, nothing is tracked. */
+  analyticsItem?: AnalyticsItem;
   className?: string;
 };
 
 export function AddToCartButton({
   variantId,
   available,
+  analyticsItem,
   className,
 }: AddToCartButtonProps) {
   const locale = useLocale();
@@ -38,6 +42,7 @@ export function AddToCartButton({
         return;
       }
 
+      if (analyticsItem) trackAddToCart({ ...analyticsItem, quantity });
       setQuantity(1);
       // The mutation handed the new cart back, so the panel it is about to open
       // is already filled in — no refetch to wait on behind the slide-in.

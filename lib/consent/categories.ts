@@ -1,3 +1,4 @@
+import { isAnalyticsConfigured } from "@/lib/analytics";
 import type { ConsentCategory } from "@/lib/consent/types";
 
 /**
@@ -19,15 +20,17 @@ export const OPTIONAL_CONSENT_CATEGORIES: readonly ConsentCategory[] = [
  * The optional categories the site *actually uses* today — and therefore the
  * only ones the banner may ask about.
  *
- * Empty, on purpose: no analytics, advertising or social tag is installed
- * (see components/ConsentScripts.tsx). Asking a visitor to accept "analytics"
- * and "marketing" that do not exist is misleading under the APD's guidance, so
- * with this list empty the banner does not appear, the footer shows no
- * preferences button, and the cookies page says plainly that nothing optional
- * is set.
+ * Analytics when Google Analytics is configured (see lib/analytics.ts), and
+ * nothing else: no advertising or social tag is installed. Asking a visitor to
+ * accept a category that does not exist is misleading under the APD's
+ * guidance, so with this list empty — a preview deployment, or production
+ * before the measurement ID is set — the banner does not appear, the footer
+ * shows no preferences button, and the cookies page says plainly that nothing
+ * optional is set.
  *
- * The day a tag is added: mount it in ConsentScripts behind its category, add
- * the category here, list its cookies on app/[lang]/cookies/page.tsx, and bump
+ * Adding a tag: mount it in ConsentScripts behind its category, add the
+ * category here, list its cookies on app/[lang]/cookies/page.tsx, and bump
  * CONSENT_VERSION so everyone is asked again.
  */
-export const ENABLED_CONSENT_CATEGORIES: readonly ConsentCategory[] = [];
+export const ENABLED_CONSENT_CATEGORIES: readonly ConsentCategory[] =
+  isAnalyticsConfigured() ? ["analytics"] : [];

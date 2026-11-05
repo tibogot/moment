@@ -54,7 +54,8 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [x] Nouveaux frais et minimums par zone
 - [x] Créneaux de livraison qui se ferment à 2 commandes (actif dès que l'app Admin est branchée)
 - [x] Historique des commandes + recommander en un clic
-- [ ] **Google Analytics** `G-43F991WPBG` : fréquentation, sources, conversions et achats ; Consent Mode v2 ; achats suivis via l'app Google & YouTube de Shopify
+- [x] **Google Analytics** `G-43F991WPBG` côté site : consentement RGPD, fréquentation, sources, conversions (produit vu, panier, paiement, demande de devis)
+- [ ] **Google Analytics — mise en route** : variable en production, pixel d'achat dans Shopify, réglages GA4 — voir `shopify-setup.md` § Google Analytics. Demande leur boutique branchée et une commande test
 - [ ] **Livraison offerte par zone** : 250 / 300 / 400 / 450 € (aujourd'hui un seul seuil, 300 €)
 - [ ] **Distance routière** au lieu de la ligne droite
 - [ ] **Minimum 4 pièces par produit** — attend la question 1

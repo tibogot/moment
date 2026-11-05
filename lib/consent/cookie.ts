@@ -1,3 +1,4 @@
+import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import {
   CONSENT_COOKIE_NAME,
   CONSENT_MAX_AGE_SECONDS,
@@ -33,8 +34,16 @@ export function rejectAllConsentRecord(): ConsentRecord {
   return buildConsentRecord({ analytics: false, marketing: false });
 }
 
+/**
+ * "Accept all" grants what the banner actually offers, not every category the
+ * type knows: a record saying "marketing: yes" when no marketing tag exists
+ * would be a consent nobody was asked for.
+ */
 export function acceptAllConsentRecord(): ConsentRecord {
-  return buildConsentRecord({ analytics: true, marketing: true });
+  return buildConsentRecord({
+    analytics: ENABLED_CONSENT_CATEGORIES.includes("analytics"),
+    marketing: ENABLED_CONSENT_CATEGORIES.includes("marketing"),
+  });
 }
 
 export function readConsentCookie(): ConsentRecord | null {

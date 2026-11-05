@@ -19,6 +19,10 @@ import {
 } from "@/lib/shopify/delivery";
 import { getDeliveryRules, getZoneTable } from "@/lib/shopify/zones";
 import { getFullSlots } from "@/lib/shopify/capacity";
+import {
+  GA_CLIENT_ID_ATTRIBUTE,
+  GA_SESSION_ID_ATTRIBUTE,
+} from "@/lib/analytics";
 import { getCustomerOrder } from "@/lib/shopify/customer-account/customer";
 import { checkoutBlocker } from "@/lib/checkout";
 import type { Locale } from "@/lib/i18n/config";
@@ -426,7 +430,13 @@ export async function removeFromCart(locale: Locale, lineId: string) {
  * changes the address or adds a discount on Shopify's own pages. That needs a
  * Cart & Checkout Validation Function running inside Shopify — see docs/dev-notes.md.
  */
-export async function beginCheckout(locale: Locale) {
+/** GA ids look like `123456789.1700000000` and `1700000000`; nothing else is stored. */
+const GA_ID_PATTERN = /^[0-9.]{1,40}$/;
+
+export async function beginCheckout(
+  locale: Locale,
+  analytics: { clientId: string; sessionId: string | null } | null = null,
+) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const cartId = await getCartIdFromCookies();
@@ -467,5 +477,34 @@ export async function beginCheckout(locale: Locale) {
   );
   if (blocker) return orderFailure("checkout_changed");
 
-  return { ok: true as const, url: checkoutUrl };
+  // The visitor's GA ids ride to Shopify's checkout on the cart, where the
+  // custom pixel reads them to send the purchase as the same visitor. Written
+  // — or cleared — on every checkout, so a visitor who withdrew consent since
+  // the last attempt leaves nothing behind for the pixel to use. Best effort:
+  // analytics never blocks a sale.
+  const clientId =
+    analytics && GA_ID_PATTERN.test(analytics.clientId) ? analytics.clientId : null;
+  const sessionId =
+    clientId && analytics?.sessionId && GA_ID_PATTERN.test(analytics.sessionId)
+      ? analytics.sessionId
+      : null;
+  await setCartAttributes(
+    locale,
+    { [GA_CLIENT_ID_ATTRIBUTE]: clientId, [GA_SESSION_ID_ATTRIBUTE]: sessionId },
+    cartId,
+  ).catch(() => null);
+
+  return {
+    ok: true as const,
+    url: checkoutUrl,
+    // For the `begin_checkout` event, from the cart just re-read rather than
+    // whatever the page last painted.
+    value: cart.subtotal,
+    items: cart.lines.map((line) => ({
+      item_id: line.productHandle,
+      item_name: line.title,
+      price: line.unitPrice,
+      quantity: line.quantity,
+    })),
+  };
 }

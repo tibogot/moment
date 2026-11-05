@@ -5,6 +5,7 @@ import {
   LegalLink,
   LegalSection,
 } from "@/components/LegalDoc";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import {
@@ -103,6 +104,24 @@ const NECESSARY_COOKIES: CookieRow[] = [
   },
 ];
 
+/**
+ * Google Analytics, set only after the visitor accepts the analytics category
+ * (components/ConsentScripts.tsx). The 13-month lifetime is
+ * GA_COOKIE_EXPIRES_SECONDS in lib/analytics.ts — change both together.
+ */
+const ANALYTICS_COOKIES: CookieRow[] = [
+  {
+    name: `_ga, _ga_${GA_MEASUREMENT_ID.replace(/^G-/, "")}`,
+    provider: "Google Ireland Ltd (Google Analytics)",
+    purpose: {
+      fr: "Mesurer la fréquentation du site, d’où viennent les visiteurs et quelles commandes aboutissent, à l’aide d’un identifiant pseudonyme. Pas de publicité, pas de signaux Google, et Google Analytics ne conserve pas votre adresse IP.",
+      nl: "Het bezoek aan de website meten, waar bezoekers vandaan komen en welke bestellingen worden afgerond, met een pseudonieme identificatie. Geen reclame, geen Google-signalen, en Google Analytics bewaart uw IP-adres niet.",
+      en: "Measures visits to the site, where visitors come from and which orders go through, using a pseudonymous identifier. No advertising, no Google signals, and Google Analytics does not store your IP address.",
+    },
+    duration: { fr: "13 mois", nl: "13 maanden", en: "13 months" },
+  },
+];
+
 const COPY = {
   fr: {
     title: "Cookies",
@@ -120,11 +139,11 @@ const COPY = {
     checkoutBody:
       "Le paiement de votre commande se déroule sur la page de paiement sécurisée de Shopify, qui dépose ses propres cookies nécessaires (sécurité, prévention de la fraude, déroulement du paiement). Ils sont décrits dans la",
     checkoutLink: "politique cookies de Shopify",
-    optional: "Cookies de mesure d’audience et de marketing",
+    optional: "Cookies de mesure d’audience",
     optionalNone:
       "Ce site n’utilise actuellement aucun cookie de mesure d’audience, de publicité ou de réseaux sociaux. C’est pourquoi aucun bandeau ne vous demande votre consentement. Si nous en ajoutons un jour, cette page sera mise à jour et votre accord vous sera demandé avant tout dépôt — refuser sera aussi simple qu’accepter.",
     optionalSome:
-      "Les cookies de mesure d’audience et de marketing ne sont déposés qu’après votre accord, donné via le bandeau cookies. Votre choix est conservé 6 mois, après quoi il vous est à nouveau demandé.",
+      "Nous utilisons Google Analytics pour comprendre comment le site est utilisé. Ses cookies ne sont déposés qu’après votre accord, donné via le bandeau cookies ; si vous refusez, Google Analytics n’est pas chargé du tout. Votre choix est conservé 6 mois, après quoi il vous est à nouveau demandé. Ce site n’utilise aucun cookie publicitaire ni de réseaux sociaux.",
     manage: "Gérer vos cookies",
     manageBody:
       "Vous pouvez à tout moment supprimer ou bloquer les cookies dans les réglages de votre navigateur. Bloquer les cookies strictement nécessaires empêchera toutefois le panier et la connexion à votre compte de fonctionner.",
@@ -152,11 +171,11 @@ const COPY = {
     checkoutBody:
       "Uw bestelling wordt betaald op de beveiligde betaalpagina van Shopify, die haar eigen noodzakelijke cookies plaatst (beveiliging, fraudepreventie, verloop van de betaling). Ze worden beschreven in het",
     checkoutLink: "cookiebeleid van Shopify",
-    optional: "Analytische en marketingcookies",
+    optional: "Analytische cookies",
     optionalNone:
       "Deze website gebruikt momenteel geen analytische, reclame- of socialemediacookies. Daarom vraagt geen banner u om toestemming. Als we er ooit een toevoegen, wordt deze pagina bijgewerkt en wordt uw toestemming gevraagd voordat er iets wordt geplaatst — weigeren zal even eenvoudig zijn als aanvaarden.",
     optionalSome:
-      "Analytische en marketingcookies worden pas geplaatst nadat u daarvoor toestemming hebt gegeven via de cookiebanner. Uw keuze wordt 6 maanden bewaard, daarna wordt ze u opnieuw gevraagd.",
+      "We gebruiken Google Analytics om te begrijpen hoe de website wordt gebruikt. De cookies ervan worden pas geplaatst nadat u toestemming hebt gegeven via de cookiebanner; weigert u, dan wordt Google Analytics helemaal niet geladen. Uw keuze wordt 6 maanden bewaard, daarna wordt ze u opnieuw gevraagd. Deze website gebruikt geen reclame- of socialemediacookies.",
     manage: "Uw cookies beheren",
     manageBody:
       "U kunt cookies op elk moment verwijderen of blokkeren in de instellingen van uw browser. Als u de strikt noodzakelijke cookies blokkeert, werken de winkelmand en de aanmelding bij uw account echter niet meer.",
@@ -183,11 +202,11 @@ const COPY = {
     checkoutBody:
       "Your order is paid on Shopify’s secure checkout page, which sets its own necessary cookies (security, fraud prevention, running the payment). They are described in",
     checkoutLink: "Shopify’s cookie policy",
-    optional: "Analytics and marketing cookies",
+    optional: "Analytics cookies",
     optionalNone:
       "This site does not currently use any analytics, advertising or social media cookies, which is why no banner asks for your consent. If we ever add one, this page will be updated and your consent will be asked before anything is set — refusing will be as easy as accepting.",
     optionalSome:
-      "Analytics and marketing cookies are only set after you agree to them through the cookie banner. Your choice is kept for 6 months, after which you are asked again.",
+      "We use Google Analytics to understand how the site is used. Its cookies are only set after you agree through the cookie banner; if you refuse, Google Analytics is not loaded at all. Your choice is kept for 6 months, after which you are asked again. This site uses no advertising or social media cookies.",
     manage: "Managing cookies",
     manageBody:
       "You can delete or block cookies at any time in your browser settings. Blocking strictly necessary cookies will, however, stop the basket and account sign-in from working.",
@@ -199,6 +218,34 @@ const COPY = {
     authority: "You may also contact the ",
   },
 } satisfies Record<Locale, Record<string, string>>;
+
+function CookieList({
+  cookies,
+  locale,
+  durationLabel,
+}: {
+  cookies: CookieRow[];
+  locale: Locale;
+  durationLabel: string;
+}) {
+  return (
+    <ul className="divide-y divide-sky border-y border-sky">
+      {cookies.map((cookie) => (
+        <li key={cookie.name} className="space-y-1 py-3">
+          <p className="font-owners-medium text-[12px] tracking-wide break-all">
+            {cookie.name}
+          </p>
+          <p>{cookie.purpose[locale]}</p>
+          <p className="text-[13px] text-black/60">
+            {durationLabel}
+            {colon(locale)}
+            {cookie.duration[locale]} · {cookie.provider}
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default async function CookiesPage({
   params,
@@ -219,21 +266,11 @@ export default async function CookiesPage({
         <p>{t.necessaryBody}</p>
         {/* A list of cards rather than a table: five columns do not fit a
             phone, and a table that scrolls sideways hides the duration. */}
-        <ul className="divide-y divide-sky border-y border-sky">
-          {NECESSARY_COOKIES.map((cookie) => (
-            <li key={cookie.name} className="space-y-1 py-3">
-              <p className="font-owners-medium text-[12px] tracking-wide break-all">
-                {cookie.name}
-              </p>
-              <p>{cookie.purpose[locale]}</p>
-              <p className="text-[13px] text-black/60">
-                {t.duration}
-                {colon(locale)}
-                {cookie.duration[locale]} · {cookie.provider}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <CookieList
+          cookies={NECESSARY_COOKIES}
+          locale={locale}
+          durationLabel={t.duration}
+        />
       </LegalSection>
 
       <LegalSection title={t.checkout}>
@@ -245,6 +282,7 @@ export default async function CookiesPage({
 
       <LegalSection title={t.optional}>
         <p>{hasOptional ? t.optionalSome : t.optionalNone}</p>
+        {hasOptional && <CookieList cookies={ANALYTICS_COOKIES} locale={locale} durationLabel={t.duration} />}
       </LegalSection>
 
       <LegalSection title={t.manage}>

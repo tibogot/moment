@@ -255,6 +255,37 @@ live from our own endpoint — but it needs Shopify **Advanced or Plus**.
 
 Do **not** add the fee as a cart line item. It breaks VAT treatment and refunds.
 
+### Google Analytics
+
+The site side is built (`lib/analytics.ts`): gtag loads only after the visitor
+accepts analytics in the cookie banner, with Consent Mode v2 and every
+advertising signal denied. It sends `view_item`, `add_to_cart`,
+`begin_checkout` and `generate_lead` (contact and pro forms). Page views follow
+client-side navigation through GA4's enhanced measurement.
+
+To switch it on:
+
+1. Vercel → Production environment → `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-43F991WPBG`,
+   redeploy. The banner now appears, asking about analytics only.
+2. **Purchases.** Settings → Customer events → Add custom pixel, paste
+   `docs/shopify-ga4-pixel.js`, Permission "Not required" (the pixel only sends
+   for visitors who accepted on the site — it needs the `_ga_client_id` cart
+   attribute the site writes at checkout), Save, Connect. Do **not** also
+   install the Google & YouTube app's GA4 tag, or every purchase is counted
+   twice.
+3. In GA4 admin:
+   - Data streams → the web stream → Enhanced measurement on, "Page changes
+     based on browser history events" ticked (default).
+   - Data retention → **14 months** (the privacy policy says so; GA's
+     default is 2).
+   - Key events: `purchase` is one by default; mark `generate_lead` as well.
+   - Data streams → Configure tag settings → Configure your domains: add
+     `moment-lab.be` and the checkout domain, and list the checkout domain
+     under "Unwanted referrals", so the return from payment is not counted as
+     a new visit.
+4. Place a test order, accept the banner first, and check GA4 → Realtime for
+   the `purchase`.
+
 ### Checkout language
 
 Checkout is hosted by Shopify, so its language comes from Shopify's own locale

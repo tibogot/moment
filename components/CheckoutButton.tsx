@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { beginCheckout } from "@/app/actions/cart";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
+import { analyticsIds, trackBeginCheckout } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 type CheckoutButtonProps = {
@@ -35,10 +36,16 @@ export function CheckoutButton({
   const go = () => {
     startTransition(async () => {
       try {
-        const result = await beginCheckout(locale);
+        const result = await beginCheckout(locale, await analyticsIds());
         if (!result.ok) {
           onRefused(dict.errors[result.code] ?? dict.errors.generic);
           return;
+        }
+        trackBeginCheckout(result.value, result.items);
+        // A beat for the event to leave before the page does. Without consent
+        // there is no tag and nothing to wait for.
+        if (typeof (window as { gtag?: unknown }).gtag === "function") {
+          await new Promise((resolve) => setTimeout(resolve, 150));
         }
         window.location.assign(result.url);
       } catch {

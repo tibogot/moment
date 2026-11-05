@@ -32,6 +32,8 @@ export type CartLine = {
   imageUrl: string | null;
   imageAlt: string;
   price: string;
+  /** The same unit price as a number, for analytics. */
+  unitPrice: number;
   lineTotal: string;
   variantId: string;
 };
@@ -314,6 +316,7 @@ function mapCartNode(locale: Locale, node: RawCart): Cart {
           merchandise.price.amount,
           merchandise.price.currencyCode,
         ),
+        unitPrice: Number(merchandise.price.amount) || 0,
         lineTotal: formatPrice(locale, lineCost.amount, lineCost.currencyCode),
         variantId: merchandise.id,
       } satisfies CartLine;

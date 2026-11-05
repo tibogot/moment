@@ -229,8 +229,9 @@ legal guarantee, mediation, governing law and the model withdrawal form. Still
 to confirm: the register division (French-speaking assumed, `lib/legal.ts`),
 the retention periods, the processors list (Resend's legal entity), that every
 newsletter email will carry an unsubscribe link, and a lawyer's read. The
-cookie banner is off because nothing optional is installed — see
-`ENABLED_CONSENT_CATEGORIES` in `lib/consent/categories.ts`.
+cookie banner asks only about categories in use — analytics once
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` is set, nothing otherwise (no banner at all) —
+see `ENABLED_CONSENT_CATEGORIES` in `lib/consent/categories.ts`.
 
 **Delivery rules stay in Shopify, not Sanity.** Asked and answered: settings
 live where their twin lives. The zone fees must agree with Shopify's shipping
