@@ -217,7 +217,7 @@
       },
       {
         "q": "Travaillez-vous avec les entreprises ?",
-        "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA et pouvons enregistrer plusieurs adresses de livraison."
+        "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA."
       }
     ],
     "zoneFree": "offerte dès {amount}"
@@ -466,7 +466,7 @@
   },
   "proAccount": {
     "title": "Compte professionnel",
-    "lead": "Pour les entreprises qui commandent régulièrement : facture avec TVA, adresses de livraison enregistrées et commande en un clic.",
+    "lead": "Pour les entreprises qui commandent régulièrement : facture avec TVA, historique de vos commandes et commande en un clic.",
     "intro": "Ouvrez un compte professionnel",
     "body": "Remplissez ce formulaire et nous activons votre compte, en général sous un jour ouvrable.",
     "vat": "Numéro de TVA",
@@ -483,7 +483,7 @@
     "personalBody": "Pour les commandes à titre privé. Retrouvez vos commandes et vos adresses.",
     "personalCta": "Se connecter",
     "proTitle": "Compte professionnel",
-    "proBody": "Pour les entreprises : facture avec TVA, plusieurs adresses de livraison, commande en un clic.",
+    "proBody": "Pour les entreprises : facture avec TVA, historique des commandes, commande en un clic.",
     "proCta": "Se connecter",
     "proNew": "Pas encore de compte pro ?",
     "proNewCta": "Ouvrir un compte professionnel",
@@ -614,7 +614,7 @@
     },
     "pro": {
       "title": "Compte professionnel",
-      "description": "Ouvrez un compte professionnel chez Moment : factures avec TVA, adresses de livraison enregistrées et commande en un clic pour les entreprises à Bruxelles et alentours.",
+      "description": "Ouvrez un compte professionnel chez Moment : factures avec TVA, historique des commandes et commande en un clic pour les entreprises à Bruxelles et alentours.",
       "keywords": [
         "traiteur entreprise Bruxelles",
         "compte lunch bureau Bruxelles",

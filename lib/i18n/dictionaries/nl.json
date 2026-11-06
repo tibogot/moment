@@ -217,7 +217,7 @@
       },
       {
         "q": "Werken jullie met bedrijven?",
-        "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. We factureren op uw btw-nummer en kunnen meerdere leveradressen bewaren."
+        "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. We factureren op uw btw-nummer."
       }
     ],
     "zoneFree": "gratis vanaf {amount}"
@@ -466,7 +466,7 @@
   },
   "proAccount": {
     "title": "Zakelijk account",
-    "lead": "Voor bedrijven die regelmatig bestellen: factuur met btw, bewaarde leveradressen en bestellen met één klik.",
+    "lead": "Voor bedrijven die regelmatig bestellen: factuur met btw, overzicht van uw bestellingen en bestellen met één klik.",
     "intro": "Open een zakelijk account",
     "body": "Vul dit formulier in en wij activeren uw account, meestal binnen één werkdag.",
     "vat": "Btw-nummer",
@@ -483,7 +483,7 @@
     "personalBody": "Voor privébestellingen. Vind uw bestellingen en adressen terug.",
     "personalCta": "Aanmelden",
     "proTitle": "Zakelijk account",
-    "proBody": "Voor bedrijven: factuur met btw, meerdere leveradressen, bestellen met één klik.",
+    "proBody": "Voor bedrijven: factuur met btw, overzicht van uw bestellingen, bestellen met één klik.",
     "proCta": "Aanmelden",
     "proNew": "Nog geen zakelijk account?",
     "proNewCta": "Een zakelijk account openen",
@@ -614,7 +614,7 @@
     },
     "pro": {
       "title": "Zakelijk account",
-      "description": "Open een zakelijk account bij Moment: facturen met btw, bewaarde leveradressen en bestellen met één klik voor bedrijven in en rond Brussel.",
+      "description": "Open een zakelijk account bij Moment: facturen met btw, overzicht van uw bestellingen en bestellen met één klik voor bedrijven in en rond Brussel.",
       "keywords": [
         "bedrijfscatering Brussel",
         "kantoorlunch account Brussel",

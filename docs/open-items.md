@@ -91,8 +91,6 @@ Dans le périmètre convenu. Les cases cochées sont faites.
   sur leur plan.) Qui valide une demande de compte pro, et en combien de temps ?
 - **Factures TVA** : page de commande Shopify (gratuit, pas une vraie facture),
   ou une app de facturation (~20–50 €/mois, à leur charge).
-- **Plusieurs adresses de livraison par société** : la FAQ l'annonce, ce n'est
-  **pas construit**. Retirer la phrase ou la construire.
 - **Réalisations** : le Studio permet de les saisir (schéma `pastEvent`), mais
   **aucune page ne les affiche** (le code `lib/events.ts` existe, pas branché à
   `/events`). Les afficher, ou retirer l'entrée du Studio.

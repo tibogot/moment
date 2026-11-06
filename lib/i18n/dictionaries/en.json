@@ -217,7 +217,7 @@
       },
       {
         "q": "Do you work with companies?",
-        "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number and can keep more than one delivery address on file."
+        "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number."
       }
     ],
     "zoneFree": "free from {amount}"
@@ -466,7 +466,7 @@
   },
   "proAccount": {
     "title": "Professional account",
-    "lead": "For companies ordering regularly: VAT invoices, saved delivery addresses and one-click reordering.",
+    "lead": "For companies ordering regularly: VAT invoices, your order history and one-click reordering.",
     "intro": "Open a professional account",
     "body": "Fill this in and we activate your account, usually within one working day.",
     "vat": "VAT number",
@@ -483,7 +483,7 @@
     "personalBody": "For ordering privately. Find your past orders and addresses.",
     "personalCta": "Sign in",
     "proTitle": "Professional account",
-    "proBody": "For companies: VAT invoices, several delivery addresses, one-click reordering.",
+    "proBody": "For companies: VAT invoices, order history, one-click reordering.",
     "proCta": "Sign in",
     "proNew": "No professional account yet?",
     "proNewCta": "Open a professional account",
@@ -613,7 +613,7 @@
     },
     "pro": {
       "title": "Professional account",
-      "description": "Open a professional account with Moment: VAT invoices, saved delivery addresses and one-click reordering for companies in and around Brussels.",
+      "description": "Open a professional account with Moment: VAT invoices, order history and one-click reordering for companies in and around Brussels.",
       "keywords": [
         "corporate catering Brussels",
         "office lunch account Brussels",
