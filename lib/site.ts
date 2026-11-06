@@ -84,8 +84,6 @@ export const siteIsIndexable =
   !siteConfig.url.includes("localhost") &&
   !siteConfig.url.endsWith(".vercel.app");
 
-export type SiteLocale = (typeof siteConfig.locales)[number];
-
 /**
  * The company's own facts.
  *

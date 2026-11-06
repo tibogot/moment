@@ -20,9 +20,3 @@ export type ConsentRecord = ConsentChoices & {
   version: number;
   updatedAt: string;
 };
-
-export type ConsentCategoryMeta = {
-  id: ConsentCategory;
-  title: string;
-  description: string;
-};
