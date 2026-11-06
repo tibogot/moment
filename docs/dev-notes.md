@@ -96,6 +96,26 @@ behaviour, not a stopgap.
 
 ## Known debt
 
+**`components/Navbar.tsx` is ~990 lines.** One component holds the
+transparent-over-hero appearance, the scroll reveal, three dropdown panels and
+their GSAP timelines. It works and is tested by eye on every page; splitting it
+(a `useNavAppearance` hook, a `useNavPanels` hook, the desktop link rows as
+their own component) is worth doing when the nav next changes, not before —
+the risk is visual regressions for a readability-only gain. The cart panel
+(`CartPanel.tsx`, ~800 lines) is the next candidate.
+
+**`components/` is flat (~75 files).** Grouping by area (`cart/`, `nav/`,
+`about/`, `product/`, `legal/`) would help a newcomer; do it in a single
+rename commit with `git mv` so history follows, as was done for
+`lib/delivery/`, `lib/hooks/` and `lib/gsap/`.
+
+**The cart's JavaScript ships on every page.** The navbar imports the cart
+panel, search panel and mobile menu eagerly (~300 KB gzipped shared JS), and
+`/api/cart` is fetched on every page view. Loading those panels with
+`next/dynamic` on first open, and skipping the cart fetch when no cart cookie
+exists, are the two remaining performance items from the November 2026 audit.
+
+
 Things that are working, understood, and not worth fixing yet — recorded so
 nobody rediscovers them as bugs.
 
