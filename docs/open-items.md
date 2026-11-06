@@ -22,7 +22,6 @@ qui est demandé, rien de plus.
 | **App Admin + webhooks** sur leur boutique, pour les créneaux pleins — voir `shopify-setup.md` | nous | à faire avec la boutique |
 | **Tarifs d'expédition Shopify** alignés sur la grille du 3 nov. (20 € / 35 €, nouveaux minimums) | nous ou Moment | à faire avec la boutique |
 | **Hébergement et comptes au nom du client** : le site tourne sur le compte Vercel du développeur. Sans maintenance, Vercel, Sanity, Geoapify et Resend doivent passer sur des comptes au nom de Moment ou de Rond Carré | Rond Carré / Moment | à décider |
-| **Adresse de l'atelier** : rue des Glands **21** ou **21A** ? Les distances partent de là | Moment | question posée le 5 nov. |
 
 Après le branchement du domaine, dans cet ordre : `NEXT_PUBLIC_SITE_URL`
 (ouvre le site à Google), origines CORS Sanity, Search Console, fiche Google
@@ -30,18 +29,31 @@ Business (créée par Moment), Google Analytics.
 
 ---
 
-## 2. Questions envoyées le 5 novembre
+## 2. Décisions prises sans leur poser la question (6 novembre)
 
-1. **4 pièces minimum** : minimum (5 accepté) ou multiples de 4 ? Épicerie incluse ?
-2. **Minimum en retrait** : 100 € pour le retrait standard et 50 € pour le retrait la veille ?
-3. **Panier mixte** (produits « veille » + traiteur) : tout passe en 48 h ?
-4. **Créneaux de retrait** (11 h 30 → 15 h) : aussi pour le retrait standard ? Premier créneau 11 h ou 11 h 30 ?
-5. **Dimanche** : livraisons **et** retraits ?
-6. **Adresse** 21 ou 21A (voir §1).
-8. **Où nous trouver** : ils peuvent saisir eux-mêmes leurs partenaires dans le Studio (rubrique « Partenaires »), plus besoin de nous envoyer la liste.
-9. **Pages légales** : accord écrit (voir §1).
+Leur mail du 3 novembre y répondait déjà, ou la règle est la seule logique.
+Rien n'est demandé au client là-dessus.
 
----
+- **4 pièces** : un *minimum* de 4 pièces identiques, pour **tous** les produits
+  (« chaque produit doit être commandé en minimum 4 pièces »).
+- **Minimum en retrait** : 100 € pour un retrait classique (« dans tous les cas
+  … livraison ou retrait »), 50 € pour le retrait la veille (règle spécifique).
+  Les 100 € sont en place (`pickup_minimum_order`).
+- **Panier mixte** (produits « veille » + traiteur) : la règle la plus stricte
+  s'applique à tout le panier (48 h, minimum standard).
+- **Créneaux de retrait** : les 8 créneaux de 30 min (11 h 30 → 15 h, une
+  commande chacun) valent pour **tous** les retraits (« 8 commandes de retrait
+  MAX/jour »). Fenêtre de retrait passée à 11 h–15 h.
+- **Dimanche** : ouvert pour la livraison et le retrait.
+- **Adresse** : **21A** rue des Glands, confirmée par la BCE (unité
+  d'établissement 2.388.047.057). Le **siège social** est Humbeekstraat 17,
+  1860 Meise : corrigé sur les mentions légales et la politique de
+  confidentialité le 6 novembre.
+
+**Envoyé au client (6 novembre)** : les accès aux comptes, et la proposition de
+garder la distance à vol d'oiseau avec des zones resserrées (8 / 20 / 40 /
+55 km) plutôt qu'un calcul routier. **Pas encore envoyé, pour la fin** : l'accord
+écrit sur les pages légales.
 
 ## 3. Demandes du 3 novembre, à construire
 

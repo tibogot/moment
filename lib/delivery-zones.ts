@@ -75,6 +75,13 @@ export type ZoneTable = {
    * `freeDeliveryShortfall` for what this does and does not promise.
    */
   freeDeliveryThreshold: number;
+  /**
+   * The basket minimum for collection at the atelier, in euros. "Le minimum
+   * de commande est donc de 100 € dans tous les cas … qu'il s'agisse d'une
+   * livraison ou d'un retrait" — the owners, 3 November 2026. Collection still
+   * pays no fee.
+   */
+  pickupMinimumOrder: number;
 };
 
 /**
@@ -86,6 +93,9 @@ export type ZoneTable = {
  * it is exactly the sort of number a caterer moves for a season.
  */
 export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
+
+/** See `ZoneTable.pickupMinimumOrder`. A setting in the Shopify admin. */
+export const DEFAULT_PICKUP_MINIMUM_ORDER = 100;
 
 /**
  * The client's table, as revised on 3 November 2026 (fees and minimums; the
@@ -105,6 +115,7 @@ export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
 export const DEFAULT_ZONE_TABLE: ZoneTable = {
   atelier: DEFAULT_ATELIER,
   freeDeliveryThreshold: DEFAULT_FREE_DELIVERY_THRESHOLD,
+  pickupMinimumOrder: DEFAULT_PICKUP_MINIMUM_ORDER,
   zones: [
     { id: 1, fee: 10, minimumOrder: 100, maxDistanceKm: 10 },
     { id: 2, fee: 20, minimumOrder: 150, maxDistanceKm: 25 },

@@ -11,6 +11,7 @@ import {
   getDeliveryAvailability,
   getDeliverySlots,
   getFreeDeliveryThreshold,
+  getPickupMinimumOrder,
   getPickupWindow,
 } from "./delivery";
 import {
@@ -118,6 +119,7 @@ function parseZoneTable(
   entries: MetaobjectFields[],
   atelier: Coordinates,
   freeDeliveryThreshold: number,
+  pickupMinimumOrder: number,
 ): ZoneTable | null {
   if (entries.length === 0) return null;
 
@@ -139,7 +141,7 @@ function parseZoneTable(
   // one it belongs in. The radius-less zone leads, as it does in the defaults.
   zones.sort((a, b) => (a.maxDistanceKm ?? -1) - (b.maxDistanceKm ?? -1));
 
-  return { atelier, zones, freeDeliveryThreshold };
+  return { atelier, zones, freeDeliveryThreshold, pickupMinimumOrder };
 }
 
 /**
@@ -154,17 +156,25 @@ function parseZoneTable(
  * second, silent pricing change nobody asked for.
  */
 export async function getZoneTable(): Promise<ZoneTable> {
-  const [entries, atelier, freeDeliveryThreshold] = await Promise.all([
-    readZoneEntries(),
-    getAtelier(),
-    getFreeDeliveryThreshold(),
-  ]);
+  const [entries, atelier, freeDeliveryThreshold, pickupMinimumOrder] =
+    await Promise.all([
+      readZoneEntries(),
+      getAtelier(),
+      getFreeDeliveryThreshold(),
+      getPickupMinimumOrder(),
+    ]);
 
   return (
-    parseZoneTable(entries, atelier, freeDeliveryThreshold) ?? {
+    parseZoneTable(
+      entries,
+      atelier,
+      freeDeliveryThreshold,
+      pickupMinimumOrder,
+    ) ?? {
       ...DEFAULT_ZONE_TABLE,
       atelier,
       freeDeliveryThreshold,
+      pickupMinimumOrder,
     }
   );
 }

@@ -763,6 +763,19 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 </CheckoutNotice>
               )}
 
+              {blocker?.kind === "below-pickup-minimum" && (
+                <CheckoutNotice
+                  tone="blocker"
+                  title={t.beforeCheckout}
+                  className="mt-4"
+                >
+                  {interpolate(t.belowPickupMinimum, {
+                    minimum: formatMoney(locale, blocker.minimum),
+                    shortfall: formatMoney(locale, blocker.shortfall),
+                  })}
+                </CheckoutNotice>
+              )}
+
               {/* The window, on the same terms as the address below: a
                   blocker the customer can clear without leaving the panel. */}
               {(blocker?.kind === "no-slot" ||

@@ -22,6 +22,7 @@ import {
 import {
   DEFAULT_ATELIER,
   DEFAULT_FREE_DELIVERY_THRESHOLD,
+  DEFAULT_PICKUP_MINIMUM_ORDER,
   type Coordinates,
 } from "@/lib/delivery-zones";
 import {
@@ -67,6 +68,7 @@ const ATELIER_LATITUDE_FIELD = "atelier_latitude";
 const ATELIER_LONGITUDE_FIELD = "atelier_longitude";
 const CUTOFF_HOUR_FIELD = "order_cutoff_hour";
 const FREE_DELIVERY_FIELD = "free_delivery_threshold";
+const PICKUP_MINIMUM_FIELD = "pickup_minimum_order";
 const PICKUP_START_FIELD = "pickup_start_time";
 const PICKUP_END_FIELD = "pickup_end_time";
 
@@ -141,6 +143,7 @@ type DeliverySettings = {
   bookingWindowDays: number;
   atelier: Coordinates;
   freeDeliveryThreshold: number;
+  pickupMinimumOrder: number;
   pickupWindow: PickupWindow;
 };
 
@@ -192,6 +195,11 @@ async function getDeliverySettings(): Promise<DeliverySettings> {
         min: 0,
         max: 100_000,
       }) ?? DEFAULT_FREE_DELIVERY_THRESHOLD,
+    pickupMinimumOrder:
+      parseDecimalField(entry?.[PICKUP_MINIMUM_FIELD], {
+        min: 0,
+        max: 100_000,
+      }) ?? DEFAULT_PICKUP_MINIMUM_ORDER,
     pickupWindow:
       pickupStart && pickupEnd
         ? { start: pickupStart, end: pickupEnd }
@@ -207,6 +215,11 @@ export async function getAtelier(): Promise<Coordinates> {
 /** The basket value at which the trip stops being charged, for the zone table. */
 export async function getFreeDeliveryThreshold(): Promise<number> {
   return (await getDeliverySettings()).freeDeliveryThreshold;
+}
+
+/** The basket minimum for collection, carried on the zone table. */
+export async function getPickupMinimumOrder(): Promise<number> {
+  return (await getDeliverySettings()).pickupMinimumOrder;
 }
 
 export async function getPickupWindow(): Promise<PickupWindow> {

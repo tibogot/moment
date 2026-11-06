@@ -96,6 +96,7 @@ export default async function FaqPage({
       slots: slotSummary(slots),
       slotFull: dict.delivery.slotFull,
       pickupWindow: formatWindow(pickupWindow),
+      pickupMinimum: formatMoney(locale, zones.pickupMinimumOrder),
       address: formatAddressLine(SITE_DETAILS),
     }),
   }));

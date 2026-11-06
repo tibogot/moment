@@ -448,6 +448,19 @@ export function CartDeliverySection({
         </CheckoutNotice>
       )}
 
+      {blocker?.kind === "below-pickup-minimum" && (
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className="mt-6 max-w-105"
+        >
+          {interpolate(t.belowPickupMinimum, {
+            minimum: formatMoney(locale, blocker.minimum),
+            shortfall: formatMoney(locale, blocker.shortfall),
+          })}
+        </CheckoutNotice>
+      )}
+
       {(blocker?.kind === "no-slot" || blocker?.kind === "stale-slot") &&
         !slotOpen && (
           <CheckoutNotice

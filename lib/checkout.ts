@@ -33,7 +33,9 @@ export type CheckoutBlocker =
   /** Home delivery with nowhere to deliver to. */
   | { kind: "no-address" }
   /** The basket is short of the zone's minimum order. */
-  | { kind: "below-minimum"; zone: DeliveryZone; shortfall: number };
+  | { kind: "below-minimum"; zone: DeliveryZone; shortfall: number }
+  /** Click & collect below the collection minimum. */
+  | { kind: "below-pickup-minimum"; minimum: number; shortfall: number };
 
 export type CheckoutState = {
   deliveryDate: string | null;
@@ -53,9 +55,9 @@ export type CheckoutState = {
  * point telling someone their basket is €22 short of a zone that depends on an
  * address they have not given yet.
  *
- * Click & collect skips the address and the minimum on purpose. The client's
- * table is headed "Livraison payante": the fee and the floor are what it costs
- * to send a van out, and collecting from the atelier sends nothing.
+ * Click & collect skips the address, the window and the zone, and has its own
+ * floor: the owners' minimum applies "qu'il s'agisse d'une livraison ou d'un
+ * retrait" (3 November 2026). It pays no fee.
  */
 export function checkoutBlocker(
   cart: CheckoutState,
@@ -82,7 +84,16 @@ export function checkoutBlocker(
   // Collection is one long opening at the atelier rather than a booked window,
   // so everything below — the window, the address, the fee and the floor — is
   // about sending a van out, and none of it applies.
-  if (!needsAddress(cart.deliveryMethod)) return null;
+  if (!needsAddress(cart.deliveryMethod)) {
+    const shortfall = Math.max(0, zones.pickupMinimumOrder - cart.subtotal);
+    return shortfall > 0
+      ? {
+          kind: "below-pickup-minimum",
+          minimum: zones.pickupMinimumOrder,
+          shortfall,
+        }
+      : null;
+  }
 
   // The window is asked for before the address, matching the order the
   // preferences bar asks in: what time on the day is a question about the

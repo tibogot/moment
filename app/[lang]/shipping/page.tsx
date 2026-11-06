@@ -35,6 +35,7 @@ type Facts = {
   cutoff: string;
   slots: string;
   pickup: string;
+  pickupMinimum: string;
 };
 
 type ShippingCopy = {
@@ -52,7 +53,6 @@ type ShippingCopy = {
   events: string;
   collection: string;
   collectionBody: (f: Facts) => string;
-  collectionSweet: (f: Facts) => string;
   cancel: string;
   cancelLines: string[];
   returns: string;
@@ -82,9 +82,7 @@ const COPY: Record<Locale, ShippingCopy> = {
       "Les prestations traiteur pour événements font l’objet d’un devis et leurs horaires sont convenus au cas par cas.",
     collection: "Retrait à l’atelier",
     collectionBody: (f) =>
-      `Les commandes peuvent être retirées à l’atelier, ${f.address}, gratuitement et sans minimum de commande. Horaires de retrait : ${f.pickup}.`,
-    collectionSweet: (f) =>
-      `Les pâtisseries et autres produits sucrés peuvent être commandés pour un retrait jusqu’à ${f.cutoff} la veille. Tout le reste suit le délai habituel de ${f.lead} jours.`,
+      `Les commandes peuvent être retirées à l’atelier, ${f.address}, gratuitement, avec un minimum de commande de ${f.pickupMinimum}. Horaires de retrait : ${f.pickup}.`,
     cancel: "Annulation et remboursement",
     cancelLines: [
       "Toute commande peut être annulée gratuitement jusqu’à 24 heures avant la date de livraison prévue ; le montant total est alors remboursé.",
@@ -117,9 +115,7 @@ const COPY: Record<Locale, ShippingCopy> = {
       "Catering voor evenementen gebeurt op offerte en de uurregeling wordt geval per geval afgesproken.",
     collection: "Afhalen in het atelier",
     collectionBody: (f) =>
-      `Bestellingen kunnen gratis en zonder minimumbedrag worden afgehaald in het atelier, ${f.address}. Afhaaluren: ${f.pickup}.`,
-    collectionSweet: (f) =>
-      `Gebak en andere zoete producten kunnen tot ${f.cutoff} de dag ervoor worden besteld om af te halen. Al het andere volgt de gewone termijn van ${f.lead} dagen.`,
+      `Bestellingen kunnen gratis worden afgehaald in het atelier, ${f.address}, met een minimumbedrag van ${f.pickupMinimum}. Afhaaluren: ${f.pickup}.`,
     cancel: "Annulering en terugbetaling",
     cancelLines: [
       "Elke bestelling kan kosteloos worden geannuleerd tot 24 uur vóór de geplande leveringsdatum; het volledige bedrag wordt dan terugbetaald.",
@@ -152,9 +148,7 @@ const COPY: Record<Locale, ShippingCopy> = {
       "Event catering is quoted rather than ordered online and its timings are agreed case by case.",
     collection: "Collection",
     collectionBody: (f) =>
-      `Orders can be collected from the atelier at ${f.address}, free of charge and with no minimum order. Collection hours: ${f.pickup}.`,
-    collectionSweet: (f) =>
-      `Pastries and other sweet items can be ordered for collection until ${f.cutoff} on the day before. Everything else follows the standard ${f.lead}-day notice period.`,
+      `Orders can be collected from the atelier at ${f.address}, free of charge, with a minimum order of ${f.pickupMinimum}. Collection hours: ${f.pickup}.`,
     cancel: "Cancellation and refunds",
     cancelLines: [
       "Any order may be cancelled free of charge up to 24 hours before the scheduled delivery date, and the full amount is refunded.",
@@ -194,6 +188,7 @@ export default async function ShippingPage({
     cutoff,
     slots: slots.map(formatSlot).join(", "),
     pickup: formatWindow(pickupWindow),
+    pickupMinimum: formatMoney(locale, zones.pickupMinimumOrder),
   };
 
   return (
@@ -232,7 +227,6 @@ export default async function ShippingPage({
 
       <LegalSection title={t.collection}>
         <p>{t.collectionBody(facts)}</p>
-        <p>{t.collectionSweet(facts)}</p>
       </LegalSection>
 
       <LegalSection title={t.cancel}>

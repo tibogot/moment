@@ -59,8 +59,9 @@ export const DEFAULT_DELIVERY_SLOTS: DeliverySlot[] = [
 export type PickupWindow = { start: string; end: string };
 
 export const DEFAULT_PICKUP_WINDOW: PickupWindow = {
+  // 11:00–15:00 since 3 November 2026 ("retrait … entre 11 h et 15 h").
   start: "11:00",
-  end: "16:00",
+  end: "15:00",
 };
 
 const TIME = /^([01]\d|2[0-3]):([0-5]\d)$/;

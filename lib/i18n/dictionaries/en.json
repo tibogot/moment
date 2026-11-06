@@ -200,7 +200,7 @@
       },
       {
         "q": "Can I collect my order?",
-        "a": "Yes, from the atelier at {address}, free and with no minimum order. Collection runs {pickupWindow}. Sweet things can be ordered for collection as late as {cutoff} the day before; anything else follows the usual {days} days' notice. Choose “Click & collect” when you pick your date."
+        "a": "Yes, from the atelier at {address}, free of charge, with a minimum order of {pickupMinimum}. Collection runs {pickupWindow}. Choose “Click & collect” when you pick your date."
       },
       {
         "q": "Can I cancel my order?",
@@ -310,7 +310,8 @@
     "staleSlot": "{slot} is no longer offered. Please pick another delivery window.",
     "freeDelivery": "Free",
     "freeDeliveryReached": "Delivery is on us — your order is over {threshold}.",
-    "freeDeliveryShortfall": "Add {shortfall} and the delivery is free."
+    "freeDeliveryShortfall": "Add {shortfall} and the delivery is free.",
+    "belowPickupMinimum": "Collection from the atelier has a minimum order of {minimum}. Add {shortfall} to order."
   },
   "shop": {
     "title": "Shop",

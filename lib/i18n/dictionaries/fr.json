@@ -200,7 +200,7 @@
       },
       {
         "q": "Puis-je venir chercher ma commande ?",
-        "a": "Oui, à l'atelier, {address}, sans frais ni minimum de commande. Le retrait se fait de {pickupWindow}. Les douceurs peuvent être commandées jusqu'à {cutoff} la veille ; le reste suit le préavis habituel de {days} jours. Choisissez « Click & collect » lors du choix de votre date."
+        "a": "Oui, à l'atelier, {address}, sans frais, avec un minimum de commande de {pickupMinimum}. Le retrait se fait de {pickupWindow}. Choisissez « Click & collect » lors du choix de votre date."
       },
       {
         "q": "Puis-je annuler ma commande ?",
@@ -310,7 +310,8 @@
     "staleSlot": "{slot} n'est plus proposé. Merci de choisir un autre créneau.",
     "freeDelivery": "Offerte",
     "freeDeliveryReached": "La livraison vous est offerte — votre commande dépasse {threshold}.",
-    "freeDeliveryShortfall": "Ajoutez {shortfall} et la livraison vous est offerte."
+    "freeDeliveryShortfall": "Ajoutez {shortfall} et la livraison vous est offerte.",
+    "belowPickupMinimum": "Le retrait à l'atelier demande un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander."
   },
   "shop": {
     "title": "Boutique",

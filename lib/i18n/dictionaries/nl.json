@@ -200,7 +200,7 @@
       },
       {
         "q": "Kan ik mijn bestelling zelf afhalen?",
-        "a": "Ja, in het atelier op {address}, gratis en zonder minimumbedrag. Afhalen kan van {pickupWindow}. Zoetigheden kunt u tot {cutoff} de dag ervoor bestellen; voor de rest geldt de gewone termijn van {days} dagen. Kies « Click & collect » wanneer u uw datum selecteert."
+        "a": "Ja, in het atelier op {address}, gratis, met een minimumbedrag van {pickupMinimum}. Afhalen kan van {pickupWindow}. Kies « Click & collect » wanneer u uw datum selecteert."
       },
       {
         "q": "Kan ik mijn bestelling annuleren?",
@@ -310,7 +310,8 @@
     "staleSlot": "{slot} wordt niet meer aangeboden. Kies een ander tijdvak.",
     "freeDelivery": "Gratis",
     "freeDeliveryReached": "De levering is gratis — uw bestelling ligt boven {threshold}.",
-    "freeDeliveryShortfall": "Voeg {shortfall} toe en de levering is gratis."
+    "freeDeliveryShortfall": "Voeg {shortfall} toe en de levering is gratis.",
+    "belowPickupMinimum": "Afhalen in het atelier vraagt een minimumbedrag van {minimum}. Voeg {shortfall} toe om te bestellen."
   },
   "shop": {
     "title": "Winkel",
