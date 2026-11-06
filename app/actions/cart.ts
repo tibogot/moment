@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
   addLinesToCart,
@@ -25,7 +25,7 @@ import {
 } from "@/lib/analytics";
 import { getCustomerOrder } from "@/lib/shopify/customer-account/customer";
 import { checkoutBlocker } from "@/lib/checkout";
-import type { Locale } from "@/lib/i18n/config";
+import { toLocale, type Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
 import {
@@ -49,6 +49,16 @@ import {
 } from "@/lib/order-preferences";
 import { orderFailure } from "@/lib/order-errors";
 import { routes } from "@/lib/routes";
+import { clientAddress, takeToken } from "@/lib/rate-limit";
+
+/** Matches the cap in `updateCartLine`; a catering order never needs more. */
+const MAX_LINE_QUANTITY = 999;
+
+/** A street, a number and a town fit comfortably; same cap as /api/address. */
+const MAX_ADDRESS_LENGTH = 120;
+
+/** Saving an address is a deliberate click, not a keystroke. */
+const ADDRESS_SAVE_LIMIT = { limit: 20, windowMs: 60_000 };
 
 async function getCartIdFromCookies() {
   const cookieStore = await cookies();
@@ -76,6 +86,7 @@ async function clearCartCookie() {
  * carry it too: the panel repaints from that response.
  */
 export async function getCart(locale: Locale) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return null;
 
   const cartId = await getCartIdFromCookies();
@@ -95,7 +106,11 @@ export async function addToCart(
   variantId: string,
   quantity = 1,
 ) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_LINE_QUANTITY) {
+    return orderFailure("cart_failed");
+  }
 
   // A cart Shopify no longer has (expired, or already checked out) is replaced
   // inside `addVariantToCart`; any other failure leaves the cookie alone, so a
@@ -135,6 +150,7 @@ export async function addToCart(
  * day, window and address are not copied — those are a new decision.
  */
 export async function reorder(locale: Locale, orderId: string) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const result = await getCustomerOrder(orderId);
@@ -212,6 +228,7 @@ async function saveOrderPreferences(
  * the owners have since closed.
  */
 export async function setDeliveryDate(locale: Locale, isoDate: string) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const availability = await getDeliveryAvailability();
@@ -240,6 +257,7 @@ export async function setDeliveryDate(locale: Locale, isoDate: string) {
  * never carry a label the owners did not write.
  */
 export async function setDeliverySlot(locale: Locale, slotId: string) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const slots = await getDeliverySlots();
@@ -270,6 +288,7 @@ export async function setDeliverySlot(locale: Locale, slotId: string) {
  * ticket. An empty note clears the attribute rather than storing "".
  */
 export async function setDeliveryNote(locale: Locale, value: string) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const note = value.trim().slice(0, DELIVERY_NOTE_MAX);
@@ -283,6 +302,7 @@ export async function setDeliveryNote(locale: Locale, value: string) {
 }
 
 export async function setDeliveryMethod(locale: Locale, method: DeliveryMethod) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
   if (!isDeliveryMethod(method)) return orderFailure("unknown_method");
 
@@ -314,7 +334,18 @@ export async function setDeliveryMethod(locale: Locale, method: DeliveryMethod) 
  * what gets stored.
  */
 export async function setDeliveryAddress(locale: Locale, value: string) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
+
+  // A public endpoint that spends the Geoapify quota, so it gets the same
+  // budget and length cap as /api/address — otherwise it is the cheaper way
+  // around them.
+  if (typeof value !== "string" || value.trim().length > MAX_ADDRESS_LENGTH) {
+    return orderFailure("address_not_found");
+  }
+  if (!takeToken(`address-save:${clientAddress(await headers())}`, ADDRESS_SAVE_LIMIT)) {
+    return orderFailure("too_many_requests");
+  }
 
   const resolved = await resolveAddress(value);
   if (!resolved) return orderFailure("address_not_found");
@@ -389,6 +420,7 @@ export async function updateCartLine(
   lineId: string,
   quantity: number,
 ) {
+  locale = toLocale(locale);
   if (!Number.isInteger(quantity) || quantity < 0 || quantity > 999) {
     return orderFailure("cart_failed");
   }
@@ -403,6 +435,7 @@ export async function updateCartLine(
 }
 
 export async function removeFromCart(locale: Locale, lineId: string) {
+  locale = toLocale(locale);
   const cartId = await getCartIdFromCookies();
   if (!cartId) return orderFailure("no_cart");
 
@@ -437,6 +470,7 @@ export async function beginCheckout(
   locale: Locale,
   analytics: { clientId: string; sessionId: string | null } | null = null,
 ) {
+  locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const cartId = await getCartIdFromCookies();

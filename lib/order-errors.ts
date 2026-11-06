@@ -25,7 +25,9 @@ export type OrderErrorCode =
   | "no_cart"
   | "cart_failed"
   | "rules_unavailable"
-  | "checkout_changed";
+  | "checkout_changed"
+  /** A per-visitor request budget ran out — see lib/rate-limit.ts. */
+  | "too_many_requests";
 
 export type OrderFailure = { ok: false; code: OrderErrorCode };
 
