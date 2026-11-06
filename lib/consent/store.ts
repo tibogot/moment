@@ -83,9 +83,3 @@ export function openCookiePreferences() {
   preferencesOpen = true;
   emit();
 }
-
-if (typeof window !== "undefined") {
-  window.addEventListener("cookie-preferences-open", () => {
-    openCookiePreferences();
-  });
-}

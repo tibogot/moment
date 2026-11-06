@@ -18,7 +18,6 @@ export type {
   AddressProvider,
   AddressSearch,
 } from "./provider";
-export { formatAddress, MAX_SUGGESTIONS } from "./provider";
 
 export function getAddressProvider(): AddressProvider {
   return isGeoapifyConfigured() ? geoapifyProvider : urbisProvider;

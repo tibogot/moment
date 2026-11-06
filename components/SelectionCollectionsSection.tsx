@@ -4,7 +4,7 @@ import { ProductTabsCarousel } from "@/components/ProductTabsCarousel";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 
-/** Matches `DEFAULT_SELECTION_HANDLE` in lib/shopify/collections.ts. */
+/** The default tab; one of `SELECTION_COLLECTION_HANDLES` in lib/shopify/collections.ts. */
 const DEFAULT_HANDLE = "pour-la-maison";
 
 type SelectionTab = {

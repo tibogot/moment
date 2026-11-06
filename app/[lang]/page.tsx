@@ -116,38 +116,6 @@ export default async function Home({
         images={{ events: images.events, coffee: images.coffee }}
       />
 
-      {/* Split image grid parked on /events for now — bring back here when needed.
-      <SplitImageSection
-        src="/images/anita-austvika.jpg"
-        alt=""
-        colStart={1}
-        colSpan={3}
-        mobile={{
-          rows: 5,
-          colStart: 1,
-          colSpan: 5,
-          rowStart: 1,
-          rowSpan: 4,
-        }}
-      />
-      <SplitImageSection
-        src="/images/kateryna-hliznitsova.jpg"
-        alt=""
-        colStart={5}
-        colSpan={2}
-        rowStart={1}
-        rowSpan={2}
-        mobile={{
-          rows: 4,
-          colStart: 3,
-          colSpan: 4,
-          rowStart: 1,
-          rowSpan: 3,
-        }}
-        continueGrid
-        fullBleedBottom
-      />
-      */}
 
       <SplitStatementSection
         copy={home.statement}

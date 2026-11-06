@@ -10,6 +10,7 @@ import {
   getPreferencesOpenSnapshot,
   getServerConsentSnapshot,
   getServerPreferencesOpenSnapshot,
+  openCookiePreferences,
   rejectAllConsent,
   saveConsent,
   setPreferencesOpen,
@@ -252,7 +253,7 @@ export function CookiePreferencesButton({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      onClick={() => window.dispatchEvent(new Event("cookie-preferences-open"))}
+      onClick={openCookiePreferences}
       className={className}
     >
       {t.footerButton}

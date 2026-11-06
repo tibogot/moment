@@ -226,11 +226,9 @@
     "closedDays": "Wij leveren niet op {closedDays}.",
     "dayArticle": "",
     "unavailable": "Niet beschikbaar voor levering",
-    "slotTitle": "Leveringsmoment",
     "slotFullBadge": "Volzet",
     "slotIntro": "Kies het tijdvak van twee uur dat u het beste uitkomt.",
     "slotFull": "Tijdvak vol? Neem contact op — afhankelijk van uw locatie en de route die we al rijden, kunnen we u misschien toevoegen aan een geplande ronde.",
-    "cutoffNote": "Bestellingen sluiten om {cutoff}. Daarna telt de termijn van {days} dagen vanaf morgen.",
     "pastCutoffNote": "De sluitingstijd van {cutoff} is vandaag voorbij, dus de vroegst mogelijke levering schuift een dag op.",
     "pickupWindow": "Afhalen kan van {window} in het atelier."
   },
@@ -267,7 +265,6 @@
     "slot": "Tijdvak",
     "selectSlot": "Kies een tijdvak",
     "chooseSlotTitle": "Kies een leveringsmoment",
-    "selectedSlot": "Gekozen leveringsmoment",
     "addressResults": "{count} adres(sen) gevonden"
   },
   "cart": {
@@ -300,7 +297,6 @@
     "pickDayIntro": "Kies de dag van levering.",
     "note": "Aanwijzingen voor de levering",
     "notePlaceholder": "Aanbellen aan de receptie, derde verdieping, code 1234…",
-    "noteSave": "Bewaren",
     "noteSaved": "Bewaard",
     "beforeCheckout": "Voor u bestelt",
     "somethingWrong": "Er ging iets mis",

@@ -30,9 +30,6 @@ export const SELECTION_COLLECTION_HANDLES = [
   "pour-le-bureau",
 ] as const;
 
-/** Default tab on the home sélections carousel. */
-export const DEFAULT_SELECTION_HANDLE = "pour-la-maison";
-
 export const SELECTION_COLLECTION_HANDLE_SET = new Set<string>(
   SELECTION_COLLECTION_HANDLES,
 );

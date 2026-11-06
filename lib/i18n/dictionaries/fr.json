@@ -226,11 +226,9 @@
     "closedDays": "Nous ne livrons pas {closedDays}.",
     "dayArticle": "le ",
     "unavailable": "Non disponible à la livraison",
-    "slotTitle": "Créneau de livraison",
     "slotFullBadge": "Complet",
     "slotIntro": "Choisissez le créneau de deux heures qui vous convient.",
     "slotFull": "Créneau complet ? Contactez-nous ! Selon votre localisation et notre itinéraire, nous pourrons peut-être vous ajouter à une tournée déjà planifiée.",
-    "cutoffNote": "Les commandes se clôturent à {cutoff}. Passé cette heure, le préavis de {days} jours court à partir de demain.",
     "pastCutoffNote": "L'heure limite de {cutoff} est passée pour aujourd'hui : la première livraison possible est décalée d'un jour.",
     "pickupWindow": "Le retrait se fait de {window} à l'atelier."
   },
@@ -267,7 +265,6 @@
     "slot": "Créneau",
     "selectSlot": "Choisir un créneau",
     "chooseSlotTitle": "Choisissez un créneau de livraison",
-    "selectedSlot": "Créneau de livraison choisi",
     "addressResults": "{count} adresse(s) trouvée(s)"
   },
   "cart": {
@@ -300,7 +297,6 @@
     "pickDayIntro": "Choisissez le jour de livraison.",
     "note": "Précisions pour la livraison",
     "notePlaceholder": "Sonner à l'accueil, 3e étage, code 1234…",
-    "noteSave": "Enregistrer",
     "noteSaved": "Enregistré",
     "beforeCheckout": "Avant de commander",
     "somethingWrong": "Un problème est survenu",

@@ -59,7 +59,6 @@ export const routes = {
   contact: "/contact",
   news: "/news",
   cart: "/cart",
-  search: "/search",
   account: "/account",
   signIn: "/signin",
   authLogin: "/api/auth/login",
