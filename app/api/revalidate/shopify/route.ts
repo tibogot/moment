@@ -35,6 +35,7 @@ import {
   DELIVERY_CAPACITY_TAG,
   tagOrderBooking,
 } from "@/lib/shopify/capacity";
+import { SHOPIFY_COLLECTIONS_TAG } from "@/lib/shopify/collections";
 import { DELIVERY_CACHE_TAG } from "@/lib/shopify/metaobjects";
 import { SHOPIFY_CACHE_TAG } from "@/lib/shopify/products";
 
@@ -47,7 +48,10 @@ import { SHOPIFY_CACHE_TAG } from "@/lib/shopify/products";
  */
 const TAGS_BY_TOPIC_PREFIX: Record<string, string> = {
   products: SHOPIFY_CACHE_TAG,
-  collections: SHOPIFY_CACHE_TAG,
+  // Collections only: product-bearing reads carry this tag too, and the
+  // layout's navbar carries nothing else — so a product or stock change
+  // (one per order line) no longer rebuilds every page of the site.
+  collections: SHOPIFY_COLLECTIONS_TAG,
   inventory_levels: SHOPIFY_CACHE_TAG,
   inventory_items: SHOPIFY_CACHE_TAG,
   metaobjects: DELIVERY_CACHE_TAG,

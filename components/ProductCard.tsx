@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CdnImage as Image } from "@/components/CdnImage";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import type { CSSProperties, MouseEvent } from "react";
 import { routes } from "@/lib/routes";

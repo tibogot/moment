@@ -315,6 +315,19 @@ button:not(:disabled),
  */
 .reveal-js [data-text-reveal] {
   visibility: hidden;
+  /* Failsafe. The guard proves a script *started*, not that the page
+     hydrated: a chunk that fails to load, or an error before TextReveal runs,
+     would otherwise leave every heading invisible for good. After 4s the copy
+     is shown whatever happened. In the normal case TextReveal has long since
+     made the container visible and hidden the lines by opacity instead, so
+     this changes nothing on screen. */
+  animation: text-reveal-failsafe 0s linear 4s forwards;
+}
+
+@keyframes text-reveal-failsafe {
+  to {
+    visibility: visible;
+  }
 }
 
 @keyframes nav-intro-drop {

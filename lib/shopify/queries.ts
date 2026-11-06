@@ -238,6 +238,24 @@ const COLLECTION_FIELDS = `
   }
 `;
 
+/**
+ * The collections without their products — what the navbar in the root layout
+ * needs. Kept apart from COLLECTIONS_QUERY so the layout's cache entry carries
+ * no product data and therefore no products tag: see SHOPIFY_COLLECTIONS_TAG.
+ */
+export const COLLECTION_LINKS_QUERY = `
+  query CollectionLinks($first: Int!, $language: LanguageCode)
+  @inContext(language: $language) {
+    collections(first: $first, sortKey: TITLE) {
+      edges {
+        node {
+          ${COLLECTION_FIELDS}
+        }
+      }
+    }
+  }
+`;
+
 export const COLLECTIONS_QUERY = `
   query Collections($first: Int!, $after: String, $language: LanguageCode)
   @inContext(language: $language) {

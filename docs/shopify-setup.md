@@ -205,7 +205,8 @@ a day to appear** — see "Webhooks" below.
 `https://<domain>/api/revalidate/shopify`, signing secret in
 `SHOPIFY_WEBHOOK_SECRET`:
 
-- `products/*`, `collections/*`, `inventory_levels/update` — catalogue
+- `products/*`, `inventory_levels/update` — product pages and lists only
+- `collections/*` — collections, plus the navbar (on every page)
 - `metaobjects/create`, `metaobjects/update`, `metaobjects/delete` — delivery rules
 - `orders/create`, `orders/updated`, `orders/cancelled` — window capacity
 

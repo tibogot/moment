@@ -11,7 +11,7 @@ import { PaletteToggle } from "@/components/PaletteToggle";
 import { Navbar } from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import { NavCatalogProvider } from "@/components/NavCatalogProvider";
-import { getCollections } from "@/lib/shopify/collections";
+import { getCollectionLinks } from "@/lib/shopify/collections";
 import { SITE_DETAILS } from "@/lib/site";
 import { languageAlternates } from "@/lib/seo";
 import { isLocale, LOCALES, OG_LOCALE, type Locale } from "@/lib/i18n/config";
@@ -124,7 +124,7 @@ export default async function RootLayout({
   if (!isLocale(lang)) notFound();
 
   const [collections, dictionary] = await Promise.all([
-    getCollections(lang),
+    getCollectionLinks(lang),
     getDictionary(lang),
   ]);
 
@@ -136,9 +136,9 @@ export default async function RootLayout({
    * provider fills them back in on idle, along with the flat product list the
    * search panel wants. See NavCatalogProvider.
    */
-  const navCollections = collections
-    .filter((collection) => collection.handle !== "frontpage")
-    .map((collection) => ({ ...collection, products: [] }));
+  const navCollections = collections.filter(
+    (collection) => collection.handle !== "frontpage",
+  );
 
   return (
     <html

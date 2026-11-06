@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
-import { revalidatePath } from "next/cache";
 import {
   addLinesToCart,
   addVariantToCart,
@@ -48,7 +47,6 @@ import {
   type DeliveryMethod,
 } from "@/lib/order-preferences";
 import { orderFailure } from "@/lib/order-errors";
-import { routes } from "@/lib/routes";
 import { clientAddress, takeToken } from "@/lib/rate-limit";
 
 /** Matches the cap in `updateCartLine`; a catering order never needs more. */
@@ -126,7 +124,6 @@ export async function addToCart(
   if (!result.ok) return orderFailure("cart_failed");
 
   await setCartCookie(result.cartId);
-  revalidatePath(routes.cart);
 
   return {
     ok: true as const,
@@ -196,7 +193,6 @@ export async function reorder(locale: Locale, orderId: string) {
   if (!added.ok) return orderFailure("cart_failed");
 
   await setCartCookie(added.cartId);
-  revalidatePath(routes.cart);
 
   return { ok: true as const, added: lines.length, skipped };
 }
@@ -216,7 +212,6 @@ async function saveOrderPreferences(
   if (!result.ok) return orderFailure("cart_failed");
 
   await setCartCookie(result.cartId);
-  revalidatePath(routes.cart);
 
   return { ok: true as const, cart: result.cart };
 }

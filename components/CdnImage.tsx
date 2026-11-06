@@ -3,6 +3,7 @@
 import Image, { type ImageLoader, type ImageProps } from "next/image";
 
 const SANITY_CDN = "https://cdn.sanity.io/";
+const SHOPIFY_CDN = "https://cdn.shopify.com/";
 
 /**
  * Sanity's CDN resizes and re-encodes on its own, so a Sanity photograph going
@@ -21,17 +22,33 @@ const sanityLoader: ImageLoader = ({ src, width, quality }) => {
 };
 
 /**
- * `next/image`, except that Sanity images skip Next's optimiser.
+ * The same for Shopify's CDN, which resizes on `width` and already serves WebP
+ * or AVIF to browsers that ask. Product photographs were the bulk of the
+ * optimiser's work — every card, gallery and cart line, in every width of the
+ * srcset — and all of it was work Shopify does for free.
+ */
+const shopifyLoader: ImageLoader = ({ src, width }) => {
+  const url = new URL(src);
+  url.searchParams.set("width", String(width));
+  return url.toString();
+};
+
+/**
+ * `next/image`, except that Sanity and Shopify images skip Next's optimiser.
  *
  * A client component because a loader is a function, and a function cannot be
- * handed across from a server component. Everything that is not a Sanity URL —
- * the bundled photographs, Shopify's — renders exactly as `next/image` would.
+ * handed across from a server component. Everything else — the bundled
+ * photographs — renders exactly as `next/image` would.
  */
 export function CdnImage(props: ImageProps) {
-  const isSanity =
-    typeof props.src === "string" && props.src.startsWith(SANITY_CDN);
+  const src = typeof props.src === "string" ? props.src : "";
+  const loader = src.startsWith(SANITY_CDN)
+    ? sanityLoader
+    : src.startsWith(SHOPIFY_CDN)
+      ? shopifyLoader
+      : props.loader;
 
   // `alt` arrives in props; the lint rule cannot see through the spread.
   // eslint-disable-next-line jsx-a11y/alt-text
-  return <Image {...props} loader={isSanity ? sanityLoader : props.loader} />;
+  return <Image {...props} loader={loader} />;
 }

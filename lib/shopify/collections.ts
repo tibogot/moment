@@ -7,6 +7,7 @@ import {
   mapProductNode,
 } from "./products";
 import {
+  COLLECTION_LINKS_QUERY,
   COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
   type CollectionByHandleQueryResponse,
@@ -71,13 +72,61 @@ async function fetchCollections(
   );
 }
 
+/**
+ * Collections without products, for the navbar in the root layout.
+ *
+ * Its own tag, because the layout is on every page: anything it reads under
+ * the products tag is invalidated by every product edit and every stock
+ * change — one per order line — which rebuilt the whole site, in three
+ * languages, after every sale. The layout now only rebuilds when a collection
+ * itself changes. Product-bearing reads below carry both tags.
+ */
+export const SHOPIFY_COLLECTIONS_TAG = "shopify-collections";
+
 /** One cache entry per language — see the note in `products.ts`. */
 const cachedCollections = (language: Locale) =>
   unstable_cache(
     () => fetchCollections(language),
     ["shopify-collections", language],
-    { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+    {
+      revalidate: SHOPIFY_REVALIDATE,
+      tags: [SHOPIFY_CACHE_TAG, SHOPIFY_COLLECTIONS_TAG],
+    },
   );
+
+type CollectionLinksResponse = {
+  collections: { edges: { node: ShopifyCollectionNode }[] };
+};
+
+const cachedCollectionLinks = (language: Locale) =>
+  unstable_cache(
+    async () => {
+      const data = await storefrontRequest<CollectionLinksResponse>(
+        COLLECTION_LINKS_QUERY,
+        { first: COLLECTIONS_PAGE_SIZE, language: shopifyLanguage(language) },
+      );
+      return data.collections.edges.map(({ node }) => mapCollectionNode(node));
+    },
+    ["shopify-collection-links", language],
+    { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_COLLECTIONS_TAG] },
+  );
+
+/**
+ * Every collection's title, handle and image, with `products: []`. For the
+ * root layout; anything that shows products uses `getCollections`.
+ */
+export async function getCollectionLinks(
+  language: Locale,
+): Promise<ShopifyCollection[]> {
+  if (!isShopifyConfigured()) return [];
+
+  try {
+    return await cachedCollectionLinks(language)();
+  } catch (error) {
+    console.error("[shopify] getCollectionLinks failed", error);
+    return [];
+  }
+}
 
 /** Every collection in the store. Returns [] when Shopify isn't configured. */
 export async function getCollections(
@@ -138,7 +187,10 @@ export async function getCollectionByHandle(
     return await unstable_cache(
       () => fetchCollectionByHandle(language, handle),
       ["shopify-collection", language, handle],
-      { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+      {
+        revalidate: SHOPIFY_REVALIDATE,
+        tags: [SHOPIFY_CACHE_TAG, SHOPIFY_COLLECTIONS_TAG],
+      },
     )();
   } catch (error) {
     console.error(`[shopify] getCollectionByHandle(${handle}) failed`, error);
