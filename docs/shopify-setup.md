@@ -46,6 +46,9 @@ value in brackets, which is what the site did before this existed.
 | `pickup_end_time` | Single line text | Collection closes, `HH:MM` (15:00) |
 | `pickup_minimum_order` | Decimal | Basket minimum for collection at the atelier, in euros (100) |
 | `minimum_pieces_per_product` | Integer | Fewest identical pieces each product can be ordered in, delivery or collection (4) |
+| `next_day_lead_time_days` | Integer | Notice for next-day collection (1) |
+| `next_day_cutoff_hour` | Integer | Hour after which today stops counting, for next-day collection (15) |
+| `next_day_pickup_minimum_order` | Decimal | Basket minimum for a next-day collection, in euros (50) |
 | `atelier_latitude` | Decimal | Where deliveries are measured from |
 | `atelier_longitude` | Decimal | — |
 
@@ -162,6 +165,26 @@ matter; the site sorts them by start time. An entry that will not read is
 dropped and the rest still show, unlike the zone table: a missing window costs
 the customer a choice, where a missing band costs them the right price.
 
+**Collection times — `pickup_slot` metaobject.** One entry per time the
+atelier takes a collection:
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `time` | Single line text | yes | `HH:MM`, e.g. `11:30` |
+| `capacity` | Integer | no | Collections that time takes. Empty = 1. `0` closes it |
+
+No entries means the built-in eight: 11:30, 12:00 … 15:00, one each.
+
+**Next-day collection — the `retrait-veille` product tag.** A product carrying
+this tag can be ordered until `next_day_cutoff_hour` (15:00) the day before and
+collected the next day, with the `next_day_pickup_minimum_order` (€50). The
+rule applies only to collection, and only when **every** product in the basket
+carries the tag — a mixed basket follows the standard notice and minimum. The
+Storefront token reads product tags (`unauthenticated_read_product_tags`, on by
+default). Tag, at minimum: all cookies; banana bread, cake citron-pavot, carrot
+cake; the healthy snacks; the pantry range; the cold-pressed juices including
+Café Latte and Matcha Latte.
+
 **Windows close themselves when full.** Two deliveries per window by default
 (the owners' figure, 3 November 2026). How it works:
 
@@ -169,11 +192,12 @@ the customer a choice, where a missing band costs them the right price.
    others, `/api/revalidate/shopify`) tags it `livraison-YYYY-MM-DD` and
    `creneau-HHMM` from its cart attributes.
 2. The pickers and the checkout gate count the non-cancelled orders carrying
-   that day's tag, and grey out windows at capacity. Collections are not
-   counted.
-3. **A phone order takes a window when you add the same two tags by hand**,
-   e.g. `livraison-2026-11-07` and `creneau-0900`. Removing them, or cancelling
-   the order, frees the window.
+   that day's tag, and grey out slots at capacity. Deliveries
+   (`livraison-…`) and collections (`retrait-…`) are counted separately.
+3. **A phone order takes a slot when you add the same two tags by hand**:
+   `livraison-2026-11-07` and `creneau-0900` for a delivery,
+   `retrait-2026-11-07` and `creneau-1130` for a collection. Removing them, or
+   cancelling the order, frees the slot.
 
 It needs:
 

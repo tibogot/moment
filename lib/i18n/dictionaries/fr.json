@@ -201,7 +201,7 @@
       },
       {
         "q": "Puis-je venir chercher ma commande ?",
-        "a": "Oui, à l'atelier, {address}, sans frais, avec un minimum de commande de {pickupMinimum}. Le retrait se fait de {pickupWindow}. Choisissez « Click & collect » lors du choix de votre date."
+        "a": "Oui, à l'atelier, {address}, sans frais, avec un minimum de commande de {pickupMinimum}. Vous choisissez votre heure de passage : {pickupSlots}. Les cookies, cakes, healthy snacks, produits d'épicerie et jus pressés à froid peuvent être commandés jusqu'à {nextDayCutoff} la veille pour un retrait le lendemain, avec un minimum de {nextDayMinimum} ; si la commande contient d'autres produits, le préavis habituel de {days} jours s'applique. Choisissez « Click & collect » lors de votre commande."
       },
       {
         "q": "Puis-je annuler ma commande ?",
@@ -231,7 +231,8 @@
     "slotIntro": "Choisissez le créneau de deux heures qui vous convient.",
     "slotFull": "Créneau complet ? Contactez-nous ! Selon votre localisation et notre itinéraire, nous pourrons peut-être vous ajouter à une tournée déjà planifiée.",
     "pastCutoffNote": "L'heure limite de {cutoff} est passée pour aujourd'hui : la première livraison possible est décalée d'un jour.",
-    "pickupWindow": "Le retrait se fait de {window} à l'atelier."
+    "pickupWindow": "Le retrait se fait de {window} à l'atelier.",
+    "pickupSlotIntro": "Choisissez l'heure à laquelle vous passez à l'atelier."
   },
   "deliveryMethods": {
     "delivery": {
@@ -371,7 +372,8 @@
     "storage": "Conservation",
     "orderPreferencesTitle": "Quand et comment",
     "viewImage": "Voir l'image {index} sur {total}",
-    "minimumHint": "Minimum {minimum} pièces par produit."
+    "minimumHint": "Minimum {minimum} pièces par produit.",
+    "nextDayNote": "Disponible la veille : commandez avant {cutoff} pour un retrait à l'atelier le lendemain."
   },
   "errors": {
     "not_configured": "La boutique n'est pas encore configurée. Merci de réessayer plus tard.",

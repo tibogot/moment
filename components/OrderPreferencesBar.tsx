@@ -22,9 +22,9 @@ import { DeliverySlotPicker } from "@/components/DeliverySlotPicker";
 import {
   getAvailabilitySnapshot,
   getCartSnapshot,
-  getPickupWindowSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
+  getPickupSlotsSnapshot,
   getSlotsSnapshot,
   getZonesSnapshot,
   notifyCartUpdated,
@@ -41,11 +41,12 @@ import {
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import {
   formatSlot,
-  formatWindow,
   parseSlotAttribute,
   slotId,
+  slotsForMethod,
   type DeliverySlot,
 } from "@/lib/delivery/slots";
+import { orderRules } from "@/lib/delivery/checkout";
 import { useFullSlots } from "@/lib/hooks/useFullSlots";
 import { maxDeliveryDistanceKm } from "@/lib/delivery/zones";
 import { routes } from "@/lib/routes";
@@ -78,7 +79,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     getCartSnapshot,
     getServerCartSnapshot,
   );
-  const availability = useSyncExternalStore(
+  const baseAvailability = useSyncExternalStore(
     subscribeCart,
     getAvailabilitySnapshot,
     getServerAvailabilitySnapshot,
@@ -90,15 +91,15 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     getZonesSnapshot,
     getZonesSnapshot,
   );
-  const slots = useSyncExternalStore(
+  const deliverySlots = useSyncExternalStore(
     subscribeCart,
     getSlotsSnapshot,
     getSlotsSnapshot,
   );
-  const pickupWindow = useSyncExternalStore(
+  const pickupSlots = useSyncExternalStore(
     subscribeCart,
-    getPickupWindowSnapshot,
-    getPickupWindowSnapshot,
+    getPickupSlotsSnapshot,
+    getPickupSlotsSnapshot,
   );
 
   const [panel, setPanel] = useState<Panel | null>(null);
@@ -142,6 +143,16 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
 
   const deliveryDate = draft.date ?? cart?.deliveryDate ?? null;
   const deliveryMethod = draft.method ?? cart?.deliveryMethod ?? null;
+  // The calendar and the slot list that apply to this basket: next-day
+  // collection moves the earliest day, and collection has its own times.
+  const availability = baseAvailability
+    ? orderRules(
+        { deliveryMethod, lines: cart?.lines ?? [] },
+        baseAvailability,
+        zones,
+      ).availability
+    : null;
+  const slots = slotsForMethod(deliveryMethod, deliverySlots, pickupSlots);
   const deliveryAddress = draft.address ?? cart?.deliveryAddress ?? null;
 
   // Resolved against the windows the shop is offering *now*, not simply
@@ -152,7 +163,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
     slots,
     draft.slot ?? cart?.deliverySlot ?? null,
   );
-  const fullSlotIds = useFullSlots(deliveryDate);
+  const fullSlotIds = useFullSlots(deliveryDate, deliveryMethod);
 
   const closePanel = useCallback(() => {
     setPanel(null);
@@ -278,10 +289,6 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
   };
 
   const addressDisabled = !needsAddress(deliveryMethod);
-  // Collection is one long opening rather than a booked window, so the segment
-  // stops being a question and starts being an answer: it shows the atelier's
-  // hours instead of offering a choice that would mean nothing.
-  const slotDisabled = deliveryMethod === "pickup";
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
@@ -321,25 +328,20 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
         <Segment
           label={t.slot}
           title={t.chooseSlotTitle}
-          value={
-            slotDisabled
-              ? formatWindow(pickupWindow)
-              : deliverySlot
-                ? formatSlot(deliverySlot)
-                : null
-          }
+          value={deliverySlot ? formatSlot(deliverySlot) : null}
           placeholder={t.selectSlot}
           open={panel === "slot"}
           onToggle={() => togglePanel("slot")}
-          disabled={slotDisabled}
-          disabledHint={interpolate(dict.delivery.pickupWindow, {
-            window: formatWindow(pickupWindow),
-          })}
         >
           <DeliverySlotPicker
             slots={slots}
             value={deliverySlot}
             fullSlotIds={fullSlotIds}
+            intro={
+              deliveryMethod === "pickup"
+                ? dict.delivery.pickupSlotIntro
+                : undefined
+            }
             onSelect={chooseSlot}
             disabled={isPending}
           />

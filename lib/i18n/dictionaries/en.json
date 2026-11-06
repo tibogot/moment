@@ -201,7 +201,7 @@
       },
       {
         "q": "Can I collect my order?",
-        "a": "Yes, from the atelier at {address}, free of charge, with a minimum order of {pickupMinimum}. Collection runs {pickupWindow}. Choose “Click & collect” when you pick your date."
+        "a": "Yes, from the atelier at {address}, free of charge, with a minimum order of {pickupMinimum}. You choose the time you come by: {pickupSlots}. Cookies, cakes, healthy snacks, pantry goods and cold-pressed juices can be ordered until {nextDayCutoff} the day before for collection the next day, with a minimum of {nextDayMinimum}; if the order includes anything else, the usual {days} days' notice applies. Choose “Click & collect” when you order."
       },
       {
         "q": "Can I cancel my order?",
@@ -231,7 +231,8 @@
     "slotIntro": "Choose the two-hour window you would like it in.",
     "slotFull": "Window full? Get in touch — depending on where you are and the route we are already driving, we may be able to add you to a round.",
     "pastCutoffNote": "Today's {cutoff} cut-off has passed, so the earliest we can deliver has moved out by a day.",
-    "pickupWindow": "Collection is from {window} at the atelier."
+    "pickupWindow": "Collection is from {window} at the atelier.",
+    "pickupSlotIntro": "Choose the time you will come by the atelier."
   },
   "deliveryMethods": {
     "delivery": {
@@ -371,7 +372,8 @@
     "storage": "Storage",
     "orderPreferencesTitle": "When and how",
     "viewImage": "View image {index} of {total}",
-    "minimumHint": "Minimum {minimum} pieces per product."
+    "minimumHint": "Minimum {minimum} pieces per product.",
+    "nextDayNote": "Available the day before: order by {cutoff} to collect from the atelier tomorrow."
   },
   "errors": {
     "not_configured": "The shop is not configured yet. Please try again later.",

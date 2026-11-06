@@ -28,11 +28,12 @@ import {
   formatSlot,
   parseSlotAttribute,
   slotId,
+  slotsForMethod,
   type DeliverySlot,
 } from "@/lib/delivery/slots";
 import { slotValuesForIds } from "@/lib/delivery/capacity";
 import { useFullSlots } from "@/lib/hooks/useFullSlots";
-import { checkoutBlocker } from "@/lib/delivery/checkout";
+import { checkoutBlocker, orderRules } from "@/lib/delivery/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
@@ -60,6 +61,7 @@ type CartDeliverySectionProps = {
   availability: DeliveryAvailability;
   zones: ZoneTable;
   slots: DeliverySlot[];
+  pickupSlots: DeliverySlot[];
   deliveryDate: string | null;
   deliverySlot: string | null;
   deliveryMethod: DeliveryMethod | null;
@@ -78,9 +80,10 @@ type CartDeliverySectionProps = {
  * nowhere to put it. Mirrors the footer of the cart panel.
  */
 export function CartDeliverySection({
-  availability,
+  availability: baseAvailability,
   zones,
-  slots,
+  slots: deliverySlots,
+  pickupSlots,
   deliveryDate,
   deliverySlot,
   deliveryMethod,
@@ -91,6 +94,15 @@ export function CartDeliverySection({
   totalPrice,
   lines,
 }: CartDeliverySectionProps) {
+  // The calendar and the slot list that apply to this basket: next-day
+  // collection moves the earliest day, and collection has its own times.
+  const availability = orderRules(
+    { deliveryMethod, lines },
+    baseAvailability,
+    zones,
+  ).availability;
+  const slots = slotsForMethod(deliveryMethod, deliverySlots, pickupSlots);
+
   const dict = useDictionary();
   const locale = useLocale();
   const closedDays = closedWeekdaysNote(
@@ -118,7 +130,7 @@ export function CartDeliverySection({
   // Resolved against the windows the shop offers now, so a cart holding one the
   // owners have withdrawn reads as no choice rather than as a booking.
   const slot = parseSlotAttribute(slots, deliverySlot);
-  const fullSlotIds = useFullSlots(deliveryDate);
+  const fullSlotIds = useFullSlots(deliveryDate, deliveryMethod);
 
   const blocker = checkoutBlocker(
     {
@@ -130,10 +142,11 @@ export function CartDeliverySection({
       subtotal,
       lines,
     },
-    availability,
+    baseAvailability,
     zones,
-    slots,
+    deliverySlots,
     slotValuesForIds(slots, fullSlotIds),
+    pickupSlots,
   );
 
   // The two date blockers are the ones this section can fix in place, by
@@ -254,7 +267,7 @@ export function CartDeliverySection({
             the window is a thing customers change once the day is settled, and
             Shopify's hosted checkout cannot edit a cart attribute — so if it
             cannot be fixed here it cannot be fixed at all. */}
-        {needsAddress(deliveryMethod) && (
+        {(
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
             <span className="font-owners-medium text-[12px] uppercase tracking-wide">
               {t.slot}
@@ -429,6 +442,11 @@ export function CartDeliverySection({
             slots={slots}
             value={slot}
             fullSlotIds={fullSlotIds}
+            intro={
+              deliveryMethod === "pickup"
+                ? dict.delivery.pickupSlotIntro
+                : undefined
+            }
             onSelect={chooseSlot}
             disabled={isPending}
             className="mt-5 max-w-105 border border-sky"

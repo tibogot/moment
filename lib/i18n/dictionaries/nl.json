@@ -201,7 +201,7 @@
       },
       {
         "q": "Kan ik mijn bestelling zelf afhalen?",
-        "a": "Ja, in het atelier op {address}, gratis, met een minimumbedrag van {pickupMinimum}. Afhalen kan van {pickupWindow}. Kies « Click & collect » wanneer u uw datum selecteert."
+        "a": "Ja, in het atelier op {address}, gratis, met een minimumbedrag van {pickupMinimum}. U kiest het uur waarop u langskomt: {pickupSlots}. Cookies, cakes, healthy snacks, kruidenierswaren en koudgeperste sappen kunt u tot {nextDayCutoff} de dag ervoor bestellen om de volgende dag af te halen, met een minimumbedrag van {nextDayMinimum}; bevat de bestelling andere producten, dan geldt de gewone termijn van {days} dagen. Kies « Click & collect » bij uw bestelling."
       },
       {
         "q": "Kan ik mijn bestelling annuleren?",
@@ -231,7 +231,8 @@
     "slotIntro": "Kies het tijdvak van twee uur dat u het beste uitkomt.",
     "slotFull": "Tijdvak vol? Neem contact op — afhankelijk van uw locatie en de route die we al rijden, kunnen we u misschien toevoegen aan een geplande ronde.",
     "pastCutoffNote": "De sluitingstijd van {cutoff} is vandaag voorbij, dus de vroegst mogelijke levering schuift een dag op.",
-    "pickupWindow": "Afhalen kan van {window} in het atelier."
+    "pickupWindow": "Afhalen kan van {window} in het atelier.",
+    "pickupSlotIntro": "Kies het uur waarop u langskomt in het atelier."
   },
   "deliveryMethods": {
     "delivery": {
@@ -371,7 +372,8 @@
     "storage": "Bewaren",
     "orderPreferencesTitle": "Wanneer en hoe",
     "viewImage": "Afbeelding {index} van {total} bekijken",
-    "minimumHint": "Minimaal {minimum} stuks per product."
+    "minimumHint": "Minimaal {minimum} stuks per product.",
+    "nextDayNote": "De dag ervoor te bestellen: bestel vóór {cutoff} en haal morgen af in het atelier."
   },
   "errors": {
     "not_configured": "De winkel is nog niet geconfigureerd. Probeer het later opnieuw.",

@@ -8,7 +8,7 @@ import {
   interpolate,
   type Dictionary,
 } from "@/lib/i18n/dictionaries";
-import { formatCutoffHour } from "@/lib/delivery/dates";
+import { DEFAULT_NEXT_DAY_CUTOFF_HOUR, formatCutoffHour } from "@/lib/delivery/dates";
 import {
   formatSlot,
   formatWindow,
@@ -71,7 +71,7 @@ export default async function FaqPage({
 }) {
   const { lang } = await params;
   const locale = toLocale(lang);
-  const [dict, { availability, zones, slots, pickupWindow }] =
+  const [dict, { availability, zones, slots, pickupSlots, pickupWindow }] =
     await Promise.all([getDictionary(locale), getDeliveryRules()]);
 
   // The notice period and the closed days are quoted here as well as applied by
@@ -104,6 +104,11 @@ export default async function FaqPage({
       slotFull: dict.delivery.slotFull,
       pickupWindow: formatWindow(pickupWindow),
       pickupMinimum: formatMoney(locale, zones.pickupMinimumOrder),
+      pickupSlots: pickupSlots.map(formatSlot).join(", "),
+      nextDayCutoff: formatCutoffHour(
+        availability.nextDay?.cutoffHour ?? DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+      ),
+      nextDayMinimum: formatMoney(locale, zones.nextDayPickupMinimumOrder),
       address: formatAddressLine(SITE_DETAILS),
     }),
   }));

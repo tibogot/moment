@@ -24,6 +24,7 @@ import {
   getCartSnapshot,
   getServerAvailabilitySnapshot,
   getServerCartSnapshot,
+  getPickupSlotsSnapshot,
   getSlotsSnapshot,
   getZonesSnapshot,
   refreshCart,
@@ -44,11 +45,12 @@ import {
   formatSlot,
   parseSlotAttribute,
   slotId,
+  slotsForMethod,
   type DeliverySlot,
 } from "@/lib/delivery/slots";
 import { slotValuesForIds } from "@/lib/delivery/capacity";
 import { useFullSlots } from "@/lib/hooks/useFullSlots";
-import { checkoutBlocker } from "@/lib/delivery/checkout";
+import { checkoutBlocker, orderRules } from "@/lib/delivery/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
@@ -95,7 +97,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     getCartSnapshot,
     getServerCartSnapshot,
   );
-  const availability = useSyncExternalStore(
+  const baseAvailability = useSyncExternalStore(
     subscribeCart,
     getAvailabilitySnapshot,
     getServerAvailabilitySnapshot,
@@ -107,10 +109,15 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     getZonesSnapshot,
     getZonesSnapshot,
   );
-  const slots = useSyncExternalStore(
+  const deliverySlots = useSyncExternalStore(
     subscribeCart,
     getSlotsSnapshot,
     getSlotsSnapshot,
+  );
+  const pickupSlots = useSyncExternalStore(
+    subscribeCart,
+    getPickupSlotsSnapshot,
+    getPickupSlotsSnapshot,
   );
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -303,11 +310,18 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const isEmpty = !cart || lines.length === 0;
   const totalQuantity = lines.reduce((sum, line) => sum + line.quantity, 0);
   const deliveryDate = cart?.deliveryDate ?? null;
+  const deliveryMethod = cart?.deliveryMethod ?? null;
+  // The calendar and the slot list that apply to this basket: next-day
+  // collection moves the earliest day, and collection has its own times.
+  const availability = baseAvailability
+    ? orderRules({ deliveryMethod, lines }, baseAvailability, zones).availability
+    : null;
+  const slots = slotsForMethod(deliveryMethod, deliverySlots, pickupSlots);
   // Against the windows the shop offers now, not simply printed: a cart can sit
   // in its cookie for a fortnight, and a window withdrawn in the meantime has to
   // read as no choice made rather than as a booking the kitchen never took.
   const slot = parseSlotAttribute(slots, cart?.deliverySlot ?? null);
-  const fullSlotIds = useFullSlots(deliveryDate);
+  const fullSlotIds = useFullSlots(deliveryDate, deliveryMethod);
 
   // A date saved days ago can go stale while the cart sits — the owners may
   // have closed it since. Shopify's hosted checkout will not let anyone edit a
@@ -330,10 +344,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           subtotal: cart.subtotal,
           lines,
         },
-        availability,
+        baseAvailability,
         zones,
-        slots,
+        deliverySlots,
         slotValuesForIds(slots, fullSlotIds),
+        pickupSlots,
       )
     : { kind: "no-date" as const };
 
@@ -492,6 +507,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 slots={slots}
                 value={slot}
                 fullSlotIds={fullSlotIds}
+                intro={
+                  deliveryMethod === "pickup"
+                    ? dict.delivery.pickupSlotIntro
+                    : undefined
+                }
                 onSelect={chooseSlot}
                 disabled={isPending}
               />
@@ -676,11 +696,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 )}
               </div>
 
-              {/* The window sits under the day it belongs to, and only for
-                  delivery: collection is one long opening at the atelier, not a
-                  booked window. Editable here because Shopify's checkout cannot
+              {/* The delivery window, or the collection time, under the day
+                  it belongs to. Editable here because Shopify's checkout cannot
                   change a cart attribute either. */}
-              {needsAddress(cart.deliveryMethod) && (
+              {(
                 <div className="mt-3 flex items-baseline justify-between gap-3">
                   <span className="font-owners-medium text-[12px] uppercase tracking-wide">
                     {t.slot}

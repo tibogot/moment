@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
-import { getMinimumPiecesPerProduct } from "@/lib/shopify/delivery";
+import {
+  getDeliveryAvailability,
+  getMinimumPiecesPerProduct,
+} from "@/lib/shopify/delivery";
+import {
+  DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+  formatCutoffHour,
+} from "@/lib/delivery/dates";
+import { hasNextDayTag } from "@/lib/delivery/next-day";
 import { TrackViewItem } from "@/components/TrackViewItem";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
@@ -61,11 +69,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { lang, handle } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
-  const [product, allProducts, minimumQuantity] = await Promise.all([
-    getProductByHandle(locale, handle),
-    getProducts(locale),
-    getMinimumPiecesPerProduct(),
-  ]);
+  const [product, allProducts, minimumQuantity, availability] =
+    await Promise.all([
+      getProductByHandle(locale, handle),
+      getProducts(locale),
+      getMinimumPiecesPerProduct(),
+      getDeliveryAvailability(),
+    ]);
 
   if (!product) notFound();
 
@@ -159,6 +169,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
             className="mt-8"
           />
           <TrackViewItem item={analyticsItem} />
+          {hasNextDayTag(product.tags ?? []) && (
+            <p className="font-archivo-light mt-2 text-[13px] opacity-70">
+              {interpolate(dict.product.nextDayNote, {
+                cutoff: formatCutoffHour(
+                  availability.nextDay?.cutoffHour ??
+                    DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+                ),
+              })}
+            </p>
+          )}
 
           {product.details && (
             <ProductDetails details={product.details} copy={dict.product} />

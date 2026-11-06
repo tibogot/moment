@@ -22,7 +22,8 @@ export default async function CartPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const [cart, { availability, zones, slots }, dict] = await Promise.all([
+  const [cart, { availability, zones, slots, pickupSlots }, dict] =
+    await Promise.all([
     getCart(toLocale(lang)),
     getDeliveryRules(),
     getDictionary(toLocale(lang)),
@@ -94,6 +95,7 @@ export default async function CartPage({
                 availability={availability}
                 zones={zones}
                 slots={slots}
+                pickupSlots={pickupSlots}
                 deliveryDate={cart.deliveryDate}
                 deliverySlot={cart.deliverySlot}
                 deliveryMethod={cart.deliveryMethod}

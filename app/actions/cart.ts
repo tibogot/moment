@@ -15,6 +15,7 @@ import { isShopifyConfigured } from "@/lib/shopify/client";
 import {
   getDeliveryAvailability,
   getDeliverySlots,
+  getPickupSlots,
 } from "@/lib/shopify/delivery";
 import { getDeliveryRules, getZoneTable } from "@/lib/shopify/zones";
 import { getFullSlots } from "@/lib/shopify/capacity";
@@ -23,7 +24,7 @@ import {
   GA_SESSION_ID_ATTRIBUTE,
 } from "@/lib/analytics";
 import { getCustomerOrder } from "@/lib/shopify/customer-account/customer";
-import { checkoutBlocker } from "@/lib/delivery/checkout";
+import { checkoutBlocker, orderRules } from "@/lib/delivery/checkout";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
 import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery/dates";
@@ -226,11 +227,25 @@ export async function setDeliveryDate(locale: Locale, isoDate: string) {
   locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
-  const availability = await getDeliveryAvailability();
+  const [availability, zones, cart] = await Promise.all([
+    getDeliveryAvailability(),
+    getZoneTable(),
+    getCart(locale),
+  ]);
   if (availability.closuresUnavailable) {
     return orderFailure("rules_unavailable");
   }
-  if (!isBookable(isoDate, availability)) {
+  // Against the rules for this basket: a next-day collection may book
+  // tomorrow, anything else keeps the standard notice.
+  const rules = orderRules(
+    {
+      deliveryMethod: cart?.deliveryMethod ?? null,
+      lines: cart?.lines ?? [],
+    },
+    availability,
+    zones,
+  );
+  if (!isBookable(isoDate, rules.availability)) {
     return orderFailure("date_unavailable");
   }
 
@@ -255,15 +270,19 @@ export async function setDeliverySlot(locale: Locale, slotId: string) {
   locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
-  const slots = await getDeliverySlots();
+  // Collection times or delivery windows, by the cart's method.
+  const cart = await getCart(locale);
+  const method = cart?.deliveryMethod === "pickup" ? "pickup" : "delivery";
+  const slots =
+    method === "pickup" ? await getPickupSlots() : await getDeliverySlots();
   const slot = findSlot(slots, slotId);
   if (!slot) return orderFailure("slot_unavailable");
 
   // Full on the day the cart already holds. A cart with no day yet is let
   // through — there is nothing to count against — and checkout counts again.
-  const deliveryDate = (await getCart(locale))?.deliveryDate;
+  const deliveryDate = cart?.deliveryDate;
   if (deliveryDate) {
-    const full = await getFullSlots(deliveryDate, slots);
+    const full = await getFullSlots(deliveryDate, slots, method);
     if (full.includes(slotAttributeValue(slot))) {
       return orderFailure("slot_unavailable");
     }
@@ -306,14 +325,16 @@ export async function setDeliveryMethod(locale: Locale, method: DeliveryMethod) 
     // Click & collect leaves nothing to deliver to, so a previously saved
     // address is cleared rather than left on the order contradicting it — and
     // the zone with it, since a zone without an address prices nothing.
+    // Delivery windows and collection times are different lists, so a slot
+    // chosen under one method means nothing under the other.
+    [DELIVERY_SLOT_ATTRIBUTE]: null,
+    // Click & collect leaves nothing to deliver to, so a previously saved
+    // address is cleared rather than left on the order contradicting it — and
+    // the zone with it, since a zone without an address prices nothing.
     ...(method === "pickup"
       ? {
           [DELIVERY_ADDRESS_ATTRIBUTE]: null,
           [DELIVERY_ZONE_ATTRIBUTE]: null,
-          // Collection is one long opening, not a booked window. Leaving a
-          // delivery slot on the order would tell the kitchen to have it at the
-          // door at 09:00 for someone who is coming to fetch it at 15:00.
-          [DELIVERY_SLOT_ATTRIBUTE]: null,
         }
       : {}),
   });
@@ -493,8 +514,13 @@ export async function beginCheckout(
   // last place in a window are separated. It cannot close the race entirely —
   // both can be on Shopify's payment page at once — but it narrows it to the
   // minutes a payment takes.
+  const method = cart.deliveryMethod === "pickup" ? "pickup" : "delivery";
   const fullSlots = cart.deliveryDate
-    ? await getFullSlots(cart.deliveryDate, rules.slots)
+    ? await getFullSlots(
+        cart.deliveryDate,
+        method === "pickup" ? rules.pickupSlots : rules.slots,
+        method,
+      )
     : [];
 
   const blocker = checkoutBlocker(
@@ -503,6 +529,7 @@ export async function beginCheckout(
     rules.zones,
     rules.slots,
     fullSlots,
+    rules.pickupSlots,
   );
   if (blocker) return orderFailure("checkout_changed");
 

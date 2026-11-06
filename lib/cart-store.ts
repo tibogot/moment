@@ -5,6 +5,7 @@
 import type { DeliveryAvailability } from "@/lib/delivery/dates";
 import {
   DEFAULT_DELIVERY_SLOTS,
+  DEFAULT_PICKUP_SLOTS,
   DEFAULT_PICKUP_WINDOW,
   type DeliverySlot,
   type PickupWindow,
@@ -23,6 +24,7 @@ let zones: ZoneTable = DEFAULT_ZONE_TABLE;
 /** Never null either, and for the same reason: a window picker with nothing in
  * it is a dead end, and the built-in three are what the server falls back to. */
 let slots: DeliverySlot[] = DEFAULT_DELIVERY_SLOTS;
+let pickupSlots: DeliverySlot[] = DEFAULT_PICKUP_SLOTS;
 let pickupWindow: PickupWindow = DEFAULT_PICKUP_WINDOW;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
@@ -62,6 +64,7 @@ function fetchCart(): Promise<void> {
         availability: DeliveryAvailability | null;
         zones?: ZoneTable;
         slots?: DeliverySlot[];
+        pickupSlots?: DeliverySlot[];
         pickupWindow?: PickupWindow;
       };
       cart = data.cart;
@@ -71,6 +74,7 @@ function fetchCart(): Promise<void> {
       // picker, and "the shop configured no windows" is a state the server
       // already resolves to the defaults rather than passing on.
       if (data.slots?.length) slots = data.slots;
+      if (data.pickupSlots?.length) pickupSlots = data.pickupSlots;
       if (data.pickupWindow) pickupWindow = data.pickupWindow;
     } catch {
       // Keep the last known cart on network errors.
@@ -130,6 +134,11 @@ export function getZonesSnapshot(): ZoneTable {
 /** The delivery windows, on the same terms as the zone table above. */
 export function getSlotsSnapshot(): DeliverySlot[] {
   return slots;
+}
+
+/** The collection times — see `DEFAULT_PICKUP_SLOTS`. Never empty. */
+export function getPickupSlotsSnapshot(): DeliverySlot[] {
+  return pickupSlots;
 }
 
 /** When the atelier is open for collection. Same terms again. */

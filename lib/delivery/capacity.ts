@@ -45,11 +45,24 @@ export function slotCapacity(slot: DeliverySlot) {
 }
 
 const DATE_TAG_PREFIX = "livraison-";
+const PICKUP_DATE_TAG_PREFIX = "retrait-";
 const SLOT_TAG_PREFIX = "creneau-";
 
 /** `livraison-2026-11-07`. Searched with `tag:` in the Admin API. */
 export function deliveryDateTag(isoDate: string) {
   return `${DATE_TAG_PREFIX}${isoDate}`;
+}
+
+/**
+ * The day tag for an order's method: `livraison-…` for a delivery,
+ * `retrait-…` for a collection. Deliveries and collections are counted apart
+ * — the van and the counter have separate capacities — and share the
+ * `creneau-HHMM` tag for the time.
+ */
+export function bookingDateTag(method: "delivery" | "pickup", isoDate: string) {
+  return method === "pickup"
+    ? `${PICKUP_DATE_TAG_PREFIX}${isoDate}`
+    : deliveryDateTag(isoDate);
 }
 
 /** `creneau-0900`, from the window's start. Unique because windows do not overlap. */
@@ -120,24 +133,28 @@ export function slotValuesForIds(slots: DeliverySlot[], ids: readonly string[]) 
 }
 
 /**
- * The tags a new order should carry, or an empty list when it takes no window:
- * a collection, an order with no date, or one whose window the table does not
- * recognise. Collections are counted separately once their slots exist — they
- * are not drops, and must not use up the van.
+ * The tags a new order should carry: its day (per method) and its time, or an
+ * empty list when it holds no bookable time — no date, or a slot the current
+ * tables do not recognise.
  */
 export function bookingTagsFor(
-  slots: DeliverySlot[],
+  deliverySlots: DeliverySlot[],
+  pickupSlots: DeliverySlot[],
   attributes: Record<string, string>,
 ): string[] {
-  if (parseDeliveryMethod(attributes[DELIVERY_METHOD_ATTRIBUTE]) === "pickup") {
-    return [];
-  }
+  const method =
+    parseDeliveryMethod(attributes[DELIVERY_METHOD_ATTRIBUTE]) === "pickup"
+      ? "pickup"
+      : "delivery";
 
   const date = attributes[DELIVERY_DATE_ATTRIBUTE]?.trim();
   if (!date || !parseISODate(date)) return [];
 
-  const slot = parseSlotAttribute(slots, attributes[DELIVERY_SLOT_ATTRIBUTE]);
+  const slot = parseSlotAttribute(
+    method === "pickup" ? pickupSlots : deliverySlots,
+    attributes[DELIVERY_SLOT_ATTRIBUTE],
+  );
   if (!slot) return [];
 
-  return [deliveryDateTag(date), deliverySlotTag(slot)];
+  return [bookingDateTag(method, date), deliverySlotTag(slot)];
 }

@@ -19,13 +19,13 @@ import { unstable_cache } from "next/cache";
 import {
   bookingTagsFor,
   countBookings,
-  deliveryDateTag,
+  bookingDateTag,
   fullSlots,
 } from "@/lib/delivery/capacity";
 import { parseISODate } from "@/lib/delivery/dates";
 import type { DeliverySlot } from "@/lib/delivery/slots";
 import { adminRequest, isAdminConfigured } from "./admin";
-import { getDeliverySlots } from "./delivery";
+import { getDeliverySlots, getPickupSlots } from "./delivery";
 
 export const DELIVERY_CAPACITY_TAG = "shopify-delivery-capacity";
 
@@ -69,9 +69,9 @@ type BookedOrder = { tags: string[]; attributes: Record<string, string> };
  * Shopify's search index thinks of it.
  */
 const readBookedOrders = unstable_cache(
-  async (isoDate: string): Promise<BookedOrder[]> => {
+  async (dayTag: string): Promise<BookedOrder[]> => {
     const data = await adminRequest<OrdersByTagResponse>(ORDERS_BY_TAG_QUERY, {
-      query: `tag:'${deliveryDateTag(isoDate)}'`,
+      query: `tag:'${dayTag}'`,
       first: ORDERS_PER_DAY_LIMIT,
     });
 
@@ -102,13 +102,18 @@ const readBookedOrders = unstable_cache(
 export async function getFullSlots(
   isoDate: string,
   slots?: DeliverySlot[],
+  method: "delivery" | "pickup" = "delivery",
 ): Promise<string[]> {
   if (!isAdminConfigured() || !parseISODate(isoDate)) return [];
 
   try {
     const [orders, table] = await Promise.all([
-      readBookedOrders(isoDate),
-      slots ? Promise.resolve(slots) : getDeliverySlots(),
+      readBookedOrders(bookingDateTag(method, isoDate)),
+      slots
+        ? Promise.resolve(slots)
+        : method === "pickup"
+          ? getPickupSlots()
+          : getDeliverySlots(),
     ]);
     return fullSlots(table, countBookings(table, orders));
   } catch (error) {
@@ -143,7 +148,11 @@ export async function tagOrderBooking(order: {
 }): Promise<boolean> {
   if (!isAdminConfigured()) return false;
 
-  const wanted = bookingTagsFor(await getDeliverySlots(), order.attributes);
+  const [deliverySlots, pickupSlots] = await Promise.all([
+    getDeliverySlots(),
+    getPickupSlots(),
+  ]);
+  const wanted = bookingTagsFor(deliverySlots, pickupSlots, order.attributes);
   const present = new Set(order.tags.map((tag) => tag.trim().toLowerCase()));
   const missing = wanted.filter((tag) => !present.has(tag));
   if (missing.length === 0) return false;

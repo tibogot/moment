@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     new URL(request.url).searchParams.get("lang") ?? undefined,
   );
 
-  const [cart, { availability, zones, slots, pickupWindow }] =
+  const [cart, { availability, zones, slots, pickupSlots, pickupWindow }] =
     await Promise.all([getCart(locale), getDeliveryRules()]);
 
   return NextResponse.json({
@@ -29,6 +29,7 @@ export async function GET(request: Request) {
     availability,
     zones,
     slots,
+    pickupSlots,
     pickupWindow,
   });
 }

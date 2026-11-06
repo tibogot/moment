@@ -5,6 +5,7 @@ import { getFullSlots } from "@/lib/shopify/capacity";
 import {
   getDeliveryAvailability,
   getDeliverySlots,
+  getPickupSlots,
 } from "@/lib/shopify/delivery";
 
 /** One answer per day picked; a person changes day a few times, not sixty. */
@@ -20,7 +21,9 @@ const CAPACITY_LIMIT = { limit: 60, windowMs: 60_000 };
  * cart actions check the count again before anything is saved.
  */
 export async function GET(request: Request) {
-  const date = new URL(request.url).searchParams.get("date") ?? "";
+  const params = new URL(request.url).searchParams;
+  const date = params.get("date") ?? "";
+  const method = params.get("method") === "pickup" ? "pickup" : "delivery";
 
   if (!takeToken(`capacity:${clientAddress(request.headers)}`, CAPACITY_LIMIT)) {
     return NextResponse.json(
@@ -36,8 +39,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ date, fullSlotIds: [] });
   }
 
-  const slots = await getDeliverySlots();
-  const full = new Set(await getFullSlots(date, slots));
+  const slots =
+    method === "pickup" ? await getPickupSlots() : await getDeliverySlots();
+  const full = new Set(await getFullSlots(date, slots, method));
 
   return NextResponse.json({
     date,

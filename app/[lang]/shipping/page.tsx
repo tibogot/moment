@@ -1,6 +1,9 @@
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { LocaleLink } from "@/components/LocaleLink";
-import { formatCutoffHour } from "@/lib/delivery/dates";
+import {
+  DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+  formatCutoffHour,
+} from "@/lib/delivery/dates";
 import { formatSlot, formatWindow } from "@/lib/delivery/slots";
 import {
   freeDeliveryThresholdFor,
@@ -37,6 +40,9 @@ type Facts = {
   slots: string;
   pickup: string;
   pickupMinimum: string;
+  pickupSlots: string;
+  nextDayCutoff: string;
+  nextDayMinimum: string;
 };
 
 type ShippingCopy = {
@@ -84,7 +90,7 @@ const COPY: Record<Locale, ShippingCopy> = {
       "Les prestations traiteur pour événements font l’objet d’un devis et leurs horaires sont convenus au cas par cas.",
     collection: "Retrait à l’atelier",
     collectionBody: (f) =>
-      `Les commandes peuvent être retirées à l’atelier, ${f.address}, gratuitement, avec un minimum de commande de ${f.pickupMinimum}. Horaires de retrait : ${f.pickup}.`,
+      `Les commandes peuvent être retirées à l’atelier, ${f.address}, gratuitement, avec un minimum de commande de ${f.pickupMinimum}, à l’heure choisie lors de la commande : ${f.pickupSlots}. Les cookies, cakes, healthy snacks, produits d’épicerie et jus pressés à froid peuvent être commandés jusqu’à ${f.nextDayCutoff} la veille pour un retrait le lendemain, avec un minimum de ${f.nextDayMinimum} ; une commande qui contient d’autres produits suit le délai habituel de ${f.lead} jours.`,
     cancel: "Annulation et remboursement",
     cancelLines: [
       "Toute commande peut être annulée gratuitement jusqu’à 24 heures avant la date de livraison prévue ; le montant total est alors remboursé.",
@@ -118,7 +124,7 @@ const COPY: Record<Locale, ShippingCopy> = {
       "Catering voor evenementen gebeurt op offerte en de uurregeling wordt geval per geval afgesproken.",
     collection: "Afhalen in het atelier",
     collectionBody: (f) =>
-      `Bestellingen kunnen gratis worden afgehaald in het atelier, ${f.address}, met een minimumbedrag van ${f.pickupMinimum}. Afhaaluren: ${f.pickup}.`,
+      `Bestellingen kunnen gratis worden afgehaald in het atelier, ${f.address}, met een minimumbedrag van ${f.pickupMinimum}, op het uur dat u bij de bestelling kiest: ${f.pickupSlots}. Cookies, cakes, healthy snacks, kruidenierswaren en koudgeperste sappen kunnen tot ${f.nextDayCutoff} de dag ervoor worden besteld om de volgende dag af te halen, met een minimumbedrag van ${f.nextDayMinimum}; een bestelling met andere producten volgt de gewone termijn van ${f.lead} dagen.`,
     cancel: "Annulering en terugbetaling",
     cancelLines: [
       "Elke bestelling kan kosteloos worden geannuleerd tot 24 uur vóór de geplande leveringsdatum; het volledige bedrag wordt dan terugbetaald.",
@@ -152,7 +158,7 @@ const COPY: Record<Locale, ShippingCopy> = {
       "Event catering is quoted rather than ordered online and its timings are agreed case by case.",
     collection: "Collection",
     collectionBody: (f) =>
-      `Orders can be collected from the atelier at ${f.address}, free of charge, with a minimum order of ${f.pickupMinimum}. Collection hours: ${f.pickup}.`,
+      `Orders can be collected from the atelier at ${f.address}, free of charge, with a minimum order of ${f.pickupMinimum}, at the time chosen when ordering: ${f.pickupSlots}. Cookies, cakes, healthy snacks, pantry goods and cold-pressed juices can be ordered until ${f.nextDayCutoff} the day before for collection the next day, with a minimum of ${f.nextDayMinimum}; an order that includes anything else follows the standard ${f.lead}-day notice.`,
     cancel: "Cancellation and refunds",
     cancelLines: [
       "Any order may be cancelled free of charge up to 24 hours before the scheduled delivery date, and the full amount is refunded.",
@@ -174,7 +180,8 @@ export default async function ShippingPage({
   const { lang } = await params;
   const locale = toLocale(lang);
   const t = COPY[locale];
-  const { availability, zones, slots, pickupWindow } = await getDeliveryRules();
+  const { availability, zones, slots, pickupSlots, pickupWindow } =
+    await getDeliveryRules();
 
   const cutoff = formatCutoffHour(availability.cutoffHour);
   const maxKm = maxDeliveryDistanceKm(zones);
@@ -192,6 +199,11 @@ export default async function ShippingPage({
     slots: slots.map(formatSlot).join(", "),
     pickup: formatWindow(pickupWindow),
     pickupMinimum: formatMoney(locale, zones.pickupMinimumOrder),
+    pickupSlots: pickupSlots.map(formatSlot).join(", "),
+    nextDayCutoff: formatCutoffHour(
+      availability.nextDay?.cutoffHour ?? DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+    ),
+    nextDayMinimum: formatMoney(locale, zones.nextDayPickupMinimumOrder),
   };
 
   return (

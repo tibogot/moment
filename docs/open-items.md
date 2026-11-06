@@ -75,7 +75,7 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [x] **Livraison offerte par zone** : 250 / 300 / 400 / 450 €, réglable par zone dans Shopify (`delivery_zone`). Reste à reporter dans les tarifs d'expédition de leur boutique.
 - [x] ~~Distance routière~~ — non retenue, zones à vol d'oiseau conservées (voir §2)
 - [x] **Minimum 4 pièces identiques par produit** (livraison et retrait) : le bouton d'ajout part de 4, le « − » du panier s'arrête à 4, et le paiement est bloqué en nommant les produits à compléter. Réglable dans Shopify (`minimum_pieces_per_product`).
-- [ ] **Retrait la veille** : produits concernés (cookies, banana bread, cake citron-pavot, carrot cake, healthy snacks, épicerie, jus), commande avant 15 h, 8 créneaux de 30 min, 1 commande chacun, minimum 50 € — attend les questions 2 à 4
+- [x] **Retrait la veille** : produits tagués `retrait-veille` dans Shopify, commande avant 15 h la veille, minimum 50 € ; 8 horaires de retrait (11:30 → 15:00, une commande chacun) pour tous les retraits ; panier mixte = règle classique (48 h, 100 €). **Reste : taguer les produits sur leur boutique** (et 2-3 sur la boutique de test pour un essai réel).
 - [x] **Page Collaborations** (`/collaborations`, menu « À propos ») : leur texte, formulaire dédié (nouveau partenariat / approvisionnement / réapprovisionnement, nom et adresse de l'établissement, TVA facultative), distincte de la page Pro
 - [x] **Partenaires dans le Studio** (rubrique « Partenaires » : nom, type, adresse, lien, visible ; le point est placé automatiquement depuis l'adresse)
 - [x] **Page « Où nous trouver »** (`/find-us`, dans le menu « À propos ») : carte, atelier, liste des partenaires par commune, lien vers le contact

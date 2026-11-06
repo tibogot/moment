@@ -46,6 +46,14 @@ entrée que pour **changer** quelque chose.
 - **Commande prise par téléphone** : pour qu'elle occupe un créneau, ajoutez-lui
   deux tags, par exemple `livraison-2026-11-07` et `creneau-0900`. Annuler la
   commande ou retirer les tags libère le créneau.
+- **Produits « retrait la veille »** : ajoutez le tag `retrait-veille` à un
+  produit (fiche produit → Tags). Il peut alors être commandé jusqu'à 15 h la
+  veille pour un retrait à l'atelier le lendemain (minimum 50 €). Si le panier
+  contient aussi un produit sans ce tag, la règle habituelle s'applique (48 h,
+  minimum 100 €). Retirez le tag pour sortir un produit de la règle.
+- **Horaires de retrait** : 11:30 à 15:00, une commande par horaire (métaobjet
+  `pickup_slot` pour les changer). Pour une commande de retrait prise par
+  téléphone, ajoutez les tags `retrait-2026-11-07` et `creneau-1130`.
 - **Comptes professionnels** : un client devient « pro » quand vous lui ajoutez
   le tag `pro` dans Shopify.
 

@@ -16,6 +16,8 @@ type DeliverySlotPickerProps = {
    * picker is the owners' answer to a full one.
    */
   fullSlotIds?: string[];
+  /** Replaces the delivery wording — collection times read differently. */
+  intro?: string;
   disabled?: boolean;
   className?: string;
 };
@@ -38,6 +40,7 @@ export function DeliverySlotPicker({
   value,
   onSelect,
   fullSlotIds = [],
+  intro,
   disabled = false,
   className,
 }: DeliverySlotPickerProps) {
@@ -47,7 +50,7 @@ export function DeliverySlotPicker({
   return (
     <div className={className}>
       <p className="font-archivo-light px-6 pt-5 text-[15px] leading-normal">
-        {dict.delivery.slotIntro}
+        {intro ?? dict.delivery.slotIntro}
       </p>
 
       {/* Only vertical padding: the options carry px-6 of their own, which is
