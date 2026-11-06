@@ -1,10 +1,6 @@
 import { unstable_cache } from "next/cache";
 import type { Locale } from "@/lib/i18n/config";
-import {
-  getShopifyClient,
-  isShopifyConfigured,
-  shopifyLanguage,
-} from "./client";
+import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 import {
   SHOPIFY_CACHE_TAG,
   SHOPIFY_REVALIDATE,
@@ -62,20 +58,15 @@ function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
 async function fetchCollections(
   language: Locale,
 ): Promise<ShopifyCollection[]> {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(COLLECTIONS_QUERY, {
-    variables: {
-      first: COLLECTIONS_PAGE_SIZE,
-      after: null,
-      language: shopifyLanguage(language),
-    },
-  })) as CollectionsQueryResponse;
+  const data = await storefrontRequest<
+    NonNullable<CollectionsQueryResponse["data"]>
+  >(COLLECTIONS_QUERY, {
+    first: COLLECTIONS_PAGE_SIZE,
+    after: null,
+    language: shopifyLanguage(language),
+  });
 
-  if (errors?.length) {
-    throw new Error(errors.map((error) => error.message).join(", "));
-  }
-
-  return (data?.collections.edges ?? []).map(({ node }) =>
+  return (data.collections.edges ?? []).map(({ node }) =>
     mapCollectionNode(node),
   );
 }
@@ -110,21 +101,16 @@ async function fetchCollectionByHandle(
   language: Locale,
   handle: string,
 ): Promise<CollectionWithProducts | null> {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(COLLECTION_BY_HANDLE_QUERY, {
-    variables: {
-      handle,
-      first: COLLECTION_PRODUCTS_PAGE_SIZE,
-      after: null,
-      language: shopifyLanguage(language),
-    },
-  })) as CollectionByHandleQueryResponse;
+  const data = await storefrontRequest<
+    NonNullable<CollectionByHandleQueryResponse["data"]>
+  >(COLLECTION_BY_HANDLE_QUERY, {
+    handle,
+    first: COLLECTION_PRODUCTS_PAGE_SIZE,
+    after: null,
+    language: shopifyLanguage(language),
+  });
 
-  if (errors?.length) {
-    throw new Error(errors.map((error) => error.message).join(", "));
-  }
-
-  const collection = data?.collection;
+  const collection = data.collection;
   if (!collection) return null;
 
   const products = collection.products.edges.map(({ node }) =>

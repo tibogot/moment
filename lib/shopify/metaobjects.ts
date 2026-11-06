@@ -15,7 +15,7 @@
 
 import { unstable_cache } from "next/cache";
 import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
-import { getShopifyClient, isShopifyConfigured } from "./client";
+import { isShopifyConfigured, storefrontRequest } from "./client";
 
 /**
  * An owner who blocks tomorrow, or drops a delivery fee, expects the site to
@@ -80,16 +80,11 @@ async function fetchMetaobjects(
   type: string,
   first: number,
 ): Promise<MetaobjectFields[]> {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(METAOBJECTS_QUERY, {
-    variables: { type, first },
-  })) as MetaobjectsQueryResponse;
+  const data = await storefrontRequest<
+    NonNullable<MetaobjectsQueryResponse["data"]>
+  >(METAOBJECTS_QUERY, { type, first });
 
-  if (errors?.length) {
-    throw new Error(errors.map((error) => error.message).join(", "));
-  }
-
-  return (data?.metaobjects?.edges ?? []).map(({ node }) =>
+  return (data.metaobjects?.edges ?? []).map(({ node }) =>
     Object.fromEntries(
       node.fields
         .filter((field): field is { key: string; value: string } =>

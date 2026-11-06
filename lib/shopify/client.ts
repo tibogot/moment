@@ -22,6 +22,42 @@ export function getShopifyClient() {
 }
 
 /**
+ * One Storefront request that throws on anything but a clean answer.
+ *
+ * `@shopify/storefront-api-client` does not throw on failure. A 429, a 5xx, a
+ * network error and a GraphQL error all come back as a resolved response
+ * carrying `errors` — an **object** (`{ message, networkStatusCode,
+ * graphQLErrors }`), not an array — and no `data`. Testing `errors?.length`,
+ * as this codebase used to, is always false, so every outage read as "no cart"
+ * or "no products": a basket was replaced, an empty shop was cached for a day.
+ *
+ * So every caller goes through here. A failure throws, which keeps it out of
+ * `unstable_cache` and lets each caller choose what an outage means; `null`
+ * fields inside a successful answer (a cart that has expired, a handle that
+ * does not exist) are left for the caller to read as such.
+ */
+export async function storefrontRequest<TData>(
+  query: string,
+  variables: Record<string, unknown>,
+): Promise<TData> {
+  const response = await getShopifyClient().request<TData>(query, {
+    variables,
+  });
+
+  if (response.errors || !response.data) {
+    const { message, networkStatusCode, graphQLErrors } = response.errors ?? {};
+    throw new Error(
+      `Storefront request failed` +
+        (networkStatusCode ? ` (${networkStatusCode})` : "") +
+        `: ${message ?? "no data"}` +
+        (graphQLErrors?.length ? ` ${JSON.stringify(graphQLErrors)}` : ""),
+    );
+  }
+
+  return response.data;
+}
+
+/**
  * Our locale as Shopify's `LanguageCode` enum.
  *
  * Every catalogue query carries it through `@inContext(language: …)`, which is

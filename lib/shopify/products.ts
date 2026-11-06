@@ -1,11 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
 import type { Locale } from "@/lib/i18n/config";
-import {
-  getShopifyClient,
-  isShopifyConfigured,
-  shopifyLanguage,
-} from "./client";
+import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 import {
   ALL_PRODUCTS_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
@@ -112,24 +108,19 @@ export function mapProductDetailNode(
 }
 
 async function fetchProductsPage(language: Locale, after?: string | null) {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(ALL_PRODUCTS_QUERY, {
-    variables: {
-      first: PRODUCTS_PAGE_SIZE,
-      after: after ?? null,
-      language: shopifyLanguage(language),
-    },
-  })) as ProductsQueryResponse;
-
-  if (errors?.length) {
-    throw new Error(errors.map((error) => error.message).join(", "));
-  }
+  const data = await storefrontRequest<
+    NonNullable<ProductsQueryResponse["data"]>
+  >(ALL_PRODUCTS_QUERY, {
+    first: PRODUCTS_PAGE_SIZE,
+    after: after ?? null,
+    language: shopifyLanguage(language),
+  });
 
   return {
-    products: (data?.products.edges ?? []).map(({ node }) =>
+    products: (data.products.edges ?? []).map(({ node }) =>
       mapProductNode(node),
     ),
-    pageInfo: data?.products.pageInfo,
+    pageInfo: data.products.pageInfo,
   };
 }
 
@@ -203,16 +194,14 @@ async function fetchProductByHandle(
   language: Locale,
   handle: string,
 ): Promise<ShopifyProduct | null> {
-  const client = getShopifyClient();
-  const { data, errors } = (await client.request(PRODUCT_BY_HANDLE_QUERY, {
-    variables: { handle, language: shopifyLanguage(language) },
-  })) as ProductByHandleQueryResponse;
+  const data = await storefrontRequest<
+    NonNullable<ProductByHandleQueryResponse["data"]>
+  >(PRODUCT_BY_HANDLE_QUERY, {
+    handle,
+    language: shopifyLanguage(language),
+  });
 
-  if (errors?.length) {
-    throw new Error(errors.map((error) => error.message).join(", "));
-  }
-
-  return data?.product ? mapProductDetailNode(data.product) : null;
+  return data.product ? mapProductDetailNode(data.product) : null;
 }
 
 export async function getProductByHandle(

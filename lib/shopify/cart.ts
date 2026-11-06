@@ -14,11 +14,7 @@ import {
 } from "@/lib/order-preferences";
 import type { Locale } from "@/lib/i18n/config";
 import { formatPriceAmount } from "@/lib/i18n/format";
-import {
-  getShopifyClient,
-  isShopifyConfigured,
-  shopifyLanguage,
-} from "./client";
+import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 
 export const CART_COOKIE_NAME = "shopify_cart_id";
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
@@ -363,27 +359,18 @@ async function runCartMutation(
   key: keyof NonNullable<CartMutationResponse["data"]>,
   fallbackError: string,
 ) {
-  let response: CartMutationResponse;
+  let data: NonNullable<CartMutationResponse["data"]>;
   try {
-    response = (await getShopifyClient().request(mutation, {
-      variables: { ...variables, language: shopifyLanguage(locale) },
-    })) as CartMutationResponse;
+    data = await storefrontRequest<NonNullable<CartMutationResponse["data"]>>(
+      mutation,
+      { ...variables, language: shopifyLanguage(locale) },
+    );
   } catch (error) {
     console.error(`[shopify] ${key} failed`, error);
     return { ok: false as const, error: fallbackError };
   }
 
-  const { data, errors } = response;
-
-  if (errors?.length) {
-    console.error(`[shopify] ${key} errors:`, errors);
-    return {
-      ok: false as const,
-      error: errors.map((error) => error.message).join(" "),
-    };
-  }
-
-  const payload = data?.[key];
+  const payload = data[key];
 
   if (!payload?.cart) {
     console.error(`[shopify] ${key} userErrors:`, payload?.userErrors);
@@ -422,17 +409,13 @@ export async function lookupCart(
   if (!isShopifyConfigured()) return { kind: "error" };
 
   try {
-    const client = getShopifyClient();
-    const { data, errors } = (await client.request(CART_QUERY, {
-      variables: { cartId, language: shopifyLanguage(locale) },
-    })) as CartQueryResponse;
+    // Throws on any failure, caught below as "error": only an answer that
+    // really says `cart: null` is allowed to cost the customer their basket.
+    const data = await storefrontRequest<
+      NonNullable<CartQueryResponse["data"]>
+    >(CART_QUERY, { cartId, language: shopifyLanguage(locale) });
 
-    if (errors?.length) {
-      console.error("[shopify] getCart errors:", errors);
-      return { kind: "error" };
-    }
-
-    if (!data?.cart) return { kind: "missing" };
+    if (!data.cart) return { kind: "missing" };
 
     return {
       kind: "found",
@@ -525,16 +508,11 @@ async function readCartAttributes(
   | { kind: "error" }
 > {
   try {
-    const client = getShopifyClient();
-    const { data, errors } = (await client.request(CART_ATTRIBUTES_QUERY, {
-      variables: { cartId },
-    })) as AttributeQueryResponse;
+    const data = await storefrontRequest<
+      NonNullable<AttributeQueryResponse["data"]>
+    >(CART_ATTRIBUTES_QUERY, { cartId });
 
-    if (errors?.length) {
-      console.error("[shopify] readCartAttributes errors:", errors);
-      return { kind: "error" };
-    }
-    if (!data?.cart) return { kind: "missing" };
+    if (!data.cart) return { kind: "missing" };
 
     const entries = data.cart.attributes
       .filter((attribute): attribute is { key: string; value: string } =>
@@ -676,15 +654,12 @@ type VariantAvailabilityResponse = {
 export async function availableVariantIds(ids: string[]): Promise<Set<string>> {
   if (ids.length === 0) return new Set();
 
-  const response = (await getShopifyClient().request(
-    VARIANT_AVAILABILITY_QUERY,
-    { variables: { ids } },
-  )) as VariantAvailabilityResponse;
-
-  if (!response.data) throw new Error("Variant availability unavailable");
+  const data = await storefrontRequest<
+    NonNullable<VariantAvailabilityResponse["data"]>
+  >(VARIANT_AVAILABILITY_QUERY, { ids });
 
   return new Set(
-    response.data.nodes
+    data.nodes
       .filter((node): node is { id: string; availableForSale: boolean } =>
         Boolean(node?.availableForSale),
       )
