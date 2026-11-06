@@ -646,7 +646,10 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
 
 /* "Où nous trouver" map (components/PartnerMap.tsx). Leaflet's own stylesheet
    is imported by the component; these bring its chrome into the design. */
-.partner-map {
+/* Doubled class: Leaflet's own stylesheet sets the font on
+   .leaflet-container, which is the same element and loads later. */
+.partner-map,
+.partner-map.leaflet-container {
   background: var(--color-cream);
   font-family: var(--font-archivo-light), sans-serif;
   /* Leaflet's panes go up to z-index 1000; isolating them keeps the map
