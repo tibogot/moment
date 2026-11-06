@@ -4,6 +4,7 @@ import {
   LegalLink,
   LegalList,
   LegalSection,
+  legalLinkClassName,
 } from "@/components/LegalDoc";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import { CONSUMER_MEDIATION } from "@/lib/legal";
@@ -255,9 +256,6 @@ const COPY = {
   },
 } satisfies Record<Locale, Record<string, string | string[]>>;
 
-const linkClassName =
-  "underline underline-offset-2 transition-opacity hover:opacity-60";
-
 export default async function TermsPage({
   params,
 }: {
@@ -280,7 +278,7 @@ export default async function TermsPage({
       <LegalSection title={t.scope}>
         <p>
           {t.scopeBody}{" "}
-          <LocaleLink href={routes.legal} className={linkClassName}>
+          <LocaleLink href={routes.legal} className={legalLinkClassName}>
             {t.scopeLink}
           </LocaleLink>
           {locale === "nl" ? " " : ". "}
@@ -299,7 +297,7 @@ export default async function TermsPage({
       <LegalSection title={t.prices}>
         <p>
           {t.pricesBody}{" "}
-          <LocaleLink href={routes.shipping} className={linkClassName}>
+          <LocaleLink href={routes.shipping} className={legalLinkClassName}>
             {t.shippingLink}
           </LocaleLink>
           . {t.pricesBody2}
@@ -353,7 +351,7 @@ export default async function TermsPage({
       <LegalSection title={t.privacy}>
         <p>
           {t.privacyBody}{" "}
-          <LocaleLink href={routes.privacy} className={linkClassName}>
+          <LocaleLink href={routes.privacy} className={legalLinkClassName}>
             {t.privacyLink}
           </LocaleLink>
           .

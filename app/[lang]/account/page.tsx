@@ -63,6 +63,8 @@ export default async function AccountPage({
     skipped: t.reorderSkipped,
     nothingLeft: t.reorderNothingLeft,
     failed: t.reorderFailed,
+    expired: t.reorderExpired,
+    reload: t.reload,
     goToCart: t.goToCart,
   };
 

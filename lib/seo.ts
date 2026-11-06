@@ -94,12 +94,23 @@ export type SeoImage = {
  * no card at all.
  */
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
-export const OG_IMAGE_ALT = `${siteConfig.name} — traiteur and catering in Brussels`;
-const DEFAULT_OG_IMAGE = {
-  url: "/opengraph-image",
-  alt: OG_IMAGE_ALT,
-  ...OG_IMAGE_SIZE,
+/** The share card's alt text, in the language of the page sharing it. */
+const OG_IMAGE_ALTS: Record<Locale, string> = {
+  fr: `${siteConfig.name} — traiteur à Bruxelles`,
+  nl: `${siteConfig.name} — traiteur in Brussel`,
+  en: `${siteConfig.name} — caterer in Brussels`,
 };
+
+/** For the image route itself, which has no locale: the default language. */
+export const OG_IMAGE_ALT = OG_IMAGE_ALTS[DEFAULT_LOCALE];
+
+function defaultOgImage(locale: Locale) {
+  return {
+    url: "/opengraph-image",
+    alt: OG_IMAGE_ALTS[locale],
+    ...OG_IMAGE_SIZE,
+  };
+}
 
 type PageSeo = {
   /** Bare page title. The root layout appends " — Moment" to it. */
@@ -167,7 +178,7 @@ export function pageMetadata({
 
   const ogImage = image
     ? { url: image.url, alt: image.alt }
-    : DEFAULT_OG_IMAGE;
+    : defaultOgImage(locale);
 
   // Keys are spread in only when they have a value. Setting one to `undefined`
   // is not the same as leaving it out: an explicit key overrides what the root

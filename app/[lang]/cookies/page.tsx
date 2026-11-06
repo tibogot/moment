@@ -4,6 +4,7 @@ import {
   LegalDoc,
   LegalLink,
   LegalSection,
+  type Localized,
 } from "@/components/LegalDoc";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
@@ -21,7 +22,6 @@ export const generateMetadata = localizedMetadata("cookies", {
   path: routes.cookies,
 });
 
-type Localized = Record<Locale, string>;
 
 type CookieRow = {
   name: string;

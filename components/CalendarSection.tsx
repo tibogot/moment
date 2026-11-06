@@ -1,5 +1,6 @@
 "use client";
 
+import { useIsClient } from "@/lib/hooks/useIsClient";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { setDeliveryDate } from "@/app/actions/cart";
@@ -12,6 +13,7 @@ import { blurFocusWithin } from "@/lib/overlayFocus";
 import {
   dayState,
   parseISODate,
+  refreshAvailability,
   toISODate,
   type DeliveryAvailability,
 } from "@/lib/delivery/dates";
@@ -75,7 +77,18 @@ type CalendarSectionProps = {
   availability: DeliveryAvailability;
 };
 
-export function CalendarSection({ availability }: CalendarSectionProps) {
+export function CalendarSection({
+  availability: builtAvailability,
+}: CalendarSectionProps) {
+  // The page is prerendered and can be a day old; once in the browser, the
+  // dates are re-derived from the current Brussels time. See
+  // `refreshAvailability`.
+  const isClient = useIsClient();
+  const availability = useMemo(
+    () =>
+      isClient ? refreshAvailability(builtAvailability) : builtAvailability,
+    [isClient, builtAvailability],
+  );
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.home.calendar;
@@ -224,6 +237,12 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
                   {monthLabel}
                 </p>
               </TextReveal>
+              {/* The animated label is split into lines for the reveal; this
+                  plain copy is what a screen reader announces when Prev/Next
+                  changes the month. */}
+              <p aria-live="polite" className="sr-only">
+                {monthLabel} {year}
+              </p>
             </div>
 
             <div className="flex items-center gap-4 md:pb-2">

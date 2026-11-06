@@ -35,6 +35,8 @@ export default async function CollectionsPage({
         lead={dict.pageIntro.collections.lead}
       />
 
+      {/* The cards are h3s; a hidden h2 keeps the outline unbroken. */}
+      <h2 className="sr-only">{dict.shop.collectionsHeading}</h2>
       <CollectionsSection collections={visibleCollections} showHeader={false} />
 
       <Footer />

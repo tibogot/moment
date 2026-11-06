@@ -362,7 +362,9 @@
         "bureau": "Bureau",
         "evenements": "Événements"
       }
-    }
+    },
+    "productsHeading": "Tous les produits",
+    "collectionsHeading": "Toutes les collections"
   },
   "product": {
     "orderPreferences": "Choisissez quand et comment vous voulez votre commande — modifiable jusqu'au paiement.",
@@ -393,7 +395,8 @@
     "slot_unavailable": "Ce créneau n'est plus disponible. Merci d'en choisir un autre.",
     "rules_unavailable": "Nous n'avons pas pu vérifier le calendrier de livraison. Merci de réessayer dans un instant.",
     "checkout_changed": "Votre commande a changé depuis le chargement de cette page. Merci de la vérifier avant de continuer.",
-    "too_many_requests": "Trop de tentatives en peu de temps. Merci de patienter une minute avant de réessayer."
+    "too_many_requests": "Trop de tentatives en peu de temps. Merci de patienter une minute avant de réessayer.",
+    "session_expired": "Votre session a expiré. Rechargez la page pour vous reconnecter."
   },
   "quote": {
     "heading": "Au-delà de notre zone de livraison",
@@ -905,7 +908,9 @@
     "reorderSkipped": "Ajouté au panier. {count} produit(s) de cette commande ne sont plus disponibles.",
     "reorderNothingLeft": "Plus aucun produit de cette commande n'est disponible.",
     "reorderFailed": "Impossible d'ajouter cette commande au panier. Merci de réessayer.",
-    "goToCart": "Voir le panier"
+    "goToCart": "Voir le panier",
+    "reorderExpired": "Votre session a expiré.",
+    "reload": "Recharger la page"
   },
   "findUs": {
     "title": "Où nous trouver",

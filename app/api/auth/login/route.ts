@@ -9,15 +9,15 @@ import { href, routes } from "@/lib/routes";
 
 export async function GET(request: NextRequest) {
   const returnTo = request.nextUrl.searchParams.get("return_to");
+  const locale = requestLocale(request, returnTo);
 
   if (!isCustomerAccountConfigured()) {
-    const locale = requestLocale(request, returnTo);
     return NextResponse.redirect(
       new URL(href(locale, routes.signIn), request.url),
     );
   }
 
   return NextResponse.redirect(
-    await buildAuthorizationUrl(safeReturnPath(returnTo)),
+    await buildAuthorizationUrl(safeReturnPath(returnTo), locale),
   );
 }

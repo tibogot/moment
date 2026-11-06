@@ -104,14 +104,22 @@ function openingHours(details: SiteDetails) {
   };
 }
 
-export function organizationSchema(details: SiteDetails) {
+/*
+ * The site-wide nodes are one company, not three, so their `@id`s are the same
+ * in every language — but the description a search engine reads is the one of
+ * the page it is on, so it comes in from the caller's dictionary.
+ */
+export function organizationSchema(
+  details: SiteDetails,
+  description: string = siteConfig.description,
+) {
   return compact({
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
     name: details.legal.companyName || siteConfig.name,
     alternateName: siteConfig.name,
     url: siteConfig.url,
-    description: siteConfig.description,
+    description,
     logo: absoluteUrl("/icon.png"),
     email: details.contact.email,
     telephone: details.contact.phone,
@@ -122,13 +130,13 @@ export function organizationSchema(details: SiteDetails) {
   });
 }
 
-export function websiteSchema() {
+export function websiteSchema(description: string = siteConfig.description) {
   return {
     "@type": "WebSite",
     "@id": WEBSITE_ID,
     name: siteConfig.name,
     url: siteConfig.url,
-    description: siteConfig.description,
+    description,
     inLanguage: siteConfig.defaultLocale,
     publisher: { "@id": ORGANIZATION_ID },
   };
@@ -138,13 +146,16 @@ export function websiteSchema() {
  * The trading entity as Google understands a caterer: a food business that
  * serves an area rather than seating guests at an address.
  */
-export function cateringBusinessSchema(details: SiteDetails) {
+export function cateringBusinessSchema(
+  details: SiteDetails,
+  description: string = siteConfig.description,
+) {
   return compact({
     "@type": "FoodEstablishment",
     additionalType: "https://schema.org/CateringBusiness",
     "@id": `${siteConfig.url}/#business`,
     name: siteConfig.name,
-    description: siteConfig.description,
+    description,
     url: siteConfig.url,
     image: absoluteUrl("/opengraph-image"),
     email: details.contact.email,
@@ -163,13 +174,16 @@ export function cateringBusinessSchema(details: SiteDetails) {
 }
 
 /** Home page graph — the three nodes every other page refers back to. */
-export function siteGraph(details: SiteDetails) {
+export function siteGraph(
+  details: SiteDetails,
+  description: string = siteConfig.description,
+) {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      organizationSchema(details),
-      websiteSchema(),
-      cateringBusinessSchema(details),
+      organizationSchema(details, description),
+      websiteSchema(description),
+      cateringBusinessSchema(details, description),
     ],
   };
 }

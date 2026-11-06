@@ -39,6 +39,9 @@ export default async function ShopPage({
       <PageIntro title={dict.shop.title} lead={dict.shop.lead} />
 
       <GridSection className="pb-[14svh]">
+        {/* The cards are h3s; this keeps the outline h1 → h2 → h3 for search
+            engines and screen readers without adding a visible label. */}
+        <h2 className="sr-only">{dict.shop.productsHeading}</h2>
         <Suspense
           fallback={
             <ProductGrid products={products} collections={visibleCollections} />

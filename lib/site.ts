@@ -76,10 +76,18 @@ export const siteConfig = {
  *
  * So: a real domain is indexable, everything else is not, and the day
  * `NEXT_PUBLIC_SITE_URL` points at moment-lab.be indexing switches itself on.
+ *
+ * Except on Vercel's preview deployments: once the variable names the real
+ * domain it does so on every environment, and a branch preview would otherwise
+ * serve production's robots rules. `VERCEL_ENV` is "preview" there and
+ * "production" only for the live site; read on the server only (robots, the
+ * layout's metadata), where it is always defined on Vercel.
  */
 export const siteIsIndexable =
   !siteConfig.url.includes("localhost") &&
-  !siteConfig.url.endsWith(".vercel.app");
+  !siteConfig.url.endsWith(".vercel.app") &&
+  (process.env.VERCEL_ENV === undefined ||
+    process.env.VERCEL_ENV === "production");
 
 /**
  * The company's own facts.

@@ -112,7 +112,7 @@ export default async function ContactPage({
             "@type": "ContactPage",
             url: absoluteUrl(withLocale(routes.contact, locale)),
             name: fullTitle(dict.nav.contact),
-            about: organizationSchema(SITE_DETAILS),
+            about: organizationSchema(SITE_DETAILS, dict.meta.contact.description),
           },
           breadcrumbSchema(locale, [
             { name: dict.nav.home, path: routes.home },

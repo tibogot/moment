@@ -362,7 +362,9 @@
         "bureau": "Kantoor",
         "evenements": "Evenementen"
       }
-    }
+    },
+    "productsHeading": "Alle producten",
+    "collectionsHeading": "Alle collecties"
   },
   "product": {
     "orderPreferences": "Kies wanneer en hoe u uw bestelling wilt — aanpasbaar tot het afrekenen.",
@@ -393,7 +395,8 @@
     "slot_unavailable": "Dit tijdvak is niet meer beschikbaar. Kies er een ander.",
     "rules_unavailable": "Wij konden de leveringskalender nu niet controleren. Probeer het zo meteen opnieuw.",
     "checkout_changed": "Er is iets in uw bestelling veranderd sinds deze pagina werd geladen. Controleer ze voordat u verdergaat.",
-    "too_many_requests": "Te veel pogingen in korte tijd. Wacht even een minuut voor u het opnieuw probeert."
+    "too_many_requests": "Te veel pogingen in korte tijd. Wacht even een minuut voor u het opnieuw probeert.",
+    "session_expired": "Uw sessie is verlopen. Laad de pagina opnieuw om opnieuw aan te melden."
   },
   "quote": {
     "heading": "Buiten ons leveringsgebied",
@@ -905,7 +908,9 @@
     "reorderSkipped": "Toegevoegd aan uw winkelmand. {count} product(en) uit deze bestelling zijn niet meer beschikbaar.",
     "reorderNothingLeft": "Geen enkel product uit deze bestelling is nog beschikbaar.",
     "reorderFailed": "Deze bestelling kon niet aan uw winkelmand worden toegevoegd. Probeer het opnieuw.",
-    "goToCart": "Naar winkelmand"
+    "goToCart": "Naar winkelmand",
+    "reorderExpired": "Uw sessie is verlopen.",
+    "reload": "Pagina opnieuw laden"
   },
   "findUs": {
     "title": "Waar vindt u ons",

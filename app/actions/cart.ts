@@ -158,6 +158,9 @@ export async function reorder(locale: Locale, orderId: string) {
   if (!isShopifyConfigured()) return orderFailure("not_configured");
 
   const result = await getCustomerOrder(orderId);
+  if (!result.ok && result.error === "not_authenticated") {
+    return orderFailure("session_expired");
+  }
   if (!result.ok || !result.order) return orderFailure("cart_failed");
 
   // The same variant can appear on two lines (a discount splits it); one line

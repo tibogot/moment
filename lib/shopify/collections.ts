@@ -46,6 +46,7 @@ function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
     id: node.id,
     title: node.title,
     handle: node.handle,
+    updatedAt: node.updatedAt,
     description: node.description,
     imageUrl: node.image?.url ?? productImage?.url ?? null,
     imageAlt: node.image?.altText ?? productImage?.altText ?? node.title,

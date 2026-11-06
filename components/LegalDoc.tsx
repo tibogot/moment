@@ -68,6 +68,13 @@ export function LegalList({ children }: { children: React.ReactNode }) {
 }
 
 /** An outbound link in legal copy — underlined, opens in a new tab. */
+/** A string in each of the site's languages — the legal pages' copy tables. */
+export type Localized = Record<Locale, string>;
+
+/** The legal pages' link style, for the internal links they render themselves. */
+export const legalLinkClassName =
+  "underline underline-offset-2 transition-opacity hover:opacity-60";
+
 export function LegalLink({
   href,
   children,
@@ -80,7 +87,7 @@ export function LegalLink({
   return (
     <a
       href={href}
-      className="underline underline-offset-2 transition-opacity hover:opacity-60"
+      className={legalLinkClassName}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >
       {children}

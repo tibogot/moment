@@ -22,6 +22,8 @@ export type ShopifyProduct = {
   id: string;
   title: string;
   handle: string;
+  /** ISO timestamp of the last edit in Shopify — the sitemap's `lastmod`. */
+  updatedAt?: string;
   description: string;
   imageUrl: string | null;
   imageAlt: string;
@@ -47,6 +49,8 @@ export type ShopifyProductNode = {
   id: string;
   title: string;
   handle: string;
+  /** ISO timestamp of the last edit in Shopify — the sitemap's `lastmod`. */
+  updatedAt?: string;
   description: string;
   productType: string;
   tags: string[];
@@ -93,6 +97,7 @@ const PRODUCT_FIELDS = `
   id
   title
   handle
+  updatedAt
   description
   productType
   tags
@@ -188,6 +193,8 @@ export type ShopifyCollection = {
   id: string;
   title: string;
   handle: string;
+  /** ISO timestamp of the last edit in Shopify — the sitemap's `lastmod`. */
+  updatedAt?: string;
   description: string;
   imageUrl: string | null;
   imageAlt: string;
@@ -198,6 +205,8 @@ export type ShopifyCollectionNode = {
   id: string;
   title: string;
   handle: string;
+  /** ISO timestamp of the last edit in Shopify — the sitemap's `lastmod`. */
+  updatedAt?: string;
   description: string;
   image: { url: string; altText: string | null } | null;
   products: { edges: { node: ShopifyProductNode }[] };
@@ -231,6 +240,7 @@ const COLLECTION_FIELDS = `
   id
   title
   handle
+  updatedAt
   description
   image {
     url

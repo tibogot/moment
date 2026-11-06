@@ -18,6 +18,8 @@ type ReorderButtonProps = {
     skipped: string;
     nothingLeft: string;
     failed: string;
+    expired: string;
+    reload: string;
     goToCart: string;
   };
 };
@@ -37,6 +39,7 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
   const [message, setMessage] = useState<{
     text: string;
     showCart: boolean;
+    showReload?: boolean;
   } | null>(null);
 
   function handleClick() {
@@ -45,7 +48,13 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
       const result = await reorder(locale, orderId);
 
       if (!result.ok) {
-        setMessage({ text: labels.failed, showCart: false });
+        // An expired sign-in is fixed by reloading: the account page sends an
+        // expiring session through the refresh route on its way in.
+        setMessage(
+          result.code === "session_expired"
+            ? { text: labels.expired, showCart: false, showReload: true }
+            : { text: labels.failed, showCart: false },
+        );
         return;
       }
       if (result.added === 0) {
@@ -81,6 +90,15 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
       {message && (
         <p role="status" className="font-archivo-light text-[13px]">
           {message.text}{" "}
+          {message.showReload && (
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="underline"
+            >
+              {labels.reload}
+            </button>
+          )}
           {message.showCart && (
             <a href={href(locale, routes.cart)} className="underline">
               {labels.goToCart}

@@ -99,7 +99,7 @@ export default async function Home({
     <>
       {/* Defines the organisation, website and business nodes the rest of the
           site's structured data refers back to by @id. */}
-      <JsonLd data={siteGraph(SITE_DETAILS)} />
+      <JsonLd data={siteGraph(SITE_DETAILS, dict.meta.home.description)} />
 
       <Hero copy={home.hero} image={images.hero} />
       {/* The page's h1 lives here rather than in the hero — see IntroSection. */}

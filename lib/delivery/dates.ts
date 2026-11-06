@@ -309,3 +309,49 @@ export function dayState(
 export function isBookable(iso: string, availability: DeliveryAvailability) {
   return dayState(iso, availability) === "open";
 }
+
+/**
+ * The same availability, re-anchored on a fresh clock.
+ *
+ * A prerendered page (the home page calendar) can be a day old: its "today",
+ * first bookable day and cut-off were decided when it was built. The browser
+ * re-derives them here, in Brussels time, from the same rules — no request —
+ * so the calendar never offers a day that has since slipped inside the notice
+ * period. The server re-checks every booking anyway; this is about not
+ * misleading the customer before it does.
+ */
+export function refreshAvailability(
+  availability: DeliveryAvailability,
+  now = new Date(),
+): DeliveryAvailability {
+  const today = todayInDeliveryTimeZone(now);
+  const previous = parseISODate(availability.today);
+  const current = parseISODate(today);
+  const shift =
+    previous && current
+      ? Math.round((current.getTime() - previous.getTime()) / 86_400_000)
+      : 0;
+
+  return {
+    ...availability,
+    today,
+    firstBookable: firstBookableDate(
+      today,
+      effectiveLeadTimeDays(availability.leadTimeDays, availability.cutoffHour, now),
+    ),
+    lastBookable: shiftISODate(availability.lastBookable, shift),
+    pastCutoff: isPastOrderCutoff(availability.cutoffHour, now),
+    nextDay: availability.nextDay && {
+      ...availability.nextDay,
+      firstBookable: firstBookableDate(
+        today,
+        effectiveLeadTimeDays(
+          availability.nextDay.leadTimeDays,
+          availability.nextDay.cutoffHour,
+          now,
+        ),
+      ),
+      pastCutoff: isPastOrderCutoff(availability.nextDay.cutoffHour, now),
+    },
+  };
+}

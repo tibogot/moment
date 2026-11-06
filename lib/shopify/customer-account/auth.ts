@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
 import { cookies } from "next/headers";
 import {
   CUSTOMER_AUTH_SCOPES,
@@ -174,7 +175,14 @@ export function safeReturnPath(value: string | null | undefined): string {
   }
 }
 
-export async function buildAuthorizationUrl(returnTo: string) {
+/**
+ * `locale` is the site language the customer is reading, so Shopify's sign-in
+ * page speaks it too (it accepts `fr`, `nl` and `en`).
+ */
+export async function buildAuthorizationUrl(
+  returnTo: string,
+  locale: Locale = DEFAULT_LOCALE,
+) {
   const config = await getOpenIdConfiguration();
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = generateCodeChallenge(codeVerifier);
@@ -200,7 +208,7 @@ export async function buildAuthorizationUrl(returnTo: string) {
   authorizationUrl.searchParams.set("redirect_uri", getAuthCallbackUrl());
   authorizationUrl.searchParams.set("state", state);
   authorizationUrl.searchParams.set("nonce", nonce);
-  authorizationUrl.searchParams.set("locale", "en");
+  authorizationUrl.searchParams.set("locale", locale);
   authorizationUrl.searchParams.set("region_country", "BE");
   authorizationUrl.searchParams.set("code_challenge", codeChallenge);
   authorizationUrl.searchParams.set("code_challenge_method", "S256");

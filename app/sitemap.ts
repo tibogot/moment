@@ -144,17 +144,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
   ]);
 
-  const now = new Date();
+  // `lastmod` only where something real backs it: Shopify's own edit time for
+  // products and collections, the publication date for articles. Static pages
+  // and menus leave it out — a sitemap that claims every page changed on every
+  // rebuild teaches search engines to ignore the field altogether.
+  const editedAt = (iso: string | undefined) =>
+    iso ? { lastModified: new Date(iso) } : {};
 
   return [
     ...staticRoutes.map(({ path, changeFrequency, priority, contentLocale }) =>
       contentLocale
-        ? single(path, contentLocale, {
-            lastModified: now,
-            changeFrequency,
-            priority,
-          })
-        : localized(path, { lastModified: now, changeFrequency, priority }),
+        ? single(path, contentLocale, { changeFrequency, priority })
+        : localized(path, { changeFrequency, priority }),
     ),
     ...collections
       // Shopify seeds every store with a "frontpage" collection; it has no page
@@ -162,21 +163,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((collection) => collection.handle !== "frontpage")
       .map((collection) =>
         localized(routes.collection(collection.handle), {
-          lastModified: now,
+          ...editedAt(collection.updatedAt),
           changeFrequency: "weekly",
           priority: 0.7,
         }),
       ),
     ...products.map((product) =>
       localized(routes.product(product.handle), {
-        lastModified: now,
+        ...editedAt(product.updatedAt),
         changeFrequency: "weekly",
         priority: 0.8,
       }),
     ),
     ...menus.map((menu) =>
       localized(routes.menu(menu.slug.current), {
-        lastModified: now,
         changeFrequency: "monthly",
         priority: 0.8,
       }),
@@ -184,9 +184,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...articlesByLocale.flatMap(({ locale, articles }) =>
       articles.map((article) =>
         single(routes.newsArticle(article.slug.current), locale, {
-          lastModified: article.publishedAt
-            ? new Date(article.publishedAt)
-            : now,
+          ...editedAt(article.publishedAt ?? undefined),
           changeFrequency: "yearly",
           priority: 0.5,
         }),

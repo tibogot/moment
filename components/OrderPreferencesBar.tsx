@@ -482,6 +482,19 @@ function Segment({
   disabledHint,
 }: SegmentProps) {
   const titleId = useId();
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // A dialog that opens should take focus, or a keyboard user is left on the
+  // trigger with the choices somewhere below. The first enabled control gets
+  // it; Escape and clicking outside are handled by the bar.
+  useEffect(() => {
+    if (!open) return;
+    panelRef.current
+      ?.querySelector<HTMLElement>(
+        "button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex='-1'])",
+      )
+      ?.focus();
+  }, [open]);
 
   return (
     <div className="relative min-w-0 flex-1">
@@ -513,6 +526,7 @@ function Segment({
 
       {open && !disabled && (
         <div
+          ref={panelRef}
           role="dialog"
           aria-labelledby={titleId}
           data-lenis-prevent

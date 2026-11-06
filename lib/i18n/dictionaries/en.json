@@ -362,7 +362,9 @@
         "bureau": "Office",
         "evenements": "Events"
       }
-    }
+    },
+    "productsHeading": "All products",
+    "collectionsHeading": "All collections"
   },
   "product": {
     "orderPreferences": "Choose when and how you would like your order — you can change it before checkout.",
@@ -393,7 +395,8 @@
     "slot_unavailable": "That delivery window is no longer available. Please choose another.",
     "rules_unavailable": "We could not check the delivery calendar just now. Please try again in a moment.",
     "checkout_changed": "Something in your order has changed since this page loaded. Please check it before continuing.",
-    "too_many_requests": "Too many attempts in a short time. Please wait a minute and try again."
+    "too_many_requests": "Too many attempts in a short time. Please wait a minute and try again.",
+    "session_expired": "Your session has expired. Reload the page to sign in again."
   },
   "quote": {
     "heading": "Beyond our delivery area",
@@ -904,7 +907,9 @@
     "reorderSkipped": "Added to your basket. {count} product(s) from this order are no longer available.",
     "reorderNothingLeft": "None of the products in this order are available any more.",
     "reorderFailed": "This order could not be added to your basket. Please try again.",
-    "goToCart": "View basket"
+    "goToCart": "View basket",
+    "reorderExpired": "Your session has expired.",
+    "reload": "Reload the page"
   },
   "findUs": {
     "title": "Find us",

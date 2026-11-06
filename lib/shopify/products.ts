@@ -42,6 +42,7 @@ export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
     id: node.id,
     title: node.title,
     handle: node.handle,
+    updatedAt: node.updatedAt,
     description: node.description,
     imageUrl: node.featuredImage?.url ?? null,
     imageAlt: node.featuredImage?.altText ?? node.title,

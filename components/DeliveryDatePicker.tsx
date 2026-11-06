@@ -77,7 +77,12 @@ export function DeliveryDatePicker({
         >
           {dict.home.calendar.prev}
         </button>
-        <span className="font-owners-medium min-w-0 truncate text-center text-[14px] uppercase tracking-wide">
+        {/* Announced when the month changes, so a screen reader user who
+            presses "next" hears where they landed. */}
+        <span
+          aria-live="polite"
+          className="font-owners-medium min-w-0 truncate text-center text-[14px] uppercase tracking-wide"
+        >
           {label} <span className="font-archivo-light">{year}</span>
         </span>
         <button

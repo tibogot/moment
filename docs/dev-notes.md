@@ -104,6 +104,11 @@ their own component) is worth doing when the nav next changes, not before —
 the risk is visual regressions for a readability-only gain. The cart panel
 (`CartPanel.tsx`, ~800 lines) is the next candidate.
 
+**`ParallaxImage` and `HeroParallaxImage` are near-copies.** They differ in
+the scroll trigger (the frame vs the closest section), the blur placeholder and
+loading priority. Merging them is worth doing with the hero on screen, since a
+regression there is the most visible one the site can have.
+
 **`components/` is flat (~75 files).** Grouping by area (`cart/`, `nav/`,
 `about/`, `product/`, `legal/`) would help a newcomer; do it in a single
 rename commit with `git mv` so history follows, as was done for

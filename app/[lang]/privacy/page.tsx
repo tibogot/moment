@@ -4,6 +4,8 @@ import {
   LegalLink,
   LegalList,
   LegalSection,
+  type Localized,
+  legalLinkClassName,
 } from "@/components/LegalDoc";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import { colon, DATA_PROTECTION_AUTHORITY } from "@/lib/legal";
@@ -15,7 +17,6 @@ export const generateMetadata = localizedMetadata("privacy", {
   path: routes.privacy,
 });
 
-type Localized = Record<Locale, string>;
 
 /**
  * One row per processing activity, carrying what art. 13 GDPR asks to be told
@@ -451,9 +452,6 @@ const COPY = {
   },
 } satisfies Record<Locale, Record<string, string | string[]>>;
 
-const linkClassName =
-  "underline underline-offset-2 transition-opacity hover:opacity-60";
-
 export default async function PrivacyPage({
   params,
 }: {
@@ -565,7 +563,7 @@ export default async function PrivacyPage({
       <LegalSection title={t.cookies}>
         <p>
           {t.cookiesBody}{" "}
-          <LocaleLink href={routes.cookies} className={linkClassName}>
+          <LocaleLink href={routes.cookies} className={legalLinkClassName}>
             {t.cookiesLink}
           </LocaleLink>
           .

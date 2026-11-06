@@ -26,7 +26,9 @@ export type OrderErrorCode =
   | "rules_unavailable"
   | "checkout_changed"
   /** A per-visitor request budget ran out — see lib/rate-limit.ts. */
-  | "too_many_requests";
+  | "too_many_requests"
+  /** The customer's sign-in has expired — a reload takes them through the refresh. */
+  | "session_expired";
 
 export type OrderFailure = { ok: false; code: OrderErrorCode };
 

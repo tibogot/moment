@@ -95,6 +95,8 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
       />
 
       <GridSection className="pb-[14svh]">
+        {/* The cards are h3s; a hidden h2 keeps the outline unbroken. */}
+        <h2 className="sr-only">{dict.shop.productsHeading}</h2>
         <ProductGrid
           products={collection.products}
           emptyMessage="Nothing in this collection yet."
