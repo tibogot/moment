@@ -3,21 +3,20 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { GridSection } from "@/components/GridSection";
 
 /**
- * Placeholder people and portraits — swap the picsum seeds for the real
- * headshots before launch. The seed keeps each card on the same image between
- * builds rather than reshuffling on every request.
+ * The kitchen team, shown on /about. **Empty until the owners send real names,
+ * roles and portraits** — the section renders nothing while it is. The
+ * placeholder people it launched with were invented, and a stranger's face
+ * under "Fondatrice & cheffe" on a real company's site is not a placeholder
+ * anyone should ship.
  *
- * Names stay here; roles are keys into the dictionary. A name is the same in
- * every language and a job title is not.
+ * Each entry: `name` (the same in every language), `role` (a key into
+ * `about.team.roles` in the dictionaries), `src` (a file in /public/images).
  */
-const team = [
-  { name: "Camille Verhoeven", role: "founder", seed: "camille" },
-  { name: "Youssef Benali", role: "sousChef", seed: "youssef" },
-  { name: "Lotte Van Damme", role: "pastry", seed: "lotte" },
-  { name: "Marek Nowak", role: "sourcing", seed: "marek" },
-  { name: "Inès Dubois", role: "events", seed: "ines" },
-  { name: "Tom Peeters", role: "deliveries", seed: "tom" },
-] as const;
+const team: readonly {
+  name: string;
+  role: keyof Dictionary["about"]["team"]["roles"];
+  src: string;
+}[] = [];
 
 /**
  * The kitchen, on the same ruled cards as the shop. The card metrics come from
@@ -25,6 +24,8 @@ const team = [
  * padding scale the product grid rests at — see globals.css.
  */
 export function AboutTeam({ copy }: { copy: Dictionary["about"]["team"] }) {
+  if (team.length === 0) return null;
+
   return (
     <GridSection className="pt-[12svh] pb-[14svh]">
       <div className="col-start-2 col-end-5 px-(--grid-gutter) pb-[5svh] md:col-end-9">
@@ -44,7 +45,7 @@ export function AboutTeam({ copy }: { copy: Dictionary["about"]["team"] }) {
                 <div className="px-(--card-gutter)">
                   <div className="product-card__image relative aspect-4/5 w-full overflow-hidden">
                     <Image
-                      src={`https://picsum.photos/seed/${member.seed}/800/1000`}
+                      src={member.src}
                       alt=""
                       fill
                       sizes="(max-width: 768px) 50vw, 33vw"

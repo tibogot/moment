@@ -50,8 +50,9 @@ const services = [
   {
     index: "03",
     href: routes.coffee,
-    // Placeholder until the coffee desk is shot — swap for a /public image.
-    src: "https://picsum.photos/seed/moment-coffee/1200/1600",
+    // The same coffee photograph as the home page panels, until the coffee
+    // desk itself is shot.
+    src: "/images/oak-bond-coffee.jpg",
     frame: { colStart: 6, colSpan: 2, rowStart: 1, rowSpan: 2 },
   },
 ] as const;

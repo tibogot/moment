@@ -121,7 +121,7 @@ export default async function ContactPage({
         )}
       />
 
-      <PageIntro title="Contact" lead={dict.contact.lead} />
+      <PageIntro title={dict.pageIntro.contact.title} lead={dict.contact.lead} />
 
       <ContactForm
         initialValues={initialValues}

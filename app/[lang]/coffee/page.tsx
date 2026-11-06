@@ -21,8 +21,8 @@ export default async function CoffeePage({
   return (
     <>
       <PageIntro
-        title="Coffee"
-        lead="A coffee desk for anyone passing by, serving the same pastries and juices we send out to our clients."
+        title={dict.pageIntro.coffee.title}
+        lead={dict.pageIntro.coffee.lead}
       />
 
       {/* Temporary: the home page's intro headline with the first-line indent

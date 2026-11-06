@@ -50,7 +50,8 @@
       "back": "Back to home"
     },
     "back": "Back",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "skipToContent": "Skip to content"
   },
   "home": {
     "hero": {
@@ -266,7 +267,8 @@
     "slot": "Window",
     "selectSlot": "Choose a window",
     "chooseSlotTitle": "Choose a delivery window",
-    "selectedSlot": "Selected delivery window"
+    "selectedSlot": "Selected delivery window",
+    "addressResults": "{count} address(es) found"
   },
   "cart": {
     "title": "Cart",
@@ -369,7 +371,8 @@
     "dietary": "Dietary",
     "servingInstructions": "Serving instructions",
     "storage": "Storage",
-    "orderPreferencesTitle": "When and how"
+    "orderPreferencesTitle": "When and how",
+    "viewImage": "View image {index} of {total}"
   },
   "errors": {
     "not_configured": "The shop is not configured yet. Please try again later.",
@@ -836,7 +839,6 @@
       "headline": "The details people ask before they ask for a menu.",
       "terms": {
         "based": "Based",
-        "since": "Since",
         "cookFor": "We cook for",
         "services": "Services",
         "deliveryArea": "Delivery area",
@@ -848,7 +850,7 @@
         "based": "Brussels, Belgium",
         "cookFor": "Private hosts, offices, agencies, embassies",
         "services": "Daily delivery, event catering, coffee desk",
-        "deliveryArea": "Brussels-Capital Region, and the ring on request",
+        "deliveryArea": "Brussels and up to 70 km from the atelier, further on quotation",
         "leadTime": "48 hours for delivery, two weeks for events",
         "diets": "Vegetarian, vegan and gluten-free on every menu",
         "languages": "Français, Nederlands, English"
@@ -949,5 +951,25 @@
     "message": "Your project",
     "messagePlaceholder": "The products you are interested in, estimated quantities, frequency…",
     "submit": "Send request"
+  },
+  "pageIntro": {
+    "collections": {
+      "title": "Collections",
+      "lead": "Plates, salads and cold-pressed juices — browse by category."
+    },
+    "events": {
+      "title": "Events",
+      "lead": "From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open."
+    },
+    "coffee": {
+      "title": "Coffee",
+      "lead": "A coffee desk for anyone passing by, serving the same pastries and juices we send out to our clients."
+    },
+    "menus": {
+      "title": "Menus"
+    },
+    "contact": {
+      "title": "Contact"
+    }
   }
 }

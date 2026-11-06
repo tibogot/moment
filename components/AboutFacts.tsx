@@ -5,12 +5,6 @@ import { REVEAL_BLOCK } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 
 /**
- * The founding year, which is the same sentence in every language and so has no
- * entry in the dictionary. Still a placeholder — confirm it with the kitchen.
- */
-const FOUNDED = "2015";
-
-/**
  * The order the rows appear in. The words live in the dictionary under the same
  * keys, so adding a fact means adding it here and in three dictionaries — which
  * is the point: a fact that exists in one language and not the others would
@@ -18,7 +12,6 @@ const FOUNDED = "2015";
  */
 const FACT_KEYS = [
   "based",
-  "since",
   "cookFor",
   "services",
   "deliveryArea",
@@ -33,11 +26,12 @@ const FACT_KEYS = [
  * to somebody deciding whether to send an enquiry.
  */
 export function AboutFacts({ copy }: { copy: Dictionary["about"]["facts"] }) {
-  // Paired by key rather than by position: `since` carries a year, which is
-  // the same in every language and therefore has no entry in `values`.
+  // Paired by key rather than by position, so a row cannot pick up its
+  // neighbour's answer. (A "since" row with the founding year was removed until
+  // the owners confirm it: the company itself was registered in April 2026.)
   const facts = FACT_KEYS.map((key) => ({
     term: copy.terms[key],
-    value: key === "since" ? FOUNDED : copy.values[key],
+    value: copy.values[key],
   }));
 
   return (

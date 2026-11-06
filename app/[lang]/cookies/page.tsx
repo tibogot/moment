@@ -15,6 +15,7 @@ import {
 } from "@/lib/legal";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
+import { siteIsIndexable } from "@/lib/site";
 
 export const generateMetadata = localizedMetadata("cookies", {
   path: routes.cookies,
@@ -88,21 +89,29 @@ const NECESSARY_COOKIES: CookieRow[] = [
     },
     duration: { fr: "6 mois", nl: "6 maanden", en: "6 months" },
   },
-  {
-    name: "moment-palette (localStorage)",
-    provider: "moment-lab.be",
-    purpose: {
-      fr: "Mémoriser la palette de couleurs que vous avez choisie pour le site.",
-      nl: "Het kleurenpalet onthouden dat u voor de website hebt gekozen.",
-      en: "Remembers the colour palette you chose for the site.",
-    },
-    duration: {
-      fr: "Jusqu’à ce que vous l’effaciez",
-      nl: "Tot u het wist",
-      en: "Until you clear it",
-    },
-  },
 ];
+
+/**
+ * The colour-palette preview (components/PaletteToggle.tsx) is a review tool
+ * that only exists on the temporary address — the layout drops it the day the
+ * real domain goes live — so its storage key is listed only while it can be
+ * set. A policy describing a key the site no longer writes is as inexact as
+ * one that leaves a key out.
+ */
+const PALETTE_STORAGE: CookieRow = {
+  name: "moment-palette (localStorage)",
+  provider: "moment-lab.be",
+  purpose: {
+    fr: "Mémoriser la palette de couleurs que vous avez choisie pour le site.",
+    nl: "Het kleurenpalet onthouden dat u voor de website hebt gekozen.",
+    en: "Remembers the colour palette you chose for the site.",
+  },
+  duration: {
+    fr: "Jusqu’à ce que vous l’effaciez",
+    nl: "Tot u het wist",
+    en: "Until you clear it",
+  },
+};
 
 /**
  * Google Analytics, set only after the visitor accepts the analytics category
@@ -267,7 +276,11 @@ export default async function CookiesPage({
         {/* A list of cards rather than a table: five columns do not fit a
             phone, and a table that scrolls sideways hides the duration. */}
         <CookieList
-          cookies={NECESSARY_COOKIES}
+          cookies={
+            siteIsIndexable
+              ? NECESSARY_COOKIES
+              : [...NECESSARY_COOKIES, PALETTE_STORAGE]
+          }
           locale={locale}
           durationLabel={t.duration}
         />

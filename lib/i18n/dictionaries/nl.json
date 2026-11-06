@@ -50,7 +50,8 @@
       "back": "Terug naar home"
     },
     "back": "Terug",
-    "dismiss": "Sluiten"
+    "dismiss": "Sluiten",
+    "skipToContent": "Naar de inhoud"
   },
   "home": {
     "hero": {
@@ -266,7 +267,8 @@
     "slot": "Tijdvak",
     "selectSlot": "Kies een tijdvak",
     "chooseSlotTitle": "Kies een leveringsmoment",
-    "selectedSlot": "Gekozen leveringsmoment"
+    "selectedSlot": "Gekozen leveringsmoment",
+    "addressResults": "{count} adres(sen) gevonden"
   },
   "cart": {
     "title": "Winkelmand",
@@ -369,7 +371,8 @@
     "dietary": "Dieet",
     "servingInstructions": "Serveertips",
     "storage": "Bewaren",
-    "orderPreferencesTitle": "Wanneer en hoe"
+    "orderPreferencesTitle": "Wanneer en hoe",
+    "viewImage": "Afbeelding {index} van {total} bekijken"
   },
   "errors": {
     "not_configured": "De winkel is nog niet geconfigureerd. Probeer het later opnieuw.",
@@ -837,7 +840,6 @@
       "headline": "Wat men vraagt voor men om een menu vraagt.",
       "terms": {
         "based": "Gevestigd in",
-        "since": "Sinds",
         "cookFor": "Wij koken voor",
         "services": "Diensten",
         "deliveryArea": "Leveringsgebied",
@@ -849,7 +851,7 @@
         "based": "Brussel, België",
         "cookFor": "Particulieren, kantoren, bureaus, ambassades",
         "services": "Dagelijkse levering, evenementencatering, koffiebar",
-        "deliveryArea": "Brussels Hoofdstedelijk Gewest, en de ring op aanvraag",
+        "deliveryArea": "Brussel en tot 70 km rond het atelier, verder op offerte",
         "leadTime": "48 uur voor een levering, twee weken voor een evenement",
         "diets": "Vegetarisch, veganistisch en glutenvrij op elk menu",
         "languages": "Français, Nederlands, English"
@@ -950,5 +952,25 @@
     "message": "Uw project",
     "messagePlaceholder": "De producten die u interesseren, de geschatte hoeveelheden, de frequentie…",
     "submit": "Aanvraag versturen"
+  },
+  "pageIntro": {
+    "collections": {
+      "title": "Collecties",
+      "lead": "Gerechten, salades en koudgeperste sappen — blader per categorie."
+    },
+    "events": {
+      "title": "Evenementen",
+      "lead": "Van een lancering voor twintig mensen tot een diner aan tafel. Wij zorgen voor het menu, de bediening en alles wat klaar moet zijn voor de deuren opengaan."
+    },
+    "coffee": {
+      "title": "Koffie",
+      "lead": "Een koffiebar voor iedereen die langskomt, met hetzelfde gebak en dezelfde sappen die we aan onze klanten leveren."
+    },
+    "menus": {
+      "title": "Menu's"
+    },
+    "contact": {
+      "title": "Contact"
+    }
   }
 }

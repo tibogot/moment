@@ -43,7 +43,7 @@ export default async function MenusPage({
         )}
       />
 
-      <PageIntro title="Menus" lead={dict.menus.lead} />
+      <PageIntro title={dict.pageIntro.menus.title} lead={dict.menus.lead} />
 
       {isDraft && (
         <GridSection className="pb-[8svh]">

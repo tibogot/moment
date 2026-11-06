@@ -50,7 +50,8 @@
       "back": "Retour à l'accueil"
     },
     "back": "Retour",
-    "dismiss": "Fermer"
+    "dismiss": "Fermer",
+    "skipToContent": "Aller au contenu"
   },
   "home": {
     "hero": {
@@ -266,7 +267,8 @@
     "slot": "Créneau",
     "selectSlot": "Choisir un créneau",
     "chooseSlotTitle": "Choisissez un créneau de livraison",
-    "selectedSlot": "Créneau de livraison choisi"
+    "selectedSlot": "Créneau de livraison choisi",
+    "addressResults": "{count} adresse(s) trouvée(s)"
   },
   "cart": {
     "title": "Panier",
@@ -369,7 +371,8 @@
     "dietary": "Régimes",
     "servingInstructions": "Conseils de service",
     "storage": "Conservation",
-    "orderPreferencesTitle": "Quand et comment"
+    "orderPreferencesTitle": "Quand et comment",
+    "viewImage": "Voir l'image {index} sur {total}"
   },
   "errors": {
     "not_configured": "La boutique n'est pas encore configurée. Merci de réessayer plus tard.",
@@ -837,7 +840,6 @@
       "headline": "Ce qu'on nous demande avant de demander un menu.",
       "terms": {
         "based": "Basés à",
-        "since": "Depuis",
         "cookFor": "Nous cuisinons pour",
         "services": "Services",
         "deliveryArea": "Zone de livraison",
@@ -849,7 +851,7 @@
         "based": "Bruxelles, Belgique",
         "cookFor": "Particuliers, bureaux, agences, ambassades",
         "services": "Livraison quotidienne, traiteur événementiel, comptoir café",
-        "deliveryArea": "Région de Bruxelles-Capitale, et le ring sur demande",
+        "deliveryArea": "Bruxelles et jusqu'à 70 km autour de l'atelier, au-delà sur devis",
         "leadTime": "48 heures pour une livraison, deux semaines pour un événement",
         "diets": "Végétarien, végane et sans gluten sur chaque menu",
         "languages": "Français, Nederlands, English"
@@ -950,5 +952,25 @@
     "message": "Votre projet",
     "messagePlaceholder": "Les produits qui vous intéressent, les quantités estimées, la fréquence…",
     "submit": "Envoyer la demande"
+  },
+  "pageIntro": {
+    "collections": {
+      "title": "Collections",
+      "lead": "Plats, salades et jus pressés à froid — parcourez par catégorie."
+    },
+    "events": {
+      "title": "Événements",
+      "lead": "D'un lancement de vingt personnes à un dîner assis. Nous nous occupons du menu, du service et de tout ce qui doit être prêt avant l'ouverture des portes."
+    },
+    "coffee": {
+      "title": "Café",
+      "lead": "Un comptoir café ouvert à tous, avec les mêmes pâtisseries et les mêmes jus que nous livrons à nos clients."
+    },
+    "menus": {
+      "title": "Menus"
+    },
+    "contact": {
+      "title": "Contact"
+    }
   }
 }

@@ -1,6 +1,8 @@
 import { Footer } from "@/components/Footer";
 import { PageIntro } from "@/components/PageIntro";
 import { SplitImageSection } from "@/components/SplitImageSection";
+import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 
@@ -8,12 +10,18 @@ export const generateMetadata = localizedMetadata("events", {
   path: routes.events,
 });
 
-export default function EventsPage() {
+export default async function EventsPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const dict = await getDictionary(toLocale((await params).lang));
+
   return (
     <>
       <PageIntro
-        title="Events"
-        lead="From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open."
+        title={dict.pageIntro.events.title}
+        lead={dict.pageIntro.events.lead}
       />
 
       {/* Same split grid as home — parked here so it stays visible while the

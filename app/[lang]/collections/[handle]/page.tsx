@@ -24,8 +24,17 @@ export async function generateStaticParams() {
   // for the default keeps `generateStaticParams` on one cache entry rather
   // than warming three to read the same list of slugs.
   const collections = await getCollections(DEFAULT_LOCALE);
-  return collections.map(({ handle }) => ({ handle }));
+  return collections
+    .filter(({ handle }) => handle !== HIDDEN_COLLECTION)
+    .map(({ handle }) => ({ handle }));
 }
+
+/**
+ * Shopify seeds every store with a "frontpage" collection. It is not a
+ * category, the nav and the sitemap already leave it out, and it must not be a
+ * page either — prerendered and indexable, it was a duplicate of the shop.
+ */
+const HIDDEN_COLLECTION = "frontpage";
 
 export async function generateMetadata({
   params,
@@ -37,7 +46,7 @@ export async function generateMetadata({
     getDictionary(locale),
   ]);
 
-  if (!collection) return notFoundMetadata();
+  if (!collection || handle === HIDDEN_COLLECTION) return notFoundMetadata();
 
   return pageMetadata({
     locale,
@@ -62,7 +71,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
     getDictionary(locale),
   ]);
 
-  if (!collection) notFound();
+  if (!collection || handle === HIDDEN_COLLECTION) notFound();
 
   return (
     <>

@@ -2,6 +2,8 @@
 
 import { CdnImage as Image } from "@/components/CdnImage";
 import { useState } from "react";
+import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyProductImage } from "@/lib/shopify/queries";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +13,7 @@ type ProductGalleryProps = {
 };
 
 export function ProductGallery({ images, title }: ProductGalleryProps) {
+  const viewImage = useDictionary().product.viewImage;
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (images.length === 0) {
@@ -29,7 +32,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 disabled={images.length === 1}
-                aria-label={`View image ${index + 1} of ${images.length}`}
+                aria-label={interpolate(viewImage, { index: index + 1, total: images.length })}
                 aria-current={index === activeIndex ? "true" : undefined}
                 className={cn(
                   "relative aspect-4/5 w-full overflow-hidden border transition-colors duration-500",
@@ -71,7 +74,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               <button
                 type="button"
                 onClick={() => setActiveIndex(index)}
-                aria-label={`View image ${index + 1} of ${images.length}`}
+                aria-label={interpolate(viewImage, { index: index + 1, total: images.length })}
                 aria-current={index === activeIndex ? "true" : undefined}
                 className={cn(
                   "relative aspect-4/5 w-16 overflow-hidden border transition-colors duration-500",
