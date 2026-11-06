@@ -32,6 +32,7 @@ import {
 } from "@/lib/cart-store";
 import { AddressPanel } from "@/components/AddressPanel";
 import { CheckoutButton } from "@/components/CheckoutButton";
+import { CheckoutBlockerNotice } from "@/components/CheckoutBlockerNotice";
 import {
   CheckoutNotice,
   CheckoutNoticeAction,
@@ -757,70 +758,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {/* Without a day there is nothing to check out to, so the picker
                   takes the primary slot rather than disabling the button and
                   leaving the customer to work out why. */}
-              {blocker?.kind === "below-minimum" && (
-                <CheckoutNotice
-                  tone="blocker"
-                  title={t.beforeCheckout}
-                  className="mt-4"
-                >
-                  {interpolate(t.belowMinimumShort, {
-                    zone: blocker.zone.id,
-                    minimum: formatMoney(locale, blocker.zone.minimumOrder),
-                    shortfall: formatMoney(locale, blocker.shortfall),
-                  })}
-                </CheckoutNotice>
-              )}
-
-              {blocker?.kind === "below-pickup-minimum" && (
-                <CheckoutNotice
-                  tone="blocker"
-                  title={t.beforeCheckout}
-                  className="mt-4"
-                >
-                  {interpolate(t.belowPickupMinimum, {
-                    minimum: formatMoney(locale, blocker.minimum),
-                    shortfall: formatMoney(locale, blocker.shortfall),
-                  })}
-                </CheckoutNotice>
-              )}
-
-              {/* The window, on the same terms as the address below: a
-                  blocker the customer can clear without leaving the panel. */}
-              {(blocker?.kind === "no-slot" ||
-                blocker?.kind === "stale-slot") && (
-                <CheckoutNotice
-                  tone="blocker"
-                  title={t.beforeCheckout}
-                  className="mt-4"
-                  action={
-                    <CheckoutNoticeAction onClick={() => setView("slot")}>
-                      {t.chooseSlot}
-                    </CheckoutNoticeAction>
-                  }
-                >
-                  {blocker.kind === "stale-slot"
-                    ? interpolate(t.staleSlot, { slot: blocker.slot })
-                    : t.pickSlotIntro}
-                </CheckoutNotice>
-              )}
-
-              {/* The remedy is the point. This used to read "add a delivery
-                  address on any product page" — a blocker the customer could
-                  only clear by leaving, on a page they had already left. */}
-              {blocker?.kind === "no-address" && (
-                <CheckoutNotice
-                  tone="blocker"
-                  title={t.beforeCheckout}
-                  className="mt-4"
-                  action={
-                    <CheckoutNoticeAction onClick={() => setView("address")}>
-                      {dict.orderBar.addAddress}
-                    </CheckoutNoticeAction>
-                  }
-                >
-                  {t.noAddressShort}
-                </CheckoutNotice>
-              )}
+              <CheckoutBlockerNotice
+                blocker={blocker}
+                compact
+                onChooseSlot={() => setView("slot")}
+                onAddAddress={() => setView("address")}
+                className="mt-4"
+              />
 
               {needsDate ? (
                 <button

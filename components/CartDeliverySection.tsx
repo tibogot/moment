@@ -10,6 +10,7 @@ import {
 import { AddressPanel } from "@/components/AddressPanel";
 import { LocaleLink } from "@/components/LocaleLink";
 import { routes } from "@/lib/routes";
+import { CheckoutBlockerNotice } from "@/components/CheckoutBlockerNotice";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import {
   CheckoutNotice,
@@ -433,68 +434,14 @@ export function CartDeliverySection({
         <span className="font-archivo-light text-[15px]">{totalPrice}</span>
       </div>
 
-      {/* Why checkout is not available yet, in the customer's terms. Shopify's
-          hosted checkout cannot edit a cart attribute or refuse a basket, so
-          every one of these has to be settled before we hand over. */}
-      {blocker?.kind === "below-minimum" && (
-        <CheckoutNotice
-          tone="blocker"
-          title={t.beforeCheckout}
-          className="mt-6 max-w-105"
-        >
-          {interpolate(t.belowMinimum, {
-            zone: blocker.zone.id,
-            minimum: formatMoney(locale, blocker.zone.minimumOrder),
-            shortfall: formatMoney(locale, blocker.shortfall),
-          })}
-        </CheckoutNotice>
-      )}
-
-      {blocker?.kind === "below-pickup-minimum" && (
-        <CheckoutNotice
-          tone="blocker"
-          title={t.beforeCheckout}
-          className="mt-6 max-w-105"
-        >
-          {interpolate(t.belowPickupMinimum, {
-            minimum: formatMoney(locale, blocker.minimum),
-            shortfall: formatMoney(locale, blocker.shortfall),
-          })}
-        </CheckoutNotice>
-      )}
-
-      {(blocker?.kind === "no-slot" || blocker?.kind === "stale-slot") &&
-        !slotOpen && (
-          <CheckoutNotice
-            tone="blocker"
-            title={t.beforeCheckout}
-            className="mt-6 max-w-105"
-            action={
-              <CheckoutNoticeAction onClick={() => setSlotOpen(true)}>
-                {t.chooseSlot}
-              </CheckoutNoticeAction>
-            }
-          >
-            {blocker.kind === "stale-slot"
-              ? interpolate(t.staleSlot, { slot: blocker.slot })
-              : t.pickSlotIntro}
-          </CheckoutNotice>
-        )}
-
-      {blocker?.kind === "no-address" && !addressOpen && (
-        <CheckoutNotice
-          tone="blocker"
-          title={t.beforeCheckout}
-          className="mt-6 max-w-105"
-          action={
-            <CheckoutNoticeAction onClick={() => setAddressOpen(true)}>
-              {dict.orderBar.addAddress}
-            </CheckoutNoticeAction>
-          }
-        >
-          {t.noAddress}
-        </CheckoutNotice>
-      )}
+      <CheckoutBlockerNotice
+        blocker={blocker}
+        onChooseSlot={() => setSlotOpen(true)}
+        onAddAddress={() => setAddressOpen(true)}
+        hideSlot={slotOpen}
+        hideAddress={addressOpen}
+        className="mt-6 max-w-105"
+      />
 
       {/* Too far to price rather than wrong: the sale leaves the site and
           becomes an enquiry, prefilled with the address and distance. Same

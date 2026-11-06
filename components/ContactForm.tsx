@@ -130,6 +130,77 @@ function TextField({
   );
 }
 
+type OccasionChipsProps = {
+  label: string;
+  options: readonly string[];
+  /** Display text for each option value. */
+  labels: Record<string, string>;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+};
+
+/**
+ * The `occasion` field as a row of radio chips — the enquiry's occasions, or a
+ * venue's kind of request on /collaborations. Same field name either way, so
+ * the server action reads one value whichever form sent it.
+ *
+ * Radios rather than a select: the native dropdown is the one control we
+ * cannot dress in the site's type. role=group rather than fieldset/legend — a
+ * legend is laid out against the fieldset's border edge, so it ignored the
+ * cell's padding and printed on top of the rule above it.
+ */
+function OccasionChips({
+  label,
+  options,
+  labels,
+  value,
+  onChange,
+  error,
+}: OccasionChipsProps) {
+  return (
+    <div
+      role="group"
+      aria-labelledby="contact-occasion-label"
+      className={cn(CELL, "md:col-span-2")}
+    >
+      <p id="contact-occasion-label" className={LABEL}>
+        {label}
+      </p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {options.map((option) => (
+          <label
+            key={option}
+            className={cn(
+              "font-owners-medium cursor-pointer border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
+              "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
+              "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
+            )}
+          >
+            <input
+              type="radio"
+              name="occasion"
+              value={option}
+              checked={value === option}
+              onChange={(event) => onChange(event.target.value)}
+              aria-describedby={error ? "contact-occasion-error" : undefined}
+              className="sr-only"
+            />
+            {labels[option]}
+          </label>
+        ))}
+      </div>
+
+      {error && (
+        <p id="contact-occasion-error" className={ERROR}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 type ContactFormProps = {
   /**
    * Starting contents of the boxes. Resolved on the server — a visitor arriving
@@ -428,51 +499,14 @@ export function ContactForm({
                   <input type="hidden" name="occasion" value={PRO_OCCASION} />
                 ) : partner ? (
                   <>
-                    <div
-                      role="group"
-                      aria-labelledby="contact-occasion-label"
-                      className={cn(CELL, "md:col-span-2")}
-                    >
-                      <p id="contact-occasion-label" className={LABEL}>
-                        {p.request}
-                      </p>
-
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {PARTNER_REQUESTS.map((request) => (
-                          <label
-                            key={request}
-                            className={cn(
-                              "font-owners-medium cursor-pointer border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
-                              "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
-                              "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
-                            )}
-                          >
-                            <input
-                              type="radio"
-                              name="occasion"
-                              value={request}
-                              checked={values.occasion === request}
-                              onChange={(event) =>
-                                update("occasion")(event.target.value)
-                              }
-                              aria-describedby={
-                                state.errors.occasion
-                                  ? "contact-occasion-error"
-                                  : undefined
-                              }
-                              className="sr-only"
-                            />
-                            {p.requests[request]}
-                          </label>
-                        ))}
-                      </div>
-
-                      {state.errors.occasion && (
-                        <p id="contact-occasion-error" className={ERROR}>
-                          {errorText(state.errors.occasion)}
-                        </p>
-                      )}
-                    </div>
+                    <OccasionChips
+                      label={p.request}
+                      options={PARTNER_REQUESTS}
+                      labels={p.requests}
+                      value={values.occasion}
+                      onChange={update("occasion")}
+                      error={errorText(state.errors.occasion)}
+                    />
 
                     <TextField
                       name="address"
@@ -497,57 +531,14 @@ export function ContactForm({
                   </>
                 ) : (
                   <>
-                  {/* Radios rather than a select: the native dropdown is the one
-                      control we cannot dress in the site's type.
-
-                      role=group rather than fieldset/legend — a legend is laid
-                      out against the fieldset's border edge, so it ignored the
-                      cell's padding and printed on top of the rule above it. */}
-                  <div
-                    role="group"
-                    aria-labelledby="contact-occasion-label"
-                    className={cn(CELL, "md:col-span-2")}
-                  >
-                    <p id="contact-occasion-label" className={LABEL}>
-                      {t.occasion}
-                    </p>
-
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {OCCASIONS.map((occasion) => (
-                        <label
-                          key={occasion}
-                          className={cn(
-                            "font-owners-medium cursor-pointer border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
-                            "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
-                            "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
-                          )}
-                        >
-                          <input
-                            type="radio"
-                            name="occasion"
-                            value={occasion}
-                            checked={values.occasion === occasion}
-                            onChange={(event) =>
-                              update("occasion")(event.target.value)
-                            }
-                            aria-describedby={
-                              state.errors.occasion
-                                ? "contact-occasion-error"
-                                : undefined
-                            }
-                            className="sr-only"
-                          />
-                          {t.occasions[occasion]}
-                        </label>
-                      ))}
-                    </div>
-
-                    {state.errors.occasion && (
-                      <p id="contact-occasion-error" className={ERROR}>
-                        {errorText(state.errors.occasion)}
-                      </p>
-                    )}
-                  </div>
+                  <OccasionChips
+                    label={t.occasion}
+                    options={OCCASIONS}
+                    labels={t.occasions}
+                    value={values.occasion}
+                    onChange={update("occasion")}
+                    error={errorText(state.errors.occasion)}
+                  />
 
                   {/* Free text, not a date input: at quote stage the day is
                       usually still approximate, and "a week in March" is a more
