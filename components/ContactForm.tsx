@@ -19,7 +19,11 @@ import {
 import { SITE_DETAILS } from "@/lib/site";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
-import { PRO_OCCASION, type ContactErrorCode } from "@/lib/contact";
+import {
+  PARTNER_REQUESTS,
+  PRO_OCCASION,
+  type ContactErrorCode,
+} from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
 /**
@@ -145,11 +149,15 @@ type ContactFormProps = {
    * questions. It drops the occasion radios (the occasion is fixed), the date
    * and the headcount, and adds the VAT number and a delivery address.
    *
-   * One component rather than two because the plumbing — controlled values, the
-   * error map, the sent panel, the honeypot — is the whole of the work and none
-   * of it differs.
+   * `partner` is the /collaborations request from a venue that wants to stock
+   * Moment products: the occasion radios become the three kinds of request,
+   * the venue's name and address are required, VAT is optional.
+   *
+   * One component rather than three because the plumbing — controlled values,
+   * the error map, the sent panel, the honeypot — is the whole of the work and
+   * none of it differs.
    */
-  variant?: "enquiry" | "pro";
+  variant?: "enquiry" | "pro" | "partner";
 };
 
 /**
@@ -165,6 +173,8 @@ export function ContactForm({
   const dict = useDictionary();
   const t = dict.contact;
   const pro = variant === "pro";
+  const partner = variant === "partner";
+  const p = dict.partner;
   const [state, formAction, pending] = useActionState(
     sendContactRequest,
     INITIAL_CONTACT_STATE,
@@ -214,7 +224,7 @@ export function ContactForm({
           ruled field below it. */}
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-          {pro ? dict.proAccount.intro : t.title}
+          {pro ? dict.proAccount.intro : partner ? p.intro : t.title}
         </h2>
         <div
           className="mt-4 h-(--grid-line) bg-sky"
@@ -237,7 +247,7 @@ export function ContactForm({
               <div className="min-w-0 text-left">
                 <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                   <p className="font-owners-narrow-bold max-w-full text-[10vw] leading-[0.92] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(3.1vw,5svh)]">
-                    {pro ? dict.proAccount.body : t.intro}
+                    {pro ? dict.proAccount.body : partner ? p.body : t.intro}
                   </p>
                 </TextReveal>
               </div>
@@ -255,19 +265,23 @@ export function ContactForm({
                       {/* Same size as the form's field labels across the rule —
                           the two columns read as one row of headings. */}
                       <p className="font-owners-medium text-[14px] uppercase tracking-wide">
-                        {t.steps[position].title}
+                        {(partner ? p.steps : t.steps)[position].title}
                       </p>
                       <p className="font-archivo-light mt-2 text-[18px] leading-normal">
-                        {t.steps[position].body}
+                        {(partner ? p.steps : t.steps)[position].body}
                       </p>
                     </div>
                   </li>
                 ))}
               </ol>
 
-              <p className="font-archivo-light mt-[4svh] max-w-[36ch] text-[18px] leading-normal">
-                {interpolate(t.notice, { days: leadTimeDays })}
-              </p>
+              {/* The delivery notice is about catering orders; a venue asking
+                  to stock the products is not booking one. */}
+              {!partner && (
+                <p className="font-archivo-light mt-[4svh] max-w-[36ch] text-[18px] leading-normal">
+                  {interpolate(t.notice, { days: leadTimeDays })}
+                </p>
+              )}
 
               {(email || phone) && (
                 <ul className="mt-[3svh] flex flex-col gap-2.5">
@@ -397,13 +411,14 @@ export function ContactForm({
 
                 <TextField
                   name="company"
-                  label={t.company}
-                  hint={t.optional}
+                  label={partner ? p.company : t.company}
+                  hint={partner ? undefined : t.optional}
                   value={values.company}
                   onChange={update("company")}
                   error={errorText(state.errors.company)}
-                  placeholder={t.companyPlaceholder}
+                  placeholder={partner ? p.companyPlaceholder : t.companyPlaceholder}
                   autoComplete="organization"
+                  required={partner}
                 />
 
                 {/* A professional application answers different questions: its occasion
@@ -411,6 +426,75 @@ export function ContactForm({
                     headcount the way a one-off event is. */}
                 {pro ? (
                   <input type="hidden" name="occasion" value={PRO_OCCASION} />
+                ) : partner ? (
+                  <>
+                    <div
+                      role="group"
+                      aria-labelledby="contact-occasion-label"
+                      className={cn(CELL, "md:col-span-2")}
+                    >
+                      <p id="contact-occasion-label" className={LABEL}>
+                        {p.request}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {PARTNER_REQUESTS.map((request) => (
+                          <label
+                            key={request}
+                            className={cn(
+                              "font-owners-medium cursor-pointer border border-sky px-3 py-2.5 text-[14px] uppercase tracking-wide transition-colors duration-300",
+                              "hover:bg-sky/30 has-checked:bg-black has-checked:text-cream",
+                              "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black",
+                            )}
+                          >
+                            <input
+                              type="radio"
+                              name="occasion"
+                              value={request}
+                              checked={values.occasion === request}
+                              onChange={(event) =>
+                                update("occasion")(event.target.value)
+                              }
+                              aria-describedby={
+                                state.errors.occasion
+                                  ? "contact-occasion-error"
+                                  : undefined
+                              }
+                              className="sr-only"
+                            />
+                            {p.requests[request]}
+                          </label>
+                        ))}
+                      </div>
+
+                      {state.errors.occasion && (
+                        <p id="contact-occasion-error" className={ERROR}>
+                          {errorText(state.errors.occasion)}
+                        </p>
+                      )}
+                    </div>
+
+                    <TextField
+                      name="address"
+                      label={p.address}
+                      value={values.address}
+                      onChange={update("address")}
+                      error={errorText(state.errors.address)}
+                      placeholder={p.addressPlaceholder}
+                      autoComplete="street-address"
+                      required
+                    />
+
+                    <TextField
+                      name="vat"
+                      label={dict.proAccount.vat}
+                      hint={t.optional}
+                      value={values.vat}
+                      onChange={update("vat")}
+                      error={errorText(state.errors.vat)}
+                      placeholder={dict.proAccount.vatPlaceholder}
+                    />
+                  </>
                 ) : (
                   <>
                   {/* Radios rather than a select: the native dropdown is the one
@@ -517,11 +601,15 @@ export function ContactForm({
 
                 <TextField
                   name="message"
-                  label={pro ? dict.proAccount.message : t.message}
+                  label={
+                    pro ? dict.proAccount.message : partner ? p.message : t.message
+                  }
                   value={values.message}
                   onChange={update("message")}
                   error={errorText(state.errors.message)}
-                  placeholder={t.messagePlaceholder}
+                  placeholder={
+                    partner ? p.messagePlaceholder : t.messagePlaceholder
+                  }
                   rows={6}
                   maxLength={MESSAGE_MAX}
                   required
@@ -555,7 +643,9 @@ export function ContactForm({
                         ? t.sending
                         : pro
                           ? dict.proAccount.submit
-                          : t.submit}
+                          : partner
+                            ? p.submit
+                            : t.submit}
                     </span>
                   </button>
                 </div>

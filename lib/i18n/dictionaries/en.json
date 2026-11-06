@@ -177,7 +177,8 @@
     "story": "Our story",
     "news": "News",
     "faq": "FAQ",
-    "findUs": "Find us"
+    "findUs": "Find us",
+    "collaborations": "Collaborations"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -444,7 +445,8 @@
       "too_long": "That is longer than we can store.",
       "company_required": "We need the company name.",
       "vat_required": "We need your VAT number to invoice you.",
-      "vat_invalid": "A Belgian VAT number is BE followed by ten digits."
+      "vat_invalid": "A Belgian VAT number is BE followed by ten digits.",
+      "address_required": "Please enter your venue's address."
     },
     "phonePlaceholder": "+32",
     "datePlaceholder": "14 March",
@@ -657,6 +659,16 @@
         "Moment stockists",
         "cookies Brussels",
         "cold-pressed juice Brussels"
+      ]
+    },
+    "collaborations": {
+      "title": "Collaborations",
+      "description": "Stock Moment products in your café, deli, hotel or restaurant: partnerships, supply and restocking in Brussels and across Belgium.",
+      "keywords": [
+        "cookie wholesale Brussels",
+        "café supplier Brussels",
+        "Moment partnership",
+        "cold-pressed juice wholesale"
       ]
     }
   },
@@ -901,5 +913,38 @@
     },
     "partnerCta": "Would you like to offer Moment products in your venue?",
     "partnerLink": "Get in touch"
+  },
+  "partner": {
+    "title": "Collaborations",
+    "lead": "Would you like to offer Moment products in your venue, or work with us? For any partnership, supply or restocking request, get in touch through this form. We would love to hear from you!",
+    "intro": "Become a partner",
+    "body": "Tell us about your venue: we will get back to you shortly.",
+    "steps": [
+      {
+        "title": "Your venue",
+        "body": "Its name, its address, and what you would like to offer your customers."
+      },
+      {
+        "title": "A conversation",
+        "body": "We get in touch to talk through products, quantities and delivery rhythm."
+      },
+      {
+        "title": "Off we go",
+        "body": "We agree the terms together, and your first orders are on their way."
+      }
+    ],
+    "request": "Your request",
+    "requests": {
+      "Partnership": "New partnership",
+      "Supply": "Supply",
+      "Restock": "Restocking"
+    },
+    "company": "Venue name",
+    "companyPlaceholder": "Café, deli, hotel…",
+    "address": "Venue address",
+    "addressPlaceholder": "Street, number, postcode, town",
+    "message": "Your project",
+    "messagePlaceholder": "The products you are interested in, estimated quantities, frequency…",
+    "submit": "Send request"
   }
 }

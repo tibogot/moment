@@ -177,7 +177,8 @@
     "story": "Ons verhaal",
     "news": "Nieuws",
     "faq": "FAQ",
-    "findUs": "Waar vindt u ons"
+    "findUs": "Waar vindt u ons",
+    "collaborations": "Samenwerkingen"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -444,7 +445,8 @@
       "too_long": "Dat is langer dan wij kunnen bewaren.",
       "company_required": "Wij hebben de bedrijfsnaam nodig.",
       "vat_required": "Wij hebben uw btw-nummer nodig om te factureren.",
-      "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers."
+      "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers.",
+      "address_required": "Vul het adres van uw zaak in."
     },
     "phonePlaceholder": "+32",
     "datePlaceholder": "14 maart",
@@ -658,6 +660,16 @@
         "verkooppunten Moment",
         "cookies Brussel",
         "koudgeperste sappen Brussel"
+      ]
+    },
+    "collaborations": {
+      "title": "Samenwerkingen",
+      "description": "Bied de producten van Moment aan in uw café, delicatessenzaak, hotel of restaurant: partnerschap, bevoorrading en herbevoorrading in Brussel en België.",
+      "keywords": [
+        "verdeler cookies Brussel",
+        "leverancier café Brussel",
+        "partnerschap Moment",
+        "koudgeperste sappen verdeler"
       ]
     }
   },
@@ -902,5 +914,38 @@
     },
     "partnerCta": "Wilt u de producten van Moment in uw zaak aanbieden?",
     "partnerLink": "Neem contact op"
+  },
+  "partner": {
+    "title": "Samenwerkingen",
+    "lead": "Wilt u de producten van Moment in uw zaak aanbieden of met ons samenwerken? Voor elke aanvraag voor een partnerschap, bevoorrading of herbevoorrading kunt u ons contacteren via dit formulier. We horen graag van u!",
+    "intro": "Partner worden",
+    "body": "Vertel ons over uw zaak: we nemen snel contact met u op.",
+    "steps": [
+      {
+        "title": "Uw zaak",
+        "body": "De naam, het adres en wat u uw klanten graag zou aanbieden."
+      },
+      {
+        "title": "Een gesprek",
+        "body": "We nemen contact op om de producten, de hoeveelheden en het leveringsritme te bespreken."
+      },
+      {
+        "title": "Van start",
+        "body": "We spreken samen de voorwaarden af, en uw eerste bestellingen komen eraan."
+      }
+    ],
+    "request": "Uw aanvraag",
+    "requests": {
+      "Partnership": "Nieuw partnerschap",
+      "Supply": "Bevoorrading",
+      "Restock": "Herbevoorrading"
+    },
+    "company": "Naam van de zaak",
+    "companyPlaceholder": "Café, delicatessenzaak, hotel…",
+    "address": "Adres van de zaak",
+    "addressPlaceholder": "Straat, nummer, postcode, gemeente",
+    "message": "Uw project",
+    "messagePlaceholder": "De producten die u interesseren, de geschatte hoeveelheden, de frequentie…",
+    "submit": "Aanvraag versturen"
   }
 }

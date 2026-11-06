@@ -25,6 +25,23 @@ export const OCCASIONS = [
  */
 export const PRO_OCCASION = "Professional account";
 
+/**
+ * What a venue writes in about, on /collaborations — the three kinds of request
+ * the owners named on 3 November 2026. Like OCCASIONS these are the subject
+ * line of the mail and stay English; the labels come from `partner.requests`.
+ *
+ * Kept apart from OCCASIONS and from the pro application because they are a
+ * different audience: a café that wants to stock the cookies is not booking a
+ * delivery and is not opening a company account to order lunch.
+ */
+export const PARTNER_REQUESTS = ["Partnership", "Supply", "Restock"] as const;
+
+export type PartnerRequest = (typeof PARTNER_REQUESTS)[number];
+
+export function isPartnerRequest(value: string): value is PartnerRequest {
+  return (PARTNER_REQUESTS as readonly string[]).includes(value);
+}
+
 export type Occasion = (typeof OCCASIONS)[number];
 
 export const CONTACT_FIELDS = [
@@ -61,6 +78,7 @@ export type ContactErrorCode =
   | "message_too_long"
   | "too_long"
   | "company_required"
+  | "address_required"
   | "vat_required"
   | "vat_invalid";
 
@@ -127,6 +145,7 @@ export function normaliseVat(value: string) {
 export function validateContact(values: ContactValues): ContactErrors {
   const errors: ContactErrors = {};
   const isProApplication = values.occasion === PRO_OCCASION;
+  const isPartner = isPartnerRequest(values.occasion);
 
   if (!values.name) {
     errors.name = "name_required";
@@ -148,6 +167,17 @@ export function validateContact(values: ContactValues): ContactErrors {
     if (!values.vat) {
       errors.vat = "vat_required";
     } else if (!BE_VAT.test(normaliseVat(values.vat))) {
+      errors.vat = "vat_invalid";
+    }
+  } else if (isPartner) {
+    // The venue is the point of the request: without its name and where it
+    // is, the owners cannot tell whether it is a fit, or how far the van goes.
+    if (!values.company) errors.company = "company_required";
+    if (!values.address) errors.address = "address_required";
+
+    // VAT is optional here — a first contact is not an account opening — but
+    // a number that is given has to be one.
+    if (values.vat && !BE_VAT.test(normaliseVat(values.vat))) {
       errors.vat = "vat_invalid";
     }
   } else if (!OCCASIONS.includes(values.occasion as Occasion)) {

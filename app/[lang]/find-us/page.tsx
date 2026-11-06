@@ -175,7 +175,7 @@ export default async function FindUsPage({
           <p className="font-archivo-light mt-12 border-t border-sky pt-6 text-[15px]">
             {t.partnerCta}{" "}
             <LocaleLink
-              href={routes.contact}
+              href={routes.collaborations}
               className="underline underline-offset-2 transition-opacity hover:opacity-60"
             >
               {t.partnerLink}

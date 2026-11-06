@@ -98,6 +98,7 @@ const CLIENT_SECTIONS = [
   "nav",
   "news",
   "orderBar",
+  "partner",
   "proAccount",
   "product",
   "quote",

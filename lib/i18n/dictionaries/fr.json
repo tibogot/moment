@@ -177,7 +177,8 @@
     "story": "Notre histoire",
     "news": "Actualités",
     "faq": "FAQ",
-    "findUs": "Où nous trouver"
+    "findUs": "Où nous trouver",
+    "collaborations": "Collaborations"
   },
   "faq": {
     "title": "Questions fréquentes",
@@ -444,7 +445,8 @@
       "too_long": "C'est plus long que ce que nous pouvons enregistrer.",
       "company_required": "Il nous faut le nom de la société.",
       "vat_required": "Il nous faut votre numéro de TVA pour facturer.",
-      "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres."
+      "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres.",
+      "address_required": "Indiquez l'adresse de votre établissement."
     },
     "phonePlaceholder": "+32",
     "datePlaceholder": "14 mars",
@@ -658,6 +660,16 @@
         "points de vente Moment",
         "cookies Bruxelles",
         "jus pressés à froid Bruxelles"
+      ]
+    },
+    "collaborations": {
+      "title": "Collaborations",
+      "description": "Proposez les produits Moment dans votre café, épicerie, hôtel ou restaurant : partenariat, approvisionnement et réapprovisionnement à Bruxelles et en Belgique.",
+      "keywords": [
+        "revendeur cookies Bruxelles",
+        "fournisseur café Bruxelles",
+        "partenariat Moment",
+        "jus pressés à froid revendeur"
       ]
     }
   },
@@ -902,5 +914,38 @@
     },
     "partnerCta": "Vous souhaitez proposer les produits Moment dans votre établissement ?",
     "partnerLink": "Contactez-nous"
+  },
+  "partner": {
+    "title": "Collaborations",
+    "lead": "Vous souhaitez proposer les produits Moment dans votre établissement ou développer une collaboration avec nous ? Pour toute demande de partenariat, d'approvisionnement ou de réapprovisionnement, contactez-nous via notre formulaire dédié. Nous serions ravis d'échanger avec vous !",
+    "intro": "Devenir partenaire",
+    "body": "Parlez-nous de votre établissement : nous revenons vers vous rapidement.",
+    "steps": [
+      {
+        "title": "Votre établissement",
+        "body": "Son nom, son adresse et ce que vous aimeriez proposer à vos clients."
+      },
+      {
+        "title": "Un échange",
+        "body": "Nous vous contactons pour parler des produits, des quantités et du rythme de livraison."
+      },
+      {
+        "title": "C'est parti",
+        "body": "Nous convenons ensemble des conditions, et vos premières commandes arrivent."
+      }
+    ],
+    "request": "Votre demande",
+    "requests": {
+      "Partnership": "Nouveau partenariat",
+      "Supply": "Approvisionnement",
+      "Restock": "Réapprovisionnement"
+    },
+    "company": "Nom de l'établissement",
+    "companyPlaceholder": "Café, épicerie, hôtel…",
+    "address": "Adresse de l'établissement",
+    "addressPlaceholder": "Rue, numéro, code postal, commune",
+    "message": "Votre projet",
+    "messagePlaceholder": "Les produits qui vous intéressent, les quantités estimées, la fréquence…",
+    "submit": "Envoyer la demande"
   }
 }

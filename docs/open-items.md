@@ -38,7 +38,6 @@ Business (créée par Moment), Google Analytics.
 4. **Créneaux de retrait** (11 h 30 → 15 h) : aussi pour le retrait standard ? Premier créneau 11 h ou 11 h 30 ?
 5. **Dimanche** : livraisons **et** retraits ?
 6. **Adresse** 21 ou 21A (voir §1).
-7. **Collaborations** : fusion avec la page Pro, ou page séparée ?
 8. **Où nous trouver** : ils peuvent saisir eux-mêmes leurs partenaires dans le Studio (rubrique « Partenaires »), plus besoin de nous envoyer la liste.
 9. **Pages légales** : accord écrit (voir §1).
 
@@ -60,7 +59,7 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [ ] **Distance routière** au lieu de la ligne droite
 - [ ] **Minimum 4 pièces par produit** — attend la question 1
 - [ ] **Retrait la veille** : produits concernés (cookies, banana bread, cake citron-pavot, carrot cake, healthy snacks, épicerie, jus), commande avant 15 h, 8 créneaux de 30 min, 1 commande chacun, minimum 50 € — attend les questions 2 à 4
-- [ ] **Page Collaborations** avec formulaire — attend la question 7
+- [x] **Page Collaborations** (`/collaborations`, menu « À propos ») : leur texte, formulaire dédié (nouveau partenariat / approvisionnement / réapprovisionnement, nom et adresse de l'établissement, TVA facultative), distincte de la page Pro
 - [x] **Partenaires dans le Studio** (rubrique « Partenaires » : nom, type, adresse, lien, visible ; le point est placé automatiquement depuis l'adresse)
 - [x] **Page « Où nous trouver »** (`/find-us`, dans le menu « À propos ») : carte, atelier, liste des partenaires par commune, lien vers le contact
 - [ ] **Clé Geoapify pour la carte** (`GEOAPIFY_MAP_KEY`, limitée au domaine) en production — sans elle, la page montre la liste sans carte
