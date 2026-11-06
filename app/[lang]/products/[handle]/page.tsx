@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { getMinimumPiecesPerProduct } from "@/lib/shopify/delivery";
 import { TrackViewItem } from "@/components/TrackViewItem";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
@@ -60,9 +61,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { lang, handle } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
-  const [product, allProducts] = await Promise.all([
+  const [product, allProducts, minimumQuantity] = await Promise.all([
     getProductByHandle(locale, handle),
     getProducts(locale),
+    getMinimumPiecesPerProduct(),
   ]);
 
   if (!product) notFound();
@@ -153,6 +155,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             variantId={product.variantId}
             available={product.availableForSale}
             analyticsItem={analyticsItem}
+            minimumQuantity={minimumQuantity}
             className="mt-8"
           />
           <TrackViewItem item={analyticsItem} />

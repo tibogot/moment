@@ -310,7 +310,8 @@
     "freeDelivery": "Gratis",
     "freeDeliveryReached": "De levering is gratis — uw bestelling ligt boven {threshold}.",
     "freeDeliveryShortfall": "Voeg {shortfall} toe en de levering is gratis.",
-    "belowPickupMinimum": "Afhalen in het atelier vraagt een minimumbedrag van {minimum}. Voeg {shortfall} toe om te bestellen."
+    "belowPickupMinimum": "Afhalen in het atelier vraagt een minimumbedrag van {minimum}. Voeg {shortfall} toe om te bestellen.",
+    "belowPieceMinimum": "Elk product wordt per minstens {minimum} identieke stuks besteld. Aan te vullen: {items}."
   },
   "shop": {
     "title": "Winkel",
@@ -369,7 +370,8 @@
     "servingInstructions": "Serveertips",
     "storage": "Bewaren",
     "orderPreferencesTitle": "Wanneer en hoe",
-    "viewImage": "Afbeelding {index} van {total} bekijken"
+    "viewImage": "Afbeelding {index} van {total} bekijken",
+    "minimumHint": "Minimaal {minimum} stuks per product."
   },
   "errors": {
     "not_configured": "De winkel is nog niet geconfigureerd. Probeer het later opnieuw.",

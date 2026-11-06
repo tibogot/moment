@@ -68,6 +68,7 @@ type CartDeliverySectionProps = {
   deliveryZone: ZoneId | null;
   subtotal: number;
   totalPrice: string;
+  lines: readonly { title: string; quantity: number }[];
 };
 
 /**
@@ -88,6 +89,7 @@ export function CartDeliverySection({
   deliveryZone,
   subtotal,
   totalPrice,
+  lines,
 }: CartDeliverySectionProps) {
   const dict = useDictionary();
   const locale = useLocale();
@@ -126,6 +128,7 @@ export function CartDeliverySection({
       deliveryAddress,
       deliveryZone,
       subtotal,
+      lines,
     },
     availability,
     zones,

@@ -87,6 +87,13 @@ export type ZoneTable = {
    * pays no fee.
    */
   pickupMinimumOrder: number;
+  /**
+   * Fewest identical pieces a product can be ordered in: "chaque produit doit
+   * être commandé en minimum 4 pièces identiques", delivery or collection. It
+   * rides on the table because every surface that gates a basket already
+   * holds the table; it is not a pricing rule.
+   */
+  minimumPiecesPerProduct: number;
 };
 
 /**
@@ -101,6 +108,9 @@ export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
 
 /** See `ZoneTable.pickupMinimumOrder`. A setting in the Shopify admin. */
 export const DEFAULT_PICKUP_MINIMUM_ORDER = 100;
+
+/** See `ZoneTable.minimumPiecesPerProduct`. A setting in the Shopify admin. */
+export const DEFAULT_MINIMUM_PIECES_PER_PRODUCT = 4;
 
 /**
  * The client's table (fees and minimums; the
@@ -120,6 +130,7 @@ export const DEFAULT_ZONE_TABLE: ZoneTable = {
   atelier: DEFAULT_ATELIER,
   freeDeliveryThreshold: DEFAULT_FREE_DELIVERY_THRESHOLD,
   pickupMinimumOrder: DEFAULT_PICKUP_MINIMUM_ORDER,
+  minimumPiecesPerProduct: DEFAULT_MINIMUM_PIECES_PER_PRODUCT,
   zones: [
     { id: 1, fee: 10, minimumOrder: 100, freeDeliveryThreshold: 250, maxDistanceKm: 10 },
     { id: 2, fee: 20, minimumOrder: 150, freeDeliveryThreshold: 300, maxDistanceKm: 25 },

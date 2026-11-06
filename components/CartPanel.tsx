@@ -328,6 +328,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           deliveryAddress: cart.deliveryAddress,
           deliveryZone: cart.deliveryZone,
           subtotal: cart.subtotal,
+          lines,
         },
         availability,
         zones,
@@ -596,10 +597,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                         <button
                           type="button"
                           aria-label={t.decrease}
+                          // Stops at the per-product minimum; "Retirer"
+                          // takes the line out altogether.
+                          disabled={line.quantity <= zones.minimumPiecesPerProduct}
                           onClick={() =>
                             stepLineQuantity(line.id, line.quantity, -1)
                           }
-                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60"
+                          className="px-2.5 py-1 text-[15px] transition-opacity hover:opacity-60 disabled:cursor-not-allowed disabled:opacity-30"
                         >
                           −
                         </button>

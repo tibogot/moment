@@ -35,7 +35,7 @@ l'établissement dans Google Maps, puis copier les coordonnées).
 
 | Réglage | Métaobjet |
 |---|---|
-| Préavis (48 h), heure limite (16 h), jours fermés, horaires et minimum de retrait | `delivery_settings` |
+| Préavis (48 h), heure limite (16 h), jours fermés, horaires et minimum de retrait, minimum de pièces par produit (4) | `delivery_settings` |
 | Jours ou périodes de fermeture (une entrée pour trois semaines, pas vingt-et-une) | `delivery_closure` |
 | Zones : frais, minimum de commande, livraison offerte à partir de…, distance | `delivery_zone` |
 | Créneaux de livraison et leur capacité (2 commandes par défaut, `0` pour fermer un créneau) | `delivery_slot` |

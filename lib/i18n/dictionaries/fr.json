@@ -310,7 +310,8 @@
     "freeDelivery": "Offerte",
     "freeDeliveryReached": "La livraison vous est offerte — votre commande dépasse {threshold}.",
     "freeDeliveryShortfall": "Ajoutez {shortfall} et la livraison vous est offerte.",
-    "belowPickupMinimum": "Le retrait à l'atelier demande un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander."
+    "belowPickupMinimum": "Le retrait à l'atelier demande un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander.",
+    "belowPieceMinimum": "Chaque produit se commande par {minimum} pièces identiques minimum. À compléter : {items}."
   },
   "shop": {
     "title": "Boutique",
@@ -369,7 +370,8 @@
     "servingInstructions": "Conseils de service",
     "storage": "Conservation",
     "orderPreferencesTitle": "Quand et comment",
-    "viewImage": "Voir l'image {index} sur {total}"
+    "viewImage": "Voir l'image {index} sur {total}",
+    "minimumHint": "Minimum {minimum} pièces par produit."
   },
   "errors": {
     "not_configured": "La boutique n'est pas encore configurée. Merci de réessayer plus tard.",

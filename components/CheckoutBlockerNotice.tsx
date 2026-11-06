@@ -24,8 +24,9 @@ type CheckoutBlockerNoticeProps = {
 };
 
 /**
- * Why checkout is not available yet, in the customer's terms — the minimum
- * order, the collection minimum, the delivery window, the address.
+ * Why checkout is not available yet, in the customer's terms — the pieces per
+ * product, the minimum order, the collection minimum, the delivery window, the
+ * address.
  *
  * One component for both checkout surfaces, the cart page and the slide-out
  * panel, because they apply the same gate (`checkoutBlocker`) and must say the
@@ -51,6 +52,18 @@ export function CheckoutBlockerNotice({
   if (!blocker) return null;
 
   switch (blocker.kind) {
+    case "below-piece-minimum":
+      return (
+        <CheckoutNotice tone="blocker" title={t.beforeCheckout} className={className}>
+          {interpolate(t.belowPieceMinimum, {
+            minimum: blocker.minimum,
+            items: blocker.lines
+              .map((line) => `${line.title} (${line.quantity}/${blocker.minimum})`)
+              .join(", "),
+          })}
+        </CheckoutNotice>
+      );
+
     case "below-minimum":
       return (
         <CheckoutNotice tone="blocker" title={t.beforeCheckout} className={className}>

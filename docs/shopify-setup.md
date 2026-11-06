@@ -45,6 +45,7 @@ value in brackets, which is what the site did before this existed.
 | `pickup_start_time` | Single line text | Collection opens, `HH:MM` (11:00) |
 | `pickup_end_time` | Single line text | Collection closes, `HH:MM` (15:00) |
 | `pickup_minimum_order` | Decimal | Basket minimum for collection at the atelier, in euros (100) |
+| `minimum_pieces_per_product` | Integer | Fewest identical pieces each product can be ordered in, delivery or collection (4) |
 | `atelier_latitude` | Decimal | Where deliveries are measured from |
 | `atelier_longitude` | Decimal | — |
 

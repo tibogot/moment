@@ -22,6 +22,12 @@ import {
 import { needsAddress, type DeliveryMethod } from "@/lib/delivery/order-preferences";
 
 export type CheckoutBlocker =
+  /** Products ordered in fewer pieces than the per-product minimum. */
+  | {
+      kind: "below-piece-minimum";
+      minimum: number;
+      lines: { title: string; quantity: number }[];
+    }
   /** No delivery day chosen yet. */
   | { kind: "no-date" }
   /** A day was chosen and has since closed, or fallen inside the lead time. */
@@ -45,6 +51,8 @@ export type CheckoutState = {
   deliveryAddress: string | null;
   deliveryZone: ZoneId | null;
   subtotal: number;
+  /** What is in the basket — for the per-product piece minimum. */
+  lines: readonly { title: string; quantity: number }[];
 };
 
 /**
@@ -72,6 +80,20 @@ export function checkoutBlocker(
    */
   fullSlots: readonly string[] = [],
 ): CheckoutBlocker | null {
+  // The basket itself comes first: whatever the day or the address, a product
+  // in fewer than the minimum pieces cannot be prepared, and fixing it changes
+  // the subtotal every rule below is measured against.
+  const short = cart.lines.filter(
+    (line) => line.quantity < zones.minimumPiecesPerProduct,
+  );
+  if (short.length > 0) {
+    return {
+      kind: "below-piece-minimum",
+      minimum: zones.minimumPiecesPerProduct,
+      lines: short.map(({ title, quantity }) => ({ title, quantity })),
+    };
+  }
+
   if (!cart.deliveryDate) return { kind: "no-date" };
 
   // A null availability means the rules have not loaded yet, which must not

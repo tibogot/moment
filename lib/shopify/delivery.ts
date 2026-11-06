@@ -22,6 +22,7 @@ import {
 import {
   DEFAULT_ATELIER,
   DEFAULT_FREE_DELIVERY_THRESHOLD,
+  DEFAULT_MINIMUM_PIECES_PER_PRODUCT,
   DEFAULT_PICKUP_MINIMUM_ORDER,
   type Coordinates,
 } from "@/lib/delivery/zones";
@@ -69,6 +70,7 @@ const ATELIER_LONGITUDE_FIELD = "atelier_longitude";
 const CUTOFF_HOUR_FIELD = "order_cutoff_hour";
 const FREE_DELIVERY_FIELD = "free_delivery_threshold";
 const PICKUP_MINIMUM_FIELD = "pickup_minimum_order";
+const MINIMUM_PIECES_FIELD = "minimum_pieces_per_product";
 const PICKUP_START_FIELD = "pickup_start_time";
 const PICKUP_END_FIELD = "pickup_end_time";
 
@@ -144,6 +146,7 @@ type DeliverySettings = {
   atelier: Coordinates;
   freeDeliveryThreshold: number;
   pickupMinimumOrder: number;
+  minimumPiecesPerProduct: number;
   pickupWindow: PickupWindow;
 };
 
@@ -200,6 +203,9 @@ async function getDeliverySettings(): Promise<DeliverySettings> {
         min: 0,
         max: 100_000,
       }) ?? DEFAULT_PICKUP_MINIMUM_ORDER,
+    minimumPiecesPerProduct:
+      parseIntegerField(entry?.[MINIMUM_PIECES_FIELD], { min: 1, max: 100 }) ??
+      DEFAULT_MINIMUM_PIECES_PER_PRODUCT,
     pickupWindow:
       pickupStart && pickupEnd
         ? { start: pickupStart, end: pickupEnd }
@@ -220,6 +226,11 @@ export async function getFreeDeliveryThreshold(): Promise<number> {
 /** The basket minimum for collection, carried on the zone table. */
 export async function getPickupMinimumOrder(): Promise<number> {
   return (await getDeliverySettings()).pickupMinimumOrder;
+}
+
+/** Fewest identical pieces per product — see `ZoneTable.minimumPiecesPerProduct`. */
+export async function getMinimumPiecesPerProduct(): Promise<number> {
+  return (await getDeliverySettings()).minimumPiecesPerProduct;
 }
 
 export async function getPickupWindow(): Promise<PickupWindow> {

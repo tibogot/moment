@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { addToCart } from "@/app/actions/cart";
 import { trackAddToCart, type AnalyticsItem } from "@/lib/analytics";
 import { setCart } from "@/lib/cart-store";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 
 type AddToCartButtonProps = {
@@ -13,6 +14,11 @@ type AddToCartButtonProps = {
   available: boolean;
   /** What analytics calls this product; omitted, nothing is tracked. */
   analyticsItem?: AnalyticsItem;
+  /**
+   * Fewest identical pieces the product can be ordered in. The stepper starts
+   * here and does not go below it.
+   */
+  minimumQuantity?: number;
   className?: string;
 };
 
@@ -20,13 +26,14 @@ export function AddToCartButton({
   variantId,
   available,
   analyticsItem,
+  minimumQuantity = 1,
   className,
 }: AddToCartButtonProps) {
   const locale = useLocale();
   const dict = useDictionary();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(minimumQuantity);
 
   const disabled = !variantId || !available || isPending;
 
@@ -43,7 +50,7 @@ export function AddToCartButton({
       }
 
       if (analyticsItem) trackAddToCart({ ...analyticsItem, quantity });
-      setQuantity(1);
+      setQuantity(minimumQuantity);
       // The mutation handed the new cart back, so the panel it is about to open
       // is already filled in — no refetch to wait on behind the slide-in.
       setCart(result.cart);
@@ -63,8 +70,10 @@ export function AddToCartButton({
           <button
             type="button"
             aria-label={dict.cart.decrease}
-            disabled={disabled || quantity <= 1}
-            onClick={() => setQuantity((current) => Math.max(1, current - 1))}
+            disabled={disabled || quantity <= minimumQuantity}
+            onClick={() =>
+              setQuantity((current) => Math.max(minimumQuantity, current - 1))
+            }
             className="px-3 py-2.5 text-[13px] transition-opacity hover:opacity-60 disabled:cursor-not-allowed"
           >
             −
@@ -98,6 +107,11 @@ export function AddToCartButton({
           </span>
         </button>
       </div>
+      {minimumQuantity > 1 && (
+        <p className="font-archivo-light mt-3 text-[13px] opacity-70">
+          {interpolate(dict.product.minimumHint, { minimum: minimumQuantity })}
+        </p>
+      )}
 
       {error && (
         <p className="font-archivo-light mt-3 text-[13px] text-black">{error}</p>
