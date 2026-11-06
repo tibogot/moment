@@ -121,6 +121,13 @@ export type SiteDetails = {
     /** Belgian VAT number, e.g. BE0123456789 */
     vatNumber: string;
     legalForm: string;
+    /**
+     * The registered office (siège social) as filed with the BCE — which is
+     * not the atelier. Belgian law wants the seat on the legal notice and as
+     * the data controller's address; the atelier is where the company
+     * operates, and is what everything customer-facing prints.
+     */
+    registeredOffice: { street: string; postalCode: string; city: string };
   };
   social: {
     instagram: string;
@@ -180,6 +187,13 @@ export const SITE_DETAILS: SiteDetails = {
     enterpriseNumber: "1036.670.672",
     vatNumber: "BE1036670672",
     legalForm: "SRL",
+    // BCE, checked 6 November 2026: seat in Meise, the single establishment
+    // unit at Rue des Glands 21A, Forest.
+    registeredOffice: {
+      street: "Humbeekstraat 17",
+      postalCode: "1860",
+      city: "Meise",
+    },
   },
   social: {
     instagram: "https://www.instagram.com/moment.brussels/",

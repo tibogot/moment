@@ -22,7 +22,8 @@ const COPY = {
     city: "Forest",
     lead: "Informations d’identification de l’éditeur du site, conformément au droit belge.",
     publisher: "Éditeur du site",
-    seat: "Siège",
+    seat: "Siège social",
+    atelier: "Atelier",
     contact: "Contact",
     registration: "Immatriculation",
     enterprise: "Numéro d’entreprise (BCE)",
@@ -43,7 +44,8 @@ const COPY = {
     city: "Vorst",
     lead: "Identificatiegegevens van de uitgever van deze website, overeenkomstig het Belgische recht.",
     publisher: "Uitgever van de website",
-    seat: "Zetel",
+    seat: "Maatschappelijke zetel",
+    atelier: "Atelier",
     contact: "Contact",
     registration: "Inschrijving",
     enterprise: "Ondernemingsnummer (KBO)",
@@ -65,6 +67,7 @@ const COPY = {
     lead: "Identification of the publisher of this website, as required under Belgian law.",
     publisher: "Publisher",
     seat: "Registered office",
+    atelier: "Atelier",
     contact: "Contact",
     registration: "Registration",
     enterprise: "Enterprise number (CBE)",
@@ -100,6 +103,12 @@ export default async function LegalPage({
         </p>
         <p>
           {t.seat}
+          {c}{legal.registeredOffice.street},{" "}
+          {legal.registeredOffice.postalCode} {legal.registeredOffice.city},{" "}
+          {t.country}
+        </p>
+        <p>
+          {t.atelier}
           {c}{contact.street},{" "}
           {contact.postalCode} {t.city},{" "}
           {t.country}

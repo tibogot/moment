@@ -469,8 +469,9 @@ export default async function PrivacyPage({
     <LegalDoc locale={locale} title={t.title} lead={t.lead}>
       <LegalSection title={t.controller}>
         <p>
-          {t.controllerBody} {contact.street}, {contact.postalCode}{" "}
-          {locale === "nl" ? "Vorst" : "Forest"} ({t.enterprise}{" "}
+          {t.controllerBody} {legal.registeredOffice.street},{" "}
+          {legal.registeredOffice.postalCode} {legal.registeredOffice.city} (
+          {t.enterprise}{" "}
           {legal.enterpriseNumber}).
         </p>
         <p>
