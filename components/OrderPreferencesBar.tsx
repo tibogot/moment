@@ -502,7 +502,7 @@ function Segment({
         <span
           className={cn(
             "font-archivo-light mt-1 w-full truncate text-[18px]",
-            !value && "opacity-50",
+            !value && "opacity-60",
           )}
         >
           {value ?? placeholder}

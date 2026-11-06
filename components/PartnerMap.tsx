@@ -71,6 +71,10 @@ export function PartnerMap({ points, tiles, labels }: PartnerMapProps) {
 
       map = L.map(container, {
         scrollWheelZoom: false,
+        // On a phone, a one-finger swipe over a 60svh map would pan the map
+        // instead of the page and trap the visitor halfway down. Pinch zoom,
+        // the +/- buttons and the markers still work.
+        dragging: !L.Browser.mobile,
         zoomControl: true,
         attributionControl: true,
       }).setView(DEFAULT_CENTER, 12);

@@ -45,7 +45,7 @@ const CELL = "bg-cream px-(--grid-gutter) py-[3.2svh] transition-colors duration
 const LABEL = "font-owners-medium block text-[14px] uppercase tracking-wide";
 
 const CONTROL =
-  "font-archivo-light mt-3 block w-full bg-transparent text-[16px] leading-normal text-black outline-none placeholder:text-black/40";
+  "font-archivo-light mt-3 block w-full bg-transparent text-[16px] leading-normal text-black outline-none placeholder:text-black/60";
 
 const ERROR = "font-archivo-light mt-2.5 text-[18px] leading-normal";
 

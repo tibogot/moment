@@ -104,10 +104,22 @@ export function AddressPanel({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={t.addressPlaceholder}
-          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[18px] outline-none placeholder:opacity-40"
+          className="font-archivo-light w-full border-b border-sky bg-transparent pb-2 text-[18px] outline-none placeholder:opacity-60"
         />
         <p className="font-archivo-light mt-3 text-[18px] leading-normal opacity-70">
           {t.addressHint}
+        </p>
+        {/* Read aloud as the lookup settles: the list below changes silently
+            otherwise, and a screen reader user cannot tell searching from
+            nothing found. */}
+        <p aria-live="polite" className="sr-only">
+          {searching
+            ? t.checking
+            : showEmpty
+              ? t.noMatch
+              : data && data.matches.length > 0
+                ? interpolate(t.addressResults, { count: data.matches.length })
+                : ""}
         </p>
       </div>
 

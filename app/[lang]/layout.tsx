@@ -158,13 +158,23 @@ export default async function RootLayout({
         {!siteIsIndexable && <InlineScript html={PALETTE_GUARD} />}
       </head>
       <body className="min-h-svh flex flex-col">
+        {/* First thing a keyboard reaches: past a navbar of six menus. Hidden
+            until focused. */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:bg-black focus:px-4 focus:py-3 focus:text-[14px] focus:uppercase focus:tracking-wide focus:text-cream"
+        >
+          {dictionary.common.skipToContent}
+        </a>
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
           <SmoothScroll>
               <ScrollToTop />
               <NavCatalogProvider collections={navCollections}>
                 <Navbar />
               </NavCatalogProvider>
-              <div className="relative flex flex-1 flex-col">{children}</div>
+              <main id="main" className="relative flex flex-1 flex-col">
+                {children}
+              </main>
               <CookieConsent />
               <ConsentScripts />
               {!siteIsIndexable && <PaletteToggle />}
