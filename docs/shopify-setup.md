@@ -41,7 +41,7 @@ value in brackets, which is what the site did before this existed.
 | `order_cutoff_hour` | Integer | Hour after which today stops counting, 0–23 (16) |
 | `closed_weekdays` | List of single line text | Weekdays you never deliver (none) |
 | `booking_window_days` | Integer | How far ahead the calendar takes bookings (365) |
-| `free_delivery_threshold` | Decimal | Basket value above which delivery is free, in euros (300) |
+| `free_delivery_threshold` | Decimal | Fallback free-delivery threshold for a band that sets none, in euros (300) |
 | `pickup_start_time` | Single line text | Collection opens, `HH:MM` (11:00) |
 | `pickup_end_time` | Single line text | Collection closes, `HH:MM` (15:00) |
 | `pickup_minimum_order` | Decimal | Basket minimum for collection at the atelier, in euros (100) |
@@ -66,12 +66,10 @@ Wednesday; one placed at 16:01 is treated as Tuesday's order and goes to
 Thursday. Without the cut-off, someone could order at 23:50 and call it 48
 hours when you had 34 of them.
 
-**`free_delivery_threshold` has to be set in two places, like every other fee
-on this page.** €300 in the metaobject is what the *site* quotes; a price-based
-rate of €0 above €300, on every zone in Settings → Shipping and delivery, is
-what Shopify *charges*. Set it here and not there and the site promises free
-delivery while the checkout adds €50 — the single most expensive way these two
-tables can disagree.
+**Free delivery is set per band**, on `delivery_zone` below; this field is
+only the fallback for a band that leaves its own threshold empty. Like every
+fee on this page, each threshold has to exist in two places — see "Shipping
+rates must match the zone table".
 
 `pickup_start_time` and `pickup_end_time` are the atelier's collection window,
 shown on the FAQ, the contact page and the shipping terms. Both or neither: a
@@ -106,22 +104,19 @@ Read the section on shipping rates below before changing a fee.
 | `zone_id` | Integer | yes | 1, 2, 3 … as the customer sees it |
 | `fee` | Decimal | yes | Delivery fee in euros |
 | `minimum_order` | Decimal | yes | Basket minimum in euros |
+| `free_delivery_threshold` | Decimal | no | Basket value from which this band's delivery is free. Empty = the `delivery_settings` fallback |
 | `max_distance_km` | Decimal | no | The band's outer edge |
 | `brussels_region` | Boolean | no | Tick only on a zone with no radius — see below |
 
 The built-in table is the one you gave us on 3 November 2026, so **you do not
 need to create these entries unless you want to change something**:
 
-| Zone | Distance | Fee | Minimum |
-|---|---|---|---|
-| 1 | 0–10 km | €10 | €100 |
-| 2 | 10–25 km | €20 | €150 |
-| 3 | 25–50 km | €35 | €250 |
-| 4 | 50–70 km | €50 | €350 |
-
-Free delivery is still **one** threshold for every zone (€300). The per-zone
-thresholds in the 3 November answer (€250 / €300 / €400 / €450) are not built
-yet — see `open-items.md`.
+| Zone | Distance | Fee | Minimum | Free from |
+|---|---|---|---|---|
+| 1 | 0–10 km | €10 | €100 | €250 |
+| 2 | 10–25 km | €20 | €150 | €300 |
+| 3 | 25–50 km | €35 | €250 | €400 |
+| 4 | 50–70 km | €50 | €350 | €450 |
 
 There is deliberately **no fifth entry for "> 70 km"**. A band with no price is
 not a band — past the last one the site stops quoting and sends the customer to
@@ -234,23 +229,21 @@ in the metaobject and in the shipping profile — in the same sitting.
 Shopify's shipping zones are postcode-based, not radial, so the table has to be
 translated into postcode lists. What the site quotes, as of 3 November 2026:
 
-| Zone | Rule | Fee | Minimum |
-|---|---|---|---|
-| 1 | 0–10 km from the atelier | €10 | €100 |
-| 2 | 10–25 km | €20 | €150 |
-| 3 | 25–50 km | €35 | €250 |
-| 4 | 50–70 km | €50 | €350 |
-| — | beyond 70 km | quote by hand | — |
-| — | **any zone, basket over €300** | **free** | — |
+| Zone | Rule | Fee | Minimum | Free from |
+|---|---|---|---|---|
+| 1 | 0–10 km from the atelier | €10 | €100 | €250 |
+| 2 | 10–25 km | €20 | €150 | €300 |
+| 3 | 25–50 km | €35 | €250 | €400 |
+| 4 | 50–70 km | €50 | €350 | €450 |
+| — | beyond 70 km | quote by hand | — | — |
 
 Compute each Belgian postcode's distance from the atelier once, bucket it into
 the four bands, and paste the lists into four shipping profiles. Coarse, but the
 narrowest band is 10 km wide so the error is tolerable.
 
-**The free-delivery threshold has to be set on every one of those profiles**, as
-a price-based rate of €0 for orders above €300. It is not a fifth zone — it cuts
-across all four — and a profile that misses it will charge €50 on an order the
-site promised to deliver free.
+**Each profile needs its own free-delivery rate**: a price-based rate of €0
+above that band's threshold (€250, €300, €400, €450). A profile that misses it
+charges the fee on an order the site promised to deliver free.
 
 The precise alternative is the Carrier Service API, which calculates the rate
 live from our own endpoint — but it needs Shopify **Advanced or Plus**.

@@ -53,6 +53,12 @@ export type DeliveryZone = {
   /** The basket has to reach this before the zone can be booked. Euros. */
   minimumOrder: number;
   /**
+   * Basket value from which this band's delivery is free, in euros. Null
+   * falls back to the table-wide `ZoneTable.freeDeliveryThreshold`. Further
+   * bands cost more to reach, so each has its own threshold.
+   */
+  freeDeliveryThreshold: number | null;
+  /**
    * Upper bound of the band, inclusive, in kilometres from the atelier. Null
    * marks an administrative zone — an area rather than a radius — which the
    * current table does not use. See `resolveDeliveryZone`.
@@ -115,10 +121,10 @@ export const DEFAULT_ZONE_TABLE: ZoneTable = {
   freeDeliveryThreshold: DEFAULT_FREE_DELIVERY_THRESHOLD,
   pickupMinimumOrder: DEFAULT_PICKUP_MINIMUM_ORDER,
   zones: [
-    { id: 1, fee: 10, minimumOrder: 100, maxDistanceKm: 10 },
-    { id: 2, fee: 20, minimumOrder: 150, maxDistanceKm: 25 },
-    { id: 3, fee: 35, minimumOrder: 250, maxDistanceKm: 50 },
-    { id: 4, fee: 50, minimumOrder: 350, maxDistanceKm: 70 },
+    { id: 1, fee: 10, minimumOrder: 100, freeDeliveryThreshold: 250, maxDistanceKm: 10 },
+    { id: 2, fee: 20, minimumOrder: 150, freeDeliveryThreshold: 300, maxDistanceKm: 25 },
+    { id: 3, fee: 35, minimumOrder: 250, freeDeliveryThreshold: 400, maxDistanceKm: 50 },
+    { id: 4, fee: 50, minimumOrder: 350, freeDeliveryThreshold: 450, maxDistanceKm: 70 },
   ],
 };
 
@@ -292,31 +298,45 @@ export function minimumOrderShortfall(subtotal: number, zone: DeliveryZone) {
 }
 
 /**
- * Whether this basket has bought its way out of the delivery fee.
- *
- * Measured on the merchandise subtotal, like the minimum order and for the same
- * reason: a threshold you can reach by being charged more for the trip is not a
- * threshold. It applies in every band, including the €50 one — that is what
- * "à partir de 300 € de commande, livraison gratuite" says, and a rule with an
- * unstated exception is a complaint waiting to be filed.
+ * The basket value from which this band's delivery is free: its own
+ * threshold, or the table-wide one when the band does not set it.
  *
  * The same caveat as every other number in this file — Shopify charges the
- * shipping rate, so the free-delivery threshold has to exist *there* too, as a
- * price-based rate of €0 above €300 on every zone. Set it here and not there
- * and the site promises free delivery while the checkout charges €50, which is
- * the single most expensive way these two tables can disagree.
+ * shipping rate, so each band's threshold has to exist *there* too, as a
+ * price-based €0 rate above it in that band's shipping zone. Set it here and
+ * not there and the site promises free delivery while the checkout charges
+ * the fee, the most expensive way these two tables can disagree.
  */
-export function qualifiesForFreeDelivery(subtotal: number, table: ZoneTable) {
-  return subtotal >= table.freeDeliveryThreshold;
+export function freeDeliveryThresholdFor(zone: DeliveryZone, table: ZoneTable) {
+  return zone.freeDeliveryThreshold ?? table.freeDeliveryThreshold;
 }
 
 /**
- * How much more would make the delivery free, or 0 when it already is.
+ * Whether this basket has bought its way out of the band's delivery fee.
  *
- * Deliberately not shown against an empty basket — "spend €300 for free
- * delivery" with nothing in the cart is noise rather than an offer — so callers
- * check the subtotal before rendering it.
+ * Measured on the merchandise subtotal, like the minimum order and for the same
+ * reason: a threshold you can reach by being charged more for the trip is not a
+ * threshold.
  */
-export function freeDeliveryShortfall(subtotal: number, table: ZoneTable) {
-  return Math.max(0, table.freeDeliveryThreshold - subtotal);
+export function qualifiesForFreeDelivery(
+  subtotal: number,
+  zone: DeliveryZone,
+  table: ZoneTable,
+) {
+  return subtotal >= freeDeliveryThresholdFor(zone, table);
+}
+
+/**
+ * How much more would make this band's delivery free, or 0 when it already is.
+ *
+ * Only meaningful once the address — and so the band — is known, and not shown
+ * against an empty basket: "spend €250 for free delivery" with nothing in the
+ * cart is noise rather than an offer. Callers check both.
+ */
+export function freeDeliveryShortfall(
+  subtotal: number,
+  zone: DeliveryZone,
+  table: ZoneTable,
+) {
+  return Math.max(0, freeDeliveryThresholdFor(zone, table) - subtotal);
 }

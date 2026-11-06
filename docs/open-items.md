@@ -72,7 +72,7 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [x] Historique des commandes + recommander en un clic
 - [x] **Google Analytics** `G-43F991WPBG` côté site : consentement RGPD, fréquentation, sources, conversions (produit vu, panier, paiement, demande de devis)
 - [ ] **Google Analytics — mise en route** : variable en production, pixel d'achat dans Shopify, réglages GA4 — voir `shopify-setup.md` § Google Analytics. Demande leur boutique branchée et une commande test
-- [ ] **Livraison offerte par zone** : 250 / 300 / 400 / 450 € (aujourd'hui un seul seuil, 300 €)
+- [x] **Livraison offerte par zone** : 250 / 300 / 400 / 450 €, réglable par zone dans Shopify (`delivery_zone`). Reste à reporter dans les tarifs d'expédition de leur boutique.
 - [x] ~~Distance routière~~ — non retenue, zones à vol d'oiseau conservées (voir §2)
 - [ ] **Minimum 4 pièces par produit** — attend la question 1
 - [ ] **Retrait la veille** : produits concernés (cookies, banana bread, cake citron-pavot, carrot cake, healthy snacks, épicerie, jus), commande avant 15 h, 8 créneaux de 30 min, 1 commande chacun, minimum 50 € — attend les questions 2 à 4

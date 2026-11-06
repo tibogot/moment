@@ -189,7 +189,7 @@
     "items": [
       {
         "q": "Where do you deliver?",
-        "a": "We deliver up to {max} km from the atelier in Forest, and the fee and the minimum order depend on the distance: {zones}. Order more than {freeThreshold} and the delivery is free, whichever band you are in. Beyond {max} km we quote by hand."
+        "a": "We deliver up to {max} km from the atelier in Forest. The fee, the minimum order and the amount from which delivery is free all depend on the distance: {zones}. Beyond {max} km we quote by hand."
       },
       {
         "q": "What time will my order arrive?",
@@ -219,7 +219,8 @@
         "q": "Do you work with companies?",
         "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number and can keep more than one delivery address on file."
       }
-    ]
+    ],
+    "zoneFree": "free from {amount}"
   },
   "delivery": {
     "calendarNote": "Blue days are closed or already full — we need {days} days’ notice.",

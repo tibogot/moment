@@ -189,7 +189,7 @@
     "items": [
       {
         "q": "Waar leveren jullie?",
-        "a": "We leveren tot {max} km van het atelier in Vorst. De kosten en het minimumbedrag hangen af van de afstand: {zones}. Vanaf {freeThreshold} is de levering gratis, in welke zone u ook ligt. Verder dan {max} km maken we een offerte op maat."
+        "a": "We leveren tot {max} km van het atelier in Vorst. De kosten, het minimumbedrag en het bedrag vanaf wanneer de levering gratis is, hangen af van de afstand: {zones}. Verder dan {max} km maken we een offerte op maat."
       },
       {
         "q": "Hoe laat komt mijn bestelling aan?",
@@ -219,7 +219,8 @@
         "q": "Werken jullie met bedrijven?",
         "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. We factureren op uw btw-nummer en kunnen meerdere leveradressen bewaren."
       }
-    ]
+    ],
+    "zoneFree": "gratis vanaf {amount}"
   },
   "delivery": {
     "calendarNote": "Blauwe dagen zijn gesloten of volzet — wij hebben {days} dagen op voorhand nodig.",

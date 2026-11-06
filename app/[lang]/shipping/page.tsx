@@ -2,7 +2,10 @@ import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { LocaleLink } from "@/components/LocaleLink";
 import { formatCutoffHour } from "@/lib/delivery/dates";
 import { formatSlot, formatWindow } from "@/lib/delivery/slots";
-import { maxDeliveryDistanceKm } from "@/lib/delivery/zones";
+import {
+  freeDeliveryThresholdFor,
+  maxDeliveryDistanceKm,
+} from "@/lib/delivery/zones";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import { formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
@@ -29,7 +32,6 @@ export const generateMetadata = localizedMetadata("shipping", {
 type Facts = {
   maxKm: number;
   address: string;
-  freeOver: string;
   lead: number;
   cutoff: string;
   slots: string;
@@ -43,7 +45,7 @@ type ShippingCopy = {
   area: string;
   areaIntro: (f: Facts) => string;
   region: string;
-  band: (fee: string, min: string) => string;
+  band: (fee: string, min: string, free: string) => string;
   free: (f: Facts) => string;
   distance: string;
   timing: string;
@@ -67,9 +69,10 @@ const COPY: Record<Locale, ShippingCopy> = {
     areaIntro: (f) =>
       `Nous livrons jusqu’à ${f.maxKm} km de l’atelier, ${f.address}. Les frais et le minimum de commande dépendent de la distance :`,
     region: "Région de Bruxelles-Capitale",
-    band: (fee, min) => `${fee}, minimum de commande ${min}`,
+    band: (fee, min, free) =>
+      `${fee}, minimum de commande ${min}, livraison offerte à partir de ${free}`,
     free: (f) =>
-      `Les commandes de plus de ${f.freeOver} sont livrées gratuitement, dans toutes les zones. Au-delà de ${f.maxKm} km, nous établissons un devis sur mesure : le site vous redirige alors vers le formulaire de demande.`,
+      `Au-delà de ${f.maxKm} km, nous établissons un devis sur mesure : le site vous redirige alors vers le formulaire de demande.`,
     distance:
       "Les distances sont mesurées à vol d’oiseau depuis l’atelier, et non par la route : la zone qui vous est attribuée est donc fixée dès l’enregistrement de votre adresse et ne change pas d’ici au paiement. La distance routière étant généralement supérieure de 20 à 30 %, ce calcul joue en votre faveur.",
     timing: "Délais et créneaux de livraison",
@@ -100,9 +103,10 @@ const COPY: Record<Locale, ShippingCopy> = {
     areaIntro: (f) =>
       `We leveren tot ${f.maxKm} km van het atelier, ${f.address}. De kosten en het minimale bestelbedrag hangen af van de afstand:`,
     region: "Brussels Hoofdstedelijk Gewest",
-    band: (fee, min) => `${fee}, minimaal bestelbedrag ${min}`,
+    band: (fee, min, free) =>
+      `${fee}, minimaal bestelbedrag ${min}, gratis levering vanaf ${free}`,
     free: (f) =>
-      `Bestellingen boven ${f.freeOver} worden in elke zone gratis geleverd. Voorbij ${f.maxKm} km maken we een offerte op maat: de website verwijst u dan naar het aanvraagformulier.`,
+      `Voorbij ${f.maxKm} km maken we een offerte op maat: de website verwijst u dan naar het aanvraagformulier.`,
     distance:
       "Afstanden worden in vogelvlucht vanaf het atelier gemeten en niet over de weg. De zone waarin u valt, ligt dus vast zodra uw adres is opgeslagen en verandert niet meer tot de betaling. Omdat de afstand over de weg doorgaans 20 à 30 % groter is, valt die berekening in uw voordeel uit.",
     timing: "Termijnen en levertijdvakken",
@@ -133,9 +137,10 @@ const COPY: Record<Locale, ShippingCopy> = {
     areaIntro: (f) =>
       `We deliver up to ${f.maxKm} km from the atelier at ${f.address}. The fee and the minimum order depend on the distance:`,
     region: "Brussels-Capital Region",
-    band: (fee, min) => `${fee}, minimum order ${min}`,
+    band: (fee, min, free) =>
+      `${fee}, minimum order ${min}, free delivery from ${free}`,
     free: (f) =>
-      `Orders over ${f.freeOver} are delivered free of charge, in every band. Beyond ${f.maxKm} km we quote by hand — the site will send you to the enquiry form rather than price the trip itself.`,
+      `Beyond ${f.maxKm} km we quote by hand — the site will send you to the enquiry form rather than price the trip itself.`,
     distance:
       "Distances are measured in a straight line from the atelier rather than by road, so the band you fall in is fixed the moment your address is saved and cannot change between then and checkout. Road distance is typically 20–30% greater, which means the bands are applied generously rather than strictly.",
     timing: "Lead time and delivery windows",
@@ -182,7 +187,6 @@ export default async function ShippingPage({
   const facts: Facts = {
     maxKm,
     address,
-    freeOver: formatMoney(locale, zones.freeDeliveryThreshold),
     lead: availability.leadTimeDays,
     cutoff,
     slots: slots.map(formatSlot).join(", "),
@@ -207,6 +211,7 @@ export default async function ShippingPage({
                 {t.band(
                   formatMoney(locale, zone.fee),
                   formatMoney(locale, zone.minimumOrder),
+                  formatMoney(locale, freeDeliveryThresholdFor(zone, zones)),
                 )}
               </li>
             );

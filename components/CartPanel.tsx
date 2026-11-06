@@ -58,8 +58,10 @@ import {
 } from "@/lib/i18n/format";
 import {
   freeDeliveryShortfall,
+  freeDeliveryThresholdFor,
   maxDeliveryDistanceKm,
   qualifiesForFreeDelivery,
+  zoneById,
 } from "@/lib/delivery/zones";
 import { needsAddress } from "@/lib/delivery/order-preferences";
 import { routes } from "@/lib/routes";
@@ -336,6 +338,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
   const needsDate =
     blocker?.kind === "no-date" || blocker?.kind === "stale-date";
+
+  // The free-delivery threshold depends on the band, so it is only quoted once
+  // the address has put the cart in one.
+  const zone = cart?.deliveryZone ? zoneById(zones, cart.deliveryZone) : null;
 
   /**
    * An address we can reach but cannot price — held apart from `error` because
@@ -737,19 +743,19 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {/* Only for delivery, and only with something in the basket to
                   measure against — collection has no fee to waive, and
                   "spend €300" against an empty cart is noise, not an offer. */}
-              {needsAddress(cart.deliveryMethod) && cart.subtotal > 0 && (
+              {zone && needsAddress(cart.deliveryMethod) && cart.subtotal > 0 && (
                 <p className="font-archivo-light mt-1 text-[14px] opacity-70">
-                  {qualifiesForFreeDelivery(cart.subtotal, zones)
+                  {qualifiesForFreeDelivery(cart.subtotal, zone, zones)
                     ? interpolate(t.freeDeliveryReached, {
                         threshold: formatMoney(
                           locale,
-                          zones.freeDeliveryThreshold,
+                          freeDeliveryThresholdFor(zone, zones),
                         ),
                       })
                     : interpolate(t.freeDeliveryShortfall, {
                         shortfall: formatMoney(
                           locale,
-                          freeDeliveryShortfall(cart.subtotal, zones),
+                          freeDeliveryShortfall(cart.subtotal, zone, zones),
                         ),
                       })}
                 </p>

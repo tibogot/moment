@@ -60,6 +60,7 @@ const ZONE_METAOBJECT_TYPE = "delivery_zone";
 const ZONE_ID_FIELD = "zone_id";
 const FEE_FIELD = "fee";
 const MINIMUM_ORDER_FIELD = "minimum_order";
+const FREE_DELIVERY_FIELD = "free_delivery_threshold";
 const MAX_DISTANCE_FIELD = "max_distance_km";
 const BRUSSELS_REGION_FIELD = "brussels_region";
 
@@ -79,6 +80,13 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
   );
 
   if (id === null || fee === null || minimumOrder === null) return null;
+
+  // Optional: empty means "use the table-wide threshold". A present but
+  // unreadable value is a bad entry, like any other price.
+  const rawFree = fields[FREE_DELIVERY_FIELD];
+  const freeDeliveryThreshold =
+    rawFree === undefined ? null : parseDecimalField(rawFree, EUROS_RANGE);
+  if (rawFree !== undefined && freeDeliveryThreshold === null) return null;
 
   // A *present* but unreadable radius is a failure: "abc" km must not quietly
   // become "the Brussels zone".
@@ -103,7 +111,7 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
     return null;
   }
 
-  return { id, fee, minimumOrder, maxDistanceKm };
+  return { id, fee, minimumOrder, freeDeliveryThreshold, maxDistanceKm };
 }
 
 /**

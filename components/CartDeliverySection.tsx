@@ -42,6 +42,7 @@ import {
 } from "@/lib/i18n/format";
 import {
   freeDeliveryShortfall,
+  freeDeliveryThresholdFor,
   maxDeliveryDistanceKm,
   qualifiesForFreeDelivery,
   zoneById,
@@ -138,8 +139,10 @@ export function CartDeliverySection({
     blocker?.kind === "no-date" || blocker?.kind === "stale-date";
 
   const zone = deliveryZone ? zoneById(zones, deliveryZone) : null;
-  const deliveryIsFree = qualifiesForFreeDelivery(subtotal, zones);
-  const toFreeDelivery = freeDeliveryShortfall(subtotal, zones);
+  const deliveryIsFree = zone
+    ? qualifiesForFreeDelivery(subtotal, zone, zones)
+    : false;
+  const toFreeDelivery = zone ? freeDeliveryShortfall(subtotal, zone, zones) : 0;
 
   const saveNote = (value: string) => {
     if (value.trim() === (deliveryNote ?? "").trim()) return;
@@ -352,11 +355,14 @@ export function CartDeliverySection({
 
         {/* Only once there is something in the basket to measure against:
             "spend €300 for free delivery" against an empty cart is noise. */}
-        {needsAddress(deliveryMethod) && subtotal > 0 && (
+        {zone && needsAddress(deliveryMethod) && subtotal > 0 && (
           <p className="font-archivo-light mt-3 text-[13px] opacity-70">
             {deliveryIsFree
               ? interpolate(t.freeDeliveryReached, {
-                  threshold: formatMoney(locale, zones.freeDeliveryThreshold),
+                  threshold: formatMoney(
+                    locale,
+                    freeDeliveryThresholdFor(zone, zones),
+                  ),
                 })
               : interpolate(t.freeDeliveryShortfall, {
                   shortfall: formatMoney(locale, toFreeDelivery),

@@ -189,7 +189,7 @@
     "items": [
       {
         "q": "Où livrez-vous ?",
-        "a": "Nous livrons jusqu'à {max} km de l'atelier, à Forest. Les frais et le minimum de commande dépendent de la distance : {zones}. À partir de {freeThreshold} de commande, la livraison est offerte, quelle que soit la zone. Au-delà de {max} km, nous établissons un devis sur mesure."
+        "a": "Nous livrons jusqu'à {max} km de l'atelier, à Forest. Les frais, le minimum de commande et le montant à partir duquel la livraison est offerte dépendent de la distance : {zones}. Au-delà de {max} km, nous établissons un devis sur mesure."
       },
       {
         "q": "À quelle heure ma commande arrive-t-elle ?",
@@ -219,7 +219,8 @@
         "q": "Travaillez-vous avec les entreprises ?",
         "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA et pouvons enregistrer plusieurs adresses de livraison."
       }
-    ]
+    ],
+    "zoneFree": "offerte dès {amount}"
   },
   "delivery": {
     "calendarNote": "Les jours en bleu sont fermés ou complets — il nous faut {days} jours de préavis.",

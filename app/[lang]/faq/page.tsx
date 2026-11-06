@@ -14,7 +14,11 @@ import {
   formatWindow,
   type DeliverySlot,
 } from "@/lib/delivery/slots";
-import { maxDeliveryDistanceKm, type ZoneTable } from "@/lib/delivery/zones";
+import {
+  freeDeliveryThresholdFor,
+  maxDeliveryDistanceKm,
+  type ZoneTable,
+} from "@/lib/delivery/zones";
 import { closedWeekdaysNote, formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";
@@ -46,8 +50,11 @@ function zoneSummary(locale: Locale, dict: Dictionary, zones: ZoneTable) {
       const minimum = interpolate(dict.faq.zoneMinimum, {
         amount: formatMoney(locale, zone.minimumOrder),
       });
+      const free = interpolate(dict.faq.zoneFree, {
+        amount: formatMoney(locale, freeDeliveryThresholdFor(zone, zones)),
+      });
 
-      return `${where} ${formatMoney(locale, zone.fee)} (${minimum})`;
+      return `${where} ${formatMoney(locale, zone.fee)} (${minimum}, ${free})`;
     })
     .join(" · ");
 }
@@ -93,7 +100,6 @@ export default async function FaqPage({
       closedDays: closedDays ? ` ${closedDays}` : "",
       max: maxDeliveryDistanceKm(zones),
       zones: zoneSummary(locale, dict, zones),
-      freeThreshold: formatMoney(locale, zones.freeDeliveryThreshold),
       slots: slotSummary(slots),
       slotFull: dict.delivery.slotFull,
       pickupWindow: formatWindow(pickupWindow),
