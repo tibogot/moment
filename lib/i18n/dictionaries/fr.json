@@ -381,13 +381,15 @@
     "generic": "Une erreur est survenue.",
     "slot_unavailable": "Ce créneau n'est plus disponible. Merci d'en choisir un autre.",
     "rules_unavailable": "Nous n'avons pas pu vérifier le calendrier de livraison. Merci de réessayer dans un instant.",
-    "checkout_changed": "Votre commande a changé depuis le chargement de cette page. Merci de la vérifier avant de continuer."
+    "checkout_changed": "Votre commande a changé depuis le chargement de cette page. Merci de la vérifier avant de continuer.",
+    "too_many_requests": "Trop de tentatives en peu de temps. Merci de patienter une minute avant de réessayer."
   },
   "quote": {
     "heading": "Au-delà de notre zone de livraison",
     "body": "{address} se trouve à environ {km} km de l'atelier, au-delà des {max} km que nous livrons directement. Nous établissons un devis sur mesure pour cette distance.",
     "cta": "Demander un devis",
-    "message": "Bonjour, je souhaiterais une livraison à {address}, à environ {km} km de votre atelier. Pouvez-vous me faire un devis ?"
+    "message": "Bonjour, je souhaiterais une livraison à {address}, à environ {km} km de votre atelier. Pouvez-vous me faire un devis ?",
+    "otherAddress": "Choisir une autre adresse"
   },
   "contact": {
     "title": "Demander un devis",

@@ -32,10 +32,17 @@ export function getCustomerAccountClientId() {
   return clientId;
 }
 
+/**
+ * Where Shopify sends the customer back after signing in. Normally the site's
+ * own address; the two variables exist only to override it (a tunnel in local
+ * development, say). `||` rather than `??`: `.env.example` lists both empty,
+ * and an empty string must fall through to the site URL, not become a
+ * relative callback that Shopify rejects.
+ */
 export function getAppUrl() {
   const url =
-    process.env.SHOPIFY_APP_URL ??
-    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.SHOPIFY_APP_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
     siteConfig.url;
 
   return url.replace(/\/$/, "");

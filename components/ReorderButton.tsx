@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { reorder } from "@/app/actions/cart";
 import { useLocale } from "@/components/LocaleProvider";
+import { notifyCartUpdated } from "@/lib/cart-store";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import { href, routes } from "@/lib/routes";
 
@@ -51,6 +52,10 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
         setMessage({ text: labels.nothingLeft, showCart: false });
         return;
       }
+
+      // The navbar badge and the slide-out panel read the shared cart store,
+      // which does not know a server action just filled the basket.
+      notifyCartUpdated();
       if (result.skipped > 0) {
         setMessage({
           text: interpolate(labels.skipped, { count: String(result.skipped) }),

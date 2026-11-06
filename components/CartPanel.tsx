@@ -503,7 +503,15 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   product page raises, same wording. */}
               {quote ? (
                 <div className="px-6 pt-5">
-                  <CheckoutNotice tone="blocker" title={dict.quote.heading}>
+                  <CheckoutNotice
+                    tone="blocker"
+                    title={dict.quote.heading}
+                    action={
+                      <CheckoutNoticeAction onClick={() => setQuote(null)}>
+                        {dict.quote.otherAddress}
+                      </CheckoutNoticeAction>
+                    }
+                  >
                     {interpolate(dict.quote.body, {
                       address: quote.address,
                       km: quote.km,

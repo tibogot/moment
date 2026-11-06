@@ -116,13 +116,29 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
 
   // The cart round-trips through the server on every change, so the chosen
   // value is held locally too and the segment updates on click rather than a
-  // few hundred milliseconds later. Once the cart catches up the two agree.
-  const [draft, setDraft] = useState<{
+  // few hundred milliseconds later.
+  //
+  // The draft belongs to the cart snapshot it was taken against. As soon as the
+  // store hands over a different cart — the server's answer to this change, or
+  // a change made in the cart panel — the draft is dropped and the cart is the
+  // truth again. Without that, a day picked here and later changed in the
+  // panel kept showing the old one for as long as the page stayed open.
+  type Draft = {
     date?: string;
     slot?: string;
     method?: DeliveryMethod;
     address?: string;
-  }>({});
+  };
+  const [draftState, setDraftState] = useState<{
+    base: typeof cart;
+    values: Draft;
+  }>({ base: cart, values: {} });
+  const draft: Draft = draftState.base === cart ? draftState.values : {};
+  const setDraft = (update: (current: Draft) => Draft) =>
+    setDraftState((state) => ({
+      base: cart,
+      values: update(state.base === cart ? state.values : {}),
+    }));
 
   const deliveryDate = draft.date ?? cart?.deliveryDate ?? null;
   const deliveryMethod = draft.method ?? cart?.deliveryMethod ?? null;

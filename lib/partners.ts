@@ -50,18 +50,40 @@ const PARTNER_KINDS: readonly PartnerKind[] = [
 
 const GEOCODE_CACHE_SECONDS = 60 * 60 * 24 * 30;
 
-const geocode = unstable_cache(
-  async (address: string): Promise<Coordinates | null> => {
-    try {
-      return (await resolveAddress(address))?.coordinates ?? null;
-    } catch (error) {
-      console.error("[partners] could not place", address, error);
-      return null;
-    }
+/**
+ * Only a real point is cached. A lookup that fails or finds nothing throws
+ * inside the cache, so `unstable_cache` stores nothing and the next rebuild
+ * tries again — otherwise one Geoapify hiccup would keep a new partner off the
+ * map for the whole month.
+ */
+const cachedGeocode = unstable_cache(
+  async (address: string): Promise<Coordinates> => {
+    const match = await resolveAddress(address);
+    if (!match) throw new Error(`no match for ${address}`);
+    return match.coordinates;
   },
   ["partner-geocode"],
   { revalidate: GEOCODE_CACHE_SECONDS },
 );
+
+async function geocode(address: string): Promise<Coordinates | null> {
+  try {
+    return await cachedGeocode(address);
+  } catch (error) {
+    console.error("[partners] could not place", address, error);
+    return null;
+  }
+}
+
+/**
+ * Links are only kept if they are http(s). The Studio validates this, but that
+ * check runs in the editor's browser, and the map writes the link into popup
+ * HTML where React's own `javascript:` guard does not apply.
+ */
+function safeUrl(value: string | null | undefined): string | null {
+  const url = value?.trim();
+  return url && /^https?:\/\//i.test(url) ? url : null;
+}
 
 export async function getPartners(): Promise<Partner[]> {
   const documents = await getPartnerDocuments();
@@ -87,7 +109,7 @@ export async function getPartners(): Promise<Partner[]> {
           kind,
           address,
           city: doc.city!.trim(),
-          url: doc.url ?? null,
+          url: safeUrl(doc.url),
           coordinates: manual ?? (await geocode(address)),
         }))(),
       ];

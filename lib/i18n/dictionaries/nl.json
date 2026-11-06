@@ -381,13 +381,15 @@
     "generic": "Er is iets misgegaan.",
     "slot_unavailable": "Dit tijdvak is niet meer beschikbaar. Kies er een ander.",
     "rules_unavailable": "Wij konden de leveringskalender nu niet controleren. Probeer het zo meteen opnieuw.",
-    "checkout_changed": "Er is iets in uw bestelling veranderd sinds deze pagina werd geladen. Controleer ze voordat u verdergaat."
+    "checkout_changed": "Er is iets in uw bestelling veranderd sinds deze pagina werd geladen. Controleer ze voordat u verdergaat.",
+    "too_many_requests": "Te veel pogingen in korte tijd. Wacht even een minuut voor u het opnieuw probeert."
   },
   "quote": {
     "heading": "Buiten ons leveringsgebied",
     "body": "{address} ligt op ongeveer {km} km van het atelier, voorbij de {max} km die wij rechtstreeks leveren. Voor die afstand maken wij een offerte op maat.",
     "cta": "Een offerte aanvragen",
-    "message": "Hallo, ik zou graag een levering op {address}, ongeveer {km} km van uw atelier. Kunt u mij een offerte bezorgen?"
+    "message": "Hallo, ik zou graag een levering op {address}, ongeveer {km} km van uw atelier. Kunt u mij een offerte bezorgen?",
+    "otherAddress": "Een ander adres kiezen"
   },
   "contact": {
     "title": "Offerte aanvragen",

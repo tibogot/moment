@@ -8,6 +8,8 @@ import {
   setDeliverySlot,
 } from "@/app/actions/cart";
 import { AddressPanel } from "@/components/AddressPanel";
+import { LocaleLink } from "@/components/LocaleLink";
+import { routes } from "@/lib/routes";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import {
   CheckoutNotice,
@@ -494,19 +496,43 @@ export function CartDeliverySection({
         </CheckoutNotice>
       )}
 
+      {/* Too far to price rather than wrong: the sale leaves the site and
+          becomes an enquiry, prefilled with the address and distance. Same
+          two ways out as the slide-out panel — the quote form, or another
+          address. */}
       {addressOpen &&
         (quote ? (
-          <CheckoutNotice
-            tone="blocker"
-            title={dict.quote.heading}
-            className="mt-6 max-w-105"
-          >
-            {interpolate(dict.quote.body, {
-              address: quote.address,
-              km: quote.km,
-              max: maxDeliveryDistanceKm(zones),
-            })}
-          </CheckoutNotice>
+          <div className="mt-6 max-w-105">
+            <CheckoutNotice
+              tone="blocker"
+              title={dict.quote.heading}
+              action={
+                <CheckoutNoticeAction onClick={() => setQuote(null)}>
+                  {dict.quote.otherAddress}
+                </CheckoutNoticeAction>
+              }
+            >
+              {interpolate(dict.quote.body, {
+                address: quote.address,
+                km: quote.km,
+                max: maxDeliveryDistanceKm(zones),
+              })}
+            </CheckoutNotice>
+            <LocaleLink
+              href={`${routes.contact}?occasion=Delivery&address=${encodeURIComponent(quote.address)}&km=${quote.km}`}
+              className="group mt-4 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+            >
+              <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
+                {dict.quote.cta}
+                <span
+                  className="transition-transform duration-500 group-hover:translate-x-1.5"
+                  aria-hidden
+                >
+                  &rarr;
+                </span>
+              </span>
+            </LocaleLink>
+          </div>
         ) : (
           <div className="mt-6 max-w-105 border border-sky">
             <p className="font-owners-medium px-4 pt-4 text-[12px] uppercase tracking-wide">

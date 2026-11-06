@@ -31,8 +31,10 @@ import { routes } from "@/lib/routes";
 
 type TokenResponse = {
   access_token: string;
-  refresh_token: string;
-  id_token: string;
+  /** Present on sign-in; a refresh may leave it out when it is not rotated. */
+  refresh_token?: string;
+  /** Present on sign-in; a refresh may leave it out. */
+  id_token?: string;
   expires_in: number;
 };
 
@@ -93,11 +95,21 @@ async function refreshAccessToken(refreshToken: string) {
   }
 }
 
-function toCustomerSession(tokens: TokenResponse): CustomerSession {
+/**
+ * `previous` is the session being refreshed. A refresh response is allowed to
+ * leave out the refresh token (when it is not rotated) and the id token, and a
+ * session missing either is rejected when the cookie is read back — so the
+ * customer would be signed out an hour after signing in. The old values carry
+ * over instead.
+ */
+function toCustomerSession(
+  tokens: TokenResponse,
+  previous?: CustomerSession,
+): CustomerSession {
   return {
     accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token,
-    idToken: tokens.id_token,
+    refreshToken: tokens.refresh_token || previous?.refreshToken || "",
+    idToken: tokens.id_token || previous?.idToken || "",
     expiresAt: Date.now() + tokens.expires_in * 1000,
   };
 }
@@ -135,7 +147,7 @@ export async function refreshAndPersistCustomerSession() {
     return null;
   }
 
-  const nextSession = toCustomerSession(refreshed);
+  const nextSession = toCustomerSession(refreshed, session);
   await setCustomerSession(nextSession);
   return nextSession;
 }

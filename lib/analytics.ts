@@ -47,6 +47,22 @@ function gtag(): Gtag | null {
 }
 
 /**
+ * True once the visitor has withdrawn consent in this visit. `gtag` stays
+ * defined after a withdrawal — a loaded library cannot be unloaded — so its
+ * existence is not proof of consent. `ConsentScripts` raises GA's own
+ * `ga-disable-<id>` switch on withdrawal and lowers it on a fresh grant; this
+ * reads the same switch, so nothing here can disagree with the banner.
+ */
+function analyticsWithdrawn() {
+  if (typeof window === "undefined") return false;
+  return (
+    (window as unknown as Record<string, unknown>)[
+      `ga-disable-${GA_MEASUREMENT_ID}`
+    ] === true
+  );
+}
+
+/**
  * Events raised before gtag exists. On the page a visitor lands on, the page's
  * own effects run before the layout's `ConsentScripts` has injected the tag,
  * so a `view_item` there would be lost. They wait here, in memory only, and
@@ -57,7 +73,7 @@ const pending: unknown[][] = [];
 const MAX_PENDING = 20;
 
 function send(...args: unknown[]) {
-  if (!isAnalyticsConfigured()) return;
+  if (!isAnalyticsConfigured() || analyticsWithdrawn()) return;
   const fn = gtag();
   if (fn) fn(...args);
   else if (pending.length < MAX_PENDING) pending.push(args);
@@ -118,7 +134,7 @@ export async function analyticsIds(): Promise<{
   sessionId: string | null;
 } | null> {
   const fn = gtag();
-  if (!fn || !isAnalyticsConfigured()) return null;
+  if (!fn || !isAnalyticsConfigured() || analyticsWithdrawn()) return null;
 
   const read = (field: string) =>
     new Promise<string | null>((resolve) => {
