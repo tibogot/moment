@@ -50,10 +50,15 @@ Rien n'est demandé au client là-dessus.
   1860 Meise : corrigé sur les mentions légales et la politique de
   confidentialité le 6 novembre.
 
-**Envoyé au client (6 novembre)** : les accès aux comptes, et la proposition de
-garder la distance à vol d'oiseau avec des zones resserrées (8 / 20 / 40 /
-55 km) plutôt qu'un calcul routier. **Pas encore envoyé, pour la fin** : l'accord
-écrit sur les pages légales.
+- **Distance** : on garde la mesure **à vol d'oiseau**, avec les limites
+  actuelles (10 / 25 / 50 / 70 km). « Distance routière » dans leur mail se lit
+  comme une façon de parler, pas une exigence : c'est aussi la règle par défaut
+  de Shopify, la route n'existant qu'avec des apps payantes et une clé Google
+  Maps. Les conditions de livraison l'annoncent déjà. Moment peut ajuster les
+  limites eux-mêmes dans Shopify (`delivery_zone`). Rien à leur demander.
+
+**Envoyé au client (6 novembre)** : les accès aux comptes uniquement. **Pour la
+fin** : l'accord écrit sur les pages légales.
 
 ## 3. Demandes du 3 novembre, à construire
 
@@ -68,7 +73,7 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [x] **Google Analytics** `G-43F991WPBG` côté site : consentement RGPD, fréquentation, sources, conversions (produit vu, panier, paiement, demande de devis)
 - [ ] **Google Analytics — mise en route** : variable en production, pixel d'achat dans Shopify, réglages GA4 — voir `shopify-setup.md` § Google Analytics. Demande leur boutique branchée et une commande test
 - [ ] **Livraison offerte par zone** : 250 / 300 / 400 / 450 € (aujourd'hui un seul seuil, 300 €)
-- [ ] **Distance routière** au lieu de la ligne droite
+- [x] ~~Distance routière~~ — non retenue, zones à vol d'oiseau conservées (voir §2)
 - [ ] **Minimum 4 pièces par produit** — attend la question 1
 - [ ] **Retrait la veille** : produits concernés (cookies, banana bread, cake citron-pavot, carrot cake, healthy snacks, épicerie, jus), commande avant 15 h, 8 créneaux de 30 min, 1 commande chacun, minimum 50 € — attend les questions 2 à 4
 - [x] **Page Collaborations** (`/collaborations`, menu « À propos ») : leur texte, formulaire dédié (nouveau partenariat / approvisionnement / réapprovisionnement, nom et adresse de l'établissement, TVA facultative), distincte de la page Pro
