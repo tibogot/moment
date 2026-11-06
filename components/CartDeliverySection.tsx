@@ -68,7 +68,7 @@ type CartDeliverySectionProps = {
   deliveryZone: ZoneId | null;
   subtotal: number;
   totalPrice: string;
-  lines: readonly { title: string; quantity: number }[];
+  lines: readonly { title: string; quantity: number; nextDayPickup: boolean }[];
 };
 
 /**

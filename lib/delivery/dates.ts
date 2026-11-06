@@ -45,6 +45,13 @@ export const DEFAULT_ORDER_CUTOFF_HOUR = 16;
 export const DEFAULT_CLOSED_WEEKDAYS: number[] = [];
 
 /**
+ * Next-day collection: notice in days and the cut-off hour, for orders that
+ * qualify (see lib/delivery/next-day.ts). "Jusqu'à 15 h la veille."
+ */
+export const DEFAULT_NEXT_DAY_LEAD_TIME_DAYS = 1;
+export const DEFAULT_NEXT_DAY_CUTOFF_HOUR = 15;
+
+/**
  * How far ahead the calendar will take a booking.
  *
  * There has to be a far edge. Without one the month arrows walk forward for
@@ -109,6 +116,17 @@ export type DeliveryAvailability = {
    * off.
    */
   closuresUnavailable: boolean;
+  /**
+   * The same day arithmetic for next-day collection, which has its own notice
+   * and cut-off. Applied through `availabilityForOrder` only to orders that
+   * qualify; absent on objects built before the rule existed.
+   */
+  nextDay?: {
+    firstBookable: string;
+    leadTimeDays: number;
+    cutoffHour: number;
+    pastCutoff: boolean;
+  };
 };
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;

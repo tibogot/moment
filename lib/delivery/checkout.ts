@@ -11,7 +11,16 @@
  */
 
 import { isBookable, type DeliveryAvailability } from "@/lib/delivery/dates";
-import { parseSlotAttribute, type DeliverySlot } from "@/lib/delivery/slots";
+import {
+  availabilityForOrder,
+  isNextDayPickup,
+} from "@/lib/delivery/next-day";
+import {
+  DEFAULT_PICKUP_SLOTS,
+  parseSlotAttribute,
+  slotsForMethod,
+  type DeliverySlot,
+} from "@/lib/delivery/slots";
 import {
   minimumOrderShortfall,
   zoneById,
@@ -43,6 +52,26 @@ export type CheckoutBlocker =
   /** Click & collect below the collection minimum. */
   | { kind: "below-pickup-minimum"; minimum: number; shortfall: number };
 
+/**
+ * The rules this cart is held to: next-day collection or the standard ones.
+ * Exported so the calendars and the checkout gate cannot disagree about which
+ * days, and which minimum, apply.
+ */
+export function orderRules(
+  cart: Pick<CheckoutState, "deliveryMethod" | "lines">,
+  availability: DeliveryAvailability,
+  zones: ZoneTable,
+) {
+  const nextDay = isNextDayPickup(cart.deliveryMethod, cart.lines);
+  return {
+    nextDay,
+    availability: availabilityForOrder(availability, nextDay),
+    pickupMinimumOrder: nextDay
+      ? zones.nextDayPickupMinimumOrder
+      : zones.pickupMinimumOrder,
+  };
+}
+
 export type CheckoutState = {
   deliveryDate: string | null;
   /** The stored label, as it came off the cart — see `Cart["deliverySlot"]`. */
@@ -51,8 +80,11 @@ export type CheckoutState = {
   deliveryAddress: string | null;
   deliveryZone: ZoneId | null;
   subtotal: number;
-  /** What is in the basket — for the per-product piece minimum. */
-  lines: readonly { title: string; quantity: number }[];
+  /**
+   * What is in the basket — for the per-product piece minimum, and whether it
+   * qualifies for next-day collection.
+   */
+  lines: readonly { title: string; quantity: number; nextDayPickup: boolean }[];
 };
 
 /**
@@ -63,9 +95,9 @@ export type CheckoutState = {
  * point telling someone their basket is €22 short of a zone that depends on an
  * address they have not given yet.
  *
- * Click & collect skips the address, the window and the zone, and has its own
- * floor: the owners' minimum applies "qu'il s'agisse d'une livraison ou d'un
- * retrait". It pays no fee.
+ * Click & collect books a collection time instead of a delivery window, skips
+ * the address and the zone, and has its own floor — €100, or €50 for a
+ * next-day collection. It pays no fee.
  */
 export function checkoutBlocker(
   cart: CheckoutState,
@@ -73,12 +105,13 @@ export function checkoutBlocker(
   zones: ZoneTable,
   slots: DeliverySlot[],
   /**
-   * Windows at capacity on the cart's day, as stored attribute values — from
-   * `getFullSlots` on the server, `useFullSlots` in the browser. A cart that
-   * chose a window before it filled is sent back to choose again, with the same
-   * message as a withdrawn one: either way, the van is not coming at that hour.
+   * Slots at capacity on the cart's day, for the cart's method, as stored
+   * attribute values — from `getFullSlots` on the server, `useFullSlots` in
+   * the browser. A cart that chose a slot before it filled is sent back to
+   * choose again, with the same message as a withdrawn one.
    */
   fullSlots: readonly string[] = [],
+  pickupSlots: DeliverySlot[] = DEFAULT_PICKUP_SLOTS,
 ): CheckoutBlocker | null {
   // The basket itself comes first: whatever the day or the address, a product
   // in fewer than the minimum pieces cannot be prepared, and fixing it changes
@@ -96,40 +129,42 @@ export function checkoutBlocker(
 
   if (!cart.deliveryDate) return { kind: "no-date" };
 
-  // A null availability means the rules have not loaded yet, which must not
-  // read as "every day is fine" — but it must not block a cart that is
-  // otherwise ready either, so the date is taken on trust until they arrive.
-  if (availability && !isBookable(cart.deliveryDate, availability)) {
+  // Next-day collection moves the earliest day and the cut-off, so the day is
+  // checked against the rules for this very basket. A null availability means
+  // the rules have not loaded yet: not "every day is fine", but not a reason
+  // to block an otherwise ready cart either.
+  const rules = availability ? orderRules(cart, availability, zones) : null;
+  if (rules && !isBookable(cart.deliveryDate, rules.availability)) {
     return { kind: "stale-date", date: cart.deliveryDate };
   }
 
-  // Collection is one long opening at the atelier rather than a booked window,
-  // so everything below — the window, the address, the fee and the floor — is
-  // about sending a van out, and none of it applies.
-  if (!needsAddress(cart.deliveryMethod)) {
-    const shortfall = Math.max(0, zones.pickupMinimumOrder - cart.subtotal);
-    return shortfall > 0
-      ? {
-          kind: "below-pickup-minimum",
-          minimum: zones.pickupMinimumOrder,
-          shortfall,
-        }
-      : null;
-  }
-
-  // The window is asked for before the address, matching the order the
-  // preferences bar asks in: what time on the day is a question about the
-  // order, where to is a question about the trip.
+  // Delivery windows or collection times, asked for before the address: what
+  // time on the day is a question about the order, where to is a question
+  // about the trip.
   if (!cart.deliverySlot) return { kind: "no-slot" };
 
-  // A stored window the current table no longer holds — the owners changed
-  // their rounds while this cart sat in a cookie. Not a mistake the customer
-  // made, but not something the kitchen can honour either.
+  // A stored slot the current table no longer holds, or one that has filled
+  // since it was chosen. Not a mistake the customer made, but not something the
+  // kitchen can honour either.
+  const slotTable = slotsForMethod(cart.deliveryMethod, slots, pickupSlots);
   if (
-    !parseSlotAttribute(slots, cart.deliverySlot) ||
+    !parseSlotAttribute(slotTable, cart.deliverySlot) ||
     fullSlots.includes(cart.deliverySlot)
   ) {
     return { kind: "stale-slot", slot: cart.deliverySlot };
+  }
+
+  // Collection: no address, no zone, no fee — only its own floor.
+  if (!needsAddress(cart.deliveryMethod)) {
+    const minimum =
+      rules?.pickupMinimumOrder ??
+      (isNextDayPickup(cart.deliveryMethod, cart.lines)
+        ? zones.nextDayPickupMinimumOrder
+        : zones.pickupMinimumOrder);
+    const shortfall = Math.max(0, minimum - cart.subtotal);
+    return shortfall > 0
+      ? { kind: "below-pickup-minimum", minimum, shortfall }
+      : null;
   }
 
   if (!cart.deliveryAddress) return { kind: "no-address" };

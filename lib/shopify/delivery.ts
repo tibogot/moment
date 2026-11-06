@@ -10,11 +10,14 @@ import {
   lastBookableDate,
   todayInDeliveryTimeZone,
   type DeliveryAvailability,
+  DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+  DEFAULT_NEXT_DAY_LEAD_TIME_DAYS,
 } from "@/lib/delivery/dates";
 import {
   DEFAULT_DELIVERY_SLOTS,
   DEFAULT_PICKUP_WINDOW,
   isValidTime,
+  DEFAULT_PICKUP_SLOTS,
   orderSlots,
   type DeliverySlot,
   type PickupWindow,
@@ -23,6 +26,7 @@ import {
   DEFAULT_ATELIER,
   DEFAULT_FREE_DELIVERY_THRESHOLD,
   DEFAULT_MINIMUM_PIECES_PER_PRODUCT,
+  DEFAULT_NEXT_DAY_PICKUP_MINIMUM_ORDER,
   DEFAULT_PICKUP_MINIMUM_ORDER,
   type Coordinates,
 } from "@/lib/delivery/zones";
@@ -71,6 +75,9 @@ const CUTOFF_HOUR_FIELD = "order_cutoff_hour";
 const FREE_DELIVERY_FIELD = "free_delivery_threshold";
 const PICKUP_MINIMUM_FIELD = "pickup_minimum_order";
 const MINIMUM_PIECES_FIELD = "minimum_pieces_per_product";
+const NEXT_DAY_LEAD_TIME_FIELD = "next_day_lead_time_days";
+const NEXT_DAY_CUTOFF_HOUR_FIELD = "next_day_cutoff_hour";
+const NEXT_DAY_PICKUP_MINIMUM_FIELD = "next_day_pickup_minimum_order";
 const PICKUP_START_FIELD = "pickup_start_time";
 const PICKUP_END_FIELD = "pickup_end_time";
 
@@ -94,6 +101,18 @@ const SLOT_CAPACITY_FIELD = "capacity";
 const readClosures = strictMetaobjectReader(CLOSURE_METAOBJECT_TYPE);
 const readSettings = metaobjectReader(SETTINGS_METAOBJECT_TYPE, 1);
 const readSlots = metaobjectReader(SLOT_METAOBJECT_TYPE);
+
+/**
+ * The collection times, one entry per time:
+ *
+ *   `time`      11:30
+ *   `capacity`  1       optional integer — orders that time takes. Empty means 1.
+ *
+ * No entries means the built-in eight (11:30 → 15:00).
+ */
+const PICKUP_SLOT_METAOBJECT_TYPE = "pickup_slot";
+const PICKUP_SLOT_TIME_FIELD = "time";
+const readPickupSlots = metaobjectReader(PICKUP_SLOT_METAOBJECT_TYPE);
 
 /** `0` is Sunday, matching `Date#getDay`. */
 const WEEKDAY_NUMBERS: Record<string, number> = {
@@ -147,6 +166,9 @@ type DeliverySettings = {
   freeDeliveryThreshold: number;
   pickupMinimumOrder: number;
   minimumPiecesPerProduct: number;
+  nextDayLeadTimeDays: number;
+  nextDayCutoffHour: number;
+  nextDayPickupMinimumOrder: number;
   pickupWindow: PickupWindow;
 };
 
@@ -206,6 +228,17 @@ async function getDeliverySettings(): Promise<DeliverySettings> {
     minimumPiecesPerProduct:
       parseIntegerField(entry?.[MINIMUM_PIECES_FIELD], { min: 1, max: 100 }) ??
       DEFAULT_MINIMUM_PIECES_PER_PRODUCT,
+    nextDayLeadTimeDays:
+      parseIntegerField(entry?.[NEXT_DAY_LEAD_TIME_FIELD], { min: 0, max: 90 }) ??
+      DEFAULT_NEXT_DAY_LEAD_TIME_DAYS,
+    nextDayCutoffHour:
+      parseIntegerField(entry?.[NEXT_DAY_CUTOFF_HOUR_FIELD], { min: 0, max: 23 }) ??
+      DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+    nextDayPickupMinimumOrder:
+      parseDecimalField(entry?.[NEXT_DAY_PICKUP_MINIMUM_FIELD], {
+        min: 0,
+        max: 100_000,
+      }) ?? DEFAULT_NEXT_DAY_PICKUP_MINIMUM_ORDER,
     pickupWindow:
       pickupStart && pickupEnd
         ? { start: pickupStart, end: pickupEnd }
@@ -226,6 +259,32 @@ export async function getFreeDeliveryThreshold(): Promise<number> {
 /** The basket minimum for collection, carried on the zone table. */
 export async function getPickupMinimumOrder(): Promise<number> {
   return (await getDeliverySettings()).pickupMinimumOrder;
+}
+
+/** The next-day collection minimum — see `ZoneTable.nextDayPickupMinimumOrder`. */
+export async function getNextDayPickupMinimumOrder(): Promise<number> {
+  return (await getDeliverySettings()).nextDayPickupMinimumOrder;
+}
+
+/**
+ * The collection times, in order. Falls back to the built-in eight whenever
+ * the admin has nothing usable: a collection with no time to pick cannot be
+ * booked.
+ */
+export async function getPickupSlots(): Promise<DeliverySlot[]> {
+  const entries: MetaobjectFields[] = await readPickupSlots();
+
+  const slots = entries.flatMap((fields) => {
+    const time = parseTimeField(fields[PICKUP_SLOT_TIME_FIELD]);
+    if (!time) return [];
+    const capacity = parseIntegerField(fields[SLOT_CAPACITY_FIELD], {
+      min: 0,
+      max: 100,
+    });
+    return [{ start: time, end: time, capacity: capacity ?? 1 }];
+  });
+
+  return slots.length > 0 ? orderSlots(slots) : DEFAULT_PICKUP_SLOTS;
 }
 
 /** Fewest identical pieces per product — see `ZoneTable.minimumPiecesPerProduct`. */
@@ -335,5 +394,19 @@ export async function getDeliveryAvailability(): Promise<DeliveryAvailability> {
     closedWeekdays: settings.closedWeekdays,
     closedDates: closedDates ?? [],
     closuresUnavailable: closedDates === null,
+    // Same clock reading, the next-day notice and cut-off.
+    nextDay: {
+      firstBookable: firstBookableDate(
+        today,
+        effectiveLeadTimeDays(
+          settings.nextDayLeadTimeDays,
+          settings.nextDayCutoffHour,
+          now,
+        ),
+      ),
+      leadTimeDays: settings.nextDayLeadTimeDays,
+      cutoffHour: settings.nextDayCutoffHour,
+      pastCutoff: isPastOrderCutoff(settings.nextDayCutoffHour, now),
+    },
   };
 }

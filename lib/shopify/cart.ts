@@ -1,4 +1,5 @@
 import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery/dates";
+import { hasNextDayTag } from "@/lib/delivery/next-day";
 import { DELIVERY_SLOT_ATTRIBUTE } from "@/lib/delivery/slots";
 import {
   DELIVERY_ZONE_ATTRIBUTE,
@@ -30,6 +31,8 @@ export type CartLine = {
   price: string;
   /** The same unit price as a number, for analytics. */
   unitPrice: number;
+  /** Tagged for next-day collection in Shopify — see lib/delivery/next-day.ts. */
+  nextDayPickup: boolean;
   lineTotal: string;
   variantId: string;
 };
@@ -106,7 +109,7 @@ type RawCart = {
           title: string;
           image: { url: string; altText: string | null } | null;
           price: { amount: string; currencyCode: string };
-          product: { title: string; handle: string };
+          product: { title: string; handle: string; tags?: string[] };
         };
       };
     }[];
@@ -183,6 +186,7 @@ const CART_FIELDS = `
             product {
               title
               handle
+              tags
             }
           }
         }
@@ -313,6 +317,7 @@ function mapCartNode(locale: Locale, node: RawCart): Cart {
           merchandise.price.currencyCode,
         ),
         unitPrice: Number(merchandise.price.amount) || 0,
+        nextDayPickup: hasNextDayTag(merchandise.product.tags ?? []),
         lineTotal: formatPrice(locale, lineCost.amount, lineCost.currencyCode),
         variantId: merchandise.id,
       } satisfies CartLine;

@@ -48,7 +48,36 @@ export const DEFAULT_DELIVERY_SLOTS: DeliverySlot[] = [
 ];
 
 /**
- * Collection is a window, not a slot.
+ * The collection times at the atelier: eight half-hour marks from 11:30 to
+ * 15:00, one order each — "soit 8 commandes de retrait MAX/jour". Written as
+ * slots whose start and end are the same time, so they reuse the delivery
+ * windows' picker, capacity counting and checkout gate, and read as "11:30".
+ */
+export const DEFAULT_PICKUP_SLOTS: DeliverySlot[] = [
+  "11:30",
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+].map((time) => ({ start: time, end: time, capacity: 1 }));
+
+/**
+ * The slots that apply to an order: collection times for click & collect,
+ * delivery windows otherwise.
+ */
+export function slotsForMethod(
+  method: "delivery" | "pickup" | null,
+  deliverySlots: DeliverySlot[],
+  pickupSlots: DeliverySlot[],
+) {
+  return method === "pickup" ? pickupSlots : deliverySlots;
+}
+
+/**
+ * Collection hours, for the copy (FAQ, shipping terms).
  *
  * Collections are taken across one opening (`DEFAULT_PICKUP_WINDOW`, set in
  * the admin) rather than in booked windows, so click & collect shows this
@@ -111,7 +140,8 @@ export const DELIVERY_SLOT_ATTRIBUTE = "Delivery slot";
 /** Never render this — see `formatSlot`, which is the same string today but is
  * allowed to stop being. */
 export function slotAttributeValue(slot: DeliverySlot) {
-  return `${slot.start} – ${slot.end}`;
+  // A collection time is a moment, not a window: stored as "11:30".
+  return slot.start === slot.end ? slot.start : `${slot.start} – ${slot.end}`;
 }
 
 /**
@@ -145,7 +175,7 @@ export function parseSlotAttribute(
  * looks like anyway.
  */
 export function formatSlot(slot: DeliverySlot) {
-  return `${slot.start} – ${slot.end}`;
+  return slot.start === slot.end ? slot.start : `${slot.start} – ${slot.end}`;
 }
 
 export function formatWindow(window: PickupWindow) {

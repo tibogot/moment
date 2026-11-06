@@ -12,7 +12,9 @@ import {
   getDeliverySlots,
   getFreeDeliveryThreshold,
   getMinimumPiecesPerProduct,
+  getNextDayPickupMinimumOrder,
   getPickupMinimumOrder,
+  getPickupSlots,
   getPickupWindow,
 } from "./delivery";
 import {
@@ -129,6 +131,7 @@ function parseZoneTable(
   atelier: Coordinates,
   freeDeliveryThreshold: number,
   pickupMinimumOrder: number,
+  nextDayPickupMinimumOrder: number,
   minimumPiecesPerProduct: number,
 ): ZoneTable | null {
   if (entries.length === 0) return null;
@@ -156,6 +159,7 @@ function parseZoneTable(
     zones,
     freeDeliveryThreshold,
     pickupMinimumOrder,
+    nextDayPickupMinimumOrder,
     minimumPiecesPerProduct,
   };
 }
@@ -177,12 +181,14 @@ export async function getZoneTable(): Promise<ZoneTable> {
     atelier,
     freeDeliveryThreshold,
     pickupMinimumOrder,
+    nextDayPickupMinimumOrder,
     minimumPiecesPerProduct,
   ] = await Promise.all([
     readZoneEntries(),
     getAtelier(),
     getFreeDeliveryThreshold(),
     getPickupMinimumOrder(),
+    getNextDayPickupMinimumOrder(),
     getMinimumPiecesPerProduct(),
   ]);
 
@@ -192,12 +198,14 @@ export async function getZoneTable(): Promise<ZoneTable> {
       atelier,
       freeDeliveryThreshold,
       pickupMinimumOrder,
+      nextDayPickupMinimumOrder,
       minimumPiecesPerProduct,
     ) ?? {
       ...DEFAULT_ZONE_TABLE,
       atelier,
       freeDeliveryThreshold,
       pickupMinimumOrder,
+      nextDayPickupMinimumOrder,
       minimumPiecesPerProduct,
     }
   );
@@ -213,14 +221,17 @@ export async function getDeliveryRules(): Promise<{
   availability: DeliveryAvailability;
   zones: ZoneTable;
   slots: DeliverySlot[];
+  pickupSlots: DeliverySlot[];
   pickupWindow: PickupWindow;
 }> {
-  const [availability, zones, slots, pickupWindow] = await Promise.all([
-    getDeliveryAvailability(),
-    getZoneTable(),
-    getDeliverySlots(),
-    getPickupWindow(),
-  ]);
+  const [availability, zones, slots, pickupSlots, pickupWindow] =
+    await Promise.all([
+      getDeliveryAvailability(),
+      getZoneTable(),
+      getDeliverySlots(),
+      getPickupSlots(),
+      getPickupWindow(),
+    ]);
 
-  return { availability, zones, slots, pickupWindow };
+  return { availability, zones, slots, pickupSlots, pickupWindow };
 }

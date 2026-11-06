@@ -87,6 +87,8 @@ export type ZoneTable = {
    * pays no fee.
    */
   pickupMinimumOrder: number;
+  /** The collection minimum for next-day orders — "minimum de commande : 50 €". */
+  nextDayPickupMinimumOrder: number;
   /**
    * Fewest identical pieces a product can be ordered in: "chaque produit doit
    * être commandé en minimum 4 pièces identiques", delivery or collection. It
@@ -109,6 +111,9 @@ export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
 /** See `ZoneTable.pickupMinimumOrder`. A setting in the Shopify admin. */
 export const DEFAULT_PICKUP_MINIMUM_ORDER = 100;
 
+/** See `ZoneTable.nextDayPickupMinimumOrder`. A setting in the Shopify admin. */
+export const DEFAULT_NEXT_DAY_PICKUP_MINIMUM_ORDER = 50;
+
 /** See `ZoneTable.minimumPiecesPerProduct`. A setting in the Shopify admin. */
 export const DEFAULT_MINIMUM_PIECES_PER_PRODUCT = 4;
 
@@ -130,6 +135,7 @@ export const DEFAULT_ZONE_TABLE: ZoneTable = {
   atelier: DEFAULT_ATELIER,
   freeDeliveryThreshold: DEFAULT_FREE_DELIVERY_THRESHOLD,
   pickupMinimumOrder: DEFAULT_PICKUP_MINIMUM_ORDER,
+  nextDayPickupMinimumOrder: DEFAULT_NEXT_DAY_PICKUP_MINIMUM_ORDER,
   minimumPiecesPerProduct: DEFAULT_MINIMUM_PIECES_PER_PRODUCT,
   zones: [
     { id: 1, fee: 10, minimumOrder: 100, freeDeliveryThreshold: 250, maxDistanceKm: 10 },
