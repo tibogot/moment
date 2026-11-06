@@ -5,7 +5,7 @@ import {
   CheckoutNoticeAction,
 } from "@/components/CheckoutNotice";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
-import type { CheckoutBlocker } from "@/lib/checkout";
+import type { CheckoutBlocker } from "@/lib/delivery/checkout";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import { formatMoney } from "@/lib/i18n/format";
 

@@ -1,8 +1,8 @@
 import { LegalDoc, LegalSection } from "@/components/LegalDoc";
 import { LocaleLink } from "@/components/LocaleLink";
-import { formatCutoffHour } from "@/lib/delivery";
-import { formatSlot, formatWindow } from "@/lib/delivery-slots";
-import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
+import { formatCutoffHour } from "@/lib/delivery/dates";
+import { formatSlot, formatWindow } from "@/lib/delivery/slots";
+import { maxDeliveryDistanceKm } from "@/lib/delivery/zones";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import { formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";

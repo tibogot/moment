@@ -106,7 +106,7 @@ export type SiteDetails = {
    * When a human answers, in 24-hour `HH:MM`. Not the delivery calendar and not
    * the pickup window — this is the reachable-by-phone-and-email hours, and it
    * is what the `openingHoursSpecification` in the JSON-LD publishes. The
-   * kitchen's delivery days live in the Shopify admin; see `lib/delivery.ts`.
+   * kitchen's delivery days live in the Shopify admin; see `lib/delivery/dates.ts`.
    */
   hours: {
     opensAt: string;

@@ -2,9 +2,9 @@
  * Delivery zones: what the trip costs, and how full the basket has to be before
  * we will make it.
  *
- * Like `lib/delivery.ts` this imports nothing from Shopify or `next/*`, so the
+ * Like `lib/delivery/dates.ts` this imports nothing from Shopify or `next/*`, so the
  * preferences bar, the cart gate and the server actions can all read it. And
- * like `lib/delivery.ts`, the table itself is *data*: it is read from the
+ * like `lib/delivery/dates.ts`, the table itself is *data*: it is read from the
  * Shopify admin and passed in, so the owners can move a fee without a
  * deployment. `DEFAULT_ZONE_TABLE` is what applies when nothing is configured,
  * and it is the client's table verbatim.

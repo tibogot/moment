@@ -15,7 +15,7 @@
 
 import { unstable_cache } from "next/cache";
 import { resolveAddress } from "@/lib/address";
-import type { Coordinates } from "@/lib/delivery-zones";
+import type { Coordinates } from "@/lib/delivery/zones";
 import { getPartnerDocuments } from "@/lib/sanity/queries";
 
 export type PartnerKind =

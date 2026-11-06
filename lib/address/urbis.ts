@@ -30,7 +30,7 @@ import {
   type AddressProvider,
   type AddressSearch,
 } from "./provider";
-import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
+import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/delivery/order-preferences";
 
 const URBIS_ENDPOINT =
   "https://geoservices.irisnet.be/localization/Rest/Localize/getaddresses";

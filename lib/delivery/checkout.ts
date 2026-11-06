@@ -10,16 +10,16 @@
  * belongs to the component, which is where it can be translated.
  */
 
-import { isBookable, type DeliveryAvailability } from "@/lib/delivery";
-import { parseSlotAttribute, type DeliverySlot } from "@/lib/delivery-slots";
+import { isBookable, type DeliveryAvailability } from "@/lib/delivery/dates";
+import { parseSlotAttribute, type DeliverySlot } from "@/lib/delivery/slots";
 import {
   minimumOrderShortfall,
   zoneById,
   type DeliveryZone,
   type ZoneId,
   type ZoneTable,
-} from "@/lib/delivery-zones";
-import { needsAddress, type DeliveryMethod } from "@/lib/order-preferences";
+} from "@/lib/delivery/zones";
+import { needsAddress, type DeliveryMethod } from "@/lib/delivery/order-preferences";
 
 export type CheckoutBlocker =
   /** No delivery day chosen yet. */

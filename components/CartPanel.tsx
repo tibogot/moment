@@ -11,7 +11,7 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
-import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsap";
 import {
   removeFromCart,
   setDeliveryAddress,
@@ -39,16 +39,16 @@ import {
 } from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
 import { DeliverySlotPicker } from "@/components/DeliverySlotPicker";
-import { formatCutoffHour, isBookable } from "@/lib/delivery";
+import { formatCutoffHour, isBookable } from "@/lib/delivery/dates";
 import {
   formatSlot,
   parseSlotAttribute,
   slotId,
   type DeliverySlot,
-} from "@/lib/delivery-slots";
-import { slotValuesForIds } from "@/lib/delivery-capacity";
-import { useFullSlots } from "@/lib/useFullSlots";
-import { checkoutBlocker } from "@/lib/checkout";
+} from "@/lib/delivery/slots";
+import { slotValuesForIds } from "@/lib/delivery/capacity";
+import { useFullSlots } from "@/lib/hooks/useFullSlots";
+import { checkoutBlocker } from "@/lib/delivery/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
@@ -60,12 +60,12 @@ import {
   freeDeliveryShortfall,
   maxDeliveryDistanceKm,
   qualifiesForFreeDelivery,
-} from "@/lib/delivery-zones";
-import { needsAddress } from "@/lib/order-preferences";
+} from "@/lib/delivery/zones";
+import { needsAddress } from "@/lib/delivery/order-preferences";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
-import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
-import { useDialogFocus } from "@/lib/useDialogFocus";
+import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/hooks/useDialogFocus";
 
 type CartPanelProps = {
   open: boolean;

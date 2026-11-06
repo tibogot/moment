@@ -7,8 +7,8 @@ import {
   prefersReducedMotion,
   ScrollTrigger,
   scheduleScrollTriggerRefresh,
-} from "@/lib/gsapConfig";
-import { SplitText } from "@/lib/gsapSplitText";
+} from "@/lib/gsap";
+import { SplitText } from "@/lib/gsap/splitText";
 import { onIntroReady } from "@/lib/intro";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 

@@ -9,7 +9,7 @@ import {
   parseISODate,
   toISODate,
   type DeliveryAvailability,
-} from "@/lib/delivery";
+} from "@/lib/delivery/dates";
 import { cn } from "@/lib/utils";
 
 type DeliveryDatePickerProps = {

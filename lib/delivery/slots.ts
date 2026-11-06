@@ -2,7 +2,7 @@
  * The delivery hours: which two-hour window the van is expected in, and when
  * the atelier is open for collection.
  *
- * This is the other half of `lib/delivery.ts`. That module answers *which day*;
+ * This is the other half of `lib/delivery/dates.ts`. That module answers *which day*;
  * this one answers *when on it*. They are separate files because they are
  * separate decisions — a kitchen can change its slots without touching its
  * notice period — and because the day rules were built long before the owners
@@ -27,7 +27,7 @@ export type DeliverySlot = {
   end: string;
   /**
    * How many orders the window takes before it stops being offered. Optional:
-   * absent means `DEFAULT_SLOT_CAPACITY` (see `lib/delivery-capacity.ts`). Not
+   * absent means `DEFAULT_SLOT_CAPACITY` (see `lib/delivery/capacity.ts`). Not
    * part of the window's identity — `slotId` and the stored attribute ignore
    * it, so raising a window from 2 to 3 does not orphan the carts holding it.
    */

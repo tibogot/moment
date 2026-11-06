@@ -12,7 +12,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { Handbag } from "lucide-react";
-import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsap";
 import { GridLines } from "@/components/GridLines";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
@@ -26,8 +26,8 @@ import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { SITE_DETAILS, type SiteDetails } from "@/lib/site";
 import { blurFocusWithin } from "@/lib/overlayFocus";
-import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
-import { useDialogFocus } from "@/lib/useDialogFocus";
+import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/hooks/useDialogFocus";
 
 /**
  * The accounts the owners have given us, and only those.

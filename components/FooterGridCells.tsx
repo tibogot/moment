@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, type CSSProperties } from "react";
-import { gsap } from "@/lib/gsapConfig";
-import { loadFlip, type FlipType } from "@/lib/gsapFlip";
+import { gsap } from "@/lib/gsap";
+import { loadFlip, type FlipType } from "@/lib/gsap/flip";
 import { GRID_ROWS, type GridHole } from "@/lib/grid";
 import { cn } from "@/lib/utils";
 

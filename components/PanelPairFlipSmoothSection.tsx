@@ -2,7 +2,7 @@
 
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridLines } from "@/components/GridLines";
-import { gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsap";
 import { routes } from "@/lib/routes";
 import { urlFor } from "@/lib/sanity/image";
 import type { SanityDecorativeImage } from "@/lib/sanity/types";

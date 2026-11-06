@@ -2,7 +2,7 @@
  * The two order preferences that sit either side of the delivery date: how the
  * order leaves the kitchen, and where it goes.
  *
- * Like `lib/delivery.ts` this imports nothing from Shopify or `next/*`, so the
+ * Like `lib/delivery/dates.ts` this imports nothing from Shopify or `next/*`, so the
  * client bar and the server actions can both read it.
  *
  * Both ride on the cart as attributes, so they follow the order into the

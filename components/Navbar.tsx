@@ -31,7 +31,7 @@ import {
   getServerCartSnapshot,
   subscribeCart,
 } from "@/lib/cart-store";
-import { gsap, ScrollTrigger } from "@/lib/gsapConfig";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { startIntro } from "@/lib/intro";
 import { blurFocusWithin, blurOpenOverlayFocus } from "@/lib/overlayFocus";
 import { mainNav, routes, type NavMenuKey } from "@/lib/routes";

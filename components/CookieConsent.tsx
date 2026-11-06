@@ -18,9 +18,9 @@ import {
 } from "@/lib/consent/store";
 import type { ConsentChoices } from "@/lib/consent/types";
 import { routes } from "@/lib/routes";
-import { useIsClient } from "@/lib/useIsClient";
-import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
-import { useDialogFocus } from "@/lib/useDialogFocus";
+import { useIsClient } from "@/lib/hooks/useIsClient";
+import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/hooks/useDialogFocus";
 import { cn } from "@/lib/utils";
 
 function CookieCtaButton({

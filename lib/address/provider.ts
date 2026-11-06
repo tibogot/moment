@@ -13,7 +13,7 @@
  * types without pulling a provider into the browser bundle.
  */
 
-import type { Coordinates } from "@/lib/delivery-zones";
+import type { Coordinates } from "@/lib/delivery/zones";
 
 export type AddressMatch = {
   /** The provider's own identifier for the address point. */

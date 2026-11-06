@@ -37,7 +37,7 @@ import {
   DELIVERY_METHODS,
   needsAddress,
   type DeliveryMethod,
-} from "@/lib/order-preferences";
+} from "@/lib/delivery/order-preferences";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import {
   formatSlot,
@@ -45,9 +45,9 @@ import {
   parseSlotAttribute,
   slotId,
   type DeliverySlot,
-} from "@/lib/delivery-slots";
-import { useFullSlots } from "@/lib/useFullSlots";
-import { maxDeliveryDistanceKm } from "@/lib/delivery-zones";
+} from "@/lib/delivery/slots";
+import { useFullSlots } from "@/lib/hooks/useFullSlots";
+import { maxDeliveryDistanceKm } from "@/lib/delivery/zones";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 

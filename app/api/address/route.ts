@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { searchAddresses } from "@/lib/address";
-import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
+import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/delivery/order-preferences";
 import { clientAddress, takeToken } from "@/lib/rate-limit";
 
 /** A street, a number and a town fit comfortably; anything longer is not an address. */

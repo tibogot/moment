@@ -5,7 +5,7 @@ import type { StaticImageData } from "next/image";
 // Sanity URLs skip Next's optimiser; see CdnImage.
 import { CdnImage as Image } from "@/components/CdnImage";
 import { useRef } from "react";
-import { gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsap";
 import { GRID_VIEWPORT_IMAGE_SIZES } from "@/lib/grid";
 
 type HeroParallaxImageProps = {

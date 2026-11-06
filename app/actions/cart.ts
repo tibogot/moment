@@ -23,20 +23,20 @@ import {
   GA_SESSION_ID_ATTRIBUTE,
 } from "@/lib/analytics";
 import { getCustomerOrder } from "@/lib/shopify/customer-account/customer";
-import { checkoutBlocker } from "@/lib/checkout";
+import { checkoutBlocker } from "@/lib/delivery/checkout";
 import { toLocale, type Locale } from "@/lib/i18n/config";
 import { resolveAddress } from "@/lib/address";
-import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery";
+import { DELIVERY_DATE_ATTRIBUTE, isBookable } from "@/lib/delivery/dates";
 import {
   DELIVERY_SLOT_ATTRIBUTE,
   findSlot,
   slotAttributeValue,
-} from "@/lib/delivery-slots";
+} from "@/lib/delivery/slots";
 import {
   DELIVERY_ZONE_ATTRIBUTE,
   formatZoneAttribute,
   resolveDeliveryZone,
-} from "@/lib/delivery-zones";
+} from "@/lib/delivery/zones";
 import {
   DELIVERY_ADDRESS_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
@@ -45,7 +45,7 @@ import {
   deliveryMethodAttributeValue,
   isDeliveryMethod,
   type DeliveryMethod,
-} from "@/lib/order-preferences";
+} from "@/lib/delivery/order-preferences";
 import { orderFailure } from "@/lib/order-errors";
 import { clientAddress, takeToken } from "@/lib/rate-limit";
 

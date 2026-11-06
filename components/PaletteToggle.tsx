@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { useIsClient } from "@/lib/useIsClient";
+import { useIsClient } from "@/lib/hooks/useIsClient";
 
 const STORAGE_KEY = "moment-palette";
 type Palette = "default" | "sky";

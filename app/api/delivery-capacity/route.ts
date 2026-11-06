@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { clientAddress, takeToken } from "@/lib/rate-limit";
-import { slotAttributeValue, slotId } from "@/lib/delivery-slots";
+import { slotAttributeValue, slotId } from "@/lib/delivery/slots";
 import { getFullSlots } from "@/lib/shopify/capacity";
 import {
   getDeliveryAvailability,

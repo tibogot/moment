@@ -13,15 +13,15 @@ import {
   useRef,
   useState,
 } from "react";
-import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsap";
 import { GridLines } from "@/components/GridLines";
 import { ProductCard } from "@/components/ProductCard";
 import { href, routes } from "@/lib/routes";
 import { matchesSearch } from "@/lib/shopify/filters";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { blurFocusWithin } from "@/lib/overlayFocus";
-import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
-import { useDialogFocus } from "@/lib/useDialogFocus";
+import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
+import { useDialogFocus } from "@/lib/hooks/useDialogFocus";
 
 type SearchPanelProps = {
   open: boolean;

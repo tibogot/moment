@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AddressSearch } from "@/lib/address/provider";
 import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
-import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
+import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/delivery/order-preferences";
 
 /** Long enough that typing a street does not fire a request per keystroke. */
 const SEARCH_DEBOUNCE_MS = 250;

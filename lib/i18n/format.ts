@@ -13,7 +13,7 @@
 
 import { INTL_LOCALE, type Locale } from "./config";
 import { interpolate, type Dictionary } from "./dictionaries";
-import { parseISODate } from "@/lib/delivery";
+import { parseISODate } from "@/lib/delivery/dates";
 
 export function formatMoney(
   locale: Locale,

@@ -7,8 +7,8 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { ProductCard } from "@/components/ProductCard";
-import { gsap } from "@/lib/gsapConfig";
-import { loadFlip, type FlipType } from "@/lib/gsapFlip";
+import { gsap } from "@/lib/gsap";
+import { loadFlip, type FlipType } from "@/lib/gsap/flip";
 import { routes } from "@/lib/routes";
 import {
   EMPTY_FILTERS,

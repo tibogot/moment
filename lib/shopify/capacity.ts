@@ -1,7 +1,7 @@
 /**
  * How full each delivery window is on a given day, read from the shop's orders.
  *
- * The arithmetic and the tag format are in `lib/delivery-capacity.ts`; this is
+ * The arithmetic and the tag format are in `lib/delivery/capacity.ts`; this is
  * the Admin API half. Two jobs:
  *
  * - `getFullSlots(date)` — which windows have reached capacity. Cached per day
@@ -21,9 +21,9 @@ import {
   countBookings,
   deliveryDateTag,
   fullSlots,
-} from "@/lib/delivery-capacity";
-import { parseISODate } from "@/lib/delivery";
-import type { DeliverySlot } from "@/lib/delivery-slots";
+} from "@/lib/delivery/capacity";
+import { parseISODate } from "@/lib/delivery/dates";
+import type { DeliverySlot } from "@/lib/delivery/slots";
 import { adminRequest, isAdminConfigured } from "./admin";
 import { getDeliverySlots } from "./delivery";
 

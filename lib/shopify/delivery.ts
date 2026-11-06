@@ -10,7 +10,7 @@ import {
   lastBookableDate,
   todayInDeliveryTimeZone,
   type DeliveryAvailability,
-} from "@/lib/delivery";
+} from "@/lib/delivery/dates";
 import {
   DEFAULT_DELIVERY_SLOTS,
   DEFAULT_PICKUP_WINDOW,
@@ -18,13 +18,13 @@ import {
   orderSlots,
   type DeliverySlot,
   type PickupWindow,
-} from "@/lib/delivery-slots";
+} from "@/lib/delivery/slots";
 import {
   DEFAULT_ATELIER,
   DEFAULT_FREE_DELIVERY_THRESHOLD,
   DEFAULT_PICKUP_MINIMUM_ORDER,
   type Coordinates,
-} from "@/lib/delivery-zones";
+} from "@/lib/delivery/zones";
 import {
   metaobjectReader,
   strictMetaobjectReader,
@@ -40,7 +40,7 @@ import {
  * rules in space live next door in `zones.ts`.
  *
  * Two metaobjects, both optional: every field falls back to the defaults in
- * `lib/delivery.ts`, which are the values that used to be hard-coded. A shop
+ * `lib/delivery/dates.ts`, which are the values that used to be hard-coded. A shop
  * with neither definition behaves exactly as it did before they existed.
  *
  * See docs/shopify-setup.md for the field-by-field setup.

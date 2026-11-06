@@ -7,7 +7,7 @@ import {
   prefersReducedMotion,
   ScrollTrigger,
   scheduleScrollTriggerRefresh,
-} from "@/lib/gsapConfig";
+} from "@/lib/gsap";
 
 type SmoothScrollProps = {
   children: ReactNode;

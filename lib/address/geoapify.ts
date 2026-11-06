@@ -19,8 +19,8 @@ import {
   type AddressProvider,
   type AddressSearch,
 } from "./provider";
-import { DEFAULT_ATELIER } from "@/lib/delivery-zones";
-import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/order-preferences";
+import { DEFAULT_ATELIER } from "@/lib/delivery/zones";
+import { MIN_ADDRESS_QUERY_LENGTH } from "@/lib/delivery/order-preferences";
 import { urbisProvider } from "./urbis";
 
 const GEOAPIFY_ENDPOINT = "https://api.geoapify.com/v1/geocode/autocomplete";

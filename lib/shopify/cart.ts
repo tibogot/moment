@@ -1,17 +1,17 @@
-import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery";
-import { DELIVERY_SLOT_ATTRIBUTE } from "@/lib/delivery-slots";
+import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery/dates";
+import { DELIVERY_SLOT_ATTRIBUTE } from "@/lib/delivery/slots";
 import {
   DELIVERY_ZONE_ATTRIBUTE,
   parseZoneAttribute,
   type ZoneId,
-} from "@/lib/delivery-zones";
+} from "@/lib/delivery/zones";
 import {
   DELIVERY_ADDRESS_ATTRIBUTE,
   DELIVERY_NOTE_ATTRIBUTE,
   DELIVERY_METHOD_ATTRIBUTE,
   parseDeliveryMethod,
   type DeliveryMethod,
-} from "@/lib/order-preferences";
+} from "@/lib/delivery/order-preferences";
 import type { Locale } from "@/lib/i18n/config";
 import { formatPriceAmount } from "@/lib/i18n/format";
 import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";

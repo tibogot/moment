@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 // Sanity URLs skip Next's optimiser; see CdnImage.
 import { CdnImage as Image } from "@/components/CdnImage";
 import { useRef, type CSSProperties } from "react";
-import { gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 type ParallaxImageProps = {

@@ -23,18 +23,18 @@
  * override — no field to learn, and it is the same mark the site writes.
  */
 
-import { DELIVERY_DATE_ATTRIBUTE, parseISODate } from "@/lib/delivery";
+import { DELIVERY_DATE_ATTRIBUTE, parseISODate } from "@/lib/delivery/dates";
 import {
   DELIVERY_SLOT_ATTRIBUTE,
   parseSlotAttribute,
   slotAttributeValue,
   slotId,
   type DeliverySlot,
-} from "@/lib/delivery-slots";
+} from "@/lib/delivery/slots";
 import {
   DELIVERY_METHOD_ATTRIBUTE,
   parseDeliveryMethod,
-} from "@/lib/order-preferences";
+} from "@/lib/delivery/order-preferences";
 
 /** Two vans' worth of drops per window, until the admin says otherwise. */
 export const DEFAULT_SLOT_CAPACITY = 2;

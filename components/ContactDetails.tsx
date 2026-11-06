@@ -1,6 +1,6 @@
 import { GridSection } from "@/components/GridSection";
 import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
-import { formatWindow, type PickupWindow } from "@/lib/delivery-slots";
+import { formatWindow, type PickupWindow } from "@/lib/delivery/slots";
 import {
   formatAddressLine,
   formatOpeningHours,

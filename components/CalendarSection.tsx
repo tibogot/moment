@@ -7,14 +7,14 @@ import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { monthCells } from "@/lib/calendar";
 import { notifyCartUpdated } from "@/lib/cart-store";
-import { finishIfReducedMotion, gsap } from "@/lib/gsapConfig";
+import { finishIfReducedMotion, gsap } from "@/lib/gsap";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import {
   dayState,
   parseISODate,
   toISODate,
   type DeliveryAvailability,
-} from "@/lib/delivery";
+} from "@/lib/delivery/dates";
 import { routes } from "@/lib/routes";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";

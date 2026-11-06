@@ -8,13 +8,13 @@ import {
   interpolate,
   type Dictionary,
 } from "@/lib/i18n/dictionaries";
-import { formatCutoffHour } from "@/lib/delivery";
+import { formatCutoffHour } from "@/lib/delivery/dates";
 import {
   formatSlot,
   formatWindow,
   type DeliverySlot,
-} from "@/lib/delivery-slots";
-import { maxDeliveryDistanceKm, type ZoneTable } from "@/lib/delivery-zones";
+} from "@/lib/delivery/slots";
+import { maxDeliveryDistanceKm, type ZoneTable } from "@/lib/delivery/zones";
 import { closedWeekdaysNote, formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
 import { breadcrumbSchema, faqSchema, graph } from "@/lib/schema";

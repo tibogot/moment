@@ -23,16 +23,16 @@ import {
   formatCutoffHour,
   isBookable,
   type DeliveryAvailability,
-} from "@/lib/delivery";
+} from "@/lib/delivery/dates";
 import {
   formatSlot,
   parseSlotAttribute,
   slotId,
   type DeliverySlot,
-} from "@/lib/delivery-slots";
-import { slotValuesForIds } from "@/lib/delivery-capacity";
-import { useFullSlots } from "@/lib/useFullSlots";
-import { checkoutBlocker } from "@/lib/checkout";
+} from "@/lib/delivery/slots";
+import { slotValuesForIds } from "@/lib/delivery/capacity";
+import { useFullSlots } from "@/lib/hooks/useFullSlots";
+import { checkoutBlocker } from "@/lib/delivery/checkout";
 import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
@@ -47,12 +47,12 @@ import {
   zoneById,
   type ZoneId,
   type ZoneTable,
-} from "@/lib/delivery-zones";
+} from "@/lib/delivery/zones";
 import {
   DELIVERY_NOTE_MAX,
   needsAddress,
   type DeliveryMethod,
-} from "@/lib/order-preferences";
+} from "@/lib/delivery/order-preferences";
 import { useRouter } from "next/navigation";
 
 type CartDeliverySectionProps = {

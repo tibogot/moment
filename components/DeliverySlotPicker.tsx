@@ -1,7 +1,7 @@
 "use client";
 
 import { useDictionary } from "@/components/LocaleProvider";
-import { formatSlot, slotId, type DeliverySlot } from "@/lib/delivery-slots";
+import { formatSlot, slotId, type DeliverySlot } from "@/lib/delivery/slots";
 import { cn } from "@/lib/utils";
 
 type DeliverySlotPickerProps = {

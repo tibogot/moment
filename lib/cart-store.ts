@@ -2,14 +2,14 @@
 // Fetches once on first subscription, deduplicates in-flight requests, and
 // refreshes whenever a `cart-updated` event fires.
 
-import type { DeliveryAvailability } from "@/lib/delivery";
+import type { DeliveryAvailability } from "@/lib/delivery/dates";
 import {
   DEFAULT_DELIVERY_SLOTS,
   DEFAULT_PICKUP_WINDOW,
   type DeliverySlot,
   type PickupWindow,
-} from "@/lib/delivery-slots";
-import { DEFAULT_ZONE_TABLE, type ZoneTable } from "@/lib/delivery-zones";
+} from "@/lib/delivery/slots";
+import { DEFAULT_ZONE_TABLE, type ZoneTable } from "@/lib/delivery/zones";
 import type { Cart } from "@/lib/shopify/cart";
 
 let cart: Cart | null = null;

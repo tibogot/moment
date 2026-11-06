@@ -3,7 +3,7 @@ import { GridSection } from "@/components/GridSection";
 import { LocaleLink } from "@/components/LocaleLink";
 import { PageIntro } from "@/components/PageIntro";
 import { PartnerMap, type MapPoint } from "@/components/PartnerMap";
-import { DEFAULT_ATELIER } from "@/lib/delivery-zones";
+import { DEFAULT_ATELIER } from "@/lib/delivery/zones";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getPartners, type Partner } from "@/lib/partners";

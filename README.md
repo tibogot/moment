@@ -42,7 +42,7 @@ npm run dev
 | `app/[lang]/` | pages, une par route, dans les trois langues |
 | `app/actions/` | Server Actions (panier, contact, newsletter) |
 | `app/api/` | panier, adresse, capacité des créneaux, auth, webhooks de revalidation |
-| `lib/delivery*.ts`, `lib/checkout.ts` | règles de livraison : jours, créneaux, zones, capacité, blocage du paiement |
+| `lib/delivery*.ts`, `lib/delivery/checkout.ts` | règles de livraison : jours, créneaux, zones, capacité, blocage du paiement |
 | `lib/shopify/` | clients Storefront / Admin / Customer Account, lecture des métaobjets |
 | `lib/i18n/dictionaries/` | textes de l'interface (`fr.json` est la référence typée) |
 | `lib/site.ts`, `lib/legal.ts` | coordonnées et identité légale de l'entreprise |

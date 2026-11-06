@@ -1,11 +1,11 @@
-import type { DeliveryAvailability } from "@/lib/delivery";
-import type { DeliverySlot, PickupWindow } from "@/lib/delivery-slots";
+import type { DeliveryAvailability } from "@/lib/delivery/dates";
+import type { DeliverySlot, PickupWindow } from "@/lib/delivery/slots";
 import {
   DEFAULT_ZONE_TABLE,
   type Coordinates,
   type DeliveryZone,
   type ZoneTable,
-} from "@/lib/delivery-zones";
+} from "@/lib/delivery/zones";
 import {
   getAtelier,
   getDeliveryAvailability,
@@ -24,7 +24,7 @@ import {
 /**
  * The delivery zone table, read from the Shopify admin.
  *
- * Read the header of `lib/delivery-zones.ts` before changing anything here. The
+ * Read the header of `lib/delivery/zones.ts` before changing anything here. The
  * short version: these fees are what the site *quotes*, and Shopify's own
  * shipping rates are what the customer is *charged*. The two are configured
  * separately and have to agree. Putting this table in the admin does not merge

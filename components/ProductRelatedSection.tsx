@@ -10,7 +10,7 @@ import {
 } from "@/lib/recently-viewed";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
-import { useIsClient } from "@/lib/useIsClient";
+import { useIsClient } from "@/lib/hooks/useIsClient";
 
 type ProductRelatedSectionProps = {
   similar: ShopifyProduct[];

@@ -16,8 +16,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * So the plugins that are not universal live beside this file and register
  * themselves on import:
  *
- *   lib/gsapFlip.ts       Flip       — ProductGrid, FooterGridCells, ServicesSection
- *   lib/gsapSplitText.ts  SplitText  — TextReveal
+ *   lib/gsap/flip.ts       Flip       — ProductGrid, FooterGridCells, ServicesSection
+ *   lib/gsap/splitText.ts  SplitText  — TextReveal
  *
  * Import from those rather than adding them back here.
  */

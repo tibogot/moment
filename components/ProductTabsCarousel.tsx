@@ -5,12 +5,12 @@ import { useId, useRef, useState } from "react";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridSection } from "@/components/GridSection";
 import { ProductCard } from "@/components/ProductCard";
-import { gsap } from "@/lib/gsapConfig";
+import { gsap } from "@/lib/gsap";
 import {
   loadDraggable,
   timeSinceDrag,
   type DraggableInstance,
-} from "@/lib/gsapDraggable";
+} from "@/lib/gsap/draggable";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { cn } from "@/lib/utils";
 
