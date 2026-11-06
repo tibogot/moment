@@ -74,7 +74,7 @@ The person editing here is francophone, so everything they read is French: the
 chrome Sanity owns comes from the `frFRLocale` plugin, and every `title` and
 `description` in `sanity/schemaTypes` is written in French by hand.
 
-Every `name` stays English — `menu`, `pricePerPerson`, `siteSettings`. Those are
+Every `name` stays English — `menu`, `pricePerPerson`, `partner`. Those are
 the data contract shared with the GROQ projections and the TypeScript types, and
 nobody sees them. **Keep new fields to the same split**: French in `title` and
 `description`, English in `name`.

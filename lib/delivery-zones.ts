@@ -284,7 +284,7 @@ export function parseZoneAttribute(
 /**
  * How much more has to go in the basket before this zone can be booked, or 0
  * when it already clears. The cart shows the gap rather than just refusing —
- * "add €23" is an instruction, "minimum €125" is a wall.
+ * "add €23" is an instruction, "minimum €150" is a wall.
  *
  * `subtotal` is the merchandise total in euros, before the delivery fee: the
  * customer cannot buy their way to the minimum with the cost of the trip.

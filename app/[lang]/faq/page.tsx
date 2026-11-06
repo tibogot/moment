@@ -30,8 +30,9 @@ export const generateMetadata = localizedMetadata("faq", {
  * The delivery bands, written out from the same table the cart prices against.
  *
  * Not copy. A FAQ that quotes fees is the first thing to go stale after a price
- * change, and a page telling a customer €15 while the checkout charges €25 is
- * worse than no page — so the numbers are read from `DELIVERY_ZONES` and the
+ * change, and a page quoting one fee while the checkout charges another is
+ * worse than no page — so the numbers are read from the live `ZoneTable`
+ * (Shopify's `delivery_zone` entries, or `DEFAULT_ZONE_TABLE`) and the
  * dictionary only holds the words around them.
  */
 function zoneSummary(locale: Locale, dict: Dictionary, zones: ZoneTable) {

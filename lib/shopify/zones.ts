@@ -109,9 +109,9 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
 /**
  * All of the table or none of it.
  *
- * A half-parsed table is worse than no table: drop the 30 km band because
- * somebody typed a comma into its fee, and every address between 15 and 30 km
- * silently falls through to the 50 km band and is quoted €10 too much. There is
+ * A half-parsed table is worse than no table: drop the 25 km band because
+ * somebody typed a comma into its fee, and every address between 10 and 25 km
+ * silently falls through to the 50 km band and is quoted €15 too much. There is
  * no safe partial answer to a price, so one bad entry sends the whole thing back
  * to the defaults and says so in the log.
  */
@@ -137,7 +137,7 @@ function parseZoneTable(
 
   // Metaobject entries come back in whatever order the admin holds them, and
   // `resolveDeliveryZone` walks the bands outwards and takes the first that
-  // fits. Unsorted, a 40 km address could match the 50 km band before the 30 km
+  // fits. Unsorted, a 20 km address could match the 50 km band before the 25 km
   // one it belongs in. The radius-less zone leads, as it does in the defaults.
   zones.sort((a, b) => (a.maxDistanceKm ?? -1) - (b.maxDistanceKm ?? -1));
 

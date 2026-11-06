@@ -133,12 +133,13 @@ no title at all until `pick` learned to accept both. Delete that branch, and the
 `Legacy<T>` type beside it, once every menu has been opened and re-saved in the
 Studio. A menu with no title is the symptom it is still needed.
 
-**`PLACEHOLDER_MENUS` is still in `lib/menus.ts`.** It stopped being used the
-moment the first real menu was published; it stays as a fallback for Sanity
-being unreachable. Delete it once there are several real menus.
+**`PLACEHOLDER_MENUS` is still in `lib/menus.ts`.** It is served, with a
+visible draft notice, whenever the menu query comes back empty — no real menu
+yet, or Sanity unreachable. Delete it, with `DraftNotice` and the fallback in
+`lib/sanity/queries.ts`, once there are several real menus.
 
-**The atelier's address exists twice on purpose.** Postal address in Sanity
-(printed), map coordinates in Shopify (arithmetic). Not duplicates of each
+**The atelier's address exists twice on purpose.** Postal address in
+`lib/site.ts` (printed), map coordinates in Shopify (arithmetic). Not duplicates of each
 other, but they describe the same building — move premises and both need
 changing. Documented in both places.
 

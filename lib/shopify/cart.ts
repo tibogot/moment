@@ -50,11 +50,12 @@ export type Cart = {
   /**
    * The merchandise total as a number, for comparing against a zone's minimum
    * order. `totalPrice` is already localised into a string by the time anything
-   * sees it, and parsing "€ 127,50" back out to compare it with 125 is not a
+   * sees it, and parsing "€ 147,50" back out to compare it with 150 is not a
    * thing to do twice.
    *
    * Subtotal rather than total on purpose: the minimum is about what was
-   * ordered, so nobody reaches €125 on the strength of the delivery fee.
+   * ordered, so nobody reaches a zone's minimum on the strength of the delivery
+   * fee.
    */
   subtotal: number;
   lines: CartLine[];

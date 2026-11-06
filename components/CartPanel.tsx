@@ -314,8 +314,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   );
 
   // Same gate as the cart page, from the same function. Two checkout buttons
-  // with two opinions about whether a basket is allowed through is how a €40
-  // order reaches a €125 zone.
+  // with two opinions about whether a basket is allowed through is how an order
+  // below its zone's minimum reaches checkout.
   const blocker = cart
     ? checkoutBlocker(
         {

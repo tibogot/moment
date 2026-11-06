@@ -51,9 +51,9 @@ export const DEFAULT_DELIVERY_SLOTS: DeliverySlot[] = [
 /**
  * Collection is a window, not a slot.
  *
- * The owners take collections across one long opening — 11:00 to 16:00 — rather
- * than in booked windows, so click & collect shows this sentence instead of the
- * picker. Modelling it as a fourth "slot" would put it in the same radio group
+ * Collections are taken across one opening (`DEFAULT_PICKUP_WINDOW`, set in
+ * the admin) rather than in booked windows, so click & collect shows this
+ * sentence instead of the picker. Modelling it as a fourth "slot" would put it in the same radio group
  * as the delivery windows and imply the customer is choosing between them.
  */
 export type PickupWindow = { start: string; end: string };

@@ -128,8 +128,8 @@ function parseClosedWeekdays(raw: string | undefined): number[] | null {
  * An `HH:MM` an owner typed, or null.
  *
  * Deliberately strict — no "9h", no "9:00", no "09.00". A time that half-parses
- * is how a collection window becomes 09:00–16:00 when it was meant to be
- * 11:00–16:00, and the fallback is a correct default, so refusing is cheap.
+ * is how a collection window becomes 09:00–15:00 when it was meant to be
+ * 11:00–15:00, and the fallback is a correct default, so refusing is cheap.
  */
 function parseTimeField(raw: string | undefined): string | null {
   const value = raw?.trim();

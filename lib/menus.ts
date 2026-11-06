@@ -202,9 +202,9 @@ export function sortMenus(menus: Menu[]) {
  * Stand-in content, used only while Sanity has no `menu` documents.
  *
  * These are plausible Brussels formats at plausible prices, not the client's.
- * Anything rendered from them is stamped with the draft notice below, in the
- * same spirit as the "Draft" lead on the shipping page — a placeholder that
- * cannot be told apart from real copy is worse than an empty page.
+ * Anything rendered from them is stamped with the draft notice below: a
+ * placeholder that cannot be told apart from real copy is worse than an empty
+ * page.
  *
  * Delete this array once the real menus are in the Studio; the pages fall
  * through to Sanity on their own.
