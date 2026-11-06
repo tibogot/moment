@@ -35,9 +35,9 @@ export function PageIntro({ title, lead, leadClassName }: PageIntroProps) {
           >
             <p
               className={cn(
-                // Flat 18px rather than the vw clamp it used to carry: the
-                // clamp read as 15px on a phone and every page was overriding
-                // it back to this anyway. Archivo Light sets small, so the lead
+                // Flat 18px rather than a vw clamp: a clamp reads as 15px on
+                // a phone, and every page wants this size anyway. Archivo
+                // Light sets small, so the lead
                 // needs the size to hold its own under the headline.
                 "font-archivo-light max-w-full text-[18px] leading-normal wrap-break-word text-black",
                 leadClassName,

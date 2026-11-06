@@ -27,8 +27,8 @@ const FACT_KEYS = [
  */
 export function AboutFacts({ copy }: { copy: Dictionary["about"]["facts"] }) {
   // Paired by key rather than by position, so a row cannot pick up its
-  // neighbour's answer. (A "since" row with the founding year was removed until
-  // the owners confirm it: the company itself was registered in April 2026.)
+  // neighbour's answer. (No "since" row with a founding year until the owners
+  // confirm one: the company itself was registered in April 2026.)
   const facts = FACT_KEYS.map((key) => ({
     term: copy.terms[key],
     value: copy.values[key],

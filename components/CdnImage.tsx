@@ -23,9 +23,9 @@ const sanityLoader: ImageLoader = ({ src, width, quality }) => {
 
 /**
  * The same for Shopify's CDN, which resizes on `width` and already serves WebP
- * or AVIF to browsers that ask. Product photographs were the bulk of the
+ * or AVIF to browsers that ask. Product photographs would be the bulk of the
  * optimiser's work — every card, gallery and cart line, in every width of the
- * srcset — and all of it was work Shopify does for free.
+ * srcset — and all of it is work Shopify does for free.
  */
 const shopifyLoader: ImageLoader = ({ src, width }) => {
   const url = new URL(src);

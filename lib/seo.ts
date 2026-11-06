@@ -204,7 +204,7 @@ export function pageMetadata({
 }
 
 /**
- * A page's SEO, as the `generateMetadata` export it has to be now that every
+ * A page's SEO, as the `generateMetadata` export it has to be because every
  * route exists in three languages.
  *
  * Static `metadata` cannot see the route params, so a page declaring it that
@@ -213,10 +213,9 @@ export function pageMetadata({
  * and English pages are duplicates not worth indexing.
  *
  * The title, description and keywords come from the dictionary under `key`
- * rather than being passed in. They were literals until every page shipped in
- * three languages and all three kept serving the English ones — which is the
- * text Google actually prints in a result, so it was the least visible and
- * most expensive thing left untranslated.
+ * rather than being passed in as literals, which would serve one language in
+ * all three — and that is the text Google actually prints in a result, so it
+ * would be the least visible and most expensive thing left untranslated.
  *
  * Keywords are translated rather than shared. A French page ranking on
  * "catering Brussels" instead of "traiteur Bruxelles" is the whole multilingual

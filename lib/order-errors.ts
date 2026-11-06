@@ -1,9 +1,8 @@
 /**
  * Why a cart action refused, as a code rather than a sentence.
  *
- * The actions used to return finished English prose, which the components put
- * straight on screen. That was fine while the site had one language and became
- * a bug the day it had three: these are the messages a customer reads at the
+ * Finished prose from the actions would reach the screen in one language on a
+ * site that has three: these are the messages a customer reads at the
  * exact moment their order will not go through, and showing them in the wrong
  * language there is worse than anywhere else on the site.
  *

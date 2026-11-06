@@ -122,7 +122,7 @@ export function OrderPreferencesBar({ className }: { className?: string }) {
   // store hands over a different cart — the server's answer to this change, or
   // a change made in the cart panel — the draft is dropped and the cart is the
   // truth again. Without that, a day picked here and later changed in the
-  // panel kept showing the old one for as long as the page stayed open.
+  // panel would keep showing the old one for as long as the page stayed open.
   type Draft = {
     date?: string;
     slot?: string;

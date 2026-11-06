@@ -374,8 +374,8 @@ export function CalendarSection({ availability }: CalendarSectionProps) {
       </div>
 
       {/* A bar rather than a dialog: picking a delivery day is a comparison, so
-          the grid has to stay on screen and stay clickable while it is up. The
-          confirm used to sit below the calendar, a full screen away from the
+          the grid has to stay on screen and stay clickable while it is up. A
+          confirm below the calendar would sit a full screen away from the
           cell being tapped on a phone. */}
       <div
         ref={barRef}

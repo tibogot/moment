@@ -10,27 +10,24 @@ import { DEFAULT_LOCALE, LOCALES } from "./i18n/config";
  * the internet.
  *
  * `SiteDetails` is the company: address, phone, VAT, social accounts. These
- * lived in the Sanity Studio until 29 August 2026, on the reasoning that they
- * are facts a business's owners know and we do not. They are hardcoded now —
- * see the note on `SITE_DETAILS` for why that turned out to be the better
- * trade.
+ * are hardcoded rather than kept in the Sanity Studio — see the note on
+ * `SITE_DETAILS` for why that is the better trade.
  *
- * The languages are *not* restated here. They used to be, and the copy said
- * `defaultLocale: "en"` while `lib/i18n/config` said `fr` — so the JSON-LD told
- * Google the site's primary language was English, on a site whose whole case
- * for existing is ranking in French.
+ * The languages are *not* restated here. They come from `lib/i18n/config`, so
+ * a second copy cannot drift and have the JSON-LD tell Google the site's
+ * primary language is English, on a site whose whole case for existing is
+ * ranking in French.
  */
 /**
  * Where this deployment actually lives.
  *
  * Every canonical URL, the sitemap, robots.txt, the Open Graph image and every
- * `@id` in the JSON-LD are built from this. It used to be a literal — and for a
- * while the wrong literal, a domain nobody had bought — so the site was telling
- * search engines that the real version of every page was somewhere that does
- * not resolve, which is worse than saying nothing at all.
+ * `@id` in the JSON-LD are built from this. A wrong value tells search engines
+ * that the real version of every page is somewhere that does not resolve,
+ * which is worse than saying nothing at all.
  *
- * The domain is now decided: **moment-lab.be**, confirmed by the owners on
- * 29 August 2026. `moment.be` was never theirs and is not coming; anything in
+ * The domain is **moment-lab.be**, confirmed by the owners. `moment.be` was
+ * never theirs and is not coming; anything in
  * the repo still naming it is out of date.
  *
  * `NEXT_PUBLIC_SITE_URL` is the supported way to set it, and the only one that
@@ -134,36 +131,28 @@ export type SiteDetails = {
 };
 
 /**
- * The company's facts, as given by the owners on 29 August 2026. **The single
- * source of truth — there is no CMS copy of any of this.**
+ * The company's facts, as given by the owners. **The single source of truth —
+ * there is no CMS copy of any of this.**
  *
- * There used to be. A `siteSettings` singleton in the Studio held the same
- * eleven fields, and `getSiteDetails` merged it over a set of defaults here.
- * That was the right shape while the defaults were *blank* and the Studio was
- * the only place an answer could come from. It stopped being the right shape
- * the moment we knew the answers and wrote them down here too, because then the
- * same fact lived in two places.
+ * A Studio copy merged over defaults here would put the same fact in two
+ * places, and a precedence rule between them buys bugs and no benefit: if a
+ * non-empty Studio field wins, an owner who clears a phone number in the
+ * Studio sends an empty string that reads as "not an answer", and watches the
+ * hardcoded number stay on the site.
  *
- * It could not render two values at once — a non-empty Studio field won,
- * otherwise this did — but that precedence rule bought one bug and no benefit:
- * clear a phone number in the Studio and the empty string read as "not an
- * answer", so the site went on showing the hardcoded one. An owner deleting a
- * number and watching it stay on the site is indefensible, and it was a
- * symptom, not the disease.
- *
- * So the CMS copy is gone. The cost, accepted knowingly: changing any of these
- * is now a code change and a deploy rather than a field an owner can edit. For
- * facts that move once every few years — an address, a VAT number, a legal
- * form — that is the cheaper side of the trade, and the Studio is now only
- * things that genuinely change: menus, news, the home page images.
+ * The cost, accepted knowingly: changing any of these is a code change and a
+ * deploy rather than a field an owner can edit. For facts that move once every
+ * few years — an address, a VAT number, a legal form — that is the cheaper
+ * side of the trade, and the Studio holds only things that genuinely change:
+ * menus, news, the home page images.
  *
  * The BCE number 1036.670.672 is the enterprise number; the VAT number is the
  * same ten digits with `BE` in front, which is how Belgium works and why there
  * are two fields holding one fact.
  *
  * The registered denomination (MOMENT LAB SRL) and the social accounts
- * (@moment.brussels on both) arrived with the client's answers of 3 November
- * 2026. Every consumer still drops a blank rather than printing a label with
+ * (@moment.brussels on both) are the client's own answers. Every consumer
+ * drops a blank rather than printing a label with
  * nothing after it, so emptying one of these is safe.
  */
 export const SITE_DETAILS: SiteDetails = {

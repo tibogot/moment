@@ -19,10 +19,9 @@ const articleListFields = `
 /**
  * Every article query filters on `language`.
  *
- * An article is written in one language and is not a translation of any other:
- * the schema has asked for that language since it was written, the client has
- * been filling it in, and nothing read it — so /fr/news, /nl/news and /en/news
- * served one undifferentiated pile, and the sitemap told Google the three were
+ * An article is written in one language and is not a translation of any other.
+ * Without the filter, /fr/news, /nl/news and /en/news would serve one
+ * undifferentiated pile, and the sitemap would tell Google the three were
  * translations of each other.
  *
  * The consequence to be clear about: a Dutch reader sees only Dutch articles,

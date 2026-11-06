@@ -31,10 +31,9 @@ export type Coordinates = { latitude: number; longitude: number };
  *
  * Every band is measured from this point, so a placeholder off by a kilometre
  * pushes customers near a band edge into the wrong fee and the wrong minimum
- * order. This is no longer a placeholder: it is Rue des Glands 21A, 1190
- * Forest, geocoded from the address the owners gave on 29 August 2026. The
- * Shopify admin can still override it — an atelier that moves is a settings
- * change, not a deployment — but it no longer *has* to.
+ * order. It is Rue des Glands 21A, 1190 Forest, geocoded from the address the
+ * owners gave. The Shopify admin can override it — an atelier that moves is a
+ * settings change, not a deployment — but it does not *have* to.
  */
 export const DEFAULT_ATELIER: Coordinates = {
   latitude: 50.81976,
@@ -78,7 +77,7 @@ export type ZoneTable = {
   /**
    * The basket minimum for collection at the atelier, in euros. "Le minimum
    * de commande est donc de 100 € dans tous les cas … qu'il s'agisse d'une
-   * livraison ou d'un retrait" — the owners, 3 November 2026. Collection still
+   * livraison ou d'un retrait" — the owners. Collection still
    * pays no fee.
    */
   pickupMinimumOrder: number;
@@ -98,18 +97,17 @@ export const DEFAULT_FREE_DELIVERY_THRESHOLD = 300;
 export const DEFAULT_PICKUP_MINIMUM_ORDER = 100;
 
 /**
- * The client's table, as revised on 3 November 2026 (fees and minimums; the
+ * The client's table (fees and minimums; the
  * per-band free-delivery thresholds they also gave are not modelled yet — see
  * `freeDeliveryThreshold`, still one number). Four priced bands measured
  * from the atelier, and a fifth case — beyond the last band — quoted by hand
  * rather than priced on the site.
  *
- * This replaced a table whose first zone was "Bruxelles", an administrative
- * area rather than a radius. Worth saying out loud to the client, because it
- * moves real customers: Forest sits in the south-west of the Region, so the
- * north-east of Brussels — Haren, Neder-Over-Heembeek, parts of Woluwe — is now
- * 11–14 km out and lands in band 2 at €20 with a €150 minimum, where the old
- * table gave every Brussels address €10 and a €100 minimum. That is what a
+ * Bands are radii, not administrative areas, and that is worth saying out loud
+ * to the client because it moves real customers: Forest sits in the south-west
+ * of the Region, so the north-east of Brussels — Haren, Neder-Over-Heembeek,
+ * parts of Woluwe — is 11–14 km out and lands in band 2 at €20 with a €150
+ * minimum, not at €10 and €100 with the rest of Brussels. That is what a
  * distance table does; it is not a bug, but nobody has confirmed they want it.
  */
 export const DEFAULT_ZONE_TABLE: ZoneTable = {
@@ -127,8 +125,8 @@ export const DEFAULT_ZONE_TABLE: ZoneTable = {
 /**
  * Past the last band we do not quote a price on the site at all.
  *
- * Derived rather than declared: this used to be a `50` sitting next to a zone 4
- * that also said `50`, which is two places to change and one of them to forget.
+ * Derived rather than declared: a constant sitting next to the last band's
+ * radius would be two places to change and one of them to forget.
  */
 export function maxDeliveryDistanceKm(table: ZoneTable) {
   return table.zones.reduce(

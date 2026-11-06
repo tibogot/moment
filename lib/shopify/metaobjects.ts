@@ -23,10 +23,10 @@ import { isShopifyConfigured, storefrontRequest } from "./client";
  * `/api/revalidate/shopify` invalidates this tag on any `metaobjects/*`
  * webhook, which is both faster than polling and very much cheaper.
  *
- * It polled every 5 minutes before, and that was the most expensive line in
- * the project. These settings are read by the home page, /contact, /pro and
- * /faq, so a 5-minute window meant those pages — times three locales — each
- * rebuilt 288 times a day whether or not anything had changed.
+ * Polling every 5 minutes would be the most expensive line in the project.
+ * These settings are read by the home page, /contact, /pro and /faq, so a
+ * 5-minute window would mean those pages — times three locales — each
+ * rebuilding 288 times a day whether or not anything had changed.
  */
 export const DELIVERY_REVALIDATE = CACHE_BACKSTOP_SECONDS;
 export const DELIVERY_CACHE_TAG = "shopify-delivery";

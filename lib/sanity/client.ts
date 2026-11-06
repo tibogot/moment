@@ -48,7 +48,7 @@ export function isSanityTag(value: unknown): value is SanityTag {
  * Fetch options for a tagged, on-demand-revalidated Sanity read.
  *
  * There is deliberately no way to ask for a shorter window. Time-based
- * revalidation is what this replaced — see `lib/cache.ts` for what it cost —
+ * revalidation is expensive — see `lib/cache.ts` for what it costs —
  * and a caller reaching for "just this one query, every minute" would put the
  * whole route back on that clock.
  */

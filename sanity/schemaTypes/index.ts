@@ -11,10 +11,9 @@ import { localeString, localeStringList, localeText } from "./objects/locale";
 /**
  * Every type the Studio knows about.
  *
- * `menu` was written before this Studio lived in the repo and spent that time
- * registered nowhere, which is why `/menus` served `PLACEHOLDER_MENUS` rather
- * than anything the client had written. A schema in a folder is not a content
- * model; this array is.
+ * A schema type that is not listed here is registered nowhere, and the pages
+ * that read it get nothing the client has written. A schema in a folder is not
+ * a content model; this array is.
  */
 export const schemaTypes = [
   article,

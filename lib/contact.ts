@@ -27,7 +27,7 @@ export const PRO_OCCASION = "Professional account";
 
 /**
  * What a venue writes in about, on /collaborations — the three kinds of request
- * the owners named on 3 November 2026. Like OCCASIONS these are the subject
+ * the owners named. Like OCCASIONS these are the subject
  * line of the mail and stay English; the labels come from `partner.requests`.
  *
  * Kept apart from OCCASIONS and from the pro application because they are a

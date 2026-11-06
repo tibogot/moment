@@ -20,12 +20,11 @@ type CheckoutNoticeProps = {
 /**
  * The one shape for anything standing between a basket and a checkout.
  *
- * There were twelve `role="alert"` elements in this flow and eleven of them
- * rendered as `font-archivo-light text-[14px]` — the same font, size and colour
- * as the "taxes calculated at checkout" note sitting beside them. The message
- * that says why the button is dead looked exactly like ambient small print.
+ * The message that says why the button is dead must not look like ambient
+ * small print — `font-archivo-light text-[14px]`, the same font, size and
+ * colour as the "taxes calculated at checkout" note sitting beside it.
  *
- * The fix is rank, not colour. Red would be the obvious answer and the wrong
+ * The difference is rank, not colour. Red would be the obvious answer and the wrong
  * one twice over: this palette is three colours and a fourth for one message is
  * a bigger decision than the problem deserves, and — more to the point — a
  * missing address is not an error. The customer has not made a mistake, they
@@ -33,7 +32,7 @@ type CheckoutNoticeProps = {
  *
  * So two ranks out of the palette that already exists. `border-sky` is the
  * house "this needs you" block, borrowed from the quote panel in
- * OrderPreferencesBar, which was the one of the twelve that got it right.
+ * OrderPreferencesBar.
  * `border-black` is heavier without being a new colour, and is kept for things
  * that actually went wrong.
  */

@@ -127,8 +127,8 @@ export function Navbar() {
   /*
    * Read rather than passed in. The collections come from the server through
    * the provider, so the nav's links are in the HTML; the products arrive on
-   * idle, because they are only ever seen after a hover or a click and used to
-   * cost every page ~21 KB of RSC payload. See NavCatalogProvider.
+   * idle, because they are only ever seen after a hover or a click and would
+   * otherwise cost every page ~21 KB of RSC payload. See NavCatalogProvider.
    */
   const { products, collections, load: loadCatalog } = useNavCatalog();
   const pathname = usePathname();
@@ -232,7 +232,7 @@ export function Navbar() {
   // Follows the open menu on the way in and ignores it on the way out, so the
   // closing panel keeps showing what you were looking at. Adjusted during
   // render for the same reason as the line above: a frame of the wrong menu is
-  // exactly the bug being fixed.
+  // exactly what this prevents.
   if (openNavMenu !== null && openNavMenu !== shownNavMenu) {
     setShownNavMenu(openNavMenu);
   }

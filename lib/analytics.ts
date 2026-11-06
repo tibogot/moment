@@ -1,7 +1,7 @@
 /**
  * Google Analytics 4, behind the visitor's consent.
  *
- * Asked for by the owners on 3 November 2026: audience, traffic sources,
+ * Asked for by the owners: audience, traffic sources,
  * conversions and purchases, with GDPR-compliant consent. The rules this file
  * keeps:
  *

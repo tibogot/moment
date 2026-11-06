@@ -16,7 +16,7 @@ import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
  *
  * See the note in `app/api/nav-catalog/route.ts` for why. The short version:
  * the shop dropdown's previews and the search panel's list are both behind an
- * interaction, but as props on `<Navbar>` they were serialised into every
+ * interaction, but as props on `<Navbar>` they would be serialised into every
  * page's HTML and parsed during hydration.
  *
  * The collections arrive from the server as usual — they are the nav's links,

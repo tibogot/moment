@@ -67,23 +67,22 @@
   --hero-headline: min(17vw, 8svh);
   --hero-body: 18px;
   /* Body copy in the sections that place it on the grid. A token rather than a
-     repeated expression: it was written out at six call sites, so the floor
-     added below would have had to be remembered six times. */
+     repeated expression: it is used at six call sites, and the floor below
+     would otherwise have to be remembered six times. */
   --body-text: 18px;
   --nav-text: 12px;
   /* Width, not height — the logotype is 6.5:1, so this is ~15px of drawn mark.
-     Nudged up from 92px when the final logotype landed: it is proportionally
-     wider than the old file, so the same width read shorter in the bar. */
+     The logotype is proportionally wide, so a narrower width reads short in
+     the bar. */
   --nav-logo: 100px;
   --nav-icon: 20px;
 
-  /* The nav links previously needed their own fluid type scale: seven
-     top-level items in French did not fit the three columns they sit in, and
-     shrinking them to 11px was the only way to avoid the logo. Grouping News
-     under About took it to six, and raising the breakpoint to 1270px gave the
-     row the rest — the design's own 14px now fits Dutch, the widest set, with
-     30px to spare. If a seventh item ever returns, this is the tradeoff that
-     comes back with it. */
+  /* The nav links need no fluid type scale of their own: News is grouped
+     under About, keeping six top-level items, and the 1270px breakpoint gives
+     the row the rest — the design's own 14px fits Dutch, the widest set, with
+     30px to spare. Seven items in French do not fit the three columns they
+     sit in, so a seventh item would bring back a fluid scale down to ~11px to
+     avoid the logo. */
 
   /* Product card metrics. Held as lengths rather than utility classes so the
      shop's grid/index switch can interpolate them — see .product-list. */
@@ -105,9 +104,9 @@
        rows. Raise the svh value to let the type run closer to the rule above. */
     --hero-headline: min(10.6vw, 15svh);
     /* The floor goes inside the min, not around it. 1.63vw is 12.5px at the
-       breakpoint itself, so the lead used to *shrink* — 18px to 12.5px — as
-       the layout switched to seven columns, and did not climb back past 18px
-       until ~1104px. Flooring the width term fixes that; leaving the svh cap
+       breakpoint itself, so without the floor the lead would *shrink* — 18px
+       to 12.5px — as the layout switched to seven columns, and not climb back
+       past 18px until ~1104px. Flooring the width term fixes that; leaving the svh cap
        outermost keeps what it was there for, which is a short viewport where
        the lead has one fixed grid row to fit into and no room to grow. */
     --hero-body: min(max(16px, 1.63vw), 2.4svh);

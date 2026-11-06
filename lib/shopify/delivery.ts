@@ -40,8 +40,8 @@ import {
  * rules in space live next door in `zones.ts`.
  *
  * Two metaobjects, both optional: every field falls back to the defaults in
- * `lib/delivery/dates.ts`, which are the values that used to be hard-coded. A shop
- * with neither definition behaves exactly as it did before they existed.
+ * `lib/delivery/dates.ts`. A shop with neither definition runs entirely on
+ * those defaults.
  *
  * See docs/shopify-setup.md for the field-by-field setup.
  */
@@ -280,8 +280,8 @@ async function getDeliveryClosures(bounds: {
     const start = fields[CLOSURE_DATE_FIELD];
     if (!start) return [];
 
-    // No end date is the common case and the old shape of this metaobject:
-    // one entry, one day. An end *before* the start is a slip in the admin —
+    // No end date is the common case: one entry, one day. An end *before* the
+    // start is a slip in the admin —
     // read it as that single day, because an entry the owners believe closes
     // the atelier must never expand to nothing.
     const end = fields[CLOSURE_END_DATE_FIELD];

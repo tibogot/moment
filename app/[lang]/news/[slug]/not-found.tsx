@@ -13,8 +13,8 @@ import { routes } from "@/lib/routes";
  * with on the server — but it renders inside the locale layout, and a server
  * component passed through a client Provider still reads its context.
  *
- * This page matters more than it used to. Articles are now served per language,
- * so asking for one in a language it was not written in lands here rather than
+ * Articles are served per language, so asking for one in a language it was
+ * not written in lands here rather than
  * showing the wrong language's article — which the copy says out loud.
  */
 export default function NewsArticleNotFound() {

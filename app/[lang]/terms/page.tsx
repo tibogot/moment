@@ -21,7 +21,7 @@ export const generateMetadata = localizedMetadata("terms", {
  * Written against Book VI of the Belgian Code of Economic Law (pre-contractual
  * information, art. VI.45; withdrawal and its exceptions, art. VI.47–VI.53)
  * and the legal guarantee of conformity in the Civil Code (art. 1649bis ff.).
- * The 24-hour cancellation rule is the owners' own (29 August 2026) and is
+ * The 24-hour cancellation rule is the owners' own and is
  * repeated on the shipping page and in the FAQ — change all three together.
  *
  * No link to the EU ODR platform: it was abolished on 20 July 2025

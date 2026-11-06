@@ -32,7 +32,7 @@ export async function generateStaticParams() {
 /**
  * Shopify seeds every store with a "frontpage" collection. It is not a
  * category, the nav and the sitemap already leave it out, and it must not be a
- * page either — prerendered and indexable, it was a duplicate of the shop.
+ * page either — prerendered and indexable, it would be a duplicate of the shop.
  */
 const HIDDEN_COLLECTION = "frontpage";
 

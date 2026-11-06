@@ -2,7 +2,7 @@
  * How many orders a delivery window can take, and how an order is marked as
  * having taken one.
  *
- * The owners' answer of 3 November 2026: two deliveries per window, three
+ * The owners' rule: two deliveries per window, three
  * windows, six a day. A window with two orders on it stops being offered.
  *
  * Like the rest of the delivery rules this imports nothing from Shopify or

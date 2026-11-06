@@ -11,10 +11,10 @@ import { routes } from "@/lib/routes";
  * The 404 screen, shared by the root boundary and the per-language one.
  *
  * Takes its copy as a prop rather than reading context, because the boundary
- * that renders it has none. `app/[lang]/not-found.tsx` used to exist and never
- * rendered: at the root-layout level it *is* the global `/_not-found` route, so
- * Next builds it outside the LocaleProvider — silently falling back to its own
- * default 404 before, and throwing once it started reading the dictionary.
+ * that renders it has none. An `app/[lang]/not-found.tsx` would never render:
+ * at the root-layout level it *is* the global `/_not-found` route, so Next
+ * builds it outside the LocaleProvider — and it throws as soon as it reads the
+ * dictionary.
  *
  * So there is one 404, at `app/not-found.tsx`, in the default language. Deeper
  * boundaries — `news/[slug]/not-found.tsx` — do render inside the provider and

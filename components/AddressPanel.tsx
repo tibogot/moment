@@ -11,9 +11,9 @@ const SEARCH_DEBOUNCE_MS = 250;
 /**
  * Type a Belgian street, pick a match, done.
  *
- * Its own file because two places ask the question now: the bar on a product
- * page, and the cart panel — where "add a delivery address" used to be a
- * sentence pointing the customer back to a product page they had already left.
+ * Its own file because two places ask the question: the bar on a product
+ * page, and the cart panel — so "add a delivery address" never has to be a
+ * sentence pointing the customer back to a product page they have already left.
  * A blocker the customer cannot clear where they are told about it is a blocker
  * they abandon.
  */

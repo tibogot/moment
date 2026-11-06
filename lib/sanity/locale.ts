@@ -7,10 +7,9 @@
  * arrive in, and the fallback that flattens one into the language a page is
  * being rendered in.
  *
- * It sits here rather than in `lib/menus.ts`, where it was written, because
- * menus are no longer the only thing translated this way. Past events are the
- * second, and a helper both of them imported from `menus` would read as an
- * accident rather than a decision.
+ * It sits here rather than in `lib/menus.ts` because menus are not the only
+ * thing translated this way. Past events are the second, and a helper both of
+ * them imported from `menus` would read as an accident rather than a decision.
  */
 
 import { DEFAULT_LOCALE, type Locale } from "../i18n/config";

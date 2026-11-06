@@ -1,7 +1,7 @@
 /**
  * The Sanity end of on-demand revalidation.
  *
- * Nothing on this site is rebuilt on a timer any more — see `lib/cache.ts` for
+ * Nothing on this site is rebuilt on a timer — see `lib/cache.ts` for
  * why — so this route is how published content reaches the public pages. A
  * GROQ-powered webhook in the Studio's project settings posts here on every
  * publish; the tags it names are the tags `sanityCache()` attached to the

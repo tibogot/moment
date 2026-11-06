@@ -16,8 +16,8 @@
 /**
  * Order matters: it is the order the switcher renders in, and the first entry
  * is the default. French leads because the kitchen, the client and most of
- * Forest do. Dutch is second rather than third because the delivery zones now
- * reach Halle, Vilvoorde and Leuven — see lib/delivery-zones.ts.
+ * Forest do. Dutch is second rather than third because the delivery zones
+ * reach Halle, Vilvoorde and Leuven — see lib/delivery/zones.ts.
  */
 export const LOCALES = ["fr", "nl", "en"] as const;
 

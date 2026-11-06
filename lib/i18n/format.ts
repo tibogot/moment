@@ -123,10 +123,10 @@ export function weekdayNames(locale: Locale) {
  * The days the kitchen never delivers on, as a sentence — or `null` when it
  * delivers every day and there is nothing to say.
  *
- * This used to read "and we do not deliver on Sundays", written into the copy
- * in all three languages. Sunday is now a setting the owners change in the
- * Shopify admin, and a site that keeps announcing a rule the kitchen has
- * dropped is the same failure as a FAQ quoting last year's delivery fee.
+ * Built from the settings rather than written into the copy: closed days are
+ * a setting the owners change in the Shopify admin, and a site that keeps
+ * announcing a rule the kitchen has dropped is the same failure as a FAQ
+ * quoting last year's delivery fee.
  *
  * The article travels in the dictionary rather than being assembled here:
  * French wants it on every item ("le dimanche et le lundi"), English and Dutch

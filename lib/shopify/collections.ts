@@ -74,8 +74,8 @@ async function fetchCollections(
  *
  * Its own tag, because the layout is on every page: anything it reads under
  * the products tag is invalidated by every product edit and every stock
- * change — one per order line — which rebuilt the whole site, in three
- * languages, after every sale. The layout now only rebuilds when a collection
+ * change — one per order line — which would rebuild the whole site, in three
+ * languages, after every sale. The layout only rebuilds when a collection
  * itself changes. Product-bearing reads below carry both tags.
  */
 export const SHOPIFY_COLLECTIONS_TAG = "shopify-collections";

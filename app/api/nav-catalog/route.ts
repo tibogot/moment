@@ -8,15 +8,15 @@ import { getProducts } from "@/lib/shopify/products";
  * than shipped inside it.
  *
  * The shop dropdown's preview images and the search panel's product list are
- * both behind an interaction — a hover, a click — but they were props on
- * `<Navbar>`, which lives in the root layout. Every prop crossing into a Client
- * Component is serialised into the RSC payload embedded in the HTML, so all 30
- * products, descriptions included, were parsed on every page of the site before
- * hydration could finish. That was ~21 KB of the home page's 115 KB payload,
- * for a panel most visitors never open.
+ * both behind an interaction — a hover, a click — and `<Navbar>` lives in the
+ * root layout. Every prop crossing into a Client Component is serialised into
+ * the RSC payload embedded in the HTML, so as props all 30 products,
+ * descriptions included, would be parsed on every page of the site before
+ * hydration could finish: ~21 KB of the home page's 115 KB payload, for a
+ * panel most visitors never open.
  *
- * The collections still render server-side — they are the nav's link structure,
- * and they cost a title and a handle each. Only the product bodies moved here.
+ * The collections render server-side — they are the nav's link structure,
+ * and they cost a title and a handle each. Only the product bodies come from here.
  *
  * Language comes in on the query string for the same reason as `/api/cart`:
  * this route sits outside `app/[lang]` and has no segment to read it from.

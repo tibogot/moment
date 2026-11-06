@@ -1,6 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 // Per-icon subpath, not the package root: `@sanity/icons` v5 ships each icon as
-// its own entry point and the barrel no longer re-exports them by name.
+// its own entry point and the barrel does not re-export them by name.
 import { ImagesIcon } from "@sanity/icons/Images";
 
 /**

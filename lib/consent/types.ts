@@ -1,5 +1,5 @@
 export const CONSENT_COOKIE_NAME = "moment_consent";
-/** 2 since Google Analytics was added (5 November 2026): everyone is asked. */
+/** 2 is the version that covers Google Analytics: everyone is asked. */
 export const CONSENT_VERSION = 2;
 /**
  * Six months — the duration the APD's cookie checklist recommends for keeping

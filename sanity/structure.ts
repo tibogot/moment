@@ -15,12 +15,11 @@ import { UsersIcon } from "@sanity/icons/Users";
  * "Menus / Réalisations / Actualités" is a list of things a caterer wants to
  * change. The order is roughly how often each is touched.
  *
- * And that is the only test anything here has to pass. "Coordonnées de
- * l'entreprise" used to sit at the bottom of this list, holding the address,
- * the phone number and the VAT number. It came out on 29 August 2026: those
- * change once every few years, they are now hardcoded in `lib/site.ts`, and a
- * screen an owner will never open teaches them the rest of the Studio is
- * decorative too.
+ * And that is the only test anything here has to pass. There is no
+ * "Coordonnées de l'entreprise" screen for the address, the phone number and
+ * the VAT number: those change once every few years, they are hardcoded in
+ * `lib/site.ts`, and a screen an owner will never open teaches them the rest
+ * of the Studio is decorative too.
  *
  * Categories and authors sit below a divider because they exist to support
  * articles rather than to be visited: someone looking for where to write a news

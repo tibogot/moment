@@ -17,14 +17,13 @@ export const generateMetadata = localizedMetadata("shipping", {
 /**
  * Delivery and returns, written from the rules the checkout actually enforces.
  *
- * This page used to be four paragraphs of "to be confirmed with operations".
- * The operations are now confirmed — the owners gave us the bands, the windows,
- * the cut-off and the cancellation policy on 29 August 2026 — so it is a server
+ * The bands, the windows, the cut-off and the cancellation policy are the
+ * owners' own, so this is a server
  * component reading the same tables the cart prices against, for the same
  * reason the FAQ is: terms of sale that contradict the checkout are worse than
  * terms nobody wrote.
  *
- * In all three languages since 5 November 2026. The 24-hour cancellation rule
+ * In all three languages. The 24-hour cancellation rule
  * is repeated on the terms page and in the FAQ — change all three together.
  */
 type Facts = {

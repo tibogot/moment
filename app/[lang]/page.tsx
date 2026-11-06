@@ -53,8 +53,8 @@ export async function generateMetadata({
   const { meta } = await getDictionary(locale);
 
   // Keywords and description come from the dictionary like every other page.
-  // They were literals here, and because this block overrides the layout's,
-  // all three languages were served the English ones.
+  // This block overrides the layout's, so literals here would serve all three
+  // languages the English ones.
   return {
     alternates: languageAlternates(routes.home, locale),
     description: meta.home.description,

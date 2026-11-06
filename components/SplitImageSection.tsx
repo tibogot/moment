@@ -89,10 +89,9 @@ function SplitGrid({
           <div
             key={index}
             className={cn(
-              // Portrait, matching the panels on the home page rather than the
-              // square this used to be. The cells here are the only ones on the
-              // site whose proportion was declared outright, so they were also
-              // the only ones that stayed square at every width.
+              // Portrait, matching the panels on the home page. The cells here
+              // are the only ones on the site whose proportion is declared
+              // outright, so they hold it at every width.
               "aspect-3/4 border-sky",
               !(fullBleedBottom && isLastRow) && "border-b",
               index % SPLIT_COLUMNS !== 0 && "border-l",

@@ -5,8 +5,7 @@
  * This is the other half of `lib/delivery/dates.ts`. That module answers *which day*;
  * this one answers *when on it*. They are separate files because they are
  * separate decisions — a kitchen can change its slots without touching its
- * notice period — and because the day rules were built long before the owners
- * could tell us the hours.
+ * notice period.
  *
  * Like the rest of the delivery rules, nothing here imports Shopify or
  * `next/*`, so the preferences bar, the cart and the server actions can all
@@ -35,7 +34,7 @@ export type DeliverySlot = {
 };
 
 /**
- * The owners' three windows, as given on 29 August 2026.
+ * The owners' three windows.
  *
  * Ordered, and rendered in this order. They tile 09:00–15:00 with no gap and no
  * overlap, which is worth preserving if these are ever edited: two slots that
@@ -59,7 +58,7 @@ export const DEFAULT_DELIVERY_SLOTS: DeliverySlot[] = [
 export type PickupWindow = { start: string; end: string };
 
 export const DEFAULT_PICKUP_WINDOW: PickupWindow = {
-  // 11:00–15:00 since 3 November 2026 ("retrait … entre 11 h et 15 h").
+  // The owners' hours: "retrait … entre 11 h et 15 h".
   start: "11:00",
   end: "15:00",
 };

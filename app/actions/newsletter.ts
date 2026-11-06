@@ -14,9 +14,9 @@ export type NewsletterState = "idle" | "success" | "error";
 /**
  * A newsletter sign-up, sent to the kitchen's inbox.
  *
- * The form used to thank the visitor and send the address nowhere, which is
- * worse than having no form: someone who asked to hear from the atelier was
- * told they would and never did. There is no mailing-list provider yet, so
+ * A form that thanks the visitor and sends the address nowhere is worse than
+ * having no form: someone who asked to hear from the atelier is told they will
+ * and never does. There is no mailing-list provider yet, so
  * until the client picks one, each sign-up arrives as an email through the same
  * Resend account the contact form already uses, and the list lives in that
  * inbox. When a provider is chosen, this is the one function to change.

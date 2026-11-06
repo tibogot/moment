@@ -57,7 +57,7 @@ export type CheckoutState = {
  *
  * Click & collect skips the address, the window and the zone, and has its own
  * floor: the owners' minimum applies "qu'il s'agisse d'une livraison ou d'un
- * retrait" (3 November 2026). It pays no fee.
+ * retrait". It pays no fee.
  */
 export function checkoutBlocker(
   cart: CheckoutState,
@@ -112,8 +112,8 @@ export function checkoutBlocker(
 
   if (!cart.deliveryAddress) return { kind: "no-address" };
 
-  // An address with no zone is an address saved before the zones existed, one
-  // whose attribute an owner edited by hand, or one priced against a band that
+  // An address with no zone is one whose attribute an owner edited by hand,
+  // or one priced against a band that
   // has since been removed from the table. Treat it as unpriced and send them
   // back through the address panel rather than guessing a minimum.
   const zone = cart.deliveryZone ? zoneById(zones, cart.deliveryZone) : null;

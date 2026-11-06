@@ -1,11 +1,11 @@
 import { defineField, defineType } from "sanity";
-// Per-icon subpath: `@sanity/icons` v5 no longer re-exports icons by name.
+// Per-icon subpath: `@sanity/icons` v5 does not re-export icons by name.
 import { PinIcon } from "@sanity/icons/Pin";
 
 /**
  * A place that sells Moment products — what the "Où nous trouver" map shows.
  *
- * Asked for by the owners on 3 November 2026, and built to be **entirely
+ * Asked for by the owners, and built to be **entirely
  * theirs**: there is no maintenance contract, so adding a café that started
  * stocking the cookies must never need a developer. Hence the shape:
  *

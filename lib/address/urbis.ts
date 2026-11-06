@@ -4,11 +4,10 @@
  * key or account, carries both the French and Dutch notation of every street,
  * and is rebuilt once a day.
  *
- * Its role changed when the delivery area did. It used to be the only lookup
- * and doubled as the delivery-area gate, because the register stops at the
- * regional border. Now that the zone table quotes fees out to 50km, that border
- * is the wrong boundary and `geoapify.ts` is the provider in front. UrbIS stays
- * as the fallback for when no API key is configured: Brussels is zone 1 and the
+ * It is not the main lookup. The register stops at the regional border, and
+ * the zone table quotes fees well past it, so that border is the wrong
+ * boundary and `geoapify.ts` is the provider in front. UrbIS is the fallback
+ * for when no API key is configured: Brussels is zone 1 and the
  * bulk of the orders, so a keyless deployment still takes those rather than
  * refusing every address.
  *

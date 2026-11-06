@@ -12,7 +12,7 @@
  * kitchen opens and how far ahead it takes bookings all live in the Shopify
  * admin and arrive on `DeliveryAvailability` — the owners change them without a
  * deployment. The `DEFAULT_*` values below are what applies when nothing has
- * been configured, and they reproduce the behaviour that used to be hard-coded.
+ * been configured.
  */
 
 /** The kitchen's clock. "Today" is whatever day it is in Brussels. */
@@ -37,8 +37,8 @@ export const DEFAULT_LEAD_TIME_DAYS = 2;
 export const DEFAULT_ORDER_CUTOFF_HOUR = 16;
 
 /**
- * No weekday is closed by default: the owners confirmed on 3 November 2026 that
- * they work Sundays "pour l'instant". When that changes it is `sunday` in the
+ * No weekday is closed by default: the owners confirmed that they work
+ * Sundays "pour l'instant". When that changes it is `sunday` in the
  * `closed_weekdays` field of `delivery_settings`, not a deployment. `0` is
  * Sunday in `Date#getDay`.
  */

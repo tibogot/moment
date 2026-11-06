@@ -22,8 +22,8 @@ const PRODUCTS_PAGE_SIZE = 100;
 // tag when Shopify says a product or collection changed; the window below is
 // only the backstop for a webhook that never arrived — see `lib/cache.ts`.
 //
-// It used to be an hour, which reads as conservative and is not: `unstable_cache`
-// lowers the revalidate of the route that reads it, so an hour here put every
+// An hour reads as conservative and is not: `unstable_cache` lowers the
+// revalidate of the route that reads it, so an hour here would put every
 // product and collection page, in all three locales, on 24 rebuilds a day.
 export const SHOPIFY_REVALIDATE = CACHE_BACKSTOP_SECONDS;
 export const SHOPIFY_CACHE_TAG = "shopify-products";

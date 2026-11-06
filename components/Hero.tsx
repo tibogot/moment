@@ -67,7 +67,7 @@ export function Hero({ copy, image }: HeroProps) {
                 carries it instead, one section down: "Un traiteur bruxellois…".
                 A p, not a heading of any level: this line is display type, and
                 inventing an h2 for it above the real h1 would be worse than
-                the h1 it used to be. Nothing about how it looks changes. */}
+                making it the h1. */}
             <p
               className="font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] uppercase"
               style={{ fontSize: "var(--hero-headline)" }}

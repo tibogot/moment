@@ -273,9 +273,8 @@ const CART_QUERY = `
 /**
  * The cart's own money formatter.
  *
- * It was pinned to `en-BE`, so a French or Dutch shopper read their basket in
- * the English convention. Same class of bug as the delivery dates and the menu
- * prices before them, in the last place that still had it.
+ * Formatted in the shopper's language rather than pinned to `en-BE`, so a
+ * French or Dutch shopper does not read their basket in the English convention.
  */
 function formatPrice(locale: Locale, amount: string, currencyCode: string) {
   return formatPriceAmount(locale, amount, currencyCode);
@@ -395,7 +394,7 @@ async function runCartMutation(
  * Shopify answers `cart: null` for a cart that has expired or been checked out,
  * and that is the only case in which the cookie should be dropped and a new
  * cart started. A timeout, a throttled request or an outage says nothing about
- * the cart — and treating it as "gone" used to replace a full basket with an
+ * the cart — and treating it as "gone" would replace a full basket with an
  * empty one on the next click.
  */
 export type CartLookup =

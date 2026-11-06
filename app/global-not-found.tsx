@@ -18,8 +18,8 @@ import "./globals.css";
  * cannot be composed from a layout and a not-found when the root layout sits
  * under a top-level dynamic segment, which is exactly `app/[lang]/layout.tsx`.
  * A `not-found.tsx` beside it is compiled as the global route and rendered
- * outside that layout — which is why the designed 404 in this repo had never
- * once appeared, for any URL, before this file existed.
+ * outside that layout, so the designed 404 would never appear for any URL
+ * without this file.
  *
  * Next skips normal rendering for this page, so it returns the whole document
  * and imports the stylesheet and fonts the root layout would have supplied.

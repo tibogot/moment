@@ -16,10 +16,10 @@
  *     the products, collections, menus and articles here is a prerendered
  *     surface in the hundreds.
  *
- * That combination — 60s in `lib/sanity/client.ts`, reached from
- * `app/[lang]/layout.tsx` — is what put this project through 150,000 writes.
+ * That combination — a 60s read in `lib/sanity/client.ts`, reached from
+ * `app/[lang]/layout.tsx` — is enough to run to six figures of writes.
  *
- * So nothing revalidates on a clock any more. Every cached read is tagged, the
+ * So nothing revalidates on a clock. Every cached read is tagged, the
  * CMS and the shop both post to `/api/revalidate/*` when something actually
  * changes, and this constant is only the backstop for when they don't: a
  * webhook that was never configured, or whose secret has rotated, costs the

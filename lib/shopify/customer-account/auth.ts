@@ -122,11 +122,11 @@ export function sessionIsExpiring(session: CustomerSession) {
 /**
  * The session, if it can be used as it is — never refreshed here.
  *
- * This is called while rendering, and a render cannot write a cookie. It used
- * to refresh anyway and throw the result away, so every render after the first
- * hour paid for a token exchange, and if Shopify retires a refresh token once
- * it has been used, the next one failed and the customer bounced between the
- * account page and sign-in. An expiring session is now the caller's cue to go
+ * This is called while rendering, and a render cannot write a cookie.
+ * Refreshing anyway and throwing the result away would make every render after
+ * the first hour pay for a token exchange, and if Shopify retires a refresh
+ * token once it has been used, the next one would fail and the customer bounce
+ * between the account page and sign-in. An expiring session is the caller's cue to go
  * through `/api/auth/refresh`, which can save what it gets.
  */
 export async function getValidCustomerSession() {
@@ -155,7 +155,7 @@ export async function refreshAndPersistCustomerSession() {
 /**
  * Where to land after signing in — a path on this site, or the account page.
  *
- * "Starts with a slash" is not enough, and was the whole check: `//evil.com`
+ * "Starts with a slash" is not enough: `//evil.com`
  * and `/\evil.com` both start with one, and browsers read both as another
  * host. A phishing link through the real Shopify login would then deliver the
  * customer, freshly signed in and trusting it, to someone else's page. So the

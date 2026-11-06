@@ -13,7 +13,7 @@ export const generateMetadata = localizedMetadata("collaborations", {
 
 /**
  * For venues that want to stock Moment products — the owners' "Collaborations"
- * tab of 3 November 2026, with their own introduction as the lead.
+ * tab, with their own introduction as the lead.
  *
  * Deliberately its own page rather than a tab of /pro. The two audiences do
  * not overlap: /pro is a company opening an account to order catering for its

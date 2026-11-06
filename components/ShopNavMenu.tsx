@@ -33,8 +33,8 @@ const previewTitleClassName =
 
 /*
  * The previews are cells of the column they sit in rather than cards of a fixed
- * rem width: the column is fluid (5 of 7 tracks) and fixed cards left it 40%
- * empty at 1920 while overflowing it at the 1200px nav breakpoint.
+ * rem width: the column is fluid (5 of 7 tracks) and fixed cards would leave it
+ * 40% empty at 1920 while overflowing it at the 1270px nav breakpoint.
  *
  * Every rule in here — the two spines and the dividers between cells — gets one
  * --grid-gutter of clearance on each side, exactly like a column line on the

@@ -2,9 +2,9 @@
  * The shape every address lookup has to speak, and the contract behind which
  * they are interchangeable.
  *
- * This exists because the delivery area outgrew the register the site started
- * with. UrbIS stops at the Brussels regional border, and the zone table now
- * quotes fees out to 50km — which crosses into Flanders and Wallonia, each with
+ * This exists because the delivery area is larger than any one register.
+ * UrbIS stops at the Brussels regional border, and the zone table quotes fees
+ * well past it — into Flanders and Wallonia, each with
  * its own register and neither with a free national one that covers the others.
  * Rather than teach the cart about three services, the cart knows about this
  * interface and one module decides who implements it.

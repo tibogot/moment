@@ -50,8 +50,8 @@ export const DELIVERY_METHODS: readonly DeliveryMethod[] = [
  * What actually gets written onto the cart — and deliberately not the same
  * string the customer sees.
  *
- * These two were one value until the site went trilingual, and they could not
- * stay that way. The attribute follows the order into the Shopify admin, so if
+ * These two cannot be one value. The attribute follows the order into the
+ * Shopify admin, so if
  * it were the display label the kitchen would find "Click & collect" on one
  * order and "Afhalen" on the next depending on which language the customer
  * happened to be reading. Worse, `parseDeliveryMethod` matches on it, so a cart

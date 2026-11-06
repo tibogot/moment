@@ -33,10 +33,10 @@ type DialogFocusOptions = {
 /**
  * What `aria-modal="true"` promises and the markup alone does not deliver.
  *
- * The cart, the mobile menu and the cookie preferences all declared themselves
- * modal, but a keyboard user who opened one stayed on the button behind it,
- * could Tab straight out into the page underneath, and was dropped at the top
- * of the document when it closed. So, while `open`:
+ * The cart, the mobile menu and the cookie preferences all declare themselves
+ * modal, but on markup alone a keyboard user who opens one stays on the button
+ * behind it, can Tab straight out into the page underneath, and is dropped at
+ * the top of the document when it closes. So, while `open`:
  *
  *   - focus moves into the dialog;
  *   - Tab and Shift+Tab loop inside it;

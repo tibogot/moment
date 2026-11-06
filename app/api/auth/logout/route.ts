@@ -10,7 +10,7 @@ import { href, routes } from "@/lib/routes";
 /**
  * Signing out is a POST, from the form on the account page.
  *
- * It was a GET, which any page on the web could fire with an image tag and
+ * Not a GET, which any page on the web could fire with an image tag to
  * sign the customer out without their knowing. The session cookie is
  * SameSite=Lax, so a POST from another site arrives without it and there is
  * nothing to end.

@@ -5,12 +5,12 @@
  */
 
 /**
- * Weekday and month names used to live here as English literals. They are now
- * generated per locale by `weekdayNames` and `formatMonth` in lib/i18n/format,
- * because the platform already knows how to say "woensdag" and a hand-written
- * list of three languages is three chances to misspell it.
+ * Weekday and month names are not here: they are generated per locale by
+ * `weekdayNames` and `formatMonth` in lib/i18n/format, because the platform
+ * already knows how to say "woensdag" and a hand-written list of three
+ * languages is three chances to misspell it.
  *
- * The Monday-first assumption below outlived them, and both sides depend on it.
+ * Both sides depend on the Monday-first assumption below.
  */
 
 /** Monday-first offset for the 1st of the month. */

@@ -15,7 +15,7 @@ export const ownersNarrowBold = localFont({
 /*
  * Every face ships as woff2, converted from the desktop files at well under
  * half the size. Archivo's Open Font License allows the format change, and the
- * client confirmed Owners' licence does too (26 September 2026).
+ * client confirmed Owners' licence does too.
  */
 export const archivoLight = localFont({
   src: "./fonts/Archivo_Condensed-Light.woff2",

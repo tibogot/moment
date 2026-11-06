@@ -47,7 +47,7 @@ import {
  *   4. Enable Storefront API access on the definition
  *   5. One entry per band
  *
- * As revised by the owners on 3 November 2026, that is four entries: 10 km /
+ * With the owners' table, that is four entries: 10 km /
  * €10 / €100, 25 km / €20 / €150, 50 km / €35 / €250, 70 km / €50 / €350. There is no
  * fifth entry for "> 70 km" — a band with no price is not a band, it is the
  * absence of one, and the site sends those addresses to the quote form.
@@ -92,9 +92,9 @@ function parseZone(fields: MetaobjectFields): DeliveryZone | null {
 
   // An *empty* one is how the administrative zone is written, and that zone
   // outranks every band — so an empty radius alone is not enough to make one.
-  // It used to be: a band whose radius was cleared by accident became "all of
-  // Brussels", and every address in the Region was charged its fee and its
-  // minimum. The owners now have to say so, with a tick, and a band that lost
+  // Otherwise a band whose radius was cleared by accident would become "all of
+  // Brussels", and every address in the Region would be charged its fee and
+  // its minimum. The owners have to say so, with a tick, and a band that lost
   // its radius without one is a bad entry like any other.
   if (
     maxDistanceKm === null &&

@@ -28,7 +28,7 @@ const REVEAL_GUARD = `(function(){try{document.documentElement.classList.add("re
 const PALETTE_GUARD = `(function(){try{var p=localStorage.getItem("moment-palette");if(p==="sky")document.documentElement.dataset.palette="sky"}catch(e){}})()`;
 
 /**
- * Every route is now three routes. This is what tells Next to build all of
+ * Every route is three routes. This is what tells Next to build all of
  * them, and — because it sits on the root layout — what supplies the `lang`
  * that each child's own `generateStaticParams` is then run against.
  */

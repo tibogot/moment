@@ -78,7 +78,7 @@ export const routes = {
 /**
  * The links that appear in the navbar and the mobile menu, in order.
  *
- * `key` rather than a label: the wording now lives in the dictionaries under
+ * `key` rather than a label: the wording lives in the dictionaries under
  * `nav`, and the type ties the two together, so adding an entry here without
  * translating it is a compile error rather than an English word on a Dutch
  * page.
@@ -98,8 +98,8 @@ export type NavMenuKey = "shop" | "about";
 /**
  * What sits behind "About".
  *
- * News moved in here and Contact deliberately did not. Seven top-level links
- * did not fit once the labels were French — "Événements" and "Actualités" are
+ * News sits in here and Contact deliberately does not. Seven top-level links
+ * do not fit once the labels are French — "Événements" and "Actualités" are
  * half again as long as their English counterparts — and something had to give.
  * News is low-traffic editorial and groups naturally with the story; Contact is
  * where every quote, event and sur-devis delivery starts, and burying the

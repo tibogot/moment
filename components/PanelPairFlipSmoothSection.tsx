@@ -14,9 +14,8 @@ import { useEffect, useRef } from "react";
 /**
  * The home page's two panels as a tiled flip.
  *
- * An earlier hinge build killed eight timelines on every hover and swapped
- * faces at 90°, which jittered. This one keeps a single paused timeline per
- * card and reverses it, uses a
+ * Killing timelines on every hover and swapping faces at 90° jitters, so this
+ * keeps a single paused timeline per card and reverses it, uses a
  * real 0→180 card (both faces live, backface hidden), and puts perspective on
  * the board so the mosaic shares one camera.
  *

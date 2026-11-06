@@ -34,12 +34,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     reduceMotion.addEventListener("change", applyMotionPreference);
 
     /*
-     * Two unconditional refreshes used to run here — one on mount and another
-     * on `load`, each a full-document forced layout roughly 100ms apart, and
-     * the first one's measurements were thrown away by the second. Both are now
-     * requests rather than calls: the shared scheduler in lib/gsapConfig folds
-     * them, and every TextReveal arming at the same time, into one refresh per
-     * frame.
+     * A refresh is wanted on mount and again on `load`. Each is a full-document
+     * forced layout, roughly 100ms apart, and the second throws away the
+     * first's measurements, so both are requests rather than calls: the shared
+     * scheduler in lib/gsap folds them, and every TextReveal arming at the same
+     * time, into one refresh per frame.
      */
     scheduleScrollTriggerRefresh();
 

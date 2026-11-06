@@ -30,11 +30,7 @@ import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
 import { useDialogFocus } from "@/lib/hooks/useDialogFocus";
 
 /**
- * The accounts the owners have given us, and only those.
- *
- * This was a module-level array reading `siteConfig`, which is why it could not
- * follow the Studio — and why the phone number beneath it was
- * `+32 2 512 34 56`, an invented number rendered as a live `tel:` link. An
+ * The accounts the owners have given us, and only those. An
  * account with no address is dropped rather than linked to "#": a social icon
  * that goes nowhere costs more trust than a missing one.
  */
@@ -432,7 +428,7 @@ export function MobileNavMenu({
                   ))}
                 </div>
 
-                {/* Wider apart than the desktop bar: the targets are now
+                {/* Wider apart than the desktop bar: the targets here are
                     thumb-height, and the space between them is what stops a
                     near miss landing on the wrong language. */}
                 <LanguageSwitcher className="shrink-0 gap-5" />
