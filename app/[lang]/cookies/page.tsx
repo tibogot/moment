@@ -33,7 +33,7 @@ type CookieRow = {
 
 /**
  * Every cookie and storage key this site itself writes. **Keep this in step
- * with the code**: the names come from lib/consent/types.ts,
+ * with the code**: the names come from lib/consent/types.ts, lib/cart-cookie.ts,
  * lib/i18n/config.ts, lib/shopify/cart.ts and
  * lib/shopify/customer-account/config.ts, and the durations from the max-ages
  * set there. The APD expects the list to be complete and exact.
@@ -46,6 +46,16 @@ const NECESSARY_COOKIES: CookieRow[] = [
       fr: "Retrouver votre panier d’une page et d’une visite à l’autre.",
       nl: "Uw winkelmand bewaren van pagina tot pagina en tussen bezoeken.",
       en: "Keeps your basket from one page and one visit to the next.",
+    },
+    duration: { fr: "14 jours", nl: "14 dagen", en: "14 days" },
+  },
+  {
+    name: "moment_has_cart",
+    provider: "moment-lab.be",
+    purpose: {
+      fr: "Indiquer qu’un panier existe, sans en contenir le contenu, pour ne le charger que lorsqu’il y en a un.",
+      nl: "Aangeven dat er een winkelmand bestaat, zonder de inhoud ervan, zodat die alleen wordt geladen als er een is.",
+      en: "Signals that a basket exists, without holding its contents, so it is only loaded when there is one.",
     },
     duration: { fr: "14 jours", nl: "14 dagen", en: "14 days" },
   },

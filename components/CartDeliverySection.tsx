@@ -102,6 +102,7 @@ export function CartDeliverySection({
     zones,
   ).availability;
   const slots = slotsForMethod(deliveryMethod, deliverySlots, pickupSlots);
+  const pickup = deliveryMethod === "pickup";
 
   const dict = useDictionary();
   const locale = useLocale();
@@ -236,7 +237,7 @@ export function CartDeliverySection({
       <div className="border-t border-sky py-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-            {t.delivery}
+            {pickup ? t.pickup : t.delivery}
           </span>
 
           {deliveryDate && !dateIsStale ? (
@@ -283,7 +284,13 @@ export function CartDeliverySection({
                 onClick={() => setSlotOpen((open) => !open)}
                 className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
               >
-                {slotOpen ? t.done : slot ? t.change : t.chooseSlot}
+                {slotOpen
+                  ? t.done
+                  : slot
+                    ? t.change
+                    : pickup
+                      ? t.chooseSlotPickup
+                      : t.chooseSlot}
               </button>
             </span>
           </div>
@@ -463,6 +470,7 @@ export function CartDeliverySection({
 
       <CheckoutBlockerNotice
         blocker={blocker}
+        pickup={pickup}
         onChooseSlot={() => setSlotOpen(true)}
         onAddAddress={() => setAddressOpen(true)}
         hideSlot={slotOpen}
@@ -528,7 +536,7 @@ export function CartDeliverySection({
           className="group mt-8 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
         >
           <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">
-            {t.chooseDate}
+            {pickup ? t.chooseDatePickup : t.chooseDate}
             <span
               className="transition-transform duration-500 group-hover:translate-x-1.5"
               aria-hidden

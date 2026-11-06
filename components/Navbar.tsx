@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import {
@@ -20,22 +21,42 @@ import { useGSAP } from "@gsap/react";
 import { CircleUserRound, Handbag, Menu, Search } from "lucide-react";
 import { useLenis } from "lenis/react";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
-import { CartPanel } from "@/components/CartPanel";
+
 import { GridLines } from "@/components/GridLines";
-import { MobileNavMenu } from "@/components/MobileNavMenu";
+
 import { AboutNavMenu } from "@/components/AboutNavMenu";
 import { ShopNavMenu } from "@/components/ShopNavMenu";
-import { SearchPanel } from "@/components/SearchPanel";
+
 import {
   getCartSnapshot,
   getServerCartSnapshot,
-  subscribeCart,
+  subscribeCartCount,
 } from "@/lib/cart-store";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { startIntro } from "@/lib/intro";
 import { blurFocusWithin, blurOpenOverlayFocus } from "@/lib/overlayFocus";
 import { mainNav, routes, type NavMenuKey } from "@/lib/routes";
 import { useNavCatalog } from "@/components/NavCatalogProvider";
+
+/**
+ * The cart panel, the search panel and the mobile menu are behind a click, so
+ * they stay out of the JavaScript every page loads up front: each is fetched
+ * as its own chunk and mounted (closed) once the browser is idle, or at once
+ * if the visitor opens it first. The cart panel alone carries the calendar,
+ * the address lookup and the cart actions.
+ */
+const CartPanel = dynamic(
+  () => import("@/components/CartPanel").then((m) => m.CartPanel),
+  { ssr: false },
+);
+const SearchPanel = dynamic(
+  () => import("@/components/SearchPanel").then((m) => m.SearchPanel),
+  { ssr: false },
+);
+const MobileNavMenu = dynamic(
+  () => import("@/components/MobileNavMenu").then((m) => m.MobileNavMenu),
+  { ssr: false },
+);
 
 const DURATION = 0.48;
 const EASE = "power2.out";
@@ -179,11 +200,25 @@ export function Navbar() {
   );
 
   const cart = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getCartSnapshot,
     getServerCartSnapshot,
   );
   const cartCount = cart?.totalQuantity ?? 0;
+
+  // See the note on the dynamic imports above: mount the panels once the
+  // browser is idle, or as soon as one is asked for.
+  const [panelsIdle, setPanelsIdle] = useState(false);
+  useEffect(() => {
+    const mount = () => setPanelsIdle(true);
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(mount, { timeout: 3000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = setTimeout(mount, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+  const mountPanels = panelsIdle || menuOpen || cartOpen || searchOpen;
 
   // The navbar's own drop is gated on this, and it mounts on every route, so
   // this is what guarantees the gate always opens.
@@ -975,17 +1010,21 @@ export function Navbar() {
         </div>
       </div>
 
-      <MobileNavMenu
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        collections={collections}
-      />
-      <SearchPanel
-        open={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        products={products}
-      />
-      <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
+      {mountPanels && (
+        <>
+          <MobileNavMenu
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            collections={collections}
+          />
+          <SearchPanel
+            open={searchOpen}
+            onClose={() => setSearchOpen(false)}
+            products={products}
+          />
+          <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
+        </>
+      )}
     </header>
   );
 }

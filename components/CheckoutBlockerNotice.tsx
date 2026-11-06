@@ -13,6 +13,8 @@ type CheckoutBlockerNoticeProps = {
   blocker: CheckoutBlocker | null;
   /** The slide-out panel's shorter wording, for its narrower column. */
   compact?: boolean;
+  /** Collection rather than delivery — changes the wording of the time. */
+  pickup?: boolean;
   /** Opens the window picker, wherever this surface keeps it. */
   onChooseSlot: () => void;
   /** Opens the address lookup, wherever this surface keeps it. */
@@ -39,6 +41,7 @@ type CheckoutBlockerNoticeProps = {
 export function CheckoutBlockerNotice({
   blocker,
   compact = false,
+  pickup = false,
   onChooseSlot,
   onAddAddress,
   hideSlot = false,
@@ -95,13 +98,15 @@ export function CheckoutBlockerNotice({
           className={className}
           action={
             <CheckoutNoticeAction onClick={onChooseSlot}>
-              {t.chooseSlot}
+              {pickup ? t.chooseSlotPickup : t.chooseSlot}
             </CheckoutNoticeAction>
           }
         >
           {blocker.kind === "stale-slot"
             ? interpolate(t.staleSlot, { slot: blocker.slot })
-            : t.pickSlotIntro}
+            : pickup
+              ? dict.delivery.pickupSlotIntro
+              : t.pickSlotIntro}
         </CheckoutNotice>
       );
 

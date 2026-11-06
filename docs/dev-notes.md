@@ -109,11 +109,11 @@ the risk is visual regressions for a readability-only gain. The cart panel
 rename commit with `git mv` so history follows, as was done for
 `lib/delivery/`, `lib/hooks/` and `lib/gsap/`.
 
-**The cart's JavaScript ships on every page.** The navbar imports the cart
-panel, search panel and mobile menu eagerly (~300 KB gzipped shared JS), and
-`/api/cart` is fetched on every page view. Loading those panels with
-`next/dynamic` on first open, and skipping the cart fetch when no cart cookie
-exists, are the two remaining performance items from the November 2026 audit.
+**The panels load after the page.** The cart panel, search panel and mobile
+menu are `next/dynamic` chunks the navbar mounts (closed) once the browser is
+idle, or at once when opened; about 56 KB of JavaScript leaves the initial
+load. The navbar badge only calls `/api/cart` when the `moment_has_cart` marker
+cookie says a cart exists (`lib/cart-cookie.ts`); the panel fetches when opened.
 
 
 Things that are working, understood, and not worth fixing yet — recorded so

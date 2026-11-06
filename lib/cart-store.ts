@@ -12,6 +12,7 @@ import {
 } from "@/lib/delivery/slots";
 import { DEFAULT_ZONE_TABLE, type ZoneTable } from "@/lib/delivery/zones";
 import type { Cart } from "@/lib/shopify/cart";
+import { hasCartMarker } from "@/lib/cart-cookie";
 
 let cart: Cart | null = null;
 let availability: DeliveryAvailability | null = null;
@@ -99,6 +100,19 @@ export function subscribeCart(callback: () => void): () => void {
   return () => listeners.delete(callback);
 }
 
+/**
+ * For the navbar badge, which is on every page: subscribes like
+ * `subscribeCart`, but only fetches when a cart exists. A visitor with no cart
+ * costs no `/api/cart` call; the panel, the preferences bar and the calendar,
+ * which need the delivery rules whatever the cart, still subscribe with
+ * `subscribeCart`.
+ */
+export function subscribeCartCount(callback: () => void): () => void {
+  listeners.add(callback);
+  if (!hasFetched && !inFlight && hasCartMarker()) void fetchCart();
+  return () => listeners.delete(callback);
+}
+
 export function getCartSnapshot(): Cart | null {
   return cart;
 }
@@ -144,6 +158,12 @@ export function getPickupSlotsSnapshot(): DeliverySlot[] {
 /** When the atelier is open for collection. Same terms again. */
 export function getPickupWindowSnapshot(): PickupWindow {
   return pickupWindow;
+}
+
+/** Loads the cart and the rules once, if nothing has yet. For the cart panel,
+ * which is mounted closed in the background and only needs them when opened. */
+export function ensureCartLoaded() {
+  if (!hasFetched && !inFlight) void fetchCart();
 }
 
 export function refreshCart(): Promise<void> {

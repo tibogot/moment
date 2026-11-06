@@ -29,7 +29,8 @@ import {
   getZonesSnapshot,
   refreshCart,
   setCart,
-  subscribeCart,
+  ensureCartLoaded,
+  subscribeCartCount,
 } from "@/lib/cart-store";
 import { AddressPanel } from "@/components/AddressPanel";
 import { CheckoutButton } from "@/components/CheckoutButton";
@@ -93,29 +94,29 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   const locale = useLocale();
   const t = dict.cart;
   const cart = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getCartSnapshot,
     getServerCartSnapshot,
   );
   const baseAvailability = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getAvailabilitySnapshot,
     getServerAvailabilitySnapshot,
   );
   // Same snapshot on the server as before the first fetch, so this needs no
   // separate server getter: both sides start on the built-in table.
   const zones = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getZonesSnapshot,
     getZonesSnapshot,
   );
   const deliverySlots = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getSlotsSnapshot,
     getSlotsSnapshot,
   );
   const pickupSlots = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getPickupSlotsSnapshot,
     getPickupSlotsSnapshot,
   );
@@ -317,6 +318,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     ? orderRules({ deliveryMethod, lines }, baseAvailability, zones).availability
     : null;
   const slots = slotsForMethod(deliveryMethod, deliverySlots, pickupSlots);
+  const pickup = deliveryMethod === "pickup";
+
+  // Mounted closed in the background (see Navbar), so it only asks for the
+  // cart and the delivery rules once it is actually opened.
+  useEffect(() => {
+    if (open) ensureCartLoaded();
+  }, [open]);
   // Against the windows the shop offers now, not simply printed: a cart can sit
   // in its cookie for a fortnight, and a window withdrawn in the meantime has to
   // read as no choice made rather than as a booking the kitchen never took.
@@ -442,9 +450,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           <div className="flex min-h-(--grid-band) items-center justify-between border-b border-sky px-6">
             <p className="font-owners-medium text-[12px] uppercase tracking-wide md:text-(length:--nav-text)">
               {view === "date"
-                ? t.deliveryDateTitle
+                ? pickup
+                  ? t.pickupDateTitle
+                  : t.deliveryDateTitle
                 : view === "slot"
-                  ? t.deliverySlotTitle
+                  ? pickup
+                    ? t.pickupSlotTitle
+                    : t.deliverySlotTitle
                   : view === "address"
                     ? t.addressTitle
                     : `${t.title}${totalQuantity ? ` (${totalQuantity})` : ""}`}
@@ -463,7 +475,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
           {view === "date" && availability ? (
             <>
               <p className="font-archivo-light px-6 pt-5 text-[15px] leading-normal">
-                {t.pickDayIntro}{" "}
+                {pickup ? t.pickDayIntroPickup : t.pickDayIntro}{" "}
                 {interpolate(dict.delivery.calendarNote, {
                   days: availability.leadTimeDays,
                 })}{" "}
@@ -669,7 +681,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
             <div className="border-b border-sky px-6 py-4">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  {t.delivery}
+                  {pickup ? t.pickup : t.delivery}
                 </span>
 
                 {deliveryDate && !dateIsStale ? (
@@ -715,7 +727,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                       onClick={() => setView("slot")}
                       className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
                     >
-                      {slot ? t.change : t.pick}
+                      {slot ? t.change : t.pickSlot}
                     </button>
                   </span>
                 </div>
@@ -790,6 +802,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               <CheckoutBlockerNotice
                 blocker={blocker}
                 compact
+                pickup={pickup}
                 onChooseSlot={() => setView("slot")}
                 onAddAddress={() => setView("address")}
                 className="mt-4"
@@ -802,7 +815,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
                 >
                   <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
-                    {t.chooseDate}
+                    {pickup ? t.chooseDatePickup : t.chooseDate}
                     <span
                       className="transition-transform duration-500 group-hover:translate-x-1.5"
                       aria-hidden

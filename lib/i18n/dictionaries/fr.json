@@ -312,7 +312,14 @@
     "freeDeliveryReached": "La livraison vous est offerte — votre commande dépasse {threshold}.",
     "freeDeliveryShortfall": "Ajoutez {shortfall} et la livraison vous est offerte.",
     "belowPickupMinimum": "Le retrait à l'atelier demande un minimum de commande de {minimum}. Ajoutez {shortfall} pour commander.",
-    "belowPieceMinimum": "Chaque produit se commande par {minimum} pièces identiques minimum. À compléter : {items}."
+    "belowPieceMinimum": "Chaque produit se commande par {minimum} pièces identiques minimum. À compléter : {items}.",
+    "pickup": "Retrait",
+    "chooseDatePickup": "Choisir une date de retrait",
+    "pickupDateTitle": "Date de retrait",
+    "pickupSlotTitle": "Heure de retrait",
+    "pickDayIntroPickup": "Choisissez le jour où vous passez à l'atelier.",
+    "chooseSlotPickup": "Choisir une heure de retrait",
+    "pickSlot": "Choisir"
   },
   "shop": {
     "title": "Boutique",

@@ -18,7 +18,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
   getCartSnapshot,
   getServerCartSnapshot,
-  subscribeCart,
+  subscribeCartCount,
 } from "@/lib/cart-store";
 import { aboutNav, mainNav, routes, type NavMenuKey } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
@@ -94,7 +94,7 @@ export function MobileNavMenu({
   // in a full-height panel push the rest of the links off the screen.
   const [expandedMenu, setExpandedMenu] = useState<NavMenuKey | null>(null);
   const cart = useSyncExternalStore(
-    subscribeCart,
+    subscribeCartCount,
     getCartSnapshot,
     getServerCartSnapshot,
   );

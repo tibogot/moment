@@ -312,7 +312,14 @@
     "freeDeliveryReached": "De levering is gratis — uw bestelling ligt boven {threshold}.",
     "freeDeliveryShortfall": "Voeg {shortfall} toe en de levering is gratis.",
     "belowPickupMinimum": "Afhalen in het atelier vraagt een minimumbedrag van {minimum}. Voeg {shortfall} toe om te bestellen.",
-    "belowPieceMinimum": "Elk product wordt per minstens {minimum} identieke stuks besteld. Aan te vullen: {items}."
+    "belowPieceMinimum": "Elk product wordt per minstens {minimum} identieke stuks besteld. Aan te vullen: {items}.",
+    "pickup": "Afhalen",
+    "chooseDatePickup": "Kies een afhaaldatum",
+    "pickupDateTitle": "Afhaaldatum",
+    "pickupSlotTitle": "Afhaaluur",
+    "pickDayIntroPickup": "Kies de dag waarop u langskomt in het atelier.",
+    "chooseSlotPickup": "Kies een afhaaluur",
+    "pickSlot": "Kiezen"
   },
   "shop": {
     "title": "Winkel",

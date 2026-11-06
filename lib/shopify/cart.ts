@@ -1,4 +1,5 @@
 import { DELIVERY_DATE_ATTRIBUTE } from "@/lib/delivery/dates";
+import { CART_COOKIE_MAX_AGE, CART_COOKIE_NAME } from "@/lib/cart-cookie";
 import { hasNextDayTag } from "@/lib/delivery/next-day";
 import { DELIVERY_SLOT_ATTRIBUTE } from "@/lib/delivery/slots";
 import {
@@ -17,8 +18,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { formatPriceAmount } from "@/lib/i18n/format";
 import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 
-export const CART_COOKIE_NAME = "shopify_cart_id";
-const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
+export { CART_COOKIE_NAME } from "@/lib/cart-cookie";
 
 export type CartLine = {
   id: string;

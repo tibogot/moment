@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
+import { CART_MARKER_COOKIE, cartMarkerOptions } from "@/lib/cart-cookie";
 import {
   addLinesToCart,
   addVariantToCart,
@@ -68,11 +69,16 @@ async function setCartCookie(cartId: string) {
   const cookieStore = await cookies();
   const options = getCartCookieOptions();
   cookieStore.set(options.name, cartId, options);
+  // Lets the browser know a cart exists without reading its id — see
+  // lib/cart-cookie.ts.
+  const marker = cartMarkerOptions();
+  cookieStore.set(marker.name, "1", marker);
 }
 
 async function clearCartCookie() {
   const cookieStore = await cookies();
   cookieStore.delete(getCartCookieOptions().name);
+  cookieStore.delete(CART_MARKER_COOKIE);
 }
 
 /**

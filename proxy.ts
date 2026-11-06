@@ -1,5 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import {
+  CART_COOKIE_NAME,
+  CART_MARKER_COOKIE,
+  cartMarkerOptions,
+} from "@/lib/cart-cookie";
+import {
   DEFAULT_LOCALE,
   LOCALE_COOKIE,
   isLocale,
@@ -27,7 +32,19 @@ import {
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  if (localeFromPath(pathname)) return NextResponse.next();
+  if (localeFromPath(pathname)) {
+    const response = NextResponse.next();
+    // A cart created before the marker cookie existed would otherwise show an
+    // empty badge until the visitor opened the cart. See lib/cart-cookie.ts.
+    if (
+      request.cookies.has(CART_COOKIE_NAME) &&
+      !request.cookies.has(CART_MARKER_COOKIE)
+    ) {
+      const marker = cartMarkerOptions();
+      response.cookies.set(marker.name, "1", marker);
+    }
+    return response;
+  }
 
   // The only place a preference is honoured is the bare domain, and only from
   // a cookie this site set itself when the visitor used the switcher. A

@@ -312,7 +312,14 @@
     "freeDeliveryReached": "Delivery is on us — your order is over {threshold}.",
     "freeDeliveryShortfall": "Add {shortfall} and the delivery is free.",
     "belowPickupMinimum": "Collection from the atelier has a minimum order of {minimum}. Add {shortfall} to order.",
-    "belowPieceMinimum": "Each product is ordered in at least {minimum} identical pieces. To top up: {items}."
+    "belowPieceMinimum": "Each product is ordered in at least {minimum} identical pieces. To top up: {items}.",
+    "pickup": "Collection",
+    "chooseDatePickup": "Choose a collection date",
+    "pickupDateTitle": "Collection date",
+    "pickupSlotTitle": "Collection time",
+    "pickDayIntroPickup": "Choose the day you will come by the atelier.",
+    "chooseSlotPickup": "Choose a collection time",
+    "pickSlot": "Choose"
   },
   "shop": {
     "title": "Shop",
