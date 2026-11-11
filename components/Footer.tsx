@@ -2,7 +2,6 @@
 
 import { Brand } from "@/components/Brand";
 import Image from "next/image";
-import NextLink from "next/link";
 import { Lines } from "@/components/Lines";
 import { useDictionary } from "@/components/LocaleProvider";
 import { LocaleLink as Link } from "@/components/LocaleLink";
@@ -11,8 +10,8 @@ import { FooterGridCells } from "@/components/FooterGridCells";
 import { GridLines } from "@/components/GridLines";
 import { GRID_COLUMNS, GRID_COLUMNS_MOBILE, type GridHole } from "@/lib/grid";
 import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
-import { legalNav, routes } from "@/lib/routes";
-import { siteConfig } from "@/lib/site";
+import { aboutNav, legalNav, routes } from "@/lib/routes";
+import { SITE_DETAILS, siteConfig } from "@/lib/site";
 
 /**
  * Same system as the hero: a full ruled field, with a hole only where the
@@ -25,6 +24,40 @@ const holes: GridHole[] = [
 const mobileHoles: GridHole[] = [
   { col: [1, 3], row: [2, 3] }, // headline
 ];
+
+const LABEL = "font-owners-medium text-[11px] uppercase tracking-wide";
+const ITEM =
+  "font-archivo-light text-[12px] leading-snug xl:text-[14px] xl:leading-normal";
+const LINK = `pointer-events-auto transition-opacity hover:opacity-60 ${ITEM}`;
+
+const { contact, social } = SITE_DETAILS;
+const phoneHref = `tel:${contact.phone.replace(/\s+/g, "")}`;
+const socialLinks = [
+  { label: "Instagram", href: social.instagram },
+  { label: "Facebook", href: social.facebook },
+].filter((link) => Boolean(link.href));
+
+/**
+ * One square of the top row: a small label, then its lines. Padded less than
+ * the page gutter, which at desktop widths would leave a column's square about
+ * eighty pixels to write in.
+ */
+function InfoCell({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={`flex min-w-0 flex-col gap-3 px-3 py-4 xl:px-4 xl:py-5 ${className}`}>
+      <p className={LABEL}>{label}</p>
+      <div className="flex min-w-0 flex-col gap-1">{children}</div>
+    </div>
+  );
+}
 
 const legalLinkClassName =
   "font-archivo-light text-[11px] leading-snug transition-opacity hover:opacity-60 md:text-[12px]";
@@ -88,6 +121,74 @@ export function Footer() {
           </Link>
         </div>
 
+        {/* The top row's squares carry what a footer is looked at for — where
+            the atelier is, how to reach it, the main pages — one subject per
+            square, so the ruled field stays a field rather than a column of
+            text. Desktop only for the page links; on a phone the menu is a
+            thumb away and the two free squares go to the address and contact. */}
+        <InfoCell
+          label={dict.footer.explore}
+          className="hidden md:col-start-5 md:col-end-6 md:row-start-2 md:row-end-3 md:flex"
+        >
+          {(["shop", "menus", "events", "coffee"] as const).map((key) => (
+            <Link key={key} href={routes[key]} className={LINK}>
+              {dict.nav[key]}
+            </Link>
+          ))}
+        </InfoCell>
+
+        <InfoCell
+          label={dict.footer.house}
+          className="hidden md:col-start-6 md:col-end-7 md:row-start-2 md:row-end-3 md:flex"
+        >
+          {aboutNav.map(({ key, href }) => (
+            <Link key={key} href={href} className={LINK}>
+              {dict.aboutNav[key]}
+            </Link>
+          ))}
+        </InfoCell>
+
+        <InfoCell
+          label={dict.footer.atelier}
+          className="col-start-3 col-end-4 row-start-2 row-end-3 md:col-start-7 md:col-end-8"
+        >
+          <p className={ITEM}>{contact.street}</p>
+          <p className={ITEM}>
+            {contact.postalCode} {contact.city}
+          </p>
+          <Link href={routes.findUs} className={`${LINK} mt-1 underline underline-offset-2`}>
+            {dict.aboutNav.findUs}
+          </Link>
+        </InfoCell>
+
+        <InfoCell
+          label={dict.footer.contact}
+          className="col-start-4 col-end-5 row-start-2 row-end-3 md:col-start-8 md:col-end-9"
+        >
+          <a href={phoneHref} className={`${LINK} whitespace-nowrap`}>
+            {contact.phone}
+          </a>
+          {/* Allowed to wrap only after the @: a phone's square is narrower
+              than the address, and a break anywhere else strands two letters. */}
+          <a href={`mailto:${contact.email}`} className={LINK}>
+            {contact.email.split("@")[0]}@<wbr />
+            <span className="whitespace-nowrap">
+              {contact.email.split("@")[1]}
+            </span>
+          </a>
+          {socialLinks.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${LINK} mt-1 first-of-type:mt-2`}
+            >
+              {label}
+            </a>
+          ))}
+        </InfoCell>
+
         {/* Headline — open across the left; the rest of the field stays squared. */}
         <div className="col-start-2 col-end-5 row-start-3 row-end-5 min-w-0 self-end pb-5 pl-(--grid-gutter) text-left md:col-end-6 md:pb-[4svh]">
           {/* Deliberately French in all three languages — it echoes the company
@@ -124,32 +225,6 @@ export function Footer() {
                 </Link>
               </li>
             ))}
-            {/* The client's way in to their own site, kept at the size of the
-                legal links because that is all the prominence it needs.
-                Untranslated on purpose: it is the name of the thing it opens.
-                nofollow is the third lock, after the noindex on the Studio page
-                and the disallow in robots.txt.
-
-                NextLink rather than LocaleLink: the Studio lives outside
-                /[lang] and the proxy skips it, so a language prefix would
-                point at a page that does not exist.
-
-                prefetch={false} is the load-bearing part. The footer is on
-                every page and this link is in the viewport whenever anyone
-                reaches the bottom of one, and the default would fetch the
-                Studio route there and then. Nothing is lost by refusing: the
-                Studio sits under a second root layout, and crossing root
-                layouts is a full page load whatever we prefetch. */}
-            <li>
-              <NextLink
-                href="/studio"
-                prefetch={false}
-                rel="nofollow"
-                className={`pointer-events-auto ${legalLinkClassName}`}
-              >
-                Studio
-              </NextLink>
-            </li>
           </ul>
         </div>
       </div>

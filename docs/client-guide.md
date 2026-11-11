@@ -9,6 +9,9 @@ pièges à connaître. Mise à jour : 5 novembre 2026.
 
 ### Dans le Studio — `/studio` sur le site, en français
 
+Aucun lien n'y mène depuis le site : ouvrez `moment-lab.be/studio` et
+enregistrez-le dans vos favoris.
+
 | Contenu | Où |
 |---|---|
 | Menus traiteur | Menus traiteur |

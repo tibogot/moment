@@ -996,7 +996,11 @@ export function Navbar() {
           aria-hidden={!navExpanded}
           inert={!navExpanded}
         >
-          <div ref={menuInnerRef} className="nav:col-span-full">
+          {/* self-start: the panel is a grid with a tweened height, and a
+              stretched item takes that height as its own — so measuring About
+              while Shop's height was still applied read back Shop's height,
+              and the panel never shrank. Unstretched, it measures its content. */}
+          <div ref={menuInnerRef} className="self-start nav:col-span-full">
             {shownNavMenu === "about" ? (
               <AboutNavMenu onNavigate={releaseShopMenuFocus} />
             ) : (

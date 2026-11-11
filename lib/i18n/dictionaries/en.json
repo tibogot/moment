@@ -173,7 +173,11 @@
     }
   },
   "footer": {
-    "headline": "Un moment,\nsimplement."
+    "headline": "Un moment,\nsimplement.",
+    "explore": "Explore",
+    "house": "The house",
+    "atelier": "Atelier",
+    "contact": "Contact"
   },
   "aboutNav": {
     "story": "Our story",
