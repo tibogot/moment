@@ -51,7 +51,7 @@ export async function generateMetadata({
     getDictionary(locale),
   ]);
 
-  if (!raw) return notFoundMetadata();
+  if (!raw) return notFoundMetadata(dict.common.notFound.title);
   const menu = resolveMenu(raw, locale);
 
   // The price belongs in the snippet: "from €32 per person" is the line that
@@ -298,6 +298,8 @@ export default async function MenuPage({ params }: MenuPageProps) {
         </GridSection>
       )}
 
+      {/* Only the way back here: the quote button lives once, in the price
+          band, next to the price it asks about. */}
       <GridSection className="pb-[14svh]">
         <div className="col-start-2 col-end-5 flex flex-wrap gap-3 px-(--grid-gutter) md:col-end-9">
           <Link
@@ -305,13 +307,6 @@ export default async function MenuPage({ params }: MenuPageProps) {
             className="font-owners-medium inline-block border border-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-sky/30"
           >
             {dict.menus.allMenus}
-          </Link>
-
-          <Link
-            href={quoteHref}
-            className="font-owners-medium inline-block border border-sky bg-sky px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-cream"
-          >
-            {dict.menus.requestMenu}
           </Link>
         </div>
       </GridSection>

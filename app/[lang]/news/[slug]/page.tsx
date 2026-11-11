@@ -60,7 +60,7 @@ export async function generateMetadata({
     getDictionary(locale),
   ]);
 
-  if (!article) return notFoundMetadata();
+  if (!article) return notFoundMetadata(dict.common.notFound.title);
 
   return pageMetadata({
     locale,

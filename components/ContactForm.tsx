@@ -246,6 +246,9 @@ export function ContactForm({
   const pro = variant === "pro";
   const partner = variant === "partner";
   const p = dict.partner;
+  // Each form explains its own three steps: a quote, a pro account and a
+  // stockist request are three different processes.
+  const steps = pro ? dict.proAccount.steps : partner ? p.steps : t.steps;
   const [state, formAction, pending] = useActionState(
     sendContactRequest,
     INITIAL_CONTACT_STATE,
@@ -336,10 +339,10 @@ export function ContactForm({
                       {/* Same size as the form's field labels across the rule —
                           the two columns read as one row of headings. */}
                       <p className="font-owners-medium text-[14px] uppercase tracking-wide">
-                        {(partner ? p.steps : t.steps)[position].title}
+                        {steps[position].title}
                       </p>
                       <p className="font-archivo-light mt-2 text-[18px] leading-normal">
-                        {(partner ? p.steps : t.steps)[position].body}
+                        {steps[position].body}
                       </p>
                     </div>
                   </li>

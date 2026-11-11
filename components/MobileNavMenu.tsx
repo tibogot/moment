@@ -291,10 +291,13 @@ export function MobileNavMenu({
 
         <nav className="row-start-2 row-end-6 flex min-h-0 flex-col overflow-hidden">
           <div
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-[3svh]"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
             data-lenis-prevent
           >
-            <ul className="border-b border-sky">
+            {/* The first row starts right under the band, whose bottom border
+                is already its top rule — a gap and a second rule there read as
+                a stray double line. */}
+            <ul className="border-b border-sky [&>li:first-child]:border-t-0">
               {mainNav.map((item) => {
                 // A plain destination.
                 if (!("menu" in item)) {

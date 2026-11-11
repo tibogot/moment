@@ -39,6 +39,7 @@
     "seeEverything": "Alles bekijken",
     "viewCart": "Winkelmand bekijken",
     "notFound": {
+      "title": "Pagina niet gevonden",
       "eyebrow": "Fout 404",
       "lead": "Deze pagina bestaat niet meer, of heeft nooit bestaan. De rest van het huis staat er nog.",
       "back": "Terug naar de startpagina"
@@ -480,6 +481,20 @@
     "lead": "Voor bedrijven die regelmatig bestellen: factuur met btw, overzicht van uw bestellingen en bestellen met één klik.",
     "intro": "Open een zakelijk account",
     "body": "Vul dit formulier in en wij activeren uw account, meestal binnen één werkdag.",
+    "steps": [
+      {
+        "title": "Uw bedrijf",
+        "body": "De naam, het btw-nummer en het adres waar u meestal laat leveren."
+      },
+      {
+        "title": "Activering",
+        "body": "We controleren uw gegevens en activeren uw account, meestal binnen één werkdag."
+      },
+      {
+        "title": "Bestellen",
+        "body": "Meld u aan: factuur met btw, overzicht van uw bestellingen en bestellen met één klik."
+      }
+    ],
     "vat": "Btw-nummer",
     "vatPlaceholder": "BE 0123 456 789",
     "address": "Belangrijkste leveradres",

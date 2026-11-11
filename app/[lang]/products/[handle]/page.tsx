@@ -49,7 +49,7 @@ export async function generateMetadata({
     getDictionary(locale),
   ]);
 
-  if (!product) return notFoundMetadata();
+  if (!product) return notFoundMetadata(dict.common.notFound.title);
 
   return pageMetadata({
     locale,
@@ -116,10 +116,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
             actually gets made.
 
             Sized deliberately below the product title underneath it — this
-            frames the controls, it is not the headline of the page. */}
+            frames the controls, it is not the headline of the page.
+
+            On a phone it moves after the product: stacked first, its date,
+            window, address and method filled the whole first screen and pushed
+            the photo, the name and the price below the fold. */}
         <section
           aria-labelledby="order-preferences"
-          className="col-start-2 col-end-5 mb-[6svh] px-(--grid-gutter) md:col-end-9"
+          className="order-last col-start-2 col-end-5 mt-[8svh] px-(--grid-gutter) md:order-first md:col-end-9 md:mt-0 md:mb-[6svh]"
         >
           <h2
             id="order-preferences"

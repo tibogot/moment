@@ -46,7 +46,7 @@ export async function generateMetadata({
     getDictionary(locale),
   ]);
 
-  if (!collection || handle === HIDDEN_COLLECTION) return notFoundMetadata();
+  if (!collection || handle === HIDDEN_COLLECTION) return notFoundMetadata(dict.common.notFound.title);
 
   return pageMetadata({
     locale,

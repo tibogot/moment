@@ -29,7 +29,9 @@ import "./globals.css";
  * would make every 404 dynamic.
  */
 export const metadata: Metadata = {
-  title: "404",
+  // Absolute: this page renders outside the layout that owns the
+  // "%s — Moment" template, so the brand has to be written in.
+  title: "Page introuvable — Moment",
 };
 
 export default async function GlobalNotFound() {

@@ -39,6 +39,7 @@
     "seeEverything": "See everything",
     "viewCart": "View cart",
     "notFound": {
+      "title": "Page not found",
       "eyebrow": "Error 404",
       "lead": "This page no longer exists, or never did. The rest of the house is still standing.",
       "back": "Back to home"
@@ -480,6 +481,20 @@
     "lead": "For companies ordering regularly: VAT invoices, your order history and one-click reordering.",
     "intro": "Open a professional account",
     "body": "Fill this in and we activate your account, usually within one working day.",
+    "steps": [
+      {
+        "title": "Your company",
+        "body": "Its name, its VAT number and the address you most often have orders delivered to."
+      },
+      {
+        "title": "Activation",
+        "body": "We check your details and activate your account, usually within one working day."
+      },
+      {
+        "title": "Order",
+        "body": "Sign in: VAT invoices, your order history and one-click reordering."
+      }
+    ],
     "vat": "VAT number",
     "vatPlaceholder": "BE 0123 456 789",
     "address": "Main delivery address",

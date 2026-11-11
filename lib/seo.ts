@@ -257,8 +257,11 @@ export function localizedMetadata(
   };
 }
 
-/** Metadata for a page whose record went missing — never indexable. */
-export function notFoundMetadata(title = "Not found"): Metadata {
+/**
+ * Metadata for a page whose record went missing — never indexable. `title` is
+ * the page language's "page not found" (`common.notFound.title`).
+ */
+export function notFoundMetadata(title: string): Metadata {
   return {
     title,
     robots: { index: false, follow: true },

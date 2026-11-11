@@ -39,6 +39,7 @@
     "seeEverything": "Voir tout",
     "viewCart": "Voir le panier",
     "notFound": {
+      "title": "Page introuvable",
       "eyebrow": "Erreur 404",
       "lead": "Cette page n'existe plus, ou n'a jamais existé. Le reste de la maison est toujours là.",
       "back": "Retour à l'accueil"
@@ -480,6 +481,20 @@
     "lead": "Pour les entreprises qui commandent régulièrement : facture avec TVA, historique de vos commandes et commande en un clic.",
     "intro": "Ouvrez un compte professionnel",
     "body": "Remplissez ce formulaire et nous activons votre compte, en général sous un jour ouvrable.",
+    "steps": [
+      {
+        "title": "Votre entreprise",
+        "body": "Son nom, son numéro de TVA et l'adresse où vous vous faites livrer le plus souvent."
+      },
+      {
+        "title": "Activation",
+        "body": "Nous vérifions vos informations et activons votre compte, en général sous un jour ouvrable."
+      },
+      {
+        "title": "Commandez",
+        "body": "Connectez-vous : facture avec TVA, historique de vos commandes et commande en un clic."
+      }
+    ],
     "vat": "Numéro de TVA",
     "vatPlaceholder": "BE 0123 456 789",
     "address": "Adresse de livraison principale",
