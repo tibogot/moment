@@ -96,20 +96,20 @@ behaviour, not a stopgap.
 
 ## Known debt
 
-**`components/Navbar.tsx` is ~990 lines.** One component holds the
+**`components/Navbar.tsx` is ~1 030 lines.** One component holds the
 transparent-over-hero appearance, the scroll reveal, three dropdown panels and
 their GSAP timelines. It works and is tested by eye on every page; splitting it
 (a `useNavAppearance` hook, a `useNavPanels` hook, the desktop link rows as
 their own component) is worth doing when the nav next changes, not before —
 the risk is visual regressions for a readability-only gain. The cart panel
-(`CartPanel.tsx`, ~800 lines) is the next candidate.
+(`CartPanel.tsx`, ~850 lines) is the next candidate.
 
 **`ParallaxImage` and `HeroParallaxImage` are near-copies.** They differ in
 the scroll trigger (the frame vs the closest section), the blur placeholder and
 loading priority. Merging them is worth doing with the hero on screen, since a
 regression there is the most visible one the site can have.
 
-**`components/` is flat (~75 files).** Grouping by area (`cart/`, `nav/`,
+**`components/` is flat (~80 files).** Grouping by area (`cart/`, `nav/`,
 `about/`, `product/`, `legal/`) would help a newcomer; do it in a single
 rename commit with `git mv` so history follows, as was done for
 `lib/delivery/`, `lib/hooks/` and `lib/gsap/`.
@@ -120,6 +120,7 @@ idle, or at once when opened; about 56 KB of JavaScript leaves the initial
 load. The navbar badge only calls `/api/cart` when the `moment_has_cart` marker
 cookie says a cart exists (`lib/cart-cookie.ts`); the panel fetches when opened.
 
+## Working as intended
 
 Things that are working, understood, and not worth fixing yet — recorded so
 nobody rediscovers them as bugs.
@@ -178,8 +179,6 @@ designed 404 in this repo had never once appeared, for any URL. So there is
 `app/global-not-found.tsx` behind the `globalNotFound` flag for unmatched URLs,
 and `app/[lang]/not-found.tsx` for `notFound()` raised inside a language. Do not
 merge them.
-
----
 
 ---
 
@@ -264,8 +263,6 @@ live where their twin lives. The zone fees must agree with Shopify's shipping
 profiles, so moving them to Sanity would put the two copies in different
 buildings again. The calendar has no twin and could move, but splitting the
 delivery domain across two admins costs more than the nicer form is worth.
-
----
 
 ---
 

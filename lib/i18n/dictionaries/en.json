@@ -231,7 +231,7 @@
     "slotIntro": "Choose the two-hour window you would like it in.",
     "slotFull": "Window full? Get in touch — depending on where you are and the route we are already driving, we may be able to add you to a round.",
     "pastCutoffNote": "Today's {cutoff} cut-off has passed, so the earliest we can deliver has moved out by a day.",
-    "pickupWindow": "Collection is from {window} at the atelier.",
+    "pickupWindow": "Collection at the atelier: {window}.",
     "pickupSlotIntro": "Choose the time you will come by the atelier."
   },
   "deliveryMethods": {
@@ -325,6 +325,7 @@
     "title": "Shop",
     "searchResults": "Results for “{query}”",
     "clearSearch": "Clear search",
+    "grid": "Grid",
     "index": "Index",
     "layout": "Product layout",
     "unavailable": "The catalogue is not available right now. Please try again later.",
@@ -375,7 +376,7 @@
     "servingSize": "Serving size",
     "ingredients": "Ingredients",
     "allergens": "Allergens",
-    "traces": "May contain traces of",
+    "traces": "Possible traces",
     "dietary": "Dietary",
     "servingInstructions": "Serving instructions",
     "storage": "Storage",
@@ -472,7 +473,7 @@
     "hoursTitle": "Reaching us",
     "hours": "Every day, {hours}, by phone and email.",
     "addressTitle": "The atelier",
-    "pickupNote": "Collection by arrangement, {window}."
+    "pickupNote": "Collection at the atelier at the time chosen when ordering, {window}."
   },
   "proAccount": {
     "title": "Professional account",
@@ -547,7 +548,7 @@
     },
     "about": {
       "title": "About — Traiteur & Catering Kitchen in Brussels",
-      "description": "Moment is a traiteur in Brussels cooking seasonal plates, salads and cold-pressed juices every morning for private hosts, offices and events — delivered across the city, ready to serve.",
+      "description": "A Brussels traiteur cooking seasonal plates, salads and cold-pressed juices every morning for homes, offices and events, delivered ready to serve.",
       "keywords": [
         "traiteur Brussels",
         "catering Brussels",
@@ -568,7 +569,7 @@
       ]
     },
     "collections": {
-      "title": "Collections",
+      "title": "Catering collections",
       "description": "Browse plates, salads and cold-pressed juices by category — prepared each morning and delivered across Brussels."
     },
     "menus": {
@@ -601,11 +602,11 @@
       ]
     },
     "news": {
-      "title": "News",
+      "title": "News from the kitchen",
       "description": "News from Moment — what we are cooking, the events we are catering, and what is coming out of our Brussels kitchen."
     },
     "faq": {
-      "title": "FAQ",
+      "title": "FAQ: ordering and delivery",
       "description": "Delivery areas and fees, lead times, collection, dietary options and how event quotes work at Moment, traiteur in Brussels.",
       "keywords": [
         "traiteur Brussels FAQ",
@@ -614,7 +615,7 @@
       ]
     },
     "contact": {
-      "title": "Contact",
+      "title": "Contact and catering quotes",
       "description": "Request a quote from Moment, traiteur in Brussels. Tell us the date, the number of people and what you have in mind — we come back with a menu and a price.",
       "keywords": [
         "traiteur Brussels contact",

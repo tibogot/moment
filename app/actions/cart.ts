@@ -90,7 +90,10 @@ async function clearCartCookie() {
  * and the prices from it, which is why a mutation returning the new cart has to
  * carry it too: the panel repaints from that response.
  */
-export async function getCart(locale: Locale) {
+export async function getCart(
+  locale: Locale,
+  { clearStale = true }: { clearStale?: boolean } = {},
+) {
   locale = toLocale(locale);
   if (!isShopifyConfigured()) return null;
 
@@ -101,7 +104,10 @@ export async function getCart(locale: Locale) {
 
   // Only a cart Shopify says is gone loses its cookie. On a failed read the
   // badge shows empty for one render, and the basket is still there on the next.
-  if (lookup.kind === "missing") await clearCartCookie();
+  // A page render cannot write cookies (Next throws), so the cart page passes
+  // `clearStale: false` and leaves the clean-up to /api/cart and the actions —
+  // a stale cookie is the normal state right after a completed checkout.
+  if (lookup.kind === "missing" && clearStale) await clearCartCookie();
 
   return lookup.kind === "found" ? lookup.cart : null;
 }
@@ -313,6 +319,7 @@ export async function setDeliverySlot(locale: Locale, slotId: string) {
 export async function setDeliveryNote(locale: Locale, value: string) {
   locale = toLocale(locale);
   if (!isShopifyConfigured()) return orderFailure("not_configured");
+  if (typeof value !== "string") return orderFailure("cart_failed");
 
   const note = value.trim().slice(0, DELIVERY_NOTE_MAX);
 
@@ -337,9 +344,6 @@ export async function setDeliveryMethod(locale: Locale, method: DeliveryMethod) 
     // Delivery windows and collection times are different lists, so a slot
     // chosen under one method means nothing under the other.
     [DELIVERY_SLOT_ATTRIBUTE]: null,
-    // Click & collect leaves nothing to deliver to, so a previously saved
-    // address is cleared rather than left on the order contradicting it — and
-    // the zone with it, since a zone without an address prices nothing.
     ...(method === "pickup"
       ? {
           [DELIVERY_ADDRESS_ATTRIBUTE]: null,
@@ -446,7 +450,7 @@ export async function updateCartLine(
   quantity: number,
 ) {
   locale = toLocale(locale);
-  if (!Number.isInteger(quantity) || quantity < 0 || quantity > 999) {
+  if (!Number.isInteger(quantity) || quantity < 0 || quantity > MAX_LINE_QUANTITY) {
     return orderFailure("cart_failed");
   }
 
@@ -470,6 +474,9 @@ export async function removeFromCart(locale: Locale, lineId: string) {
   return { ok: true as const, cart: result.cart };
 }
 
+/** GA ids look like `123456789.1700000000` and `1700000000`; nothing else is stored. */
+const GA_ID_PATTERN = /^[0-9.]{1,40}$/;
+
 /**
  * The only way to Shopify's checkout.
  *
@@ -488,9 +495,6 @@ export async function removeFromCart(locale: Locale, lineId: string) {
  * changes the address or adds a discount on Shopify's own pages. That needs a
  * Cart & Checkout Validation Function running inside Shopify — see docs/dev-notes.md.
  */
-/** GA ids look like `123456789.1700000000` and `1700000000`; nothing else is stored. */
-const GA_ID_PATTERN = /^[0-9.]{1,40}$/;
-
 export async function beginCheckout(
   locale: Locale,
   analytics: { clientId: string; sessionId: string | null } | null = null,

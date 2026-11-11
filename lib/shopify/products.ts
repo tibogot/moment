@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
 import type { Locale } from "@/lib/i18n/config";
+import { formatPriceAmount } from "@/lib/i18n/format";
 import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 import {
   ALL_PRODUCTS_QUERY,
@@ -27,15 +28,23 @@ const PRODUCTS_PAGE_SIZE = 100;
 // product and collection page, in all three locales, on 24 rebuilds a day.
 export const SHOPIFY_REVALIDATE = CACHE_BACKSTOP_SECONDS;
 export const SHOPIFY_CACHE_TAG = "shopify-products";
+/**
+ * Part of every catalogue cache key. Bump it whenever the *shape or format* of
+ * what is cached changes (a new field, a price formatted differently): the
+ * data cache outlives deployments, so without a new key the old entries keep
+ * being served until the backstop expires them.
+ */
+export const SHOPIFY_CACHE_VERSION = "v2";
 
-export function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("en-BE", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(Number(amount));
-}
-
-export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
+/**
+ * The price is formatted in the page's language — "5,50 €" in French and
+ * Dutch, "€5.50" in English — the same way the cart formats its lines, so a
+ * product card and the basket it goes into never disagree.
+ */
+export function mapProductNode(
+  node: ShopifyProductNode,
+  language: Locale,
+): ShopifyProduct {
   const { amount, currencyCode } = node.priceRange.minVariantPrice;
 
   return {
@@ -46,7 +55,7 @@ export function mapProductNode(node: ShopifyProductNode): ShopifyProduct {
     description: node.description,
     imageUrl: node.featuredImage?.url ?? null,
     imageAlt: node.featuredImage?.altText ?? node.title,
-    price: formatPrice(amount, currencyCode),
+    price: formatPriceAmount(language, amount, currencyCode),
     priceAmount: amount,
     currencyCode,
     productType: node.productType,
@@ -99,9 +108,10 @@ function mapProductDetails(
 
 export function mapProductDetailNode(
   node: ShopifyProductDetailNode,
+  language: Locale,
 ): ShopifyProduct {
   return {
-    ...mapProductNode(node),
+    ...mapProductNode(node, language),
     descriptionHtml: node.descriptionHtml ?? null,
     images: mapProductImages(node),
     details: mapProductDetails(node),
@@ -119,7 +129,7 @@ async function fetchProductsPage(language: Locale, after?: string | null) {
 
   return {
     products: (data.products.edges ?? []).map(({ node }) =>
-      mapProductNode(node),
+      mapProductNode(node, language),
     ),
     pageInfo: data.products.pageInfo,
   };
@@ -152,7 +162,7 @@ async function fetchAllProducts(language: Locale): Promise<ShopifyProduct[]> {
 const cachedProducts = (language: Locale) =>
   unstable_cache(
     () => fetchAllProducts(language),
-    ["shopify-products", language],
+    ["shopify-products", SHOPIFY_CACHE_VERSION, language],
     {
       revalidate: SHOPIFY_REVALIDATE,
       tags: [SHOPIFY_CACHE_TAG],
@@ -202,9 +212,16 @@ async function fetchProductByHandle(
     language: shopifyLanguage(language),
   });
 
-  return data.product ? mapProductDetailNode(data.product) : null;
+  return data.product ? mapProductDetailNode(data.product, language) : null;
 }
 
+/**
+ * Throws when Shopify fails, and returns `null` only when the handle really
+ * does not exist. The difference matters to the page: `null` becomes a cached
+ * 404, while a thrown render keeps the last good page (ISR) until Shopify is
+ * back — so an outage during a rebuild cannot cache "not found" for a product
+ * that is still on sale.
+ */
 export async function getProductByHandle(
   language: Locale,
   handle: string,
@@ -214,11 +231,11 @@ export async function getProductByHandle(
   try {
     return await unstable_cache(
       () => fetchProductByHandle(language, handle),
-      ["shopify-product", language, handle],
+      ["shopify-product", SHOPIFY_CACHE_VERSION, language, handle],
       { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
     )();
   } catch (error) {
     console.error(`[shopify] getProductByHandle(${handle}) failed`, error);
-    return null;
+    throw error;
   }
 }

@@ -48,3 +48,4 @@ next-env.d.ts
 # the way there — 50KB of regenerable JSON that would churn on every schema
 # edit. `npm run typegen` rebuilds both.
 schema.json
+.claude/settings.json

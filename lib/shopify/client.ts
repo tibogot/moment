@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 
 const storeDomain = process.env.SHOPIFY_STORE_DOMAIN;
 const publicAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-01";
+const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-10";
 
 export function isShopifyConfigured() {
   return Boolean(storeDomain && publicAccessToken);

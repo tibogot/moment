@@ -1,11 +1,28 @@
 import { PortableText, type PortableTextComponents } from "next-sanity";
 import { SanityImage } from "@/components/SanityImage";
+import {
+  localeFromPath,
+  withLocale,
+  type Locale,
+} from "@/lib/i18n/config";
 import type {
   NewsArticle,
   SanityImage as SanityImageType,
 } from "@/lib/sanity/types";
 
-const components: PortableTextComponents = {
+/**
+ * Editors type site links the way they read them, `/shop` or `/contact`.
+ * Without a language those go through the proxy's redirect to French — so a
+ * Dutch or English reader following one lands on the French page. They get the
+ * article's language here; a link that already names a language keeps it, and
+ * external, mail and anchor links are left as written.
+ */
+function localizeHref(href: string, locale: Locale) {
+  if (!href.startsWith("/") || href.startsWith("//")) return href;
+  return localeFromPath(href) ? href : withLocale(href, locale);
+}
+
+const components = (locale: Locale): PortableTextComponents => ({
   block: {
     h2: ({ children }) => (
       <h2 className="font-owners-narrow-bold mt-10 text-[8vw] leading-[0.95] tracking-[-0.005em] uppercase md:mt-12 md:text-[min(4vw,6svh)]">
@@ -37,7 +54,8 @@ const components: PortableTextComponents = {
       <em className="font-archivo-light-italic not-italic">{children}</em>
     ),
     link: ({ children, value }) => {
-      const href = typeof value?.href === "string" ? value.href : "#";
+      const href =
+        typeof value?.href === "string" ? localizeHref(value.href, locale) : "#";
       const isExternal = href.startsWith("http");
 
       return (
@@ -88,12 +106,14 @@ const components: PortableTextComponents = {
       );
     },
   },
-};
+});
 
 type PortableTextContentProps = {
   value: NewsArticle["body"];
+  /** The article's language, given to the site links written without one. */
+  locale: Locale;
 };
 
-export function PortableTextContent({ value }: PortableTextContentProps) {
-  return <PortableText value={value} components={components} />;
+export function PortableTextContent({ value, locale }: PortableTextContentProps) {
+  return <PortableText value={value} components={components(locale)} />;
 }

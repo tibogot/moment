@@ -24,7 +24,7 @@ export default async function CartPage({
   const { lang } = await params;
   const [cart, { availability, zones, slots, pickupSlots }, dict] =
     await Promise.all([
-    getCart(toLocale(lang)),
+    getCart(toLocale(lang), { clearStale: false }),
     getDeliveryRules(),
     getDictionary(toLocale(lang)),
   ]);

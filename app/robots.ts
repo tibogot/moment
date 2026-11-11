@@ -1,12 +1,11 @@
 import type { MetadataRoute } from "next";
-import { LOCALES } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/routes";
 import { siteConfig, siteIsIndexable } from "@/lib/site";
 
 /**
- * The disallow list is the crawl-budget half of the job — the same routes also
- * carry `robots: { index: false }` in their metadata, which is what actually
- * keeps them out of the index if a crawler reaches them by another path.
+ * The cart, account and sign-in pages are *not* disallowed: they carry
+ * `robots: { index: false }`, and a crawler has to be allowed to fetch a page
+ * to read that. Disallowed, an externally linked /fr/cart could still be
+ * indexed as a bare URL — the one thing the noindex is there to prevent.
  *
  * Until the real domain exists the whole site is closed instead. See
  * `siteIsIndexable`: a `.vercel.app` address indexed now would have to be
@@ -28,13 +27,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: [
         "/api/",
-        // Per language: these pages live at /fr/cart and so on, and robots
-        // rules match by prefix, so a bare /cart matched nothing at all.
-        ...LOCALES.flatMap((locale) =>
-          [routes.cart, routes.account, routes.signIn].map((path) =>
-            href(locale, path),
-          ),
-        ),
         // Not for secrecy — the Studio asks for a Sanity login on its own. This
         // is so a CMS sign-in screen never turns up in the results for the
         // client's own name.

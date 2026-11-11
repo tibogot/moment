@@ -13,11 +13,7 @@ import { geoapifyProvider, isGeoapifyConfigured } from "./geoapify";
 import { urbisProvider } from "./urbis";
 import type { AddressProvider } from "./provider";
 
-export type {
-  AddressMatch,
-  AddressProvider,
-  AddressSearch,
-} from "./provider";
+export type { AddressProvider } from "./provider";
 
 export function getAddressProvider(): AddressProvider {
   return isGeoapifyConfigured() ? geoapifyProvider : urbisProvider;

@@ -18,8 +18,6 @@ import type { Locale } from "@/lib/i18n/config";
 import { formatPriceAmount } from "@/lib/i18n/format";
 import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 
-export { CART_COOKIE_NAME } from "@/lib/cart-cookie";
-
 export type CartLine = {
   id: string;
   quantity: number;

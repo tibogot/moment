@@ -51,9 +51,9 @@ function sortProducts(
 }
 
 const views = [
-  { id: "grid", label: "Grid", cells: 2 },
-  { id: "index", label: "Index", cells: 3 },
-] as const satisfies readonly { id: View; label: string; cells: number }[];
+  { id: "grid", cells: 2 },
+  { id: "index", cells: 3 },
+] as const satisfies readonly { id: View; cells: number }[];
 
 /**
  * Index runs on the page's own column count — 3 on mobile, 7 above md — so the
@@ -422,7 +422,7 @@ export function ProductGrid({
               aria-label={dict.shop.layout}
               className="mt-4 flex self-end border border-sky bg-cream"
             >
-              {views.map(({ id, label, cells }) => (
+              {views.map(({ id, cells }) => (
                 <button
                   key={id}
                   type="button"
@@ -434,7 +434,7 @@ export function ProductGrid({
                   )}
                 >
                   <ViewGlyph cells={cells} />
-                  {label}
+                  {id === "grid" ? dict.shop.grid : dict.shop.index}
                 </button>
               ))}
             </div>

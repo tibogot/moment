@@ -60,7 +60,10 @@ export function proxy(request: NextRequest) {
   url.pathname = pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
   url.search = search;
 
-  return NextResponse.redirect(url);
+  // Permanent for a real path (/shop is /fr/shop for good), so search engines
+  // pass its links on to the prefixed URL; temporary for "/", whose target
+  // depends on the visitor's remembered language.
+  return NextResponse.redirect(url, pathname === "/" ? 307 : 308);
 }
 
 export const config = {

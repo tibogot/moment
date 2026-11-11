@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
 import {
   SHOPIFY_CACHE_TAG,
+  SHOPIFY_CACHE_VERSION,
   SHOPIFY_REVALIDATE,
   mapProductNode,
 } from "./products";
@@ -34,9 +35,12 @@ export const SELECTION_COLLECTION_HANDLE_SET = new Set<string>(
   SELECTION_COLLECTION_HANDLES,
 );
 
-function mapCollectionNode(node: ShopifyCollectionNode): ShopifyCollection {
+function mapCollectionNode(
+  node: ShopifyCollectionNode,
+  language: Locale,
+): ShopifyCollection {
   const products = (node.products?.edges ?? []).map(({ node: productNode }) =>
-    mapProductNode(productNode),
+    mapProductNode(productNode, language),
   );
   const productImage = products[0]?.imageUrl
     ? { url: products[0].imageUrl, altText: products[0].imageAlt }
@@ -66,7 +70,7 @@ async function fetchCollections(
   });
 
   return (data.collections.edges ?? []).map(({ node }) =>
-    mapCollectionNode(node),
+    mapCollectionNode(node, language),
   );
 }
 
@@ -85,7 +89,7 @@ export const SHOPIFY_COLLECTIONS_TAG = "shopify-collections";
 const cachedCollections = (language: Locale) =>
   unstable_cache(
     () => fetchCollections(language),
-    ["shopify-collections", language],
+    ["shopify-collections", SHOPIFY_CACHE_VERSION, language],
     {
       revalidate: SHOPIFY_REVALIDATE,
       tags: [SHOPIFY_CACHE_TAG, SHOPIFY_COLLECTIONS_TAG],
@@ -103,9 +107,11 @@ const cachedCollectionLinks = (language: Locale) =>
         COLLECTION_LINKS_QUERY,
         { first: COLLECTIONS_PAGE_SIZE, language: shopifyLanguage(language) },
       );
-      return data.collections.edges.map(({ node }) => mapCollectionNode(node));
+      return data.collections.edges.map(({ node }) =>
+        mapCollectionNode(node, language),
+      );
     },
-    ["shopify-collection-links", language],
+    ["shopify-collection-links", SHOPIFY_CACHE_VERSION, language],
     { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_COLLECTIONS_TAG] },
   );
 
@@ -161,7 +167,7 @@ async function fetchCollectionByHandle(
   if (!collection) return null;
 
   const products = collection.products.edges.map(({ node }) =>
-    mapProductNode(node),
+    mapProductNode(node, language),
   );
 
   return {
@@ -175,6 +181,13 @@ async function fetchCollectionByHandle(
   } satisfies CollectionWithProducts;
 }
 
+/**
+ * Throws when Shopify fails, and returns `null` only when the handle really
+ * does not exist. The difference matters to the page: `null` becomes a cached
+ * 404, while a thrown render keeps the last good page (ISR) until Shopify is
+ * back — so an outage during a rebuild cannot cache "not found" for a product
+ * that is still on sale.
+ */
 export async function getCollectionByHandle(
   language: Locale,
   handle: string,
@@ -184,7 +197,7 @@ export async function getCollectionByHandle(
   try {
     return await unstable_cache(
       () => fetchCollectionByHandle(language, handle),
-      ["shopify-collection", language, handle],
+      ["shopify-collection", SHOPIFY_CACHE_VERSION, language, handle],
       {
         revalidate: SHOPIFY_REVALIDATE,
         tags: [SHOPIFY_CACHE_TAG, SHOPIFY_COLLECTIONS_TAG],
@@ -192,6 +205,6 @@ export async function getCollectionByHandle(
     )();
   } catch (error) {
     console.error(`[shopify] getCollectionByHandle(${handle}) failed`, error);
-    return null;
+    throw error;
   }
 }

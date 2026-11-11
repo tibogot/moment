@@ -174,7 +174,7 @@ export default async function NewsArticlePage({
       {article.body?.length ? (
         <GridSection className="pb-[8svh]">
           <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) pt-[6svh] md:col-end-8">
-            <PortableTextContent value={article.body} />
+            <PortableTextContent value={article.body} locale={locale} />
           </div>
         </GridSection>
       ) : null}

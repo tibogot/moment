@@ -6,9 +6,7 @@ import type { DeliveryAvailability } from "@/lib/delivery/dates";
 import {
   DEFAULT_DELIVERY_SLOTS,
   DEFAULT_PICKUP_SLOTS,
-  DEFAULT_PICKUP_WINDOW,
   type DeliverySlot,
-  type PickupWindow,
 } from "@/lib/delivery/slots";
 import { DEFAULT_ZONE_TABLE, type ZoneTable } from "@/lib/delivery/zones";
 import type { Cart } from "@/lib/shopify/cart";
@@ -26,7 +24,6 @@ let zones: ZoneTable = DEFAULT_ZONE_TABLE;
  * it is a dead end, and the built-in three are what the server falls back to. */
 let slots: DeliverySlot[] = DEFAULT_DELIVERY_SLOTS;
 let pickupSlots: DeliverySlot[] = DEFAULT_PICKUP_SLOTS;
-let pickupWindow: PickupWindow = DEFAULT_PICKUP_WINDOW;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
 let refetchQueued = false;
@@ -66,7 +63,6 @@ function fetchCart(): Promise<void> {
         zones?: ZoneTable;
         slots?: DeliverySlot[];
         pickupSlots?: DeliverySlot[];
-        pickupWindow?: PickupWindow;
       };
       cart = data.cart;
       availability = data.availability;
@@ -76,7 +72,6 @@ function fetchCart(): Promise<void> {
       // already resolves to the defaults rather than passing on.
       if (data.slots?.length) slots = data.slots;
       if (data.pickupSlots?.length) pickupSlots = data.pickupSlots;
-      if (data.pickupWindow) pickupWindow = data.pickupWindow;
     } catch {
       // Keep the last known cart on network errors.
     } finally {
@@ -153,11 +148,6 @@ export function getSlotsSnapshot(): DeliverySlot[] {
 /** The collection times — see `DEFAULT_PICKUP_SLOTS`. Never empty. */
 export function getPickupSlotsSnapshot(): DeliverySlot[] {
   return pickupSlots;
-}
-
-/** When the atelier is open for collection. Same terms again. */
-export function getPickupWindowSnapshot(): PickupWindow {
-  return pickupWindow;
 }
 
 /** Loads the cart and the rules once, if nothing has yet. For the cart panel,

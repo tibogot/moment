@@ -584,9 +584,18 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               )}
             </>
           ) : isEmpty ? (
-            <p className="font-archivo-light px-6 py-10 text-[16px]">
-              {t.empty}
-            </p>
+            // Same way out as the empty cart page: an empty basket is a dead
+            // end without a road back to the products.
+            <div className="px-6 py-10">
+              <p className="font-archivo-light text-[16px]">{t.empty}</p>
+              <Link
+                href={routes.shop}
+                onClick={closePanel}
+                className="font-owners-medium mt-6 inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+              >
+                {t.browseShop}
+              </Link>
+            </div>
           ) : (
             <ul>
               {lines.map((line) => (

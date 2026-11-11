@@ -231,7 +231,7 @@
     "slotIntro": "Choisissez le créneau de deux heures qui vous convient.",
     "slotFull": "Créneau complet ? Contactez-nous ! Selon votre localisation et notre itinéraire, nous pourrons peut-être vous ajouter à une tournée déjà planifiée.",
     "pastCutoffNote": "L'heure limite de {cutoff} est passée pour aujourd'hui : la première livraison possible est décalée d'un jour.",
-    "pickupWindow": "Le retrait se fait de {window} à l'atelier.",
+    "pickupWindow": "Retrait à l'atelier : {window}.",
     "pickupSlotIntro": "Choisissez l'heure à laquelle vous passez à l'atelier."
   },
   "deliveryMethods": {
@@ -325,7 +325,8 @@
     "title": "Boutique",
     "searchResults": "Résultats pour « {query} »",
     "clearSearch": "Effacer la recherche",
-    "index": "Index",
+    "grid": "Grille",
+    "index": "Liste",
     "layout": "Affichage",
     "unavailable": "Le catalogue n'est pas disponible pour le moment. Merci de réessayer plus tard.",
     "recentlyViewed": "Vus récemment",
@@ -375,7 +376,7 @@
     "servingSize": "Portion",
     "ingredients": "Ingrédients",
     "allergens": "Allergènes",
-    "traces": "Peut contenir des traces de",
+    "traces": "Traces possibles",
     "dietary": "Régimes",
     "servingInstructions": "Conseils de service",
     "storage": "Conservation",
@@ -420,7 +421,7 @@
         "body": "Nous revenons avec une proposition, modifiable autant de fois que vous voulez."
       },
       {
-        "title": "Confirme",
+        "title": "Confirmez",
         "body": "Vous validez, nous cuisinons. Facture ou paiement en ligne, comme vous préférez."
       }
     ],
@@ -470,9 +471,9 @@
     "guestsPlaceholder": "25, ou 20–30",
     "messagePlaceholder": "Un déjeuner pour un conseil d'administration, des régimes particuliers, un budget à respecter — tout ce que vous savez déjà.",
     "hoursTitle": "Nous joindre",
-    "hours": "Tous les jours, de {hours}, par téléphone et par e-mail.",
+    "hours": "Tous les jours, {hours}, par téléphone et par e-mail.",
     "addressTitle": "L'atelier",
-    "pickupNote": "Retrait sur rendez-vous, de {window}."
+    "pickupNote": "Retrait à l'atelier à l'heure choisie lors de la commande, {window}."
   },
   "proAccount": {
     "title": "Compte professionnel",
@@ -547,7 +548,7 @@
     },
     "about": {
       "title": "À propos — Traiteur et cuisine de catering à Bruxelles",
-      "description": "Moment est un traiteur bruxellois qui cuisine chaque matin des plats de saison, des salades et des jus pressés à froid pour les particuliers, les bureaux et les événements — livrés dans toute la ville, prêts à servir.",
+      "description": "Traiteur bruxellois : plats de saison, salades et jus pressés à froid cuisinés chaque matin pour particuliers, bureaux et événements, livrés prêts à servir.",
       "keywords": [
         "traiteur Bruxelles",
         "catering Bruxelles",
@@ -568,12 +569,12 @@
       ]
     },
     "collections": {
-      "title": "Collections",
+      "title": "Collections traiteur",
       "description": "Parcourez nos plats, salades et jus pressés à froid par catégorie — préparés chaque matin et livrés dans tout Bruxelles."
     },
     "menus": {
       "title": "Menus traiteur et tarifs",
-      "description": "Menus traiteur au prix par personne depuis notre cuisine bruxelloise — petit-déjeuner, lunch de bureau, apéro, buffet et dîner assis, avec les prix, les minimums et le délai pour chacun.",
+      "description": "Menus traiteur au prix par personne : petit-déjeuner, lunch de bureau, apéro, buffet et dîner assis, avec prix, minimums et délais pour chacun.",
       "keywords": [
         "menu traiteur Bruxelles",
         "prix traiteur Bruxelles",
@@ -602,11 +603,11 @@
       ]
     },
     "news": {
-      "title": "Actualités",
+      "title": "Actualités du traiteur",
       "description": "Les actualités de Moment — ce que nous cuisinons, les événements dont nous nous occupons et ce qui sort de notre cuisine bruxelloise."
     },
     "faq": {
-      "title": "FAQ",
+      "title": "FAQ : commandes et livraison",
       "description": "Zones et frais de livraison, délais, retrait à l'atelier, régimes alimentaires et fonctionnement des devis événementiels chez Moment, traiteur à Bruxelles.",
       "keywords": [
         "traiteur Bruxelles FAQ",
@@ -615,7 +616,7 @@
       ]
     },
     "contact": {
-      "title": "Contact",
+      "title": "Contact et devis traiteur",
       "description": "Demandez un devis à Moment, traiteur à Bruxelles. Dites-nous la date, le nombre de personnes et ce que vous imaginez — nous revenons avec un menu et un prix.",
       "keywords": [
         "traiteur Bruxelles contact",

@@ -16,12 +16,11 @@ import { WhyUsSection } from "@/components/WhyUsSection";
 import {
   DEFAULT_LOCALE,
   isLocale,
-  OG_LOCALE,
   toLocale,
 } from "@/lib/i18n/config";
 import { routes } from "@/lib/routes";
 import { siteGraph } from "@/lib/schema";
-import { languageAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getHomePageImages } from "@/lib/sanity/queries";
 import { SITE_DETAILS } from "@/lib/site";
@@ -55,11 +54,23 @@ export async function generateMetadata({
   // Keywords and description come from the dictionary like every other page.
   // This block overrides the layout's, so literals here would serve all three
   // languages the English ones.
-  return {
-    alternates: languageAlternates(routes.home, locale),
+  //
+  // Built through `pageMetadata` so the share card (image, url, type, site
+  // name) is the same as everywhere else — an `openGraph` object here replaces
+  // the layout's rather than merging, which is how the most shared page ended
+  // up with no image. Only the titles are swapped back to the absolute one.
+  const base = pageMetadata({
+    title: meta.home.title,
     description: meta.home.description,
-    keywords: [...meta.home.keywords],
-    openGraph: { locale: OG_LOCALE[locale] },
+    keywords: meta.home.keywords,
+    path: routes.home,
+    locale,
+  });
+  return {
+    ...base,
+    title: { absolute: meta.home.title },
+    openGraph: { ...base.openGraph, title: meta.home.title },
+    twitter: { ...base.twitter, title: meta.home.title },
   };
 }
 
@@ -75,7 +86,9 @@ export default async function Home({
       getCollections(locale),
       Promise.all(
         SELECTION_COLLECTION_HANDLES.map((handle) =>
-          getCollectionByHandle(locale, handle),
+          // A sélection that fails to load is left out rather than taking
+          // the home page down with it.
+          getCollectionByHandle(locale, handle).catch(() => null),
         ),
       ).then((items) => items.filter((item) => item !== null)),
       getDeliveryAvailability(),

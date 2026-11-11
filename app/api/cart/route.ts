@@ -21,8 +21,9 @@ export async function GET(request: Request) {
     new URL(request.url).searchParams.get("lang") ?? undefined,
   );
 
-  const [cart, { availability, zones, slots, pickupSlots, pickupWindow }] =
-    await Promise.all([getCart(locale), getDeliveryRules()]);
+  const [cart, { availability, zones, slots, pickupSlots }] = await Promise.all(
+    [getCart(locale), getDeliveryRules()],
+  );
 
   return NextResponse.json({
     cart,
@@ -30,6 +31,5 @@ export async function GET(request: Request) {
     zones,
     slots,
     pickupSlots,
-    pickupWindow,
   });
 }

@@ -24,7 +24,7 @@
  */
 
 const storeDomain = process.env.SHOPIFY_STORE_DOMAIN;
-const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-01";
+const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-10";
 const staticToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 const clientId = process.env.SHOPIFY_ADMIN_CLIENT_ID;
 const clientSecret = process.env.SHOPIFY_ADMIN_CLIENT_SECRET;
