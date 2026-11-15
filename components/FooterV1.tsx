@@ -14,6 +14,11 @@ import { aboutNav, legalNav, routes } from "@/lib/routes";
 import { SITE_DETAILS, siteConfig } from "@/lib/site";
 
 /**
+ * The footer before v2 (replaced 15 November 2026 by `components/Footer.tsx`,
+ * which renders the v2 one). Kept, not deleted, for its flip hover effect
+ * (FooterGridCells) — to be brought to the v2 footer later. Unused today
+ * except on the /v2/footer comparison page.
+ *
  * Same system as the hero: a full ruled field, with a hole only where the
  * headline sits so the sky squares stay intact everywhere else.
  */
@@ -52,7 +57,9 @@ function InfoCell({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`flex min-w-0 flex-col gap-3 px-3 py-4 xl:px-4 xl:py-5 ${className}`}>
+    <div
+      className={`flex min-w-0 flex-col gap-3 px-3 py-4 xl:px-4 xl:py-5 ${className}`}
+    >
       <p className={LABEL}>{label}</p>
       <div className="flex min-w-0 flex-col gap-1">{children}</div>
     </div>
@@ -62,7 +69,7 @@ function InfoCell({
 const legalLinkClassName =
   "font-archivo-light text-[11px] leading-snug transition-opacity hover:opacity-60 md:text-[12px]";
 
-export function Footer() {
+export function FooterV1() {
   const dict = useDictionary();
 
   return (
@@ -156,7 +163,10 @@ export function Footer() {
           <p className={ITEM}>
             {contact.postalCode} {contact.city}
           </p>
-          <Link href={routes.findUs} className={`${LINK} mt-1 underline underline-offset-2`}>
+          <Link
+            href={routes.findUs}
+            className={`${LINK} mt-1 underline underline-offset-2`}
+          >
             {dict.aboutNav.findUs}
           </Link>
         </InfoCell>
