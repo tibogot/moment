@@ -718,3 +718,72 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   border-radius: 0 !important;
   color: var(--color-black);
 }
+
+/* v2 test page */
+@keyframes v2-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * v2 grid — scoped to .v2, nothing outside the test page reads it.
+ *
+ * The layout grid IS the brand grid: one layout column per drawn cell. The
+ * column count steps at two breakpoints only, and a row is always the column
+ * width × 4/3, so every cell in every section is exactly 3/4 portrait. The
+ * hero is the one exception: it is locked to the screen height, so it fits
+ * whole rows and lets them stretch a little.
+ *
+ * .v2 is the size container: cqw resolves against it (no scrollbar), and the
+ * custom properties below are substituted where they are used, so a child
+ * reading --v2-row gets the container's width, not its own.
+ */
+.v2 {
+  container-type: inline-size;
+  --v2-cols: 4;
+  /* Inner padding of a cell, so type never touches a rule. */
+  --v2-pad: max(0.75rem, 1.1vw);
+}
+
+@media (width >= 48rem) {
+  .v2 {
+    --v2-cols: 6;
+  }
+}
+
+@media (width >= 64rem) {
+  .v2 {
+    --v2-cols: 8;
+  }
+}
+
+.v2 {
+  --v2-col: calc((100cqw - 2 * var(--grid-margin)) / var(--v2-cols));
+  --v2-row: calc(var(--v2-col) * 4 / 3);
+  --v2-columns: var(--grid-margin) repeat(var(--v2-cols), minmax(0, 1fr))
+    var(--grid-margin);
+}
+
+/* Grid overlay (Shift + G, dev only): hidden until <html data-v2-grid>. */
+.v2-debug {
+  display: none;
+}
+
+html[data-v2-grid] .v2-debug {
+  display: block;
+}
+
+/*
+ * One cell of first-line indent for a v2 headline, from tablet up. A
+ * percentage, like .intro-headline, not --v2-col: the block's content box is
+ * --v2-span cells minus a gutter each side, so one cell is
+ * (100% + 2 gutters) / span. Set --v2-span to the cells the block spans.
+ */
+@media (width >= 48rem) {
+  .v2-indent {
+    --first-line-indent: calc(
+      (100% + 2 * var(--grid-gutter)) / var(--v2-span, 6)
+    );
+  }
+}
