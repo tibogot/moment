@@ -34,6 +34,7 @@ export const SANITY_TAGS = [
   "article",
   "author",
   "category",
+  "faqPage",
 ] as const;
 
 export type SanityTag = (typeof SANITY_TAGS)[number];

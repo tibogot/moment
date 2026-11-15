@@ -1,6 +1,7 @@
 import { article } from "./documents/article";
 import { author } from "./documents/author";
 import { category } from "./documents/category";
+import { faqPage } from "./documents/faqPage";
 import { homePage } from "./documents/homePage";
 import { menu } from "./documents/menu";
 import { partner } from "./documents/partner";
@@ -19,6 +20,7 @@ export const schemaTypes = [
   article,
   author,
   category,
+  faqPage,
   homePage,
   menu,
   partner,

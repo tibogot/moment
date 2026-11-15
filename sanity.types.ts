@@ -242,6 +242,27 @@ export type HomePage = {
   };
 };
 
+export type FaqPage = {
+  _id: string;
+  _type: "faqPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  steps?: Array<{
+    title?: LocaleString;
+    body?: LocaleText;
+    _type: "faqStep";
+    _key: string;
+  }>;
+  questions?: Array<{
+    question?: LocaleString;
+    answer?: LocaleText;
+    hidden?: boolean;
+    _type: "faqQuestion";
+    _key: string;
+  }>;
+};
+
 export type Category = {
   _id: string;
   _type: "category";
@@ -423,6 +444,7 @@ export type AllSanitySchemaTypes =
   | Menu
   | Slug
   | HomePage
+  | FaqPage
   | Category
   | CategoryReference
   | AuthorReference
@@ -645,6 +667,28 @@ export type HomePageQueryResult =
   | null;
 
 // Source: lib/sanity/queries.ts
+// Variable: faqPageQuery
+// Query: *[_id == "faqPage"][0] {  steps[]{ _key, title, body },  "questions": questions[hidden != true]{ _key, question, answer }}
+export type FaqPageQueryResult =
+  | {
+      steps: null;
+      questions: null;
+    }
+  | {
+      steps: Array<{
+        _key: string;
+        title: LocaleString | null;
+        body: LocaleText | null;
+      }> | null;
+      questions: Array<{
+        _key: string;
+        question: LocaleString | null;
+        answer: LocaleText | null;
+      }> | null;
+    }
+  | null;
+
+// Source: lib/sanity/queries.ts
 // Variable: partnersQuery
 // Query: *[_type == "partner" && visible != false] | order(name asc) {  _id,  name,  kind,  street,  postalCode,  city,  url,  location}
 export type PartnersQueryResult = Array<{
@@ -669,6 +713,7 @@ declare global {
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
     '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
     '*[_id == "homePage"][0] {\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  eventsImage,\n  coffeeImage\n}': HomePageQueryResult;
+    '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
     '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
   }
 }
