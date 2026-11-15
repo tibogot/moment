@@ -1,6 +1,7 @@
 import { defineQuery } from "next-sanity";
 import { sanityClient, sanityCache } from "./client";
 import type { Locale } from "../i18n/config";
+import type { LocaleString } from "./locale";
 import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
 import type { PastEvent } from "../events";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
@@ -317,6 +318,48 @@ export async function getHomePageImages(): Promise<HomePageImages> {
     };
   } catch {
     return NO_HOME_IMAGES;
+  }
+}
+
+/* --------------------------- Comment ça marche ---------------------------- */
+
+/**
+ * The /faq page's steps and questions, in three languages each. Hidden
+ * questions are filtered here so nothing downstream has to remember to.
+ */
+export const faqPageQuery = defineQuery(`*[_id == "faqPage"][0] {
+  steps[]{ _key, title, body },
+  "questions": questions[hidden != true]{ _key, question, answer }
+}`);
+
+export type FaqPageContent = {
+  steps: { _key: string; title?: LocaleString; body?: LocaleString }[];
+  questions: {
+    _key: string;
+    question?: LocaleString;
+    answer?: LocaleString;
+  }[];
+};
+
+/**
+ * Null when there is nothing to show — no document, a Sanity outage — and the
+ * page falls back to the dictionary texts. Never throws: a help page that 500s
+ * is worse than one showing last month's wording.
+ */
+export async function getFaqPage(): Promise<FaqPageContent | null> {
+  try {
+    const response = await sanityClient.fetch<Partial<FaqPageContent> | null>(
+      faqPageQuery,
+      {},
+      sanityCache("faqPage"),
+    );
+    if (!response) return null;
+    return {
+      steps: response.steps ?? [],
+      questions: response.questions ?? [],
+    };
+  } catch {
+    return null;
   }
 }
 

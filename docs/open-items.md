@@ -81,6 +81,12 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [x] **Page « Où nous trouver »** (`/find-us`, dans le menu « À propos ») : carte, atelier, liste des partenaires par commune, lien vers le contact
 - [ ] **Clé Geoapify pour la carte** (`GEOAPIFY_MAP_KEY`, limitée au domaine) en production — sans elle, la page montre la liste sans carte
 - [x] **Webhook Sanity** : `"partner"` ajouté au filtre de revalidation (5 nov.)
+- [x] **« Comment ça marche ? »** (sur le modèle de Grape & Fig) : la page FAQ s'appelle désormais « Comment ça marche ? » / « Hoe werkt het? » / « How it works » (même adresse `/faq`, menu « À propos ») et s'ouvre sur la commande en six étapes — choisir, livraison ou retrait, date et créneau, précisions, paiement, confirmation — suivies des questions fréquentes. Les chiffres (pièces minimum, préavis, heure limite) viennent des réglages Shopify. (15 nov.)
+- [x] **« Comment ça marche ? » dans le Studio** (15 nov.) : étapes et questions modifiables par Moment (rubrique « Comment ça marche ? », trois langues côte à côte, ordre par glisser-déposer, « Masquer sur le site »). Les chiffres (zones, frais, préavis, créneaux, retrait) ne sont plus dans les textes : la page les affiche dans « La livraison en bref », depuis les réglages Shopify.
+- [ ] **Webhook Sanity** : ajouter `"faqPage"` au filtre (sanity.io/manage → API → Webhooks), sinon une modification publiée met jusqu'à 24 h à apparaître. Filtre complet dans `app/api/revalidate/sanity/route.ts`
+- [ ] **Publier « Comment ça marche ? » une première fois** dans le Studio : le formulaire est prérempli avec les textes actuels, il suffit de cliquer sur Publier. Nous n'avons pas les droits d'écriture sur le projet Sanity pour le faire nous-mêmes. Tant que ce n'est pas fait, le site affiche ces mêmes textes, intégrés au code
+- [ ] **Relecture des six étapes et des réponses par Moment** : textes rédigés par nous en FR/NL/EN, à valider par eux — directement dans le Studio
+- [ ] **Dimanche** : sur la boutique de démonstration, `delivery_settings` → `closed_weekdays` contient encore `sunday` (d'où « Nous ne livrons pas le dimanche » sur la page). À retirer, et à vérifier sur leur boutique au branchement
 
 ---
 

@@ -15,6 +15,34 @@ Last reviewed **5 November 2026**.
   `defineQuery` and writes `sanity.types.ts`; `lib/sanity/types.ts` derives the
   site's names from it. Run it after touching a schema or a query.
   `sanity/README.md` has the caveats.
+- **Every visible word exists three times.** The site is French, Dutch and
+  English, and no text is typed into a component — not a button label, not an
+  `aria-label`, not an error message. It goes in `lib/i18n/dictionaries/`,
+  under the same key in `fr.json`, `nl.json` and `en.json`, and the component
+  reads it from the dictionary. **Nothing will stop you if you forget:** a key
+  missing from Dutch or English silently falls back to French, so the page
+  renders fine with a French sentence on the English site. `npm run i18n`
+  (also part of `npm run check`) compares the three files and fails on a
+  missing key, a list of a different length or a `{placeholder}` that differs.
+  It cannot see a string hardcoded in a component — the HTML diff below does.
+  Numbers that are settings (fees, notice, cut-off, minimums) are never typed
+  into the copy either: the copy holds a `{placeholder}` and the page fills it
+  from the delivery rules — see `app/[lang]/faq/page.tsx`.
+- **Studio copy vs dictionary copy.** Texts the owners edit live in Sanity,
+  three languages side by side (`localeString` / `localeText`), French
+  required. The one exception to "copy lives in the dictionaries" is the
+  fallback: `/faq` reads its steps and questions from the `faqPage` singleton,
+  and the dictionaries keep the same texts as the default the page shows and
+  the Studio form is prefilled with (`lib/faq.ts`). Once the owners have
+  published that document, editing `faq.steps` / `faq.items` in the
+  dictionaries changes nothing on the site — edit in the Studio.
+- **Loading states use the brand colours.** Black, sky `#a7c5ee` and cream
+  `#f8f7f2` only — no greys, no `animate-pulse` defaults. The space behind
+  an image while it loads is `bg-sky/20` (or `.product-card__image`, which
+  is the same tint through `--palette-line`, so it follows the palette
+  preview); a panel that is sky anyway stays `bg-sky`. A skeleton, if one is
+  ever added, is the same `bg-sky/20` block. There are none today, and no
+  `loading.tsx` files.
 - **Language checks.** To find untranslated strings, fetch the rendered HTML in
   all three languages and diff the visible text — single words, `aria-label`s
   and Shopify data all slip past a grep for sentences. The legal pages are

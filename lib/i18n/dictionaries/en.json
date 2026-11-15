@@ -52,7 +52,11 @@
     },
     "back": "Back",
     "dismiss": "Dismiss",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "palettePreview": {
+      "toSky": "Preview: cream background — switch to blue",
+      "toCream": "Preview: blue background — switch back to cream"
+    }
   },
   "home": {
     "hero": {
@@ -182,31 +186,74 @@
   "aboutNav": {
     "story": "Our story",
     "news": "News",
-    "faq": "FAQ",
+    "faq": "How it works",
     "findUs": "Find us",
     "collaborations": "Collaborations"
   },
   "faq": {
-    "title": "Frequently asked questions",
-    "lead": "The questions we are asked most. Yours not here? Write to us.",
+    "title": "How it works",
+    "lead": "From the shop to your table, step by step. And just below, delivery at a glance and the questions we're asked most often.",
+    "stepsTitle": "Ordering, step by step",
+    "steps": [
+      {
+        "title": "Choose",
+        "body": "Browse the shop and our menus. Each product is ordered in several identical pieces, so everyone at the table gets their share."
+      },
+      {
+        "title": "Delivery or collection",
+        "body": "Enter your address in the cart: the fee, the minimum order and the amount from which delivery is free appear according to the distance. Or collect your order from the atelier in Forest, free of charge."
+      },
+      {
+        "title": "Day and time",
+        "body": "Pick a date in the calendar: it only shows the days you can still book. Then a two-hour slot for delivery, or the time you'll come by to collect."
+      },
+      {
+        "title": "Your notes",
+        "body": "Add what we need to know to deliver: floor, door code, who to call. This is also where you tell us about diets and allergies."
+      },
+      {
+        "title": "Payment",
+        "body": "You pay online, on a secure checkout page. Your cart, date and time slot carry over exactly as you chose them."
+      },
+      {
+        "title": "Confirmation",
+        "body": "You receive an email summarising your products, the date and the time slot. With an account, you'll find your past orders and can reorder in one click."
+      }
+    ],
+    "glanceTitle": "Delivery at a glance",
+    "glance": {
+      "zones": "Areas and fees",
+      "slots": "Delivery windows",
+      "notice": "Notice",
+      "noticeValue": "{days} days, orders close at {cutoff}",
+      "closed": "Closed days",
+      "pickup": "Collection from the atelier",
+      "pickupValue": "{address} · free · minimum {minimum} · {slots}",
+      "nextDay": "Next-day collection",
+      "nextDayValue": "Cookies, cakes, snacks, pantry goods and juices: order by {cutoff} the day before, minimum {minimum}",
+      "pieces": "Per product",
+      "piecesValue": "at least {pieces} identical pieces"
+    },
     "zoneBrussels": "Brussels",
     "zoneMinimum": "minimum {amount}",
+    "zoneFree": "free from {amount}",
+    "questionsTitle": "Frequently asked questions",
     "items": [
       {
         "q": "Where do you deliver?",
-        "a": "We deliver up to {max} km from the atelier in Forest. The fee, the minimum order and the amount from which delivery is free all depend on the distance: {zones}. Beyond {max} km we quote by hand."
+        "a": "We deliver across Brussels and the surrounding area, from our atelier in Forest. The fee, the minimum order and the amount from which delivery is free depend on the distance: you'll find them under “Delivery at a glance”, and the cart works them out for your address. Beyond our area, we quote by hand."
       },
       {
         "q": "What time will my order arrive?",
-        "a": "You pick a two-hour window when you order: {slots}. {slotFull}"
+        "a": "You pick a two-hour window when you order. Is a window full? Get in touch: depending on your address and our route, we may be able to add you to a delivery already planned."
       },
       {
         "q": "How far in advance should I order?",
-        "a": "We need {days} days' notice, and orders for a given day close at {cutoff} — order after that and the notice starts counting from the next day.{closedDays} The calendar on the site only shows days that are still open. For an event, get in touch as early as you can: busy dates go quickly."
+        "a": "The notice we need and the time orders close are listed under “Delivery at a glance”. The calendar on the site only shows days that are still open. For an event, get in touch as early as you can: busy dates go quickly."
       },
       {
         "q": "Can I collect my order?",
-        "a": "Yes, from the atelier at {address}, free of charge, with a minimum order of {pickupMinimum}. You choose the time you come by: {pickupSlots}. Cookies, cakes, healthy snacks, pantry goods and cold-pressed juices can be ordered until {nextDayCutoff} the day before for collection the next day, with a minimum of {nextDayMinimum}; if the order includes anything else, the usual {days} days' notice applies. Choose “Click & collect” when you order."
+        "a": "Yes, from the atelier in Forest, free of charge: choose “Click & collect” when you order, then the time you'll come by. Cookies, cakes, healthy snacks, pantry goods and cold-pressed juices can even be ordered the day before for the next day; if the order includes anything else, the usual notice applies. Address, times and minimums: see “Delivery at a glance”."
       },
       {
         "q": "Can I cancel my order?",
@@ -224,8 +271,7 @@
         "q": "Do you work with companies?",
         "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number."
       }
-    ],
-    "zoneFree": "free from {amount}"
+    ]
   },
   "delivery": {
     "calendarNote": "Blue days are closed or already full — we need {days} days’ notice.",
@@ -628,8 +674,8 @@
       "description": "News from Moment — what we are cooking, the events we are catering, and what is coming out of our Brussels kitchen."
     },
     "faq": {
-      "title": "FAQ: ordering and delivery",
-      "description": "Delivery areas and fees, lead times, collection, dietary options and how event quotes work at Moment, traiteur in Brussels.",
+      "title": "How it works: ordering and delivery",
+      "description": "Ordering from Moment, traiteur in Brussels, in six steps: products, delivery or collection, date and time slot, payment. Plus answers to the questions we hear most.",
       "keywords": [
         "traiteur Brussels FAQ",
         "catering delivery Brussels",

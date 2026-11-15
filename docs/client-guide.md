@@ -18,6 +18,7 @@ enregistrez-le dans vos favoris.
 | Actualités | Actualités |
 | Partenaires (carte « Où nous trouver ») | Partenaires |
 | Photo d'ouverture et les deux panneaux de la page d'accueil | Page d'accueil |
+| Étapes de commande et questions fréquentes (page « Comment ça marche ? ») | Comment ça marche ? |
 
 **Actualités** : ne mettez que le titre dans le champ titre, sans « \| Moment » —
 le site ajoute le nom tout seul. L'onglet *Référencement* → « Titre pour Google »
@@ -29,6 +30,17 @@ le point sur la carte tout seul à partir de l'adresse. Pour masquer un
 partenaire sans le supprimer, décochez « Afficher sur la carte ». Si un point
 tombe au mauvais endroit, remplissez « Position sur la carte » (clic droit sur
 l'établissement dans Google Maps, puis copier les coordonnées).
+
+**Comment ça marche ?** : la première fois que vous l'ouvrez, le formulaire
+contient déjà les textes affichés sur le site — cliquez sur **Publier** pour
+qu'ils deviennent les vôtres. Ensuite : modifiez une étape ou une question,
+ajoutez-en (« Ajouter un élément »), glissez pour changer l'ordre, ou cochez
+« Masquer sur le site » pour retirer une question sans la supprimer. Le
+français est obligatoire ; si le néerlandais ou l'anglais manque, le site
+affiche le français à la place. **N'écrivez ni prix, ni minimum, ni délai, ni
+horaire dans ces textes** : la page les affiche elle-même dans « La livraison en
+bref », à partir de vos réglages Shopify (ci-dessous), et ils sont ainsi
+toujours justes.
 
 ### Dans l'admin Shopify
 
