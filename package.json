@@ -9,7 +9,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck",
-    "typegen": "sanity schema extract --force --enforce-required-fields && sanity typegen generate"
+    "typegen": "sanity schema extract --force --enforce-required-fields && sanity typegen generate",
+    "shopify:webhooks": "node scripts/shopify-webhooks.mjs",
+    "shopify:policies": "node scripts/shopify-policies.mjs"
   },
   "engines": {
     "node": ">=20.9"

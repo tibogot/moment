@@ -17,6 +17,9 @@
  *   inventory_levels/update          (sold out / back in stock)
  *   metaobjects/create, metaobjects/update, metaobjects/delete
  *                                    (delivery zones, closures, atelier hours)
+ *                                    — not offered in the admin: subscribed
+ *                                    by the Admin app, see
+ *                                    scripts/shopify-webhooks.mjs
  *   orders/create, orders/updated, orders/cancelled
  *                                    (delivery window capacity — a new order
  *                                    is tagged with its day and window, and
@@ -112,12 +115,28 @@ function isAuthentic(rawBody: string, signature: string | null, secret: string) 
   return timingSafeEqual(expected, received);
 }
 
-export async function POST(request: NextRequest) {
-  const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
+/**
+ * Two senders, two secrets.
+ *
+ * The webhooks made in the admin (products, collections, stock, orders) are
+ * signed with the shop's secret. The admin offers no metaobject topics, so
+ * those are subscribed by the Admin app instead (`npm run shopify:webhooks`),
+ * and Shopify signs an app's webhooks with that app's client secret. Either
+ * one proves the request came from Shopify.
+ */
+function webhookSecrets() {
+  return [
+    process.env.SHOPIFY_WEBHOOK_SECRET,
+    process.env.SHOPIFY_ADMIN_CLIENT_SECRET,
+  ].filter((secret): secret is string => Boolean(secret));
+}
 
-  if (!secret) {
+export async function POST(request: NextRequest) {
+  const secrets = webhookSecrets();
+
+  if (secrets.length === 0) {
     console.error(
-      "[revalidate] SHOPIFY_WEBHOOK_SECRET is not set; webhook rejected",
+      "[revalidate] neither SHOPIFY_WEBHOOK_SECRET nor SHOPIFY_ADMIN_CLIENT_SECRET is set; webhook rejected",
     );
     return NextResponse.json(
       { revalidated: [], message: "Webhook secret is not configured" },
@@ -128,8 +147,9 @@ export async function POST(request: NextRequest) {
   // Read as text, not JSON: the signature covers the bytes Shopify sent, and
   // a parse-and-restringify round trip would not reproduce them.
   const rawBody = await request.text();
+  const signature = request.headers.get("x-shopify-hmac-sha256");
 
-  if (!isAuthentic(rawBody, request.headers.get("x-shopify-hmac-sha256"), secret)) {
+  if (!secrets.some((secret) => isAuthentic(rawBody, signature, secret))) {
     return NextResponse.json(
       { revalidated: [], message: "Invalid signature" },
       { status: 401 },

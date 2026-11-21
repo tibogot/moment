@@ -251,27 +251,30 @@ What the metaobject buys is that both copies now live in the Shopify admin,
 a few clicks apart. **Whenever you change a delivery fee, change it twice** —
 in the metaobject and in the shipping profile — in the same sitting.
 
-Shopify's shipping zones are postcode-based, not radial, so the table has to be
-translated into postcode lists. What the site quotes, as of 3 November 2026:
+**How it is set up (21 November 2026).** Shopify's *local delivery* takes
+radius zones from a location, which is the site's own model, so the table maps
+one to one: Settings → Shipping and delivery → Local delivery → **Atelier
+Forest** (the location's address is the atelier, not the Meise seat), "Set a
+delivery radius" in km, **"Include neighboring states or regions" ticked**
+(without it nothing outside the Brussels Region is offered), four ring zones:
 
-| Zone | Rule | Fee | Minimum | Free from |
+| Zone | Ring | Fee | Minimum | Free from |
 |---|---|---|---|---|
-| 1 | 0–10 km from the atelier | €10 | €100 | €250 |
-| 2 | 10–25 km | €20 | €150 | €300 |
-| 3 | 25–50 km | €35 | €250 | €400 |
-| 4 | 50–70 km | €50 | €350 | €450 |
-| — | beyond 70 km | quote by hand | — | — |
+| Zone 1 | 0–10 km | €10 | €100 | €249.99 |
+| Zone 2 | 10–25 km | €20 | €150 | €299.99 |
+| Zone 3 | 25–50 km | €35 | €250 | €399.99 |
+| Zone 4 | 50–70 km | €50 | €350 | €449.99 |
 
-Compute each Belgian postcode's distance from the atelier once, bucket it into
-the four bands, and paste the lists into four shipping profiles. Coarse, but the
-narrowest band is 10 km wide so the error is tolerable.
+Free delivery is the zone's conditional pricing (a second tier at €0); Shopify
+starts it at the upper bound of the first tier, hence the cent below the site's
+threshold. Shopify measures straight-line distance, as the site does — checked
+with Storefront carts on real addresses (Ixelles, Halle, Leuven, Gent, Namur,
+Liège) against the site's own calculation.
 
-**Each profile needs its own free-delivery rate**: a price-based rate of €0
-above that band's threshold (€250, €300, €400, €450). A profile that misses it
-charges the fee on an order the site promised to deliver free.
-
-The precise alternative is the Carrier Service API, which calculates the rate
-live from our own endpoint — but it needs Shopify **Advanced or Plus**.
+**There are no general shipping rates.** Shipping now lives under Markets, and
+the "Belgique" market is set to *Not shipping*; the API's delivery profiles no
+longer show it. Adding a rate there would let a customer pick it over the zone
+fee. Collection is *Pickup in store* on the same location, free.
 
 Do **not** add the fee as a cart line item. It breaks VAT treatment and refunds.
 
