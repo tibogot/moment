@@ -366,7 +366,10 @@
         "sans-gluten": "Gluten-free",
         "maison": "Home",
         "bureau": "Office",
-        "evenements": "Events"
+        "evenements": "Events",
+        "cake": "Cake",
+        "petit-dejeuner": "Breakfast",
+        "epicerie": "Pantry"
       }
     },
     "productsHeading": "All products",

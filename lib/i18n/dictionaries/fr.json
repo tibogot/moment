@@ -366,7 +366,10 @@
         "sans-gluten": "Sans gluten",
         "maison": "Maison",
         "bureau": "Bureau",
-        "evenements": "Événements"
+        "evenements": "Événements",
+        "cake": "Cake",
+        "petit-dejeuner": "Petit-déjeuner",
+        "epicerie": "Épicerie"
       }
     },
     "productsHeading": "Tous les produits",
