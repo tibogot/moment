@@ -3,6 +3,7 @@
 // import heroImage from "@/public/images/gemini-moment.webp";
 // import { urlFor } from "@/lib/sanity/image";
 // import { HeroParallaxImage } from "@/components/HeroParallaxImage";
+import Image from "next/image";
 import type { HomePageImages } from "@/lib/sanity/queries";
 import { Lines } from "@/components/Lines";
 import TextReveal from "@/components/TextReveal";
@@ -10,7 +11,7 @@ import { CellGrid } from "@/components/v2/CellGrid";
 import { REVEAL_HERO } from "@/lib/colors";
 
 type ImageGridHeroProps = {
-  copy: { headline: string; lead: string };
+  copy: { headline: string; lead: string; services: string[] };
   image?: HomePageImages["hero"];
   /** Headline and lead over the grid. Off to judge the grid on its own. */
   withText?: boolean;
@@ -39,7 +40,45 @@ export function ImageGridHero({
       {/* Sky rules on the cream page, like every page — the palette preview
           flips both, in step with the navbar. With the photo back, the rules
           go to bg-cream/60. */}
-      <CellGrid lineClassName="bg-sky" />
+      {/* 12 columns on desktop (9 on tablet, 4 on a phone): smaller cells
+          keep the full-screen hero near 3/4 on any screen (about 0.72–0.78),
+          the charter's "adapt for a coherent result". Chosen over 8 (0.65–
+          0.88, near square on wide screens) and 16 (exact, but reads as a
+          texture) on 19 November 2026. */}
+      <CellGrid lineClassName="bg-sky" subdivide={1.5} />
+
+      {/* The logotype, at the exact centre of the screen, simply laid over
+          the grid: no cells cleared, the rules run on behind it. The same
+          size as in the logo section below (300px at 1440). */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <Image
+          src="/brand/Moment-Logotype.svg"
+          alt="Moment"
+          width={1437}
+          height={220}
+          priority
+          // The file is cream for the navbar; black here, as in the charter.
+          className="h-auto w-[clamp(120px,21vw,420px)] brightness-0"
+        />
+      </div>
+
+      {/* What Moment does, in the type of the navbar's links: inside the
+          grid, centred at the foot of the last row of cells, a gutter above
+          its bottom rule. Laid over the grid like the logo. */}
+      <ul
+        className="font-owners-medium absolute inset-x-0 flex items-center justify-center gap-x-[clamp(6px,2vw,14px)] px-(--grid-inset) text-[11px] tracking-wide uppercase md:text-[14px]"
+        style={{ bottom: "calc(var(--grid-band) + var(--grid-gutter))" }}
+      >
+        {copy.services.map((service, index) => (
+          <li
+            key={service}
+            className="flex items-center gap-x-[clamp(6px,2vw,14px)] whitespace-nowrap"
+          >
+            {index > 0 && <span aria-hidden>-</span>}
+            {service}
+          </li>
+        ))}
+      </ul>
 
       {withText && (
         <div

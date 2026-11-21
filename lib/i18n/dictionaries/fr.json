@@ -61,7 +61,13 @@
   "home": {
     "hero": {
       "headline": "Un moment\ngourmand,\nsimplement.",
-      "lead": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, préparés chaque matin et livrés prêts à servir."
+      "lead": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, préparés chaque matin et livrés prêts à servir.",
+      "services": [
+        "Traiteur",
+        "Livraison",
+        "Événements",
+        "Coffee desk"
+      ]
     },
     "intro": {
       "headline": "Un traiteur bruxellois pour les tables du quotidien et des grands soirs.",
@@ -147,7 +153,7 @@
       "note": "Choisissez un jour disponible pour l'ajouter à votre commande — inutile d'avoir déjà quelque chose dans le panier. Il nous faut {days} jours de préavis.",
       "prev": "Préc.",
       "next": "Suiv.",
-      "dismiss": "Fermer",
+      "dismiss": "Annuler",
       "deliveryOn": "Livraison le",
       "savedPrefix": "Livraison prévue le",
       "savedSuffix": ". Cette date suit votre commande — modifiable à tout moment avant le paiement.",
@@ -288,7 +294,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Livraison à domicile",
-      "description": "Nous apportons votre commande à votre porte, partout à Bruxelles."
+      "description": "Nous apportons votre commande à votre porte, à Bruxelles et dans les environs."
     },
     "pickup": {
       "label": "Click & collect",

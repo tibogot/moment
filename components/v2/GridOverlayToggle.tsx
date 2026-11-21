@@ -44,7 +44,7 @@ export function GridOverlayToggle() {
       // 16px from the bottom, so the two sit on one line. On the left it
       // starts where the navbar's text does (--grid-inset), but never closer
       // than 4.5rem to the edge, where Next's dev badge sits.
-      className={`font-owners-medium fixed bottom-4 z-[100] flex h-6 items-center border border-sky px-2.5 text-[11px] leading-none text-black uppercase tracking-wide transition-colors duration-300 ${on ? "bg-sky" : "bg-cream"}`}
+      className={`font-owners-medium fixed bottom-4 z-20 flex h-6 items-center border border-sky px-2.5 text-[11px] leading-none text-black uppercase tracking-wide transition-colors duration-300 ${on ? "bg-sky" : "bg-cream"}`}
       style={{ left: "max(4.5rem, var(--grid-inset))" }}
       aria-pressed={on}
     >

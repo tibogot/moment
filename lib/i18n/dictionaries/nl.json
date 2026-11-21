@@ -61,7 +61,13 @@
   "home": {
     "hero": {
       "headline": "Een moment\nom van te\ngenieten.",
-      "lead": "Traiteur in Brussel voor particulieren en bedrijven. Seizoensgerechten, elke ochtend bereid en klaar om te serveren geleverd."
+      "lead": "Traiteur in Brussel voor particulieren en bedrijven. Seizoensgerechten, elke ochtend bereid en klaar om te serveren geleverd.",
+      "services": [
+        "Traiteur",
+        "Levering",
+        "Evenementen",
+        "Coffee desk"
+      ]
     },
     "intro": {
       "headline": "Een Brusselse traiteur voor de tafel van alledag en de grote avonden.",
@@ -147,7 +153,7 @@
       "note": "Kies een beschikbare dag om die aan uw bestelling toe te voegen — u hoeft nog niets in uw winkelmand te hebben. Wij hebben {days} dagen op voorhand nodig.",
       "prev": "Vorige",
       "next": "Volgende",
-      "dismiss": "Sluiten",
+      "dismiss": "Annuleren",
       "deliveryOn": "Levering op",
       "savedPrefix": "Levering vastgelegd op",
       "savedSuffix": ". Deze datum volgt uw bestelling — tot het afrekenen aanpasbaar.",
@@ -288,7 +294,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Levering aan huis",
-      "description": "Wij brengen uw bestelling tot aan de deur, overal in Brussel."
+      "description": "Wij brengen uw bestelling tot aan de deur, in Brussel en omgeving."
     },
     "pickup": {
       "label": "Click & collect",

@@ -61,7 +61,13 @@
   "home": {
     "hero": {
       "headline": "A moment\nworth\ntasting.",
-      "lead": "A traiteur in Brussels for private hosts and companies. Seasonal plates, cooked each morning and delivered ready to serve."
+      "lead": "A traiteur in Brussels for private hosts and companies. Seasonal plates, cooked each morning and delivered ready to serve.",
+      "services": [
+        "Catering",
+        "Delivery",
+        "Events",
+        "Coffee desk"
+      ]
     },
     "intro": {
       "headline": "A traiteur in Brussels for everyday tables and big nights.",
@@ -147,7 +153,7 @@
       "note": "Pick any open day to add it to your order — you do not need anything in your basket yet. We need {days} days' notice.",
       "prev": "Prev",
       "next": "Next",
-      "dismiss": "Close",
+      "dismiss": "Cancel",
       "deliveryOn": "Delivery on",
       "savedPrefix": "Delivery set for",
       "savedSuffix": ". It travels with your order — change it any time before checkout.",
@@ -288,7 +294,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Home delivery",
-      "description": "We bring your order to your door, anywhere in Brussels."
+      "description": "We bring your order to your door, in Brussels and the surrounding area."
     },
     "pickup": {
       "label": "Click & collect",

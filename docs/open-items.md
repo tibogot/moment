@@ -86,7 +86,8 @@ Dans le périmètre convenu. Les cases cochées sont faites.
 - [ ] **Webhook Sanity** : ajouter `"faqPage"` au filtre (sanity.io/manage → API → Webhooks), sinon une modification publiée met jusqu'à 24 h à apparaître. Filtre complet dans `app/api/revalidate/sanity/route.ts`
 - [ ] **Publier « Comment ça marche ? » une première fois** dans le Studio : le formulaire est prérempli avec les textes actuels, il suffit de cliquer sur Publier. Nous n'avons pas les droits d'écriture sur le projet Sanity pour le faire nous-mêmes. Tant que ce n'est pas fait, le site affiche ces mêmes textes, intégrés au code
 - [ ] **Relecture des six étapes et des réponses par Moment** : textes rédigés par nous en FR/NL/EN, à valider par eux — directement dans le Studio
-- [ ] **Dimanche** : sur la boutique de démonstration, `delivery_settings` → `closed_weekdays` contient encore `sunday` (d'où « Nous ne livrons pas le dimanche » sur la page). À retirer, et à vérifier sur leur boutique au branchement
+- [x] **Dimanche** sur la boutique de démonstration : plus de `sunday` fermé (19 nov.), le site est ouvert le dimanche partout.
+- [ ] **Dimanche sur leur boutique** : vérifier au branchement que `delivery_settings` → `closed_weekdays` ne contient pas `sunday`
 
 ---
 

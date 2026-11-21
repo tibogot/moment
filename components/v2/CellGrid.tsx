@@ -35,6 +35,8 @@ const LINE = "var(--grid-line)";
 type Layout = {
   columns: number;
   rows: number;
+  /** Row edges as fractions of the field height, rows + 1 of them, 0 → 1. */
+  edges: number[];
   ratio: number;
   /** Cell size in px — the diagonal needs its real angle and length. */
   cellW: number;
@@ -51,6 +53,7 @@ const diagonalCell = (
   { columns, rows }: { columns: number; rows: number },
 ) => (diagonal === "bottom-right" ? key(columns - 1, rows - 1) : key(0, 0));
 const pct = (index: number, total: number) => `${(index / total) * 100}%`;
+const frac = (value: number) => `${value * 100}%`;
 
 type CellGridProps = {
   /**
@@ -80,7 +83,48 @@ type CellGridProps = {
    * on the page.
    */
   cells?: boolean;
+  /**
+   * Drawn cells per page column from tablet up, for a full-screen hero: its
+   * rows must round to whole cells in a fixed height, and smaller cells
+   * round closer to 3/4 (0.65–0.88 at 8 columns). 1.5 gives 9 / 12 columns
+   * (about 0.72–0.78), with one page line in two shared; 2 gives 12 / 16,
+   * every page line shared. Phones keep their 4.
+   */
+  subdivide?: number;
+  /**
+   * A row exactly at the vertical centre (the logo section sets its logo on
+   * it). See `centredRows`.
+   */
+  centreRow?: boolean;
 };
+
+/**
+ * Row edges in px (0 → height) and the index of the middle row, for a field
+ * that needs one row exactly at its centre.
+ *
+ * If an odd number of whole rows comes close to 3/4 (0.66–0.84), whole rows,
+ * as in the hero. Otherwise rounding to odd stretches the cells badly (3.9
+ * rows of 3/4 → 3 long ones or 5 near-squares), so the cells stay exactly
+ * 3/4 and the rows stack out from the centre row; the outer ones are cut by
+ * the frame, as if the grid ran on under it.
+ */
+export function centredRows(height: number, cellW: number) {
+  const cellH = cellW / CELL_RATIO;
+  const exact = height / cellH;
+  const odd = Math.max(1, 2 * Math.round((exact - 1) / 2) + 1);
+  const ratio = cellW / (height / odd);
+  if (ratio >= 0.66 && ratio <= 0.84) {
+    const edges = Array.from({ length: odd + 1 }, (_, i) => (i * height) / odd);
+    return { edges, middle: (odd - 1) / 2 };
+  }
+  const above = Math.ceil((height / 2 - cellH / 2) / cellH);
+  const first = height / 2 - cellH / 2 - above * cellH;
+  const edges = [0];
+  for (let i = 1; first + i * cellH < height; i++)
+    edges.push(first + i * cellH);
+  edges.push(height);
+  return { edges, middle: above };
+}
 
 export function CellGrid({
   lineClassName = "bg-sky",
@@ -88,6 +132,8 @@ export function CellGrid({
   diagonal = false,
   readout = true,
   cells = true,
+  subdivide = 1,
+  centreRow = false,
 }: CellGridProps) {
   const fieldRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState<Layout | null>(null);
@@ -104,12 +150,31 @@ export function CellGrid({
     const update = () => {
       const box = field.getBoundingClientRect();
       if (!box.width || !box.height) return;
-      const columns =
+      const pageColumns =
         parseInt(getComputedStyle(field).getPropertyValue("--v2-cols"), 10) ||
         4;
+      const columns =
+        pageColumns >= 6 ? Math.round(pageColumns * subdivide) : pageColumns;
       const cellW = box.width / columns;
-      const rows = Math.max(1, Math.round(box.height / (cellW / CELL_RATIO)));
-      const cellH = box.height / rows;
+      const edgesPx = centreRow
+        ? centredRows(box.height, cellW).edges
+        : (() => {
+            const n = Math.max(
+              1,
+              Math.round(box.height / (cellW / CELL_RATIO)),
+            );
+            return Array.from(
+              { length: n + 1 },
+              (_, i) => (i * box.height) / n,
+            );
+          })();
+      const rows = edgesPx.length - 1;
+      const edges = edgesPx.map((y) => y / box.height);
+      // The full-size cell: the diagonal and the readout use it.
+      const cellH = Math.max(...edgesPx.slice(1).map((y, i) => y - edgesPx[i]));
+      // Which row a y (px) falls in.
+      const rowAt = (y: number) =>
+        edgesPx.slice(1, -1).filter((edge) => edge <= y).length;
 
       const holes = new Map<string, Set<number>>();
       holeElements.forEach((element, index) => {
@@ -125,8 +190,8 @@ export function CellGrid({
         const bottom = r.bottom - parseFloat(style.paddingBottom) - box.top;
         const c0 = Math.floor((left - HOLE_PADDING) / cellW);
         const c1 = Math.floor((right + HOLE_PADDING) / cellW);
-        const r0 = Math.floor((top - HOLE_PADDING) / cellH);
-        const r1 = Math.floor((bottom + HOLE_PADDING) / cellH);
+        const r0 = rowAt(top - HOLE_PADDING);
+        const r1 = rowAt(bottom + HOLE_PADDING);
         for (let c = Math.max(0, c0); c <= Math.min(columns - 1, c1); c++)
           for (let row = Math.max(0, r0); row <= Math.min(rows - 1, r1); row++)
             holes.set(
@@ -134,7 +199,15 @@ export function CellGrid({
               (holes.get(key(c, row)) ?? new Set()).add(index),
             );
       });
-      setLayout({ columns, rows, ratio: cellW / cellH, cellW, cellH, holes });
+      setLayout({
+        columns,
+        rows,
+        edges,
+        ratio: cellW / cellH,
+        cellW,
+        cellH,
+        holes,
+      });
     };
 
     update();
@@ -144,12 +217,14 @@ export function CellGrid({
     // Webfonts change the size of the type after the first measure.
     document.fonts?.ready.then(update);
     return () => observer.disconnect();
-  }, []);
+  }, [subdivide, centreRow]);
 
   const segments: ReactNode[] = [];
   const labels: ReactNode[] = [];
   if (layout) {
-    const { columns, rows, holes } = layout;
+    const { columns, rows, edges, holes } = layout;
+    const rowTop = (r: number) => frac(edges[r]);
+    const rowHeight = (r: number) => frac(edges[r + 1] - edges[r]);
     // A rule is dropped only *inside* one block: both cells under the same
     // `data-grid-hole` element. Two blocks side by side keep the rule between
     // them, so each reads as its own box — like the panels on the can labels —
@@ -173,8 +248,8 @@ export function CellGrid({
             style={{
               width: LINE,
               left: pct(b, columns),
-              top: pct(r, rows),
-              height: pct(1, rows),
+              top: rowTop(r),
+              height: rowHeight(r),
               transform: "translateX(-50%)",
             }}
           />,
@@ -191,7 +266,7 @@ export function CellGrid({
             className={cn("absolute", lineClassName)}
             style={{
               height: LINE,
-              top: pct(b, rows),
+              top: rowTop(b),
               left: pct(c, columns),
               width: pct(1, columns),
               transform: "translateY(-50%)",
@@ -213,9 +288,9 @@ export function CellGrid({
             )}
             style={{
               left: pct(c, columns),
-              top: pct(r, rows),
+              top: rowTop(r),
               width: pct(1, columns),
-              height: pct(1, rows),
+              height: rowHeight(r),
               padding: "var(--v2-pad)",
             }}
           >
@@ -288,10 +363,11 @@ export function CellGrid({
                   className="absolute top-0 left-0 overflow-hidden"
                   style={{
                     width: pct(1, layout.columns),
-                    height: pct(1, layout.rows),
+                    height: frac(layout.edges[1]),
                     ...(diagonal === "bottom-right" && {
                       left: pct(layout.columns - 1, layout.columns),
-                      top: pct(layout.rows - 1, layout.rows),
+                      top: frac(layout.edges[layout.rows - 1]),
+                      height: frac(1 - layout.edges[layout.rows - 1]),
                     }),
                   }}
                 >
