@@ -46,17 +46,35 @@ toujours justes.
 
 - **Produits, prix, stock, commandes.** Les traductions des fiches produits se
   font dans l'app gratuite *Translate & Adapt*.
-- **Réglages de livraison** — Contenu → Métaobjets :
+- **Un produit n'apparaît sur le site que s'il est « Actif » et publié sur le
+  canal du site** (fiche produit → *Publishing* / *Canaux de vente* → la case
+  du canal Headless, « Site Moment »). Un produit en brouillon, ou publié sur
+  la seule « Boutique en ligne » Shopify, existe dans l'admin mais pas sur le
+  site.
+- **Allergènes, ingrédients, traces, régime, portion, conservation, conseils
+  de service** : en bas de chaque fiche produit, section *Métachamps produit*.
+  Ils s'affichent sur la fiche du site ; un champ vide n'apparaît pas.
+- **Réglages de livraison** — Contenu → Métaobjets. Les entrées existent déjà,
+  remplies avec vos règles du 3 novembre 2026 : vous les **modifiez**, vous n'en
+  créez que pour une fermeture ou un nouveau créneau.
 
 | Réglage | Métaobjet |
 |---|---|
-| Préavis (48 h), heure limite (16 h), jours fermés, horaires et minimum de retrait, minimum de pièces par produit (4) | `delivery_settings` |
-| Jours ou périodes de fermeture (une entrée pour trois semaines, pas vingt-et-une) | `delivery_closure` |
-| Zones : frais, minimum de commande, livraison offerte à partir de…, distance | `delivery_zone` |
-| Créneaux de livraison et leur capacité (2 commandes par défaut, `0` pour fermer un créneau) | `delivery_slot` |
+| Préavis (48 h), heure limite (16 h), jours fermés, horaires et minimum de retrait, minimum de pièces par produit (4) | Livraison — réglages |
+| Jours ou périodes de fermeture (une entrée pour trois semaines, pas vingt-et-une) | Livraison — fermetures |
+| Zones : frais, minimum de commande, livraison offerte à partir de…, distance | Livraison — zones |
+| Créneaux de livraison et leur capacité (2 commandes par défaut, `0` pour fermer un créneau) | Livraison — créneaux |
+| Heures de retrait et leur capacité (1 par défaut) | Retrait — horaires |
 
-Sans entrée, le site applique vos règles du 3 novembre 2026. Vous n'ajoutez une
-entrée que pour **changer** quelque chose.
+Un réglage modifié apparaît sur le site en quelques secondes. Pour une
+fermeture, ajoutez-la quand même dès que vous la connaissez : le calendrier ne
+la propose plus aux clients à partir de ce moment-là.
+
+- **Le dimanche** : ouvert par défaut, comme vous l'avez indiqué le 3 novembre.
+  Si vous arrêtez de travailler le dimanche, ajoutez `sunday` dans le champ
+  `closed_weekdays` de `delivery_settings` (les jours s'écrivent en anglais :
+  `monday` … `sunday`). Le calendrier, la page « Comment ça marche ? » et les
+  vérifications au paiement suivent tout de suite. Retirez-le pour rouvrir.
 
 - **Commande prise par téléphone** : pour qu'elle occupe un créneau, ajoutez-lui
   deux tags, par exemple `livraison-2026-11-07` et `creneau-0900`. Annuler la
@@ -76,11 +94,18 @@ entrée que pour **changer** quelque chose.
 
 ## 2. Le piège : les frais de livraison sont à deux endroits
 
-Le site **affiche** les frais depuis le métaobjet `delivery_zone`. Shopify les
-**encaisse** depuis Paramètres → Expédition et livraison. Si vous changez un
-frais, un minimum ou le seuil de livraison offerte, **changez-le aux deux
-endroits, dans la même séance**. Sinon le client voit 20 € sur le site et paie
-35 € au paiement.
+Le site **affiche** les frais depuis le métaobjet « Livraison — zones ». Shopify
+les **encaisse** depuis Paramètres → Expédition et livraison → **Livraison
+locale** → Atelier Forest (quatre zones par rayon : 0–10, 10–25, 25–50 et
+50–70 km, avec leur prix, leur minimum et la gratuité au-delà d'un montant). Si
+vous changez un frais, un minimum, une distance ou le seuil de livraison
+offerte, **changez-le aux deux endroits, dans la même séance**. Sinon le client
+voit 20 € sur le site et paie 35 € au paiement.
+
+Le retrait à l'atelier est activé dans Paramètres → Expédition et livraison →
+**Retrait en magasin**. Il n'y a volontairement **aucun tarif d'expédition
+classique** (le marché « Belgique » est sur « Not shipping ») : n'en ajoutez
+pas, le client pourrait sinon choisir un envoi qui ne respecte pas vos zones.
 
 ---
 
