@@ -418,7 +418,10 @@
         "sans-gluten": "Glutenvrij",
         "maison": "Thuis",
         "bureau": "Kantoor",
-        "evenements": "Evenementen"
+        "evenements": "Evenementen",
+        "cake": "Cake",
+        "petit-dejeuner": "Ontbijt",
+        "epicerie": "Kruidenierswaren"
       }
     },
     "productsHeading": "Alle producten",
