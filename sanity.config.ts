@@ -7,6 +7,7 @@ import {
   sanityDataset,
   sanityProjectId,
 } from "@/lib/sanity/env";
+import { hasSitePage, ViewOnSiteAction } from "@/sanity/actions/viewOnSite";
 import { schemaTypes } from "@/sanity/schemaTypes";
 import { structure } from "@/sanity/structure";
 
@@ -66,6 +67,11 @@ export default defineConfig({
    * why their new phone number never appears.
    */
   document: {
+    // "Voir sur le site" on every document that has a page — see the action.
+    actions: (previous, context) =>
+      hasSitePage(context.schemaType)
+        ? [...previous, ViewOnSiteAction]
+        : previous,
     newDocumentOptions: (previous) =>
       previous.filter(
         (item) =>
