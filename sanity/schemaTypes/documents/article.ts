@@ -100,8 +100,9 @@ export const article = defineType({
       title: "Rubriques",
       type: "array",
       group: "meta",
+      description:
+        "Facultatif. Une petite étiquette au-dessus de l'article (Recettes, Coulisses…). Les rubriques se créent dans Actualités → Rubriques des articles.",
       of: [{ type: "reference", to: [{ type: "category" }] }],
-      validation: (rule) => rule.required().min(1),
     }),
     defineField({
       name: "author",

@@ -307,7 +307,7 @@ export type Article = {
     _type: "image";
   };
   body: BlockContent;
-  categories: Array<
+  categories?: Array<
     {
       _key: string;
     } & CategoryReference
@@ -493,7 +493,7 @@ export type ArticlesQueryResult = Array<{
   };
   categories: Array<{
     title: string;
-  }>;
+  }> | null;
 }>;
 
 // Source: lib/sanity/queries.ts
@@ -518,7 +518,7 @@ export type ArticleBySlugQueryResult = {
   };
   categories: Array<{
     title: string;
-  }>;
+  }> | null;
   body: BlockContent;
 } | null;
 
