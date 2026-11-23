@@ -774,7 +774,7 @@ export function Navbar() {
   return (
     <header
       ref={headerRef}
-      className="fixed inset-x-0 top-0 z-40"
+      className="fixed inset-x-0 top-(--announcement-h) z-40"
       {...(hasTransparentHero ? { "data-nav-transparent": "" } : {})}
     >
       <div

@@ -338,6 +338,18 @@ export type Author = {
   bio?: string;
 };
 
+export type Announcement = {
+  _id: string;
+  _type: "announcement";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  enabled?: boolean;
+  message?: LocaleString;
+  linkLabel?: LocaleString;
+  linkUrl?: string;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -450,6 +462,7 @@ export type AllSanitySchemaTypes =
   | AuthorReference
   | Article
   | Author
+  | Announcement
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -702,6 +715,15 @@ export type PartnersQueryResult = Array<{
   location: Geopoint | null;
 }>;
 
+// Source: lib/sanity/queries.ts
+// Variable: announcementQuery
+// Query: *[_id == "announcement" && enabled == true][0] {  message,  linkLabel,  linkUrl}
+export type AnnouncementQueryResult = {
+  message: LocaleString | null;
+  linkLabel: LocaleString | null;
+  linkUrl: string | null;
+} | null;
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
@@ -715,6 +737,7 @@ declare global {
     '*[_id == "homePage"][0] {\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  eventsImage,\n  coffeeImage\n}': HomePageQueryResult;
     '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
     '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
+    '*[_id == "announcement" && enabled == true][0] {\n  message,\n  linkLabel,\n  linkUrl\n}': AnnouncementQueryResult;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

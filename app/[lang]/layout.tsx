@@ -9,6 +9,11 @@ import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
 import { PaletteToggle } from "@/components/PaletteToggle";
 import { Navbar } from "@/components/Navbar";
+import {
+  ANNOUNCEMENT_HEIGHT,
+  AnnouncementBar,
+} from "@/components/AnnouncementBar";
+import { getAnnouncement } from "@/lib/sanity/queries";
 import SmoothScroll from "@/components/SmoothScroll";
 import { NavCatalogProvider } from "@/components/NavCatalogProvider";
 import { getCollectionLinks } from "@/lib/shopify/collections";
@@ -123,9 +128,10 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [collections, dictionary] = await Promise.all([
+  const [collections, dictionary, announcement] = await Promise.all([
     getCollectionLinks(lang),
     getDictionary(lang),
+    getAnnouncement(),
   ]);
 
   /*
@@ -157,7 +163,17 @@ export default async function RootLayout({
             domain does — the same switch that opens the site to Google. */}
         {!siteIsIndexable && <InlineScript html={PALETTE_GUARD} />}
       </head>
-      <body className="min-h-svh flex flex-col">
+      {/* --announcement-h is the bar's height while it is on, 0 otherwise: the
+          navbar sits below it and the page starts below both. */}
+      <body
+        className="min-h-svh flex flex-col"
+        style={
+          {
+            "--announcement-h": announcement ? ANNOUNCEMENT_HEIGHT : "0px",
+            paddingTop: "var(--announcement-h)",
+          } as React.CSSProperties
+        }
+      >
         {/* First thing a keyboard reaches: past a navbar of six menus. Hidden
             until focused. */}
         <a
@@ -169,6 +185,9 @@ export default async function RootLayout({
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
           <SmoothScroll>
               <ScrollToTop />
+              {announcement && (
+                <AnnouncementBar announcement={announcement} locale={lang} />
+              )}
               <NavCatalogProvider collections={navCollections}>
                 <Navbar />
               </NavCatalogProvider>
