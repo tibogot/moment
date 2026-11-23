@@ -312,7 +312,7 @@ export type Article = {
       _key: string;
     } & CategoryReference
   >;
-  author: AuthorReference;
+  author?: AuthorReference;
   publishedAt: string;
   featured?: boolean;
   seoTitle?: string;
@@ -490,7 +490,7 @@ export type ArticlesQueryResult = Array<{
   };
   author: {
     name: string;
-  };
+  } | null;
   categories: Array<{
     title: string;
   }> | null;
@@ -515,7 +515,7 @@ export type ArticleBySlugQueryResult = {
   };
   author: {
     name: string;
-  };
+  } | null;
   categories: Array<{
     title: string;
   }> | null;

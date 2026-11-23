@@ -13,6 +13,7 @@ import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { articleSchema, breadcrumbSchema, graph } from "@/lib/schema";
 import { notFoundMetadata, pageMetadata, toDescription } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { formatArticleDate } from "@/lib/sanity/format";
 import { urlFor } from "@/lib/sanity/image";
@@ -95,7 +96,8 @@ export default async function NewsArticlePage({
   const metadataLine = [
     category,
     article.publishedAt ? formatArticleDate(article.publishedAt) : null,
-    article.author?.name,
+    // No author picked in the Studio: the article is signed by the brand.
+    article.author?.name ?? siteConfig.name,
   ]
     .filter(Boolean)
     .join(" · ");
