@@ -1,4 +1,5 @@
 import type { StructureResolver } from "sanity/structure";
+import { BasketIcon } from "@sanity/icons/Basket";
 import { BellIcon } from "@sanity/icons/Bell";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { HelpCircleIcon } from "@sanity/icons/HelpCircle";
@@ -8,6 +9,7 @@ import { PinIcon } from "@sanity/icons/Pin";
 import { TagIcon } from "@sanity/icons/Tag";
 import { UlistIcon } from "@sanity/icons/Ulist";
 import { UsersIcon } from "@sanity/icons/Users";
+import { ShopifyPane } from "@/sanity/components/ShopifyPane";
 
 /**
  * The Studio's left-hand navigation.
@@ -15,7 +17,7 @@ import { UsersIcon } from "@sanity/icons/Users";
  * Written in the words the client uses on their own site, not in the words the
  * schema uses. "Articles / Categories / Authors" is a list of document types;
  * "Menus / Réalisations / Actualités" is a list of things a caterer wants to
- * change. The order is roughly how often each is touched.
+ * change.
  *
  * And that is the only test anything here has to pass. There is no
  * "Coordonnées de l'entreprise" screen for the address, the phone number and
@@ -23,14 +25,58 @@ import { UsersIcon } from "@sanity/icons/Users";
  * `lib/site.ts`, and a screen an owner will never open teaches them the rest
  * of the Studio is decorative too.
  *
- * Categories and authors sit inside "Actualités" because they exist to support
- * articles rather than to be visited: someone looking for where to write a news
- * post should not have to read past them.
+ * The order:
+ * - the announcement bar alone at the top — the most frequent edit, and the
+ *   one made in a hurry ("fermé demain");
+ * - "Pages du site": one entry per page, named as in the site's menu;
+ * - "Contenus": the lists that grow (a menu, a réalisation, an article);
+ * - "Produits et livraison": a signpost to Shopify, where the first thing an
+ *   owner looks for actually lives.
  */
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Moment")
     .items([
+      /**
+       * Pinned to a fixed document id, which is what makes it a singleton: no
+       * "create new" button, no second copy competing to be read. The query in
+       * `lib/sanity/queries.ts` looks that id up directly. Same pattern for
+       * every page below.
+       */
+      S.listItem()
+        .title("Bandeau d'annonce")
+        .icon(BellIcon)
+        .child(
+          S.document()
+            .schemaType("announcement")
+            .documentId("announcement")
+            .title("Bandeau d'annonce"),
+        ),
+
+      S.divider().title("Pages du site"),
+
+      S.listItem()
+        .title("Page d'accueil")
+        .icon(HomeIcon)
+        .child(
+          S.document()
+            .schemaType("homePage")
+            .documentId("homePage")
+            .title("Page d'accueil"),
+        ),
+
+      S.listItem()
+        .title("Comment ça marche ?")
+        .icon(HelpCircleIcon)
+        .child(
+          S.document()
+            .schemaType("faqPage")
+            .documentId("faqPage")
+            .title("Comment ça marche ?"),
+        ),
+
+      S.divider().title("Contenus"),
+
       S.listItem()
         .title("Menus traiteur")
         .icon(UlistIcon)
@@ -105,40 +151,11 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      /**
-       * Pinned to a fixed document id, which is what makes it a singleton: no
-       * "create new" button, no second copy competing to be read. The query in
-       * `lib/sanity/queries.ts` looks that id up directly.
-       */
       S.listItem()
-        .title("Page d'accueil")
-        .icon(HomeIcon)
+        .id("shopify")
+        .title("Produits et livraison")
+        .icon(BasketIcon)
         .child(
-          S.document()
-            .schemaType("homePage")
-            .documentId("homePage")
-            .title("Page d'accueil"),
-        ),
-
-      // Same singleton pattern — one fixed id, read by `getAnnouncement()`.
-      S.listItem()
-        .title("Bandeau d'annonce")
-        .icon(BellIcon)
-        .child(
-          S.document()
-            .schemaType("announcement")
-            .documentId("announcement")
-            .title("Bandeau d'annonce"),
-        ),
-
-      // Same singleton pattern — one fixed id, read by `getFaqPage()`.
-      S.listItem()
-        .title("Comment ça marche ?")
-        .icon(HelpCircleIcon)
-        .child(
-          S.document()
-            .schemaType("faqPage")
-            .documentId("faqPage")
-            .title("Comment ça marche ?"),
+          S.component(ShopifyPane).id("shopify").title("Produits et livraison"),
         ),
     ]);
