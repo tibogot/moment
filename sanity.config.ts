@@ -39,7 +39,21 @@ export default defineConfig({
    * Those are the data contract shared with the GROQ projections and the
    * TypeScript types; they are not shown to anyone.
    */
-  plugins: [frFRLocale(), structureTool({ structure }), visionTool()],
+  plugins: [
+    frFRLocale(),
+    structureTool({ structure }),
+    // Vision (raw GROQ queries) is a developer tool: kept on `next dev`,
+    // absent from the deployed Studio, where it would only be a screen of code
+    // in the client's top bar.
+    ...(process.env.NODE_ENV === "development" ? [visionTool()] : []),
+  ],
+
+  /**
+   * Content Releases (bundling edits to publish together on a date) is for
+   * editorial teams. Here it would only add "versions" and "release drafts"
+   * next to the plain Publish button a caterer needs.
+   */
+  releases: { enabled: false },
 
   schema: {
     types: schemaTypes,

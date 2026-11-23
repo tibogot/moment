@@ -2,7 +2,8 @@ import { defineField, defineType } from "sanity";
 import { UsersIcon } from "@sanity/icons/Users";
 
 /**
- * Who signs an article. Referenced by `article`, never shown on its own page.
+ * Who signs an article. Referenced by `article`, optionally (an unsigned
+ * article shows "Moment"), never shown on its own page.
  */
 export const author = defineType({
   name: "author",

@@ -109,8 +109,9 @@ export const article = defineType({
       title: "Auteur",
       type: "reference",
       group: "meta",
+      description:
+        "Facultatif. Laissé vide, l'article est signé « Moment ». Les auteurs se créent dans Actualités → Auteurs des articles.",
       to: [{ type: "author" }],
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "publishedAt",
