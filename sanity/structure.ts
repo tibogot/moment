@@ -1,4 +1,5 @@
 import type { StructureResolver } from "sanity/structure";
+import { BellIcon } from "@sanity/icons/Bell";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { HelpCircleIcon } from "@sanity/icons/HelpCircle";
 import { HomeIcon } from "@sanity/icons/Home";
@@ -100,6 +101,17 @@ export const structure: StructureResolver = (S) =>
             .schemaType("homePage")
             .documentId("homePage")
             .title("Page d'accueil"),
+        ),
+
+      // Same singleton pattern — one fixed id, read by `getAnnouncement()`.
+      S.listItem()
+        .title("Bandeau d'annonce")
+        .icon(BellIcon)
+        .child(
+          S.document()
+            .schemaType("announcement")
+            .documentId("announcement")
+            .title("Bandeau d'annonce"),
         ),
 
       // Same singleton pattern — one fixed id, read by `getFaqPage()`.

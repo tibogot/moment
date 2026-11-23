@@ -17,6 +17,7 @@ enregistrez-le dans vos favoris.
 | Menus traiteur | Menus traiteur |
 | Actualités | Actualités |
 | Partenaires (carte « Où nous trouver ») | Partenaires |
+| Bandeau en haut du site (fermeture, nouveauté…) | Bandeau d'annonce |
 | Photo d'ouverture et les deux panneaux de la page d'accueil | Page d'accueil |
 | Étapes de commande et questions fréquentes (page « Comment ça marche ? ») | Comment ça marche ? |
 
@@ -24,6 +25,12 @@ enregistrez-le dans vos favoris.
 le site ajoute le nom tout seul. L'onglet *Référencement* → « Titre pour Google »
 permet un titre différent dans Google uniquement ; laissé vide, le titre normal
 est utilisé.
+
+**Bandeau d'annonce** : écrivez une phrase courte (« Fermé du 24 décembre au
+2 janvier »), ajoutez si vous voulez un lien (texte + adresse, par exemple
+`/menus`), allumez « Afficher le bandeau » et publiez. Il apparaît en haut de
+toutes les pages en quelques secondes. Pour le retirer, éteignez l'interrupteur
+et publiez : le texte reste enregistré pour la prochaine fois.
 
 **Partenaires** : Nouveau → nom, type, adresse, lien éventuel. Le site place
 le point sur la carte tout seul à partir de l'adresse. Pour masquer un

@@ -1,3 +1,4 @@
+import { announcement } from "./documents/announcement";
 import { article } from "./documents/article";
 import { author } from "./documents/author";
 import { category } from "./documents/category";
@@ -17,6 +18,7 @@ import { localeString, localeStringList, localeText } from "./objects/locale";
  * a content model; this array is.
  */
 export const schemaTypes = [
+  announcement,
   article,
   author,
   category,

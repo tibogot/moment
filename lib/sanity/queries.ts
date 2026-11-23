@@ -382,3 +382,39 @@ export const partnersQuery = defineQuery(`*[_type == "partner" && visible != fal
 export async function getPartnerDocuments() {
   return sanityClient.fetch(partnersQuery, {}, sanityCache("partner"));
 }
+
+/**
+ * The announcement bar, or null when it is switched off or empty. Read by the
+ * root layout, so it is on every page; the `announcement` tag lets a publish
+ * in the Studio reach all of them at once.
+ */
+export const announcementQuery = defineQuery(`*[_id == "announcement" && enabled == true][0] {
+  message,
+  linkLabel,
+  linkUrl
+}`);
+
+export type AnnouncementContent = {
+  message: LocaleString;
+  linkLabel?: LocaleString | null;
+  linkUrl?: string | null;
+};
+
+export async function getAnnouncement(): Promise<AnnouncementContent | null> {
+  try {
+    const response = await sanityClient.fetch<Partial<AnnouncementContent> | null>(
+      announcementQuery,
+      {},
+      sanityCache("announcement"),
+    );
+    if (!response?.message) return null;
+    return {
+      message: response.message,
+      linkLabel: response.linkLabel ?? null,
+      linkUrl: response.linkUrl ?? null,
+    };
+  } catch {
+    // A banner that cannot be read is a banner not shown — never a broken page.
+    return null;
+  }
+}
