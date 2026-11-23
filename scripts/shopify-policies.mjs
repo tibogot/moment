@@ -96,7 +96,25 @@ async function admin(query, variables = {}) {
   return json.data;
 }
 
+const skipped = [];
 for (const type of types) {
+  try {
+    await installPolicy(type);
+  } catch (error) {
+    skipped.push(type);
+    console.error(`${type}: not installed — ${error.message}`);
+  }
+}
+if (skipped.length) {
+  console.error(
+    `\n${skipped.length} policy(ies) skipped. The privacy policy needs Shopify's ` +
+      `"automatic management" turned off first (Settings → Policies → Privacy policy); ` +
+      `then run this again.`,
+  );
+  process.exit(1);
+}
+
+async function installPolicy(type) {
   const { shopPolicyUpdate } = await admin(
     `mutation ($policy: ShopPolicyInput!) {
       shopPolicyUpdate(shopPolicy: $policy) {
