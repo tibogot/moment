@@ -15,7 +15,7 @@
     "shopify:policies": "node scripts/shopify-policies.mjs"
   },
   "engines": {
-    "node": "22.x"
+    "node": "26.x"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
