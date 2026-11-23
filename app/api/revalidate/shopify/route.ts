@@ -33,7 +33,7 @@
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import {
   DELIVERY_CAPACITY_TAG,
   tagOrderBooking,
@@ -49,6 +49,9 @@ import { SHOPIFY_CACHE_TAG } from "@/lib/shopify/products";
  * verb never matters here — a product deleted and a product updated invalidate
  * the same reads.
  */
+/** Long enough for the Storefront API to see the change; see the second pass below. */
+const SECOND_PASS_DELAY_MS = 15_000;
+
 const TAGS_BY_TOPIC_PREFIX: Record<string, string> = {
   products: SHOPIFY_CACHE_TAG,
   // Collections only: product-bearing reads carry this tag too, and the
@@ -173,6 +176,19 @@ export async function POST(request: NextRequest) {
   }
 
   revalidateTag(tag, { expire: 0 });
+
+  // The Storefront API lags the admin by a few seconds. A visitor who loads a
+  // page in that gap makes the site re-read the old data and cache it again —
+  // for up to the 24-hour backstop. Seen with a new delivery closure: the
+  // webhook arrived at once, a page read the closures straight after, and the
+  // closure stayed invisible. A second invalidation once Shopify has caught up
+  // closes the gap. Orders are read through the Admin API, which has no lag.
+  if (!topic.startsWith("orders/")) {
+    after(async () => {
+      await new Promise((resolve) => setTimeout(resolve, SECOND_PASS_DELAY_MS));
+      revalidateTag(tag, { expire: 0 });
+    });
+  }
 
   return NextResponse.json({ revalidated: [tag], topic, now: Date.now() });
 }
