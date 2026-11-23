@@ -3,9 +3,6 @@ import type { Locale } from "@/lib/i18n/config";
 import { pick } from "@/lib/sanity/locale";
 import type { AnnouncementContent } from "@/lib/sanity/queries";
 
-/** Matches the offset the navbar and the page take below — see the layout. */
-export const ANNOUNCEMENT_HEIGHT = "2.25rem";
-
 /**
  * The one-line announcement across the top of every page, written in the
  * Studio ("Bandeau d'annonce"). Nothing renders when it is switched off.
@@ -13,7 +10,8 @@ export const ANNOUNCEMENT_HEIGHT = "2.25rem";
  * Fixed above the navbar rather than inside it: the navbar's appearance is a
  * GSAP timeline measured from its own band, and a line of text inside that
  * band would change every height it tweens between. The layout instead moves
- * the navbar and the page down by `--announcement-h` while the bar is on.
+ * the navbar and the page down by `--announcement-h` while the bar is on. Its
+ * height (2.25rem) is set once, as a class on <body> in the layout.
  *
  * Styling is a placeholder in the site's own vocabulary (the sky-blue of the
  * calls to action, the small uppercase label face) until it is designed.
