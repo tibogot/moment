@@ -2,8 +2,9 @@ import { defineField, defineType } from "sanity";
 import { TagIcon } from "@sanity/icons/Tag";
 
 /**
- * How articles are grouped. Referenced by `article`; an article needs at least
- * one, so these have to exist before the first news post can be published.
+ * How articles are grouped. Referenced by `article`, optionally: a required
+ * category made the first news post fail to publish until one had been created
+ * somewhere else in the Studio, which is a trap for a client without support.
  */
 export const category = defineType({
   name: "category",

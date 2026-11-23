@@ -23,7 +23,7 @@ import { UsersIcon } from "@sanity/icons/Users";
  * `lib/site.ts`, and a screen an owner will never open teaches them the rest
  * of the Studio is decorative too.
  *
- * Categories and authors sit below a divider because they exist to support
+ * Categories and authors sit inside "Actualités" because they exist to support
  * articles rather than to be visited: someone looking for where to write a news
  * post should not have to read past them.
  */
@@ -52,11 +52,42 @@ export const structure: StructureResolver = (S) =>
             .defaultOrdering([{ field: "date", direction: "desc" }]),
         ),
 
+      /**
+       * Articles with their categories and authors inside, rather than those
+       * two at the top level: on their own, "Rubriques" read like the site's
+       * sections, and nothing said they only exist for news posts.
+       */
       S.listItem()
         .title("Actualités")
         .icon(DocumentTextIcon)
-        .schemaType("article")
-        .child(S.documentTypeList("article").title("Actualités")),
+        .child(
+          S.list()
+            .title("Actualités")
+            .items([
+              S.listItem()
+                .title("Articles")
+                .icon(DocumentTextIcon)
+                .schemaType("article")
+                .child(S.documentTypeList("article").title("Articles")),
+              S.divider(),
+              S.listItem()
+                .title("Rubriques des articles")
+                .icon(TagIcon)
+                .schemaType("category")
+                .child(
+                  S.documentTypeList("category").title(
+                    "Rubriques des articles",
+                  ),
+                ),
+              S.listItem()
+                .title("Auteurs des articles")
+                .icon(UsersIcon)
+                .schemaType("author")
+                .child(
+                  S.documentTypeList("author").title("Auteurs des articles"),
+                ),
+            ]),
+        ),
 
       /**
        * Alphabetical: this is a directory people scan for one name ("is Café X
@@ -71,20 +102,6 @@ export const structure: StructureResolver = (S) =>
             .title("Partenaires")
             .defaultOrdering([{ field: "name", direction: "asc" }]),
         ),
-
-      S.divider(),
-
-      S.listItem()
-        .title("Rubriques")
-        .icon(TagIcon)
-        .schemaType("category")
-        .child(S.documentTypeList("category").title("Rubriques")),
-
-      S.listItem()
-        .title("Auteurs")
-        .icon(UsersIcon)
-        .schemaType("author")
-        .child(S.documentTypeList("author").title("Auteurs")),
 
       S.divider(),
 
