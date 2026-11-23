@@ -242,7 +242,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Home delivery",
-      "description": "We bring your order to your door, anywhere in Brussels."
+      "description": "We bring your order to your door, in Brussels and the surrounding area."
     },
     "pickup": {
       "label": "Click & collect",

@@ -242,7 +242,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Livraison à domicile",
-      "description": "Nous apportons votre commande à votre porte, partout à Bruxelles."
+      "description": "Nous apportons votre commande à votre porte, à Bruxelles et dans les environs."
     },
     "pickup": {
       "label": "Click & collect",

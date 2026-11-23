@@ -242,7 +242,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Levering aan huis",
-      "description": "Wij brengen uw bestelling tot aan de deur, overal in Brussel."
+      "description": "Wij brengen uw bestelling tot aan de deur, in Brussel en omgeving."
     },
     "pickup": {
       "label": "Click & collect",
