@@ -91,7 +91,7 @@ export const menu = defineType({
       type: "image",
       group: "content",
       description:
-        "Une fois la photo chargée, cliquez sur « Edit » pour choisir le point important : c'est lui qui reste visible au recadrage sur mobile.",
+        "Une fois la photo chargée, cliquez sur l'icône de recadrage en haut à droite de la photo (« Rogner l'image ») et placez le point important : c'est lui qui reste visible au recadrage sur mobile.",
       options: { hotspot: true },
       fields: [
         defineField({

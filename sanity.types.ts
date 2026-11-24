@@ -270,7 +270,7 @@ export type Category = {
   _updatedAt: string;
   _rev: string;
   title: string;
-  slug: Slug;
+  slug?: Slug;
   description?: string;
 };
 
@@ -326,7 +326,7 @@ export type Author = {
   _updatedAt: string;
   _rev: string;
   name: string;
-  slug: Slug;
+  slug?: Slug;
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;

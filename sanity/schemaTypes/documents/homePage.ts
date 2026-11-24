@@ -30,7 +30,7 @@ export const homePage = defineType({
       title: "Photo d'ouverture",
       type: "image",
       description:
-        "La grande photo plein écran en haut de la page d'accueil. Elle est recadrée très différemment sur un téléphone et sur un écran large — après l'avoir chargée, cliquez sur « Edit » et placez le point important, c'est lui qui reste toujours visible.",
+        "La grande photo plein écran en haut de la page d'accueil. Elle est recadrée très différemment sur un téléphone et sur un écran large — après l'avoir chargée, cliquez sur l'icône de recadrage en haut à droite de la photo (« Rogner l'image ») et placez le point important, c'est lui qui reste toujours visible.",
       options: { hotspot: true },
     }),
 

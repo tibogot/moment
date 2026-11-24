@@ -10,6 +10,12 @@ export const author = defineType({
   title: "Auteur",
   type: "document",
   icon: UsersIcon,
+  /**
+   * Only the name reaches the site (the byline of an article). The other
+   * fields are hidden rather than deleted: there is no author page, so a photo
+   * or a bio typed here would go nowhere, and a form asking for them reads as
+   * work the owner has left undone. Unhide them if an author page is built.
+   */
   fields: [
     defineField({
       name: "name",
@@ -23,19 +29,21 @@ export const author = defineType({
       type: "slug",
       description: "Générée depuis le nom. Rien à modifier à la main.",
       options: { source: "name", maxLength: 96 },
-      validation: (rule) => rule.required(),
+      hidden: true,
     }),
     defineField({
       name: "image",
       title: "Photo",
       type: "image",
       options: { hotspot: true },
+      hidden: true,
     }),
     defineField({
       name: "role",
       title: "Fonction",
       type: "string",
       description: "Chef, responsable événements…",
+      hidden: true,
     }),
     defineField({
       name: "bio",
@@ -43,6 +51,7 @@ export const author = defineType({
       type: "text",
       rows: 4,
       description: "Quelques lignes, facultatives.",
+      hidden: true,
     }),
   ],
   preview: {
