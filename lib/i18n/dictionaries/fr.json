@@ -1006,7 +1006,11 @@
       "other": "Partenaire"
     },
     "partnerCta": "Vous souhaitez proposer les produits Moment dans votre établissement ?",
-    "partnerLink": "Contactez-nous"
+    "partnerLink": "Contactez-nous",
+    "zoomIn": "Zoomer",
+    "zoomOut": "Dézoomer",
+    "closePopup": "Fermer",
+    "attribution": "Afficher les crédits de la carte"
   },
   "partner": {
     "title": "Collaborations",

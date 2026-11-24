@@ -1005,7 +1005,11 @@
       "other": "Partner"
     },
     "partnerCta": "Would you like to offer Moment products in your venue?",
-    "partnerLink": "Get in touch"
+    "partnerLink": "Get in touch",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "closePopup": "Close",
+    "attribution": "Show map credits"
   },
   "partner": {
     "title": "Collaborations",

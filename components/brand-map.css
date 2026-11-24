@@ -1,0 +1,116 @@
+/* The v2 test map (BrandMap): markers, popup and controls in the site's own
+   vocabulary — square edges, black rules, cream panels, Owners labels. */
+
+.brand-map {
+  background: var(--color-cream);
+  font-family: var(--font-archivo-light), sans-serif;
+  /* Keeps the map's own layers under the navbar and the cart panel. */
+  isolation: isolate;
+}
+
+.brand-marker {
+  display: block;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 9999px;
+  /* Cream, not sky: it has to read on the sky-blue ground as well. */
+  background: var(--color-cream);
+  border: 2px solid var(--color-black);
+  cursor: pointer;
+}
+
+.brand-marker:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 3px;
+}
+
+.brand-marker--primary {
+  width: 20px;
+  height: 20px;
+  background: var(--color-black);
+  border-color: var(--color-cream);
+  box-shadow: 0 0 0 2px var(--color-black);
+}
+
+.brand-popup .maplibregl-popup-content {
+  border-radius: 0;
+  background: var(--color-cream);
+  color: var(--color-black);
+  border: 1px solid var(--color-black);
+  box-shadow: none;
+  padding: 14px 32px 14px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.brand-popup .maplibregl-popup-content p {
+  margin: 0;
+}
+
+.brand-popup .maplibregl-popup-content a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* The tip, recoloured on whichever side the popup opened. */
+.brand-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.brand-popup.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.brand-popup.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: var(--color-black);
+}
+.brand-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.brand-popup.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.brand-popup.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: var(--color-black);
+}
+.brand-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--color-black);
+}
+.brand-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--color-black);
+}
+
+.brand-popup .maplibregl-popup-close-button {
+  top: 6px;
+  right: 6px;
+  font-size: 18px;
+  color: var(--color-black);
+  border-radius: 0;
+}
+
+.brand-popup__kind {
+  font-family: var(--font-owners-medium), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.brand-popup__name {
+  font-family: var(--font-owners-medium), sans-serif;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-bottom: 4px !important;
+}
+
+.brand-popup__links {
+  margin-top: 8px !important;
+}
+
+/* Zoom buttons: square, cream, black rule — like the site's own buttons. */
+.brand-map .maplibregl-ctrl-group {
+  border-radius: 0;
+  background: var(--color-cream);
+  border: 1px solid var(--color-black);
+  box-shadow: none;
+}
+.brand-map .maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--color-black);
+}
+
+.brand-map .maplibregl-ctrl-attrib {
+  background: color-mix(in srgb, var(--color-cream) 85%, transparent);
+  font-size: 10px;
+}

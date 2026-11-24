@@ -1006,7 +1006,11 @@
       "other": "Partner"
     },
     "partnerCta": "Wilt u de producten van Moment in uw zaak aanbieden?",
-    "partnerLink": "Neem contact op"
+    "partnerLink": "Neem contact op",
+    "zoomIn": "Inzoomen",
+    "zoomOut": "Uitzoomen",
+    "closePopup": "Sluiten",
+    "attribution": "Kaartvermeldingen tonen"
   },
   "partner": {
     "title": "Samenwerkingen",
