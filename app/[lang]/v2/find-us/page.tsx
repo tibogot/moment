@@ -82,7 +82,7 @@ export default async function FindUsTestPage({
   return (
     <>
       <div className="v2">
-        <PageIntroGrid title={t.title} lead={t.lead} size="small" />
+        <PageIntroGrid title={t.title} lead={t.lead} />
       </div>
 
       <GridSection className="pb-[14svh]">
