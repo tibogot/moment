@@ -33,6 +33,8 @@ export const partner = defineType({
       name: "name",
       title: "Nom de l'établissement",
       type: "string",
+      description:
+        "Un lieu où l'on trouve les produits Moment. Chaque partenaire affiché apparaît sur la carte de la page « Où nous trouver ».",
       validation: (rule) => rule.required().max(80),
     }),
 

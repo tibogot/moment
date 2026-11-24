@@ -56,7 +56,7 @@ export const pastEvent = defineType({
       type: "string",
       group: "facts",
       description:
-        "Le plus proche de ce qu'était la soirée. C'est ce mot que les gens tapent dans Google — choisissez celui qu'un client emploierait, pas celui du contrat.",
+        "Une réalisation est un événement déjà servi, montré en exemple sur la page Événements. Prenez le type le plus proche de ce qu'était la soirée. C'est ce mot que les gens tapent dans Google — choisissez celui qu'un client emploierait, pas celui du contrat.",
       options: {
         list: [
           { title: "Lancement / inauguration", value: "launch" },

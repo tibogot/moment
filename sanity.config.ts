@@ -1,6 +1,6 @@
 import { frFRLocale } from "@sanity/locale-fr-fr";
 import { visionTool } from "@sanity/vision";
-import { defineConfig } from "sanity";
+import { defineConfig, defineLocaleResourceBundle } from "sanity";
 import { structureTool } from "sanity/structure";
 import {
   sanityApiVersion,
@@ -55,6 +55,26 @@ export default defineConfig({
    * next to the plain Publish button a caterer needs.
    */
   releases: { enabled: false },
+
+  /**
+   * An empty list says "Aucun document de ce type" by default, which reads as
+   * "something is missing" to someone who has never created one. Partenaires
+   * and Réalisations start empty, so the message says what to do instead.
+   * Sanity has one empty-list text for every list, not one per type: what each
+   * list is for is written on the first field of its form.
+   */
+  i18n: {
+    bundles: [
+      defineLocaleResourceBundle({
+        locale: "fr-FR",
+        namespace: "structure",
+        resources: {
+          "panes.document-list-pane.no-documents-of-type.text":
+            "Rien ici pour l'instant. Cliquez sur le crayon en haut de cette colonne pour créer le premier.",
+        },
+      }),
+    ],
+  },
 
   schema: {
     types: schemaTypes,
