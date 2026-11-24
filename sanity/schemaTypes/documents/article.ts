@@ -74,7 +74,7 @@ export const article = defineType({
       type: "image",
       group: "content",
       description:
-        "Une fois l'image chargée, cliquez sur « Edit » pour choisir le point important : c'est lui qui reste visible quand l'image est recadrée sur mobile.",
+        "Une fois l'image chargée, cliquez sur l'icône de recadrage en haut à droite de la photo (« Rogner l'image ») et placez le point important : c'est lui qui reste visible quand l'image est recadrée sur mobile.",
       options: { hotspot: true },
       fields: [
         defineField({
@@ -130,6 +130,9 @@ export const article = defineType({
       group: "meta",
       description: "Affiche l'article en tête de la page Actualités.",
       initialValue: false,
+      // Hidden: the news page lists by date only and never reads this, so the
+      // switch did nothing. Kept in the schema so existing values survive.
+      hidden: true,
     }),
     defineField({
       name: "seoTitle",
