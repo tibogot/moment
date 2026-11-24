@@ -2,7 +2,7 @@ import type { StructureResolver } from "sanity/structure";
 import { BasketIcon } from "@sanity/icons/Basket";
 import { BellIcon } from "@sanity/icons/Bell";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
-import { HelpCircleIcon } from "@sanity/icons/HelpCircle";
+import { OlistIcon } from "@sanity/icons/Olist";
 import { HomeIcon } from "@sanity/icons/Home";
 import { ImagesIcon } from "@sanity/icons/Images";
 import { PinIcon } from "@sanity/icons/Pin";
@@ -66,13 +66,13 @@ export const structure: StructureResolver = (S) =>
         ),
 
       S.listItem()
-        .title("Comment ça marche ?")
-        .icon(HelpCircleIcon)
+        .title("Comment ça marche & FAQ")
+        .icon(OlistIcon)
         .child(
           S.document()
             .schemaType("faqPage")
             .documentId("faqPage")
-            .title("Comment ça marche ?"),
+            .title("Comment ça marche & FAQ"),
         ),
 
       S.divider().title("Contenus"),

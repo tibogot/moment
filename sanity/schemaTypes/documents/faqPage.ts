@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { HelpCircleIcon } from "@sanity/icons/HelpCircle";
+import { OlistIcon } from "@sanity/icons/Olist";
 import en from "@/lib/i18n/dictionaries/en.json";
 import fr from "@/lib/i18n/dictionaries/fr.json";
 import nl from "@/lib/i18n/dictionaries/nl.json";
@@ -63,9 +63,10 @@ const requireFrench = (value?: { fr?: string }) =>
 
 export const faqPage = defineType({
   name: "faqPage",
-  title: "Comment ça marche ?",
+  title: "Comment ça marche & FAQ",
   type: "document",
-  icon: HelpCircleIcon,
+  // A numbered list, not a "?": a question mark reads as help about the Studio.
+  icon: OlistIcon,
   initialValue,
   fields: [
     defineField({
