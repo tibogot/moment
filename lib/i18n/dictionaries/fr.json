@@ -52,11 +52,7 @@
     },
     "back": "Retour",
     "dismiss": "Fermer",
-    "skipToContent": "Aller au contenu",
-    "palettePreview": {
-      "toSky": "Aperçu : fond crème — passer au fond bleu",
-      "toCream": "Aperçu : fond bleu — revenir au fond crème"
-    }
+    "skipToContent": "Aller au contenu"
   },
   "home": {
     "hero": {

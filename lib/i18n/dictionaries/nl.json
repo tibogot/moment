@@ -52,11 +52,7 @@
     },
     "back": "Terug",
     "dismiss": "Sluiten",
-    "skipToContent": "Naar de inhoud",
-    "palettePreview": {
-      "toSky": "Voorbeeld: crèmekleurige achtergrond — overschakelen naar blauw",
-      "toCream": "Voorbeeld: blauwe achtergrond — terug naar crème"
-    }
+    "skipToContent": "Naar de inhoud"
   },
   "home": {
     "hero": {
