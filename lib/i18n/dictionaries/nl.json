@@ -69,6 +69,15 @@
         "Coffee desk"
       ]
     },
+    "heroPhoto": {
+      "headline": "Life is\nmoments",
+      "lead": "Uw moment kiezen, ook als de tijd ontbreekt.",
+      "intro": "Traiteur in Brussel: maaltijden geleverd op kantoor, thuis en voor uw evenementen.",
+      "introBody": [
+        "Salades, ontbijt en koudgeperste sappen, elke ochtend bereid in ons atelier in Vorst met seizoensproducten, en klaar om te serveren geleverd in Brussel en omgeving. U kiest de dag en het tijdslot, wij zorgen voor de rest, op kantoor of thuis.",
+        "Voor een teamlunch die de routine doorbreekt of een evenement waar elk detail telt, stellen wij samen met u het menu samen en verzorgen wij de bediening, van twintig tot tweehonderd gasten. Lancering, vergadering of diner aan tafel, wij passen het formaat aan, nooit de kwaliteit."
+      ]
+    },
     "intro": {
       "headline": "Een Brusselse traiteur voor de tafel van alledag en de grote avonden.",
       "body": "Wij koken voor particulieren en bedrijven in heel de stad. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd. Wij verzorgen evenementen van begin tot eind, en houden een koffiebar open voor wie langskomt."
@@ -95,6 +104,27 @@
       "events": "Voor evenementen",
       "home": "Voor thuis",
       "office": "Voor op kantoor"
+    },
+    "moments": {
+      "brunch": "Brunch",
+      "lunch": "Lunch",
+      "pause": "Pauze",
+      "shop": "De hele winkel"
+    },
+    "offer": {
+      "title": "Voor elk moment",
+      "events": {
+        "title": "Evenementen",
+        "body": "Een volledige cateringservice, waar elk detail telt."
+      },
+      "companies": {
+        "title": "Bedrijven",
+        "body": "Een teamlunch die de routine doorbreekt."
+      },
+      "coffee": {
+        "title": "Coffee desk",
+        "body": "Een koffie waar u eindelijk de tijd voor neemt."
+      }
     },
     "statement": {
       "headline": "Eten dat de tafel draagt, niet alleen het bord — die ochtend gekookt, klaar om te serveren.",
@@ -160,7 +190,8 @@
       "save": "Bewaren",
       "saving": "Bewaren…",
       "choosePlates": "Kies uw gerechten",
-      "askAboutDate": "Een vraag over deze datum"
+      "askAboutDate": "Een vraag over deze datum",
+      "today": "Vandaag"
     },
     "panels": {
       "events": {
@@ -192,75 +223,70 @@
   "aboutNav": {
     "story": "Ons verhaal",
     "news": "Nieuws",
-    "faq": "Hoe werkt het?",
+    "faq": "Hoe werkt het & FAQ",
     "findUs": "Waar vindt u ons",
     "collaborations": "Samenwerkingen"
   },
   "faq": {
-    "title": "Hoe werkt het?",
+    "title": "Hoe werkt het & FAQ",
     "lead": "Van de winkel tot op uw tafel, stap voor stap. En meteen daaronder het belangrijkste over de levering en de vragen die we het vaakst krijgen.",
     "stepsTitle": "Bestellen, stap voor stap",
     "steps": [
       {
         "title": "Kies",
-        "body": "Blader door de winkel en onze menu's. Elk product bestelt u per meerdere identieke stuks, zodat iedereen aan tafel zijn deel heeft."
+        "body": "De winkel en onze menu's, elk product in meerdere stuks."
       },
       {
         "title": "Levering of afhalen",
-        "body": "Geef in de winkelmand uw adres op: de kosten, het minimumbedrag en het bedrag vanaf wanneer de levering gratis is, verschijnen volgens de afstand. Of haal uw bestelling gratis af in het atelier in Vorst."
+        "body": "Uw adres, met verdieping en code, of afhalen in ons atelier in Vorst."
       },
       {
-        "title": "Dag en uur",
-        "body": "Kies een datum in de kalender: die toont alleen de dagen die u nog kunt reserveren. Daarna een tijdvak van twee uur voor de levering, of uw afhaaluur."
+        "title": "Dag en tijdslot",
+        "body": "Een datum in de kalender, daarna een tijdslot van twee uur."
       },
       {
-        "title": "Uw opmerkingen",
-        "body": "Vermeld wat we moeten weten om te leveren: verdieping, code, contactpersoon. Hier laat u ons ook dieetwensen en allergieën weten."
-      },
-      {
-        "title": "Betaling",
-        "body": "U betaalt online, op een beveiligde betaalpagina. Uw winkelmand, datum en tijdvak worden er overgenomen zoals u ze koos."
-      },
-      {
-        "title": "Bevestiging",
-        "body": "U ontvangt een e-mail met uw producten, de datum en het tijdvak. Met een account vindt u uw vorige bestellingen terug en bestelt u opnieuw met één klik."
+        "title": "Betaal, het is bevestigd",
+        "body": "Veilig online betalen, daarna een e-mail met alles op een rij."
       }
     ],
-    "glanceTitle": "Levering in het kort",
     "glance": {
-      "zones": "Zones en kosten",
-      "slots": "Levertijdvakken",
-      "notice": "Termijn",
       "noticeValue": "{days} dagen, bestellingen sluiten om {cutoff}",
-      "closed": "Gesloten dagen",
-      "pickup": "Afhalen in het atelier",
       "pickupValue": "{address} · gratis · minimum {minimum} · {slots}",
-      "nextDay": "Afhalen de volgende dag",
       "nextDayValue": "Cookies, cakes, snacks, kruidenierswaren en sappen: bestellen tot {cutoff} de dag ervoor, minimum {minimum}",
-      "pieces": "Per product",
       "piecesValue": "minstens {pieces} identieke stuks"
+    },
+    "ordering": {
+      "title": "Bestellen & leveren",
+      "zones": {
+        "title": "Zones en kosten",
+        "body": "We leveren in Brussel en omgeving vanuit ons atelier in Vorst. Verder weg maken we een offerte op maat."
+      },
+      "slots": {
+        "title": "Levertijdsloten",
+        "body": "U kiest een tijdslot van twee uur bij het bestellen."
+      },
+      "notice": {
+        "title": "Wanneer bestellen",
+        "body": "De kalender toont alleen de dagen die nog beschikbaar zijn. Voor een evenement neemt u best zo vroeg mogelijk contact op."
+      },
+      "pieces": {
+        "title": "Per product",
+        "body": "Elk product bestelt u in meerdere identieke stuks."
+      },
+      "pickup": {
+        "title": "Afhalen in het atelier",
+        "body": "Kies « Click & collect » bij het bestellen, daarna uw afhaaluur."
+      },
+      "nextDay": {
+        "title": "De dag voordien bestellen",
+        "body": "Sommige producten bestelt u de dag voordien, af te halen in het atelier."
+      }
     },
     "zoneBrussels": "Brussel",
     "zoneMinimum": "minimum {amount}",
     "zoneFree": "gratis vanaf {amount}",
     "questionsTitle": "Veelgestelde vragen",
     "items": [
-      {
-        "q": "Waar leveren jullie?",
-        "a": "We leveren in Brussel en omgeving, vanuit ons atelier in Vorst. De kosten, het minimumbedrag en het bedrag vanaf wanneer de levering gratis is, hangen af van de afstand: u vindt ze onder « Levering in het kort », en de winkelmand berekent ze voor uw adres. Buiten onze zone maken we een offerte op maat."
-      },
-      {
-        "q": "Hoe laat komt mijn bestelling aan?",
-        "a": "U kiest bij het bestellen een tijdvak van twee uur. Is een tijdvak volzet? Neem contact op: afhankelijk van uw adres en onze ronde kunnen we u misschien toevoegen aan een geplande levering."
-      },
-      {
-        "q": "Hoe lang op voorhand moet ik bestellen?",
-        "a": "De termijn en het uur waarop bestellingen sluiten, staan onder « Levering in het kort ». De kalender op de site toont alleen dagen die nog vrij zijn. Voor een evenement: neem zo vroeg mogelijk contact op, drukke data gaan snel."
-      },
-      {
-        "q": "Kan ik mijn bestelling zelf afhalen?",
-        "a": "Ja, gratis in het atelier in Vorst: kies « Click & collect » bij uw bestelling, en daarna het uur waarop u langskomt. Cookies, cakes, healthy snacks, kruidenierswaren en koudgeperste sappen kunt u zelfs de dag ervoor bestellen voor de volgende dag; bevat de bestelling andere producten, dan geldt de gewone termijn. Adres, uren en minimumbedragen: zie « Levering in het kort »."
-      },
       {
         "q": "Kan ik mijn bestelling annuleren?",
         "a": "Ja, kosteloos tot 24 uur voor de voorziene leverdatum: het volledige bedrag wordt terugbetaald. Binnen 24 uur is terugbetaling in principe niet mogelijk, omdat de producten vers zijn en speciaal voor uw bestelling bereid worden. Klopt er iets niet aan de levering of aan onze producten, bel ons dan meteen — dan zoeken we een oplossing."
@@ -277,7 +303,12 @@
         "q": "Werken jullie met bedrijven?",
         "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. We factureren op uw btw-nummer."
       }
-    ]
+    ],
+    "contactCta": {
+      "title": "Nog een vraag?",
+      "body": "Schrijf of bel ons, we helpen u graag verder.",
+      "button": "Contacteer ons"
+    }
   },
   "delivery": {
     "calendarNote": "Blauwe dagen zijn gesloten of volzet — wij hebben {days} dagen op voorhand nodig.",

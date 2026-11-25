@@ -55,7 +55,7 @@ function observeForArming(element: Element, onArm: ArmCallback) {
         callback?.();
       }
     },
-    { rootMargin: ARM_MARGIN }
+    { rootMargin: ARM_MARGIN },
   );
 
   armCallbacks.set(element, onArm);
@@ -74,6 +74,16 @@ interface TextRevealProps {
   blockColor?: string;
   stagger?: number;
   duration?: number;
+  /**
+   * A second block, of this colour, following the first a beat later — the
+   * double sweep of good-fella.com (25 November 2026). In: the first block
+   * crosses, the second follows over it. Out: the second leaves first,
+   * uncovering the first, which leaves to show the line. Unset, the single
+   * block as everywhere else.
+   */
+  followColor?: string;
+  /** How far behind the first block the second runs, in seconds. */
+  followDelay?: number;
 }
 
 export default function TextReveal({
@@ -83,11 +93,15 @@ export default function TextReveal({
   blockColor = "#000",
   stagger = 0.15,
   duration = 0.75,
+  followColor,
+  followDelay = 0.14,
 }: TextRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const splitRefs = useRef<SplitText[]>([]);
   const lines = useRef<Element[]>([]);
   const blocks = useRef<HTMLDivElement[]>([]);
+  /** The second blocks (followColor), one per line, same order as blocks. */
+  const followBlocks = useRef<HTMLDivElement[]>([]);
   const triggers = useRef<ScrollTriggerType[]>([]);
   const timelines = useRef<gsap.core.Timeline[]>([]);
   const releaseIntroRef = useRef<(() => void) | null>(null);
@@ -122,11 +136,15 @@ export default function TextReveal({
       // Cleanup previous state - kill all animations first
       triggers.current.forEach((t) => t.kill());
       timelines.current.forEach((tl) => tl.kill());
-      gsap.killTweensOf([...blocks.current, ...lines.current]);
+      gsap.killTweensOf([
+        ...blocks.current,
+        ...followBlocks.current,
+        ...lines.current,
+      ]);
 
       // Clean up DOM wrappers before reverting SplitText
       const wrappers = containerRef.current.querySelectorAll(
-        ".block-line-wrapper"
+        ".block-line-wrapper",
       );
       wrappers.forEach((wrapper: Element) => {
         if (wrapper.parentNode && wrapper.firstChild) {
@@ -150,6 +168,7 @@ export default function TextReveal({
       splitRefs.current = [];
       lines.current = [];
       blocks.current = [];
+      followBlocks.current = [];
       triggers.current = [];
       timelines.current = [];
 
@@ -162,7 +181,7 @@ export default function TextReveal({
 
         // Double-check for any leftover wrappers and remove them
         const leftoverWrappers = containerRef.current.querySelectorAll(
-          ".block-line-wrapper"
+          ".block-line-wrapper",
         );
         if (leftoverWrappers.length > 0) {
           leftoverWrappers.forEach((wrapper: Element) => {
@@ -220,13 +239,25 @@ export default function TextReveal({
           block.style.backgroundColor = blockColor;
           wrapper.appendChild(block);
 
+          // After the first, so it paints over it.
+          if (followColor) {
+            const follow = document.createElement("div");
+            follow.className = "block-revealer";
+            follow.style.backgroundColor = followColor;
+            wrapper.appendChild(follow);
+            followBlocks.current.push(follow);
+          }
+
           lines.current.push(line);
           blocks.current.push(block);
         });
       });
 
       gsap.set(lines.current, { opacity: HIDDEN_OPACITY });
-      gsap.set(blocks.current, { scaleX: 0, transformOrigin: "left center" });
+      gsap.set([...blocks.current, ...followBlocks.current], {
+        scaleX: 0,
+        transformOrigin: "left center",
+      });
 
       // Make container visible now that GSAP has initialized
       if (containerRef.current) {
@@ -243,9 +274,24 @@ export default function TextReveal({
       const createBlockRevealAnimation = (
         block: HTMLDivElement,
         line: Element,
-        index: number
+        index: number,
       ) => {
         const tl = gsap.timeline({ delay: delay + index * stagger });
+        const follow = followBlocks.current[index];
+
+        if (follow) {
+          // In: the first block, then the second over it. Out: the second
+          // leaves first, uncovering the first, which uncovers the line.
+          const covered = duration + followDelay;
+          const ease = "power4.inOut";
+          tl.to(block, { scaleX: 1, duration, ease }, 0);
+          tl.to(follow, { scaleX: 1, duration, ease }, followDelay);
+          tl.set(line, { opacity: 1 }, covered);
+          tl.set([block, follow], { transformOrigin: "right center" }, covered);
+          tl.to(follow, { scaleX: 0, duration, ease }, covered);
+          tl.to(block, { scaleX: 0, duration, ease }, covered + followDelay);
+          return tl;
+        }
 
         tl.to(block, { scaleX: 1, duration: duration, ease: "power4.inOut" });
         tl.set(line, { opacity: 1 });
@@ -268,7 +314,7 @@ export default function TextReveal({
               const tl = createBlockRevealAnimation(
                 block,
                 lines.current[index],
-                index
+                index,
               );
               tl.pause();
               timelines.current.push(tl);
@@ -298,7 +344,7 @@ export default function TextReveal({
           const tl = createBlockRevealAnimation(
             block,
             lines.current[index],
-            index
+            index,
           );
           tl.pause();
           timelines.current.push(tl);
@@ -306,7 +352,7 @@ export default function TextReveal({
 
         const queued = timelines.current.slice();
         releaseIntroRef.current = onIntroReady(() =>
-          queued.forEach((tl) => tl.play())
+          queued.forEach((tl) => tl.play()),
         );
       }
 
@@ -334,7 +380,7 @@ export default function TextReveal({
         // Clean up DOM wrappers first
         if (containerRef.current) {
           const wrappers = containerRef.current.querySelectorAll(
-            ".block-line-wrapper"
+            ".block-line-wrapper",
           );
 
           wrappers.forEach((wrapper: Element) => {
@@ -372,8 +418,10 @@ export default function TextReveal({
         blockColor,
         stagger,
         duration,
+        followColor,
+        followDelay,
       ],
-    }
+    },
   );
 
   return (

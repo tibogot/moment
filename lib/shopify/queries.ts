@@ -25,6 +25,13 @@ export type ShopifyProduct = {
   /** ISO timestamp of the last edit in Shopify — the sitemap's `lastmod`. */
   updatedAt?: string;
   description: string;
+  /**
+   * A few words for the cards (the carousel), from the product metafield
+   * custom.short_description — "Accroche" in the admin, 40 characters at
+   * most. Empty until the owners fill it in; the cards then fall back to
+   * the description, cut to one line.
+   */
+  shortDescription: string;
   imageUrl: string | null;
   imageAlt: string;
   /** Formatted for display, e.g. "€12.00". */
@@ -52,6 +59,7 @@ export type ShopifyProductNode = {
   /** ISO timestamp of the last edit in Shopify — the sitemap's `lastmod`. */
   updatedAt?: string;
   description: string;
+  shortDescription?: { value: string } | null;
   productType: string;
   tags: string[];
   availableForSale: boolean;
@@ -99,6 +107,9 @@ const PRODUCT_FIELDS = `
   handle
   updatedAt
   description
+  shortDescription: metafield(namespace: "custom", key: "short_description") {
+    value
+  }
   productType
   tags
   availableForSale

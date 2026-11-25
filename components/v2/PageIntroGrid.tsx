@@ -5,6 +5,11 @@ import { REVEAL_BLOCK } from "@/lib/colors";
 type PageIntroGridProps = {
   title: string;
   lead?: string;
+  /**
+   * "small" for a page whose title is a long phrase rather than one word
+   * ("Comment ça marche ? & FAQ"): about two-thirds of the usual size.
+   */
+  size?: "default" | "small";
 };
 
 /**
@@ -19,12 +24,12 @@ type PageIntroGridProps = {
  *                     tablet 6 — title 1–6, lead 3–6
  *                     desktop 8 — title 1–7, lead 5–8
  */
-export function PageIntroGrid({ title, lead }: PageIntroGridProps) {
+export function PageIntroGrid({ title, lead, size }: PageIntroGridProps) {
   return (
     <section className="relative w-full bg-cream">
       <CellGrid lineClassName="bg-sky" readout={false} cells={false} />
       <div style={{ paddingBlock: "var(--grid-band)" }}>
-        <PageIntroContent title={title} lead={lead} />
+        <PageIntroContent title={title} lead={lead} size={size} />
       </div>
     </section>
   );
@@ -35,7 +40,11 @@ export function PageIntroGrid({ title, lead }: PageIntroGridProps) {
  * first section continues straight into something else, like the photographs
  * on /events (`PhotoGridSection`'s `header`): one section, one band.
  */
-export function PageIntroContent({ title, lead }: PageIntroGridProps) {
+export function PageIntroContent({
+  title,
+  lead,
+  size = "default",
+}: PageIntroGridProps) {
   return (
     <div
       className="relative grid"
@@ -48,7 +57,13 @@ export function PageIntroContent({ title, lead }: PageIntroGridProps) {
             animateOnScroll={false}
             delay={0.15}
           >
-            <h1 className="font-owners-narrow-bold max-w-full text-[11vw] leading-[0.9] tracking-[-0.005em] wrap-break-word text-black uppercase md:text-[min(8vw,12svh)]">
+            <h1
+              className={`font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] wrap-break-word text-black uppercase ${
+                size === "small"
+                  ? "text-[8vw] md:text-[min(5.2vw,8svh)]"
+                  : "text-[11vw] md:text-[min(8vw,12svh)]"
+              }`}
+            >
               {title}
             </h1>
           </TextReveal>

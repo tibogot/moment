@@ -2,7 +2,11 @@ import { unstable_cache } from "next/cache";
 import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
 import type { Locale } from "@/lib/i18n/config";
 import { formatPriceAmount } from "@/lib/i18n/format";
-import { isShopifyConfigured, shopifyLanguage, storefrontRequest } from "./client";
+import {
+  isShopifyConfigured,
+  shopifyLanguage,
+  storefrontRequest,
+} from "./client";
 import {
   ALL_PRODUCTS_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
@@ -53,6 +57,7 @@ export function mapProductNode(
     handle: node.handle,
     updatedAt: node.updatedAt,
     description: node.description,
+    shortDescription: node.shortDescription?.value?.trim() ?? "",
     imageUrl: node.featuredImage?.url ?? null,
     imageAlt: node.featuredImage?.altText ?? node.title,
     price: formatPriceAmount(language, amount, currencyCode),

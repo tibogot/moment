@@ -14,15 +14,42 @@ import { CellGrid, centredRows } from "@/components/v2/CellGrid";
  *
  * The slot is measured against the same rows CellGrid draws
  * (`centredRows`), so it always lands exactly on cells: the row at the
- * exact centre of the screen, 4 cells wide on desktop, 3 on tablet, 2 on a
- * phone, centred. The logo takes 70% of the slot's width, which leaves at least
+ * exact centre of the screen, about a third of the columns wide (half on a
+ * phone), centred. The logo takes 70% of the slot's width, which leaves at least
  * the width of the "m" free on each side (the charter's exclusion zone) and
  * keeps it well above the 45px digital minimum.
  */
 
-type Slot = { left: number; top: number; width: number; height: number };
+type Slot = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  logoWidth: number;
+};
 
-export function LogoGridHero() {
+/** The logotype file's proportions. */
+const LOGO_RATIO = 1437 / 220;
+
+/**
+ * `subdivide` as in CellGrid (1.5: 12 / 9 / 4 columns; 3: 24 / 18 / 4).
+ * `stretch`: always whole odd rows, the cells stretched a little to fill
+ * exactly 100svh, instead of cutting the outer rows.
+ * `logoCells`: how many cells the logo takes from tablet up (default about a
+ * third of the columns); a phone keeps half of its 4. `logoFill`: the share
+ * of that width the logo takes (default 0.7).
+ */
+export function LogoGridHero({
+  subdivide = 1.5,
+  stretch = false,
+  logoCells,
+  logoFill = 0.7,
+}: {
+  subdivide?: number;
+  stretch?: boolean;
+  logoCells?: number;
+  logoFill?: number;
+}) {
   const fieldRef = useRef<HTMLDivElement>(null);
   const [slot, setSlot] = useState<Slot | null>(null);
 
@@ -32,38 +59,47 @@ export function LogoGridHero() {
     const update = () => {
       const { width, height } = field.getBoundingClientRect();
       if (!width || !height) return;
-      // Same columns and rows as CellGrid with subdivide={1.5}.
+      // Same columns and rows as CellGrid.
       const pageColumns =
         parseInt(getComputedStyle(field).getPropertyValue("--v2-cols"), 10) ||
         4;
       const columns =
-        pageColumns >= 6 ? Math.round(pageColumns * 1.5) : pageColumns;
+        pageColumns >= 6 ? Math.round(pageColumns * subdivide) : pageColumns;
       const cellW = width / columns;
       // The same rows as CellGrid with centreRow: one exactly at the centre.
-      const { edges, middle } = centredRows(height, cellW);
+      const { edges, middle } = centredRows(height, cellW, stretch);
 
-      const span = columns >= 12 ? 4 : columns >= 9 ? 3 : 2;
-      const startColumn = Math.floor((columns - span) / 2);
+      const rowH = edges[middle + 1] - edges[middle];
+      // logoCells from tablet up, else about a third of the columns; half on
+      // a phone. As many cells left as right.
+      const target = pageColumns < 6 ? columns / 2 : (logoCells ?? columns / 3);
+      let span = columns % 2 ? 1 : 2;
+      for (let s = span; s <= columns; s += 2)
+        if (Math.abs(s - target) <= Math.abs(span - target)) span = s;
+      const startColumn = (columns - span) / 2;
       setSlot({
         left: startColumn * cellW,
         top: edges[middle],
         width: span * cellW,
-        height: edges[middle + 1] - edges[middle],
+        height: rowH,
+        // logoFill of the slot, and never taller than 55% of the row.
+        logoWidth: Math.min(logoFill * span * cellW, 0.55 * rowH * LOGO_RATIO),
       });
     };
     update();
     const observer = new ResizeObserver(update);
     observer.observe(field);
     return () => observer.disconnect();
-  }, []);
+  }, [subdivide, stretch, logoCells, logoFill]);
 
   return (
     <section className="relative h-svh w-full overflow-hidden bg-cream">
       <CellGrid
         lineClassName="bg-sky"
-        readout={false}
-        subdivide={1.5}
-        centreRow
+        // The ratio in the bottom band while we compare the stretched one.
+        readout={stretch}
+        subdivide={subdivide}
+        centreRow={stretch ? "stretch" : true}
       />
 
       {/* The field, where the slot is placed. */}
@@ -101,7 +137,8 @@ export function LogoGridHero() {
               height={220}
               // The file is cream for the navbar; black here, as in the
               // charter.
-              className="h-auto w-[70%] brightness-0"
+              className="h-auto brightness-0"
+              style={{ width: slot.logoWidth }}
             />
           )}
         </div>

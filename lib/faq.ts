@@ -1,5 +1,5 @@
 /**
- * The texts of the "Comment ça marche ?" page (/faq), in one language.
+ * The texts of the "Comment ça marche & FAQ" page (/faq), in one language.
  *
  * Written in the Studio (`faqPage`, see `sanity/schemaTypes/documents/
  * faqPage.ts`). Until that document exists — or if Sanity is unreachable —

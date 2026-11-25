@@ -79,7 +79,11 @@ const MENU_CONTENT_OFFSET = 14;
 const CONTENT_REVEAL_AT = 0.42;
 
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
-const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
+const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
+  routes.home,
+  // The previous home, kept at /v1: its hero is a photograph too.
+  "/v1",
+]);
 /** Must match --breakpoint-nav in app/globals.css. */
 const NAV_MOBILE_MQ = "(width < 79.375rem)";
 
@@ -310,6 +314,19 @@ export function Navbar() {
 
     navTweenRef.current?.kill();
     gsap.killTweensOf(bg);
+
+    // The scrub only runs with the panel closed (shouldScrollControlNav), but
+    // it can take over while the panel is still closing — scrolling as the
+    // pointer leaves. Killing that tween used to leave the panel half open,
+    // its links and photographs floating over the page while the cream sheet
+    // snapped to the bar. Close it with the sheet, in the same frame.
+    const menu = menuRef.current;
+    const menuInner = menuInnerRef.current;
+    if (menu && menuInner) {
+      gsap.killTweensOf([menu, menuInner]);
+      gsap.set(menu, { height: 0 });
+      gsap.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+    }
 
     gsap.set(bg, {
       transformOrigin: "top center",
@@ -807,9 +824,12 @@ export function Navbar() {
           <GridLines lineClassName="bg-sky" />
         </div>
 
+        {/* Links, logo and icons a cell's padding in from the frame's
+            lines (--v2-pad), like every v2 section's text, so the bar lines
+            up with the page under it (25 November 2026). */}
         <nav
           ref={navRef}
-          className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-(--grid-inset) select-none nav:grid-cols-(--grid-columns) nav:px-0"
+          className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-[calc(var(--grid-margin)_+_var(--v2-pad))] select-none nav:grid-cols-(--grid-columns) nav:px-0"
           style={{
             color: allowsTransparentNav ? CREAM : BLACK,
           }}
@@ -856,7 +876,7 @@ export function Navbar() {
             // nowrap stays: without it a label that outgrows the row folds
             // onto two lines inside a box that still measures as fitting,
             // which hides the problem instead of showing it.
-            className="hidden min-w-0 whitespace-nowrap nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-3 nav:pl-(--grid-gutter)"
+            className="hidden min-w-0 whitespace-nowrap nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-3 nav:pl-(--v2-pad)"
             style={{ fontSize: "var(--nav-text)" }}
           >
             {mainNav.map((item) =>
@@ -927,7 +947,7 @@ export function Navbar() {
           </Link>
 
           <div
-            className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--grid-gutter)"
+            className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--v2-pad)"
             onMouseEnter={closeNavMenu}
           >
             <button
@@ -1002,7 +1022,10 @@ export function Navbar() {
               and the panel never shrank. Unstretched, it measures its content. */}
           <div ref={menuInnerRef} className="self-start nav:col-span-full">
             {shownNavMenu === "about" ? (
-              <AboutNavMenu onNavigate={releaseShopMenuFocus} />
+              <AboutNavMenu
+                onNavigate={releaseShopMenuFocus}
+                open={navExpanded && openNavMenu === "about"}
+              />
             ) : (
               <ShopNavMenu
                 products={products}

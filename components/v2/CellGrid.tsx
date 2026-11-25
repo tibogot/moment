@@ -13,6 +13,11 @@ import { cn } from "@/lib/utils";
  * number of rows tall and fit exactly; the hero is locked to the screen
  * height, so it rounds to whole rows and lets them stretch a little.
  *
+ * A section can instead anchor its rows on an element marked
+ * `data-grid-anchor` (its top is a row edge): the rows are then exact 3/4
+ * cells stacked up and down from it, cut at the frame top and bottom if
+ * they do not land on it (/v2/systeme, the centred hero).
+ *
  * Must sit inside a `.v2` wrapper. Type on the grid is marked
  * `data-grid-hole` anywhere in the same section: every cell it touches loses
  * its interior rules, so no line crosses a letter.
@@ -93,9 +98,36 @@ type CellGridProps = {
   subdivide?: number;
   /**
    * A row exactly at the vertical centre (the logo section sets its logo on
-   * it). See `centredRows`.
+   * it). See `centredRows`. "stretch": always whole odd rows, the cells
+   * stretched a little to fill the field.
    */
-  centreRow?: boolean;
+  centreRow?: boolean | "stretch";
+  /**
+   * Fixed counts, for a section that picks its own grid (the monogram
+   * section): this many columns and this many equal rows.
+   */
+  columns?: number;
+  rows?: number;
+  /**
+   * Height of the bottom band, when it is not --grid-band: a full-screen
+   * section of whole 3/4 rows hands the height left over to its bottom band
+   * (the /v2/systeme test, 23 November 2026). Bands only.
+   */
+  bottomBand?: string;
+  /**
+   * Draw the rules over the section's content rather than under it: a
+   * photograph filling its block then meets the rules around it exactly,
+   * full thickness, with no sliver of page between them (25 November 2026).
+   * Rules never cross content — a block is a `data-grid-hole` — so only
+   * its edges are drawn over.
+   */
+  linesOnTop?: boolean;
+  /**
+   * The rule along the section's top edge (sections without bands). Off for
+   * a section that continues the one above it rather than starting anew —
+   * the home's carousel under its intro (25 November 2026).
+   */
+  topRule?: boolean;
 };
 
 /**
@@ -108,12 +140,12 @@ type CellGridProps = {
  * 3/4 and the rows stack out from the centre row; the outer ones are cut by
  * the frame, as if the grid ran on under it.
  */
-export function centredRows(height: number, cellW: number) {
+export function centredRows(height: number, cellW: number, stretch = false) {
   const cellH = cellW / CELL_RATIO;
   const exact = height / cellH;
   const odd = Math.max(1, 2 * Math.round((exact - 1) / 2) + 1);
   const ratio = cellW / (height / odd);
-  if (ratio >= 0.66 && ratio <= 0.84) {
+  if (stretch || (ratio >= 0.66 && ratio <= 0.84)) {
     const edges = Array.from({ length: odd + 1 }, (_, i) => (i * height) / odd);
     return { edges, middle: (odd - 1) / 2 };
   }
@@ -134,6 +166,11 @@ export function CellGrid({
   cells = true,
   subdivide = 1,
   centreRow = false,
+  columns: fixedColumns,
+  rows: fixedRows,
+  bottomBand,
+  linesOnTop = false,
+  topRule = true,
 }: CellGridProps) {
   const fieldRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState<Layout | null>(null);
@@ -143,6 +180,7 @@ export function CellGrid({
     // The block it rules: a page section, or the footer.
     const section = field?.closest("section, footer");
     if (!field || !section) return;
+    const anchor = section.querySelector<HTMLElement>("[data-grid-anchor]");
     const holeElements = Array.from(
       section.querySelectorAll<HTMLElement>("[data-grid-hole]"),
     );
@@ -154,20 +192,40 @@ export function CellGrid({
         parseInt(getComputedStyle(field).getPropertyValue("--v2-cols"), 10) ||
         4;
       const columns =
-        pageColumns >= 6 ? Math.round(pageColumns * subdivide) : pageColumns;
+        fixedColumns ??
+        (pageColumns >= 6 ? Math.round(pageColumns * subdivide) : pageColumns);
       const cellW = box.width / columns;
-      const edgesPx = centreRow
-        ? centredRows(box.height, cellW).edges
-        : (() => {
-            const n = Math.max(
-              1,
-              Math.round(box.height / (cellW / CELL_RATIO)),
-            );
-            return Array.from(
-              { length: n + 1 },
-              (_, i) => (i * box.height) / n,
-            );
-          })();
+      // Exact 3/4 rows through the anchor's top, cut at both ends. Slivers
+      // under 1px (rounding) are dropped.
+      const anchoredEdges = () => {
+        const cellH = cellW / CELL_RATIO;
+        const at = anchor!.getBoundingClientRect().top - box.top;
+        const first = ((at % cellH) + cellH) % cellH;
+        const edges = [0];
+        for (let y = first; y < box.height - 1; y += cellH)
+          if (y > 1) edges.push(y);
+        edges.push(box.height);
+        return edges;
+      };
+      const edgesPx = anchor
+        ? anchoredEdges()
+        : fixedRows
+          ? Array.from(
+              { length: fixedRows + 1 },
+              (_, i) => (i * box.height) / fixedRows,
+            )
+          : centreRow
+            ? centredRows(box.height, cellW, centreRow === "stretch").edges
+            : (() => {
+                const n = Math.max(
+                  1,
+                  Math.round(box.height / (cellW / CELL_RATIO)),
+                );
+                return Array.from(
+                  { length: n + 1 },
+                  (_, i) => (i * box.height) / n,
+                );
+              })();
       const rows = edgesPx.length - 1;
       const edges = edgesPx.map((y) => y / box.height);
       // The full-size cell: the diagonal and the readout use it.
@@ -217,7 +275,7 @@ export function CellGrid({
     // Webfonts change the size of the type after the first measure.
     document.fonts?.ready.then(update);
     return () => observer.disconnect();
-  }, [subdivide, centreRow]);
+  }, [subdivide, centreRow, fixedColumns, fixedRows]);
 
   const segments: ReactNode[] = [];
   const labels: ReactNode[] = [];
@@ -307,12 +365,19 @@ export function CellGrid({
   // Section: one rule along the top edge; the next section draws the one
   // below, so two sections never stack two lines.
   const band = bands ? "var(--grid-band)" : "0px";
+  const foot = bands ? (bottomBand ?? band) : "0px";
 
   return (
     <>
       {/* Frame: the two spines and the horizontals run full bleed, crossing
           at the corners like the brand-book pages. */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0",
+          linesOnTop && "z-10",
+        )}
+        aria-hidden
+      >
         <span
           className={cn("absolute inset-y-0", lineClassName)}
           style={{ width: LINE, left: "var(--grid-margin)" }}
@@ -321,17 +386,19 @@ export function CellGrid({
           className={cn("absolute inset-y-0", lineClassName)}
           style={{ width: LINE, right: "var(--grid-margin)" }}
         />
-        <span
-          className={cn("absolute inset-x-0", lineClassName)}
-          style={{
-            height: LINE,
-            top: bands ? `calc(${band} - ${LINE})` : 0,
-          }}
-        />
+        {(bands || topRule) && (
+          <span
+            className={cn("absolute inset-x-0", lineClassName)}
+            style={{
+              height: LINE,
+              top: bands ? `calc(${band} - ${LINE})` : 0,
+            }}
+          />
+        )}
         {bands && (
           <span
             className={cn("absolute inset-x-0", lineClassName)}
-            style={{ height: LINE, bottom: `calc(${band} - ${LINE})` }}
+            style={{ height: LINE, bottom: `calc(${foot} - ${LINE})` }}
           />
         )}
       </div>
@@ -339,12 +406,12 @@ export function CellGrid({
       {/* Field: the area inside the frame, measured to pick the rows. */}
       <div
         ref={fieldRef}
-        className="pointer-events-none absolute"
+        className={cn("pointer-events-none absolute", linesOnTop && "z-10")}
         style={{
           left: "var(--grid-margin)",
           right: "var(--grid-margin)",
           top: band,
-          bottom: band,
+          bottom: foot,
         }}
         aria-hidden
       >
@@ -391,7 +458,7 @@ export function CellGrid({
         <p
           className="font-archivo-light pointer-events-none absolute bottom-0 flex items-center text-[12px] text-black tabular-nums"
           style={{
-            height: "var(--grid-band)",
+            height: foot,
             right: "calc(var(--grid-margin) + var(--grid-gutter) / 2)",
           }}
           aria-hidden

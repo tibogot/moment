@@ -206,11 +206,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
       // Reopening should show the cart, not wherever the last visit left off.
       // Reset once the panel is out of sight, or the view swaps under the
       // customer mid-slide.
-      tl.to(
-        panel,
-        { xPercent: 100, onComplete: () => setView("cart") },
-        0,
-      );
+      tl.to(panel, { xPercent: 100, onComplete: () => setView("cart") }, 0);
       tl.to(backdrop, { autoAlpha: 0, duration: ANIM_DURATION * 0.7 }, 0.05);
     }
 
@@ -257,7 +253,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
         // to fetch. Hold the optimistic value if a newer tap is still queued
         // behind this one, or the number would flick back for a moment.
         setCart(result.cart);
-        if (pendingRef.current[lineId] === target && !timers.current.has(lineId)) {
+        if (
+          pendingRef.current[lineId] === target &&
+          !timers.current.has(lineId)
+        ) {
           clearPending(lineId);
         }
       } catch {
@@ -290,7 +289,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
    * same frame all read the same render, so `line.quantity + 1` three times over
    * asks for 2 rather than 4. The ref always holds the latest target.
    */
-  const stepLineQuantity = (lineId: string, rendered: number, delta: number) => {
+  const stepLineQuantity = (
+    lineId: string,
+    rendered: number,
+    delta: number,
+  ) => {
     setLineQuantity(lineId, (pendingRef.current[lineId] ?? rendered) + delta);
   };
 
@@ -315,7 +318,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   // The calendar and the slot list that apply to this basket: next-day
   // collection moves the earliest day, and collection has its own times.
   const availability = baseAvailability
-    ? orderRules({ deliveryMethod, lines }, baseAvailability, zones).availability
+    ? orderRules({ deliveryMethod, lines }, baseAvailability, zones)
+        .availability
     : null;
   const slots = slotsForMethod(deliveryMethod, deliverySlots, pickupSlots);
   const pickup = deliveryMethod === "pickup";
@@ -591,9 +595,17 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               <Link
                 href={routes.shop}
                 onClick={closePanel}
-                className="font-owners-medium mt-6 inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                className="group mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
               >
-                {t.browseShop}
+                <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] tracking-wide uppercase">
+                  {t.browseShop}
+                  <span
+                    className="transition-transform duration-500 group-hover:translate-x-1.5"
+                    aria-hidden
+                  >
+                    &rarr;
+                  </span>
+                </span>
               </Link>
             </div>
           ) : (
@@ -640,7 +652,9 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                           aria-label={t.decrease}
                           // Stops at the per-product minimum; "Retirer"
                           // takes the line out altogether.
-                          disabled={line.quantity <= zones.minimumPiecesPerProduct}
+                          disabled={
+                            line.quantity <= zones.minimumPiecesPerProduct
+                          }
                           onClick={() =>
                             stepLineQuantity(line.id, line.quantity, -1)
                           }
@@ -720,7 +734,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {/* The delivery window, or the collection time, under the day
                   it belongs to. Editable here because Shopify's checkout cannot
                   change a cart attribute either. */}
-              {(
+              {
                 <div className="mt-3 flex items-baseline justify-between gap-3">
                   <span className="font-owners-medium text-[12px] uppercase tracking-wide">
                     {t.slot}
@@ -740,7 +754,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     </button>
                   </span>
                 </div>
-              )}
+              }
 
               {dateIsStale && deliveryDate && (
                 <CheckoutNotice
@@ -787,23 +801,25 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               {/* Only for delivery, and only with something in the basket to
                   measure against — collection has no fee to waive, and
                   "spend €300" against an empty cart is noise, not an offer. */}
-              {zone && needsAddress(cart.deliveryMethod) && cart.subtotal > 0 && (
-                <p className="font-archivo-light mt-1 text-[14px] opacity-70">
-                  {qualifiesForFreeDelivery(cart.subtotal, zone, zones)
-                    ? interpolate(t.freeDeliveryReached, {
-                        threshold: formatMoney(
-                          locale,
-                          freeDeliveryThresholdFor(zone, zones),
-                        ),
-                      })
-                    : interpolate(t.freeDeliveryShortfall, {
-                        shortfall: formatMoney(
-                          locale,
-                          freeDeliveryShortfall(cart.subtotal, zone, zones),
-                        ),
-                      })}
-                </p>
-              )}
+              {zone &&
+                needsAddress(cart.deliveryMethod) &&
+                cart.subtotal > 0 && (
+                  <p className="font-archivo-light mt-1 text-[14px] opacity-70">
+                    {qualifiesForFreeDelivery(cart.subtotal, zone, zones)
+                      ? interpolate(t.freeDeliveryReached, {
+                          threshold: formatMoney(
+                            locale,
+                            freeDeliveryThresholdFor(zone, zones),
+                          ),
+                        })
+                      : interpolate(t.freeDeliveryShortfall, {
+                          shortfall: formatMoney(
+                            locale,
+                            freeDeliveryShortfall(cart.subtotal, zone, zones),
+                          ),
+                        })}
+                  </p>
+                )}
 
               {/* Without a day there is nothing to check out to, so the picker
                   takes the primary slot rather than disabling the button and

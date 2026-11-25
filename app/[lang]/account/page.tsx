@@ -137,7 +137,7 @@ export default async function AccountPage({
           <form method="post" action={signOutHref(locale)} className="mt-10">
             <button
               type="submit"
-              className="font-owners-medium inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+              className="font-owners-medium inline-block border border-sky bg-cream px-3 py-2.5 text-[11px] tracking-wide uppercase transition-colors duration-500 hover:bg-sky"
             >
               {t.signOut}
             </button>
