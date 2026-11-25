@@ -288,8 +288,24 @@
         "a": "Ja, kosteloos tot 24 uur voor de voorziene leverdatum: het volledige bedrag wordt terugbetaald. Binnen 24 uur is terugbetaling in principe niet mogelijk, omdat de producten vers zijn en speciaal voor uw bestelling bereid worden. Klopt er iets niet aan de levering of aan onze producten, bel ons dan meteen — dan zoeken we een oplossing."
       },
       {
+        "q": "Kan ik mijn bestelling nog wijzigen?",
+        "a": "Neem zo snel mogelijk contact met ons op, telefonisch of per e-mail: zolang de bereiding niet begonnen is, passen we ze graag aan. Dezelfde voorwaarden als bij een annulering gelden."
+      },
+      {
         "q": "Hebben jullie vegetarische, veganistische of glutenvrije opties?",
-        "a": "Ja. We maken vegetarische, veganistische en glutenvrije versies van hetzelfde gerecht, apart geëtiketteerd en verpakt. Laat ons weten welke diëten en allergieën er zijn wanneer u bestelt."
+        "a": "Ja. Elk product vermeldt op zijn productpagina het dieet (vegetarisch, veganistisch, glutenvrij) en de allergenen, en met de filters in de winkel vindt u ze snel terug. Hebt u een allergie, neem dan contact met ons op voordat u bestelt."
+      },
+      {
+        "q": "Hoe bewaar ik jullie producten?",
+        "a": "Op elke productpagina staat hoe u het product bewaart. Onze verse producten bewaart u in de koelkast en eet u op vóór de datum op de verpakking."
+      },
+      {
+        "q": "Welke betaalmiddelen aanvaarden jullie?",
+        "a": "U betaalt online, op de beveiligde betaalpagina van Shopify: met een bankkaart (Visa, Mastercard, American Express) en met de andere betaalmiddelen die u daar ziet."
+      },
+      {
+        "q": "Waar vind ik jullie producten buiten de website?",
+        "a": "Op de pagina 'Waar vindt u ons' toont een kaart ons atelier en de partnerzaken die onze producten verkopen."
       },
       {
         "q": "Hoe verloopt een offerte voor een evenement?",
@@ -297,7 +313,7 @@
       },
       {
         "q": "Werken jullie met bedrijven?",
-        "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen. We factureren op uw btw-nummer."
+        "a": "Ja, een groot deel van wat we doen. Kantoorlunches, vergaderingen, recepties en bedrijfsevenementen."
       }
     ],
     "contactCta": {

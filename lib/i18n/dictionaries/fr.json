@@ -288,8 +288,24 @@
         "a": "Oui, gratuitement jusqu'à 24 heures avant la date de livraison prévue : la commande est intégralement remboursée. En deçà de 24 heures, l'annulation ne peut en principe pas être remboursée, les produits étant frais et préparés spécifiquement pour votre commande. Si quelque chose ne va pas avec la livraison ou avec nos produits, appelez-nous immédiatement et nous trouverons une solution."
       },
       {
+        "q": "Puis-je modifier ma commande après l'avoir passée ?",
+        "a": "Contactez-nous au plus vite, par téléphone ou par e-mail : tant que la préparation n'a pas commencé, nous l'adaptons volontiers. Les mêmes conditions que pour une annulation s'appliquent."
+      },
+      {
         "q": "Proposez-vous des options végétariennes, véganes ou sans gluten ?",
-        "a": "Oui. Nous préparons des versions végétariennes, véganes et sans gluten du même plat, étiquetées et emballées séparément. Indiquez-nous les régimes et les allergies au moment de la commande."
+        "a": "Oui. Chaque produit indique sur sa fiche son régime (végétarien, vegan, sans gluten) et ses allergènes, et les filtres de la boutique vous permettent de les retrouver. En cas d'allergie, contactez-nous avant de commander."
+      },
+      {
+        "q": "Comment conserver vos produits ?",
+        "a": "Chaque fiche produit précise comment le conserver. Nos produits frais se gardent au réfrigérateur et se consomment avant la date indiquée sur l'emballage."
+      },
+      {
+        "q": "Quels moyens de paiement acceptez-vous ?",
+        "a": "Le paiement se fait en ligne, sur la page de paiement sécurisée de Shopify : par carte bancaire (Visa, Mastercard, American Express) et avec les autres moyens proposés à cette étape."
+      },
+      {
+        "q": "Où trouver vos produits en dehors du site ?",
+        "a": "Sur la page « Où nous trouver », une carte montre notre atelier et les lieux partenaires qui proposent nos produits."
       },
       {
         "q": "Comment se passe un devis pour un événement ?",
@@ -297,7 +313,7 @@
       },
       {
         "q": "Travaillez-vous avec les entreprises ?",
-        "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA."
+        "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise."
       }
     ],
     "contactCta": {

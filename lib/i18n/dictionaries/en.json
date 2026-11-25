@@ -288,8 +288,24 @@
         "a": "Yes, free of charge up to 24 hours before the delivery date, and we refund the order in full. Inside 24 hours we cannot normally refund, because the food is fresh and made for your order specifically. If anything is wrong with what arrives, or with our service, call us straight away and we will put it right."
       },
       {
+        "q": "Can I change my order after placing it?",
+        "a": "Contact us as soon as you can, by phone or email: as long as we have not started preparing it, we are happy to adjust it. The same terms as for a cancellation apply."
+      },
+      {
         "q": "Do you cater for vegetarian, vegan or gluten-free diets?",
-        "a": "Yes. We prepare vegetarian, vegan and gluten-free versions of the same dish, labelled and boxed separately. Tell us about diets and allergies when you order."
+        "a": "Yes. Each product page shows its diet (vegetarian, vegan, gluten-free) and its allergens, and the shop filters help you find them. If you have an allergy, contact us before you order."
+      },
+      {
+        "q": "How should I store your products?",
+        "a": "Each product page says how to store it. Our fresh products keep in the fridge and should be eaten before the date on the packaging."
+      },
+      {
+        "q": "Which payment methods do you accept?",
+        "a": "You pay online, on Shopify's secure payment page: by card (Visa, Mastercard, American Express) and with the other methods offered at that step."
+      },
+      {
+        "q": "Where can I find your products outside the website?",
+        "a": "On the 'Find us' page, a map shows our atelier and the partner venues that stock our products."
       },
       {
         "q": "How does a quote for an event work?",
@@ -297,7 +313,7 @@
       },
       {
         "q": "Do you work with companies?",
-        "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events. We invoice against your VAT number."
+        "a": "Yes — a large part of what we do. Office lunches, meetings, receptions and corporate events."
       }
     ],
     "contactCta": {
