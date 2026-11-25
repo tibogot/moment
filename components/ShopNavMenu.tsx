@@ -37,16 +37,19 @@ const previewTitleClassName =
  * 40% empty at 1920 while overflowing it at the 1270px nav breakpoint.
  *
  * Every rule in here — the two spines and the dividers between cells — gets one
- * --grid-gutter of clearance on each side, exactly like a column line on the
- * page grid. That makes the gap between cells two gutters wide, so a cell is
- * (100% - 2 * PREVIEW_COUNT gutters) / PREVIEW_COUNT, and a divider sits a
- * whole number of cell-plus-gap steps in. At step PREVIEW_COUNT the formula
+ * --v2-pad of clearance on each side, the cell padding of the v2 grid. That
+ * makes the gap between cells two pads wide, so a cell is
+ * (100% - 2 * PREVIEW_COUNT pads) / PREVIEW_COUNT, and a divider sits a whole
+ * number of cell-plus-gap steps in. The row's own padding, the gap and the
+ * cards' bleed must all use the same length: when the row moved to --v2-pad
+ * and the rest stayed on --grid-gutter, the hover fill stopped short of the
+ * dividers and the photos sat off-centre in their cells. At step PREVIEW_COUNT the formula
  * lands on 100% — the right spine — which is the check that the rules and the
  * cells cannot drift apart.
  */
 const previewMetrics = {
-  "--preview-gap": "calc(2 * var(--grid-gutter))",
-  "--preview-card": `calc((100% - ${2 * PREVIEW_COUNT} * var(--grid-gutter)) / ${PREVIEW_COUNT})`,
+  "--preview-gap": "calc(2 * var(--v2-pad))",
+  "--preview-card": `calc((100% - ${2 * PREVIEW_COUNT} * var(--v2-pad)) / ${PREVIEW_COUNT})`,
 } as React.CSSProperties;
 
 /* Always PREVIEW_COUNT tracks, even when a collection has fewer products to
@@ -102,14 +105,14 @@ function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
 
   /* The reveal has to fill the ruled cell, like it does in the shop grid, so
      the card owns the whole cell rather than sitting inside it: horizontally it
-     bleeds one gutter each side and pads one back in — half the gap either way,
+     bleeds one --v2-pad each side and pads one back in — half the gap either way,
      which lands exactly on the dividers while leaving the image at the cell
      width — and vertically it takes the row's padding as its own, so it runs
      the full height the dividers do without the image moving. */
   return (
     <Link
       href={routes.product(product.handle)}
-      className="product-card group -mx-(--grid-gutter) flex h-full min-w-0 flex-col gap-3 px-(--grid-gutter) pt-[4svh] pb-4 transition-colors duration-500"
+      className="product-card group -mx-(--v2-pad) flex h-full min-w-0 flex-col gap-3 px-(--v2-pad) pt-[4svh] pb-4 transition-colors duration-500"
       onClick={onNavigate}
     >
       <div className="product-card__image relative aspect-4/5 overflow-hidden">
