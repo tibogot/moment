@@ -25,11 +25,12 @@ export default async function EventsPage({
   return (
     <>
       <div className="v2">
-        {/* Two photographs staggered as before, each as many rows as columns
-            so both are 3/4 portraits:
-              mobile 4 × 8    1–4 · 1–4      2–4 · 5–7
-              tablet 6 × 6    1–3 · 1–3      4–6 · 3–5
-              desktop 8 × 7   1–4 · 1–4      6–8 · 4–6 */}
+        {/* Two photographs staggered, each as many rows as columns so both
+            are 3/4 portraits, on the page grid (16 / 12 / 4 cells, like the
+            home and the FAQ). Cells, columns · rows:
+              mobile 4 × 8     1–4 · 1–4       2–4 · 5–7
+              tablet 12 × 12   1–6 · 1–6       7–12 · 5–10
+              desktop 16 × 14  1–8 · 1–8       11–16 · 7–12 */}
         {/* One section: title and lead, then the photographs in the cells,
             a single rule between them. */}
         <PhotoGridSection
@@ -39,19 +40,19 @@ export default async function EventsPage({
               lead={dict.pageIntro.events.lead}
             />
           }
-          rowsClassName="[--rows:8] md:[--rows:6] lg:[--rows:7]"
+          rowsClassName="[--rows:8] md:[--rows:12] lg:[--rows:14]"
           photos={[
             {
               src: "/images/anita-austvika.jpg",
               alt: "",
               className:
-                "col-[2/span_4] row-[1/span_4] md:col-[2/span_3] md:row-[1/span_3] lg:col-[2/span_4] lg:row-[1/span_4]",
+                "col-[2/span_4] row-[1/span_4] md:col-[2/span_6] md:row-[1/span_6] lg:col-[2/span_8] lg:row-[1/span_8]",
             },
             {
               src: "/images/kateryna-hliznitsova.jpg",
               alt: "",
               className:
-                "col-[3/span_3] row-[5/span_3] md:col-[5/span_3] md:row-[3/span_3] lg:col-[7/span_3] lg:row-[4/span_3]",
+                "col-[3/span_3] row-[5/span_3] md:col-[8/span_6] md:row-[5/span_6] lg:col-[12/span_6] lg:row-[7/span_6]",
             },
           ]}
         />

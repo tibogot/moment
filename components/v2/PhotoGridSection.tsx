@@ -7,9 +7,10 @@ export type GridPhoto = {
   src: string;
   alt: string;
   /**
-   * Where it sits, as Tailwind grid placements on the section's grid — cell
-   * n is grid column n + 1. Give it as many rows as columns and the photo is
-   * a 3/4 rectangle, the cell's own shape.
+   * Where it sits, as Tailwind grid placements on the page grid (16 / 12 / 4
+   * cells, the home's and the FAQ's) — cell n is grid column n + 1. Give it as
+   * many rows as columns and the photo is a 3/4 rectangle, the cell's own
+   * shape.
    */
   className: string;
 };
@@ -42,8 +43,8 @@ export function PhotoGridSection({
     <div
       className={cn("relative grid", rowsClassName)}
       style={{
-        gridTemplateColumns: "var(--v2-columns)",
-        gridTemplateRows: "repeat(var(--rows), var(--v2-row))",
+        gridTemplateColumns: "var(--s-grid-columns)",
+        gridTemplateRows: "repeat(var(--rows), var(--s-cell-h))",
         // Without a header the cells sit between the section's own bands.
         paddingBlock: header ? undefined : "var(--grid-band)",
       }}
@@ -71,7 +72,7 @@ export function PhotoGridSection({
   if (!header) {
     return (
       <section className="relative w-full bg-cream">
-        <CellGrid lineClassName="bg-sky" readout={false} />
+        <CellGrid lineClassName="bg-sky" readout={false} subdivide={2} />
         {grid}
       </section>
     );
@@ -88,10 +89,20 @@ export function PhotoGridSection({
       className="relative w-full bg-cream"
       style={{ paddingBlock: "var(--grid-band)" }}
     >
-      <CellGrid lineClassName="bg-sky" readout={false} cells={false} />
+      <CellGrid
+        lineClassName="bg-sky"
+        readout={false}
+        cells={false}
+        subdivide={2}
+      />
       <div className="relative">{header}</div>
       <div className="relative">
-        <CellGrid lineClassName="bg-sky" readout={false} bands={false} />
+        <CellGrid
+          lineClassName="bg-sky"
+          readout={false}
+          bands={false}
+          subdivide={2}
+        />
         {grid}
       </div>
     </section>

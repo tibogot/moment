@@ -20,9 +20,12 @@ type PageIntroGridProps = {
  * cells not drawn, the two blocks in a subgrid on the page's columns — the
  * title from the page inset, the lead under it, pushed right, at a fixed gap.
  *
+ * On the page grid (16 / 12 / 4 cells, --s-grid-columns), like the home and
+ * the FAQ, with the text a cell's padding (--v2-pad) in from the lines.
+ *
  * Columns, as cells:  mobile 4 — title 1–4, lead 2–4
- *                     tablet 6 — title 1–6, lead 3–6
- *                     desktop 8 — title 1–7, lead 5–8
+ *                     tablet 12 — title 1–12, lead 5–12
+ *                     desktop 16 — title 1–14, lead 9–16
  */
 export function PageIntroGrid({ title, lead, size }: PageIntroGridProps) {
   return (
@@ -48,10 +51,10 @@ export function PageIntroContent({
   return (
     <div
       className="relative grid"
-      style={{ gridTemplateColumns: "var(--v2-columns)" }}
+      style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
     >
-      <div className="col-[2/span_4] grid grid-cols-subgrid gap-y-[5svh] pt-[8svh] pb-[7svh] md:col-[2/span_6] lg:col-[2/span_8]">
-        <div className="col-[1/span_4] min-w-0 px-(--grid-gutter) text-left md:col-[1/span_6] lg:col-[1/span_7]">
+      <div className="col-[2/span_4] grid grid-cols-subgrid gap-y-[5svh] pt-[8svh] pb-[7svh] md:col-[2/span_12] lg:col-[2/span_16]">
+        <div className="col-[1/span_4] min-w-0 px-(--v2-pad) text-left md:col-[1/span_12] lg:col-[1/span_14]">
           <TextReveal
             blockColor={REVEAL_BLOCK}
             animateOnScroll={false}
@@ -70,7 +73,7 @@ export function PageIntroContent({
         </div>
 
         {lead && (
-          <div className="col-[2/span_3] min-w-0 px-(--grid-gutter) text-left md:col-[3/span_4] lg:col-[5/span_4]">
+          <div className="col-[2/span_3] min-w-0 px-(--v2-pad) text-left md:col-[5/span_8] lg:col-[9/span_8]">
             <TextReveal
               blockColor={REVEAL_BLOCK}
               animateOnScroll={false}
