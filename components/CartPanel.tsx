@@ -16,6 +16,7 @@ import {
   removeFromCart,
   setDeliveryAddress,
   setDeliveryDate,
+  setDeliveryMethod,
   setDeliverySlot,
   updateCartLine,
 } from "@/app/actions/cart";
@@ -35,6 +36,7 @@ import {
 import { AddressPanel } from "@/components/AddressPanel";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { CheckoutBlockerNotice } from "@/components/CheckoutBlockerNotice";
+import { DeliveryMethodToggle } from "@/components/DeliveryMethodToggle";
 import {
   CheckoutNotice,
   CheckoutNoticeAction,
@@ -66,7 +68,10 @@ import {
   qualifiesForFreeDelivery,
   zoneById,
 } from "@/lib/delivery/zones";
-import { needsAddress } from "@/lib/delivery/order-preferences";
+import {
+  needsAddress,
+  type DeliveryMethod,
+} from "@/lib/delivery/order-preferences";
 import { routes } from "@/lib/routes";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
@@ -397,6 +402,20 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     });
   };
 
+  // Switching drops the slot (and, for collection, the address) on the
+  // server, so the cart is re-read rather than patched here.
+  const chooseMethod = (method: DeliveryMethod) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await setDeliveryMethod(locale, method);
+      if (!result.ok) {
+        setError(dict.errors[result.code]);
+        return;
+      }
+      void refreshCart();
+    });
+  };
+
   const chooseDate = (iso: string) => {
     setError(null);
     startTransition(async () => {
@@ -702,75 +721,87 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 cart attribute, and Shopify's hosted checkout gives the customer
                 no way to change it once they have left this panel. */}
             <div className="border-b border-sky px-6 py-4">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  {pickup ? t.pickup : t.delivery}
-                </span>
+              <DeliveryMethodToggle
+                value={deliveryMethod}
+                onChange={chooseMethod}
+                disabled={isPending}
+              />
 
-                {deliveryDate && !dateIsStale ? (
-                  <span className="flex items-baseline gap-3">
-                    <span className="font-archivo-light text-[15px]">
-                      {formatLongDate(locale, deliveryDate)}
+              {/* Hidden until a method is picked: the calendar and the times
+                  are not the same for collection and delivery. */}
+              {deliveryMethod && (
+                <>
+                  <div className="mt-4 flex items-baseline justify-between gap-3">
+                    <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                      {pickup ? t.pickup : t.delivery}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => setView("date")}
-                      className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                    >
-                      {t.change}
-                    </button>
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setView("date")}
-                    className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                  >
-                    {dateIsStale ? t.pickAnother : t.pick}
-                  </button>
-                )}
-              </div>
 
-              {/* The delivery window, or the collection time, under the day
+                    {deliveryDate && !dateIsStale ? (
+                      <span className="flex items-baseline gap-3">
+                        <span className="font-archivo-light text-[15px]">
+                          {formatLongDate(locale, deliveryDate)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setView("date")}
+                          className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                        >
+                          {t.change}
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setView("date")}
+                        className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                      >
+                        {dateIsStale ? t.pickAnother : t.pick}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* The delivery window, or the collection time, under the day
                   it belongs to. Editable here because Shopify's checkout cannot
                   change a cart attribute either. */}
-              {
-                <div className="mt-3 flex items-baseline justify-between gap-3">
-                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                    {t.slot}
-                  </span>
-                  <span className="flex items-baseline gap-3">
-                    {slot && (
-                      <span className="font-archivo-light text-[15px]">
-                        {formatSlot(slot)}
+                  {
+                    <div className="mt-3 flex items-baseline justify-between gap-3">
+                      <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                        {t.slot}
                       </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => setView("slot")}
-                      className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                    >
-                      {slot ? t.change : t.pickSlot}
-                    </button>
-                  </span>
-                </div>
-              }
-
-              {dateIsStale && deliveryDate && (
-                <CheckoutNotice
-                  tone="blocker"
-                  title={t.beforeCheckout}
-                  className="mt-4"
-                  action={
-                    <CheckoutNoticeAction onClick={() => setView("date")}>
-                      {t.pickAnother}
-                    </CheckoutNoticeAction>
+                      <span className="flex items-baseline gap-3">
+                        {slot && (
+                          <span className="font-archivo-light text-[15px]">
+                            {formatSlot(slot)}
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => setView("slot")}
+                          className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                        >
+                          {slot ? t.change : t.pickSlot}
+                        </button>
+                      </span>
+                    </div>
                   }
-                >
-                  {interpolate(t.staleDate, {
-                    date: formatLongDate(locale, deliveryDate),
-                  })}
-                </CheckoutNotice>
+
+                  {dateIsStale && deliveryDate && (
+                    <CheckoutNotice
+                      tone="blocker"
+                      title={t.beforeCheckout}
+                      className="mt-4"
+                      action={
+                        <CheckoutNoticeAction onClick={() => setView("date")}>
+                          {t.pickAnother}
+                        </CheckoutNoticeAction>
+                      }
+                    >
+                      {interpolate(t.staleDate, {
+                        date: formatLongDate(locale, deliveryDate),
+                      })}
+                    </CheckoutNotice>
+                  )}
+                </>
               )}
             </div>
 

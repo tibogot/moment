@@ -57,19 +57,42 @@ export function CheckoutBlockerNotice({
   switch (blocker.kind) {
     case "below-piece-minimum":
       return (
-        <CheckoutNotice tone="blocker" title={t.beforeCheckout} className={className}>
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className={className}
+        >
           {interpolate(t.belowPieceMinimum, {
             minimum: blocker.minimum,
             items: blocker.lines
-              .map((line) => `${line.title} (${line.quantity}/${blocker.minimum})`)
+              .map(
+                (line) => `${line.title} (${line.quantity}/${blocker.minimum})`,
+              )
               .join(", "),
           })}
         </CheckoutNotice>
       );
 
+    // The toggle sits right above this notice on both surfaces, so it only
+    // says what to do; there is nothing to open.
+    case "no-method":
+      return (
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className={className}
+        >
+          {t.chooseMethod}
+        </CheckoutNotice>
+      );
+
     case "below-minimum":
       return (
-        <CheckoutNotice tone="blocker" title={t.beforeCheckout} className={className}>
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className={className}
+        >
           {interpolate(compact ? t.belowMinimumShort : t.belowMinimum, {
             zone: blocker.zone.id,
             minimum: formatMoney(locale, blocker.zone.minimumOrder),
@@ -80,7 +103,11 @@ export function CheckoutBlockerNotice({
 
     case "below-pickup-minimum":
       return (
-        <CheckoutNotice tone="blocker" title={t.beforeCheckout} className={className}>
+        <CheckoutNotice
+          tone="blocker"
+          title={t.beforeCheckout}
+          className={className}
+        >
           {interpolate(t.belowPickupMinimum, {
             minimum: formatMoney(locale, blocker.minimum),
             shortfall: formatMoney(locale, blocker.shortfall),

@@ -11,10 +11,7 @@
  */
 
 import { isBookable, type DeliveryAvailability } from "@/lib/delivery/dates";
-import {
-  availabilityForOrder,
-  isNextDayPickup,
-} from "@/lib/delivery/next-day";
+import { availabilityForOrder, isNextDayPickup } from "@/lib/delivery/next-day";
 import {
   DEFAULT_PICKUP_SLOTS,
   parseSlotAttribute,
@@ -28,7 +25,10 @@ import {
   type ZoneId,
   type ZoneTable,
 } from "@/lib/delivery/zones";
-import { needsAddress, type DeliveryMethod } from "@/lib/delivery/order-preferences";
+import {
+  needsAddress,
+  type DeliveryMethod,
+} from "@/lib/delivery/order-preferences";
 
 export type CheckoutBlocker =
   /** Products ordered in fewer pieces than the per-product minimum. */
@@ -37,6 +37,8 @@ export type CheckoutBlocker =
       minimum: number;
       lines: { title: string; quantity: number }[];
     }
+  /** Neither delivery nor click & collect chosen yet — there is no default. */
+  | { kind: "no-method" }
   /** No delivery day chosen yet. */
   | { kind: "no-date" }
   /** A day was chosen and has since closed, or fallen inside the lead time. */
@@ -126,6 +128,11 @@ export function checkoutBlocker(
       lines: short.map(({ title, quantity }) => ({ title, quantity })),
     };
   }
+
+  // Before the day: the calendar and the times differ by method (next-day
+  // collection, collection hours), so a day chosen with no method is a day
+  // chosen against the wrong rules.
+  if (!cart.deliveryMethod) return { kind: "no-method" };
 
   if (!cart.deliveryDate) return { kind: "no-date" };
 

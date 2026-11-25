@@ -359,6 +359,7 @@
   },
   "cart": {
     "title": "Panier",
+    "chooseMethod": "Choisissez d'abord la livraison à domicile ou le click & collect.",
     "empty": "Votre panier est vide.",
     "browseShop": "Voir la boutique",
     "total": "Total",

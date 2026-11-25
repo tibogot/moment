@@ -359,6 +359,7 @@
   },
   "cart": {
     "title": "Cart",
+    "chooseMethod": "First choose home delivery or click & collect.",
     "empty": "Your cart is empty.",
     "browseShop": "Browse the shop",
     "total": "Total",

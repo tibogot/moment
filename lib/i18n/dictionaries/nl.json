@@ -359,6 +359,7 @@
   },
   "cart": {
     "title": "Winkelmand",
+    "chooseMethod": "Kies eerst levering aan huis of click & collect.",
     "empty": "Uw winkelmand is leeg.",
     "browseShop": "Naar de winkel",
     "total": "Totaal",

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import {
   setDeliveryAddress,
   setDeliveryDate,
+  setDeliveryMethod,
   setDeliveryNote,
   setDeliverySlot,
 } from "@/app/actions/cart";
@@ -17,6 +18,7 @@ import {
   CheckoutNoticeAction,
 } from "@/components/CheckoutNotice";
 import { DeliveryDatePicker } from "@/components/DeliveryDatePicker";
+import { DeliveryMethodToggle } from "@/components/DeliveryMethodToggle";
 import { DeliverySlotPicker } from "@/components/DeliverySlotPicker";
 import { notifyCartUpdated } from "@/lib/cart-store";
 import {
@@ -159,7 +161,9 @@ export function CartDeliverySection({
   const deliveryIsFree = zone
     ? qualifiesForFreeDelivery(subtotal, zone, zones)
     : false;
-  const toFreeDelivery = zone ? freeDeliveryShortfall(subtotal, zone, zones) : 0;
+  const toFreeDelivery = zone
+    ? freeDeliveryShortfall(subtotal, zone, zones)
+    : 0;
 
   const saveNote = (value: string) => {
     if (value.trim() === (deliveryNote ?? "").trim()) return;
@@ -214,6 +218,24 @@ export function CartDeliverySection({
     });
   };
 
+  // Switching drops the slot (and, for collection, the address) on the
+  // server; the page is server-rendered, so it re-reads the cart.
+  const chooseMethod = (method: DeliveryMethod) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await setDeliveryMethod(locale, method);
+      if (!result.ok) {
+        setError(dict.errors[result.code]);
+        return;
+      }
+      setPickerOpen(false);
+      setSlotOpen(false);
+      setAddressOpen(false);
+      notifyCartUpdated();
+      router.refresh();
+    });
+  };
+
   const chooseDate = (iso: string) => {
     setError(null);
     startTransition(async () => {
@@ -235,179 +257,177 @@ export function CartDeliverySection({
       {/* Carried as a cart attribute, so it follows the order into the
           Shopify admin. */}
       <div className="border-t border-sky py-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-            {pickup ? t.pickup : t.delivery}
-          </span>
+        <DeliveryMethodToggle
+          value={deliveryMethod}
+          onChange={chooseMethod}
+          disabled={isPending}
+          className="max-w-md"
+        />
 
-          {deliveryDate && !dateIsStale ? (
-            <span className="flex items-baseline gap-4">
-              <span className="font-archivo-light text-[13px]">
-                {formatLongDate(locale, deliveryDate)}
+        {/* Hidden until a method is picked: the calendar and the times are
+            not the same for collection and delivery. */}
+        {deliveryMethod && (
+          <>
+            <div className="mt-5 flex flex-wrap items-baseline justify-between gap-3">
+              <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                {pickup ? t.pickup : t.delivery}
               </span>
-              <button
-                type="button"
-                onClick={() => setPickerOpen((open) => !open)}
-                className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
-              >
-                {pickerOpen ? t.done : t.change}
-              </button>
-            </span>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setPickerOpen((open) => !open)}
-              className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
-            >
-              {dateIsStale ? t.pickAnother : t.pick}
-            </button>
-          )}
-        </div>
 
-        {/* Editable here as well as on the product page: unlike the method,
+              {deliveryDate && !dateIsStale ? (
+                <span className="flex items-baseline gap-4">
+                  <span className="font-archivo-light text-[13px]">
+                    {formatLongDate(locale, deliveryDate)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPickerOpen((open) => !open)}
+                    className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
+                  >
+                    {pickerOpen ? t.done : t.change}
+                  </button>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen((open) => !open)}
+                  className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
+                >
+                  {dateIsStale ? t.pickAnother : t.pick}
+                </button>
+              )}
+            </div>
+
+            {/* Editable here as well as on the product page: unlike the method,
             the window is a thing customers change once the day is settled, and
             Shopify's hosted checkout cannot edit a cart attribute — so if it
             cannot be fixed here it cannot be fixed at all. */}
-        {(
-          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
-            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              {t.slot}
-            </span>
-            <span className="flex items-baseline gap-4">
-              {slot && (
-                <span className="font-archivo-light text-[13px]">
-                  {formatSlot(slot)}
+            {
+              <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  {t.slot}
                 </span>
-              )}
-              <button
-                type="button"
-                onClick={() => setSlotOpen((open) => !open)}
-                className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
-              >
-                {slotOpen
-                  ? t.done
-                  : slot
-                    ? t.change
-                    : pickup
-                      ? t.chooseSlotPickup
-                      : t.chooseSlot}
-              </button>
-            </span>
-          </div>
-        )}
+                <span className="flex items-baseline gap-4">
+                  {slot && (
+                    <span className="font-archivo-light text-[13px]">
+                      {formatSlot(slot)}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setSlotOpen((open) => !open)}
+                    className="font-archivo-light text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
+                  >
+                    {slotOpen
+                      ? t.done
+                      : slot
+                        ? t.change
+                        : pickup
+                          ? t.chooseSlotPickup
+                          : t.chooseSlot}
+                  </button>
+                </span>
+              </div>
+            }
 
-        {/* Read-only: the method is chosen on the product page, and repeating
-            the editor here would be a third place to keep in step. Showing it
-            still matters — the customer has to be able to check what they
-            picked before handing over to Shopify's checkout. */}
-        {deliveryMethod && (
-          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
-            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              {t.method}
-            </span>
-            <span className="font-archivo-light text-[13px]">
-              {dict.deliveryMethods[deliveryMethod].label}
-            </span>
-          </div>
-        )}
+            {deliveryAddress && needsAddress(deliveryMethod) && (
+              <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  {t.address}
+                </span>
+                <span className="font-archivo-light text-[13px]">
+                  {deliveryAddress}
+                </span>
+              </div>
+            )}
 
-        {deliveryAddress && needsAddress(deliveryMethod) && (
-          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
-            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              {t.address}
-            </span>
-            <span className="font-archivo-light text-[13px]">
-              {deliveryAddress}
-            </span>
-          </div>
-        )}
-
-        {/* Only for delivery: "ring at reception" means nothing to someone
+            {/* Only for delivery: "ring at reception" means nothing to someone
             collecting from the atelier themselves. Saved on blur rather than
             behind a button — a note nobody remembers to submit is a note the
             driver never gets. */}
-        {needsAddress(deliveryMethod) && (
-          <div className="mt-3">
-            <label
-              htmlFor="delivery-note"
-              className="font-owners-medium text-[12px] uppercase tracking-wide"
-            >
-              {t.note}
-            </label>
-            <textarea
-              id="delivery-note"
-              rows={2}
-              defaultValue={deliveryNote ?? ""}
-              maxLength={DELIVERY_NOTE_MAX}
-              placeholder={t.notePlaceholder}
-              disabled={isPending}
-              onBlur={(event) => saveNote(event.target.value)}
-              className="font-archivo-light mt-2 w-full resize-none border border-sky bg-transparent px-3 py-2 text-[13px] leading-normal outline-none transition-colors duration-300 focus:bg-sky/20 disabled:opacity-40"
-            />
-            {noteSaved && (
-              <p
-                role="status"
-                className="font-archivo-light mt-1 text-[12px] opacity-60"
-              >
-                {t.noteSaved}
-              </p>
+            {needsAddress(deliveryMethod) && (
+              <div className="mt-3">
+                <label
+                  htmlFor="delivery-note"
+                  className="font-owners-medium text-[12px] uppercase tracking-wide"
+                >
+                  {t.note}
+                </label>
+                <textarea
+                  id="delivery-note"
+                  rows={2}
+                  defaultValue={deliveryNote ?? ""}
+                  maxLength={DELIVERY_NOTE_MAX}
+                  placeholder={t.notePlaceholder}
+                  disabled={isPending}
+                  onBlur={(event) => saveNote(event.target.value)}
+                  className="font-archivo-light mt-2 w-full resize-none border border-sky bg-transparent px-3 py-2 text-[13px] leading-normal outline-none transition-colors duration-300 focus:bg-sky/20 disabled:opacity-40"
+                />
+                {noteSaved && (
+                  <p
+                    role="status"
+                    className="font-archivo-light mt-1 text-[12px] opacity-60"
+                  >
+                    {t.noteSaved}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
 
-        {/* The fee is what Shopify will charge at checkout, shown here so it
+            {/* The fee is what Shopify will charge at checkout, shown here so it
             is not a surprise on the last screen. Once the basket clears the
             free-delivery threshold the band still shows — the minimum order
             still applies — but the fee reads as waived rather than as €50. */}
-        {zone && needsAddress(deliveryMethod) && (
-          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
-            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-              {t.deliveryFee}
-            </span>
-            <span className="font-archivo-light text-[13px]">
-              {interpolate(t.zoneLine, {
-                fee: deliveryIsFree
-                  ? t.freeDelivery
-                  : formatMoney(locale, zone.fee),
-                zone: zone.id,
-                minimum: formatMoney(locale, zone.minimumOrder),
-              })}
-            </span>
-          </div>
-        )}
+            {zone && needsAddress(deliveryMethod) && (
+              <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                  {t.deliveryFee}
+                </span>
+                <span className="font-archivo-light text-[13px]">
+                  {interpolate(t.zoneLine, {
+                    fee: deliveryIsFree
+                      ? t.freeDelivery
+                      : formatMoney(locale, zone.fee),
+                    zone: zone.id,
+                    minimum: formatMoney(locale, zone.minimumOrder),
+                  })}
+                </span>
+              </div>
+            )}
 
-        {/* Only once there is something in the basket to measure against:
+            {/* Only once there is something in the basket to measure against:
             "spend €300 for free delivery" against an empty cart is noise. */}
-        {zone && needsAddress(deliveryMethod) && subtotal > 0 && (
-          <p className="font-archivo-light mt-3 text-[13px] opacity-70">
-            {deliveryIsFree
-              ? interpolate(t.freeDeliveryReached, {
-                  threshold: formatMoney(
-                    locale,
-                    freeDeliveryThresholdFor(zone, zones),
-                  ),
-                })
-              : interpolate(t.freeDeliveryShortfall, {
-                  shortfall: formatMoney(locale, toFreeDelivery),
-                })}
-          </p>
-        )}
+            {zone && needsAddress(deliveryMethod) && subtotal > 0 && (
+              <p className="font-archivo-light mt-3 text-[13px] opacity-70">
+                {deliveryIsFree
+                  ? interpolate(t.freeDeliveryReached, {
+                      threshold: formatMoney(
+                        locale,
+                        freeDeliveryThresholdFor(zone, zones),
+                      ),
+                    })
+                  : interpolate(t.freeDeliveryShortfall, {
+                      shortfall: formatMoney(locale, toFreeDelivery),
+                    })}
+              </p>
+            )}
 
-        {dateIsStale && deliveryDate && (
-          <CheckoutNotice
-            tone="blocker"
-            title={t.beforeCheckout}
-            className="mt-4 max-w-105"
-            action={
-              <CheckoutNoticeAction onClick={() => setPickerOpen(true)}>
-                {t.pickAnother}
-              </CheckoutNoticeAction>
-            }
-          >
-            {interpolate(t.staleDate, {
-              date: formatLongDate(locale, deliveryDate),
-            })}
-          </CheckoutNotice>
+            {dateIsStale && deliveryDate && (
+              <CheckoutNotice
+                tone="blocker"
+                title={t.beforeCheckout}
+                className="mt-4 max-w-105"
+                action={
+                  <CheckoutNoticeAction onClick={() => setPickerOpen(true)}>
+                    {t.pickAnother}
+                  </CheckoutNoticeAction>
+                }
+              >
+                {interpolate(t.staleDate, {
+                  date: formatLongDate(locale, deliveryDate),
+                })}
+              </CheckoutNotice>
+            )}
+          </>
         )}
 
         {error && (
