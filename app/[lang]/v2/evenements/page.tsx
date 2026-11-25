@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
-import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import { SystemSplit } from "@/components/v2/SystemSections";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -38,7 +37,6 @@ export default async function EventsV2({
         />
       </div>
       <Footer />
-      <GridOverlayToggle />
     </>
   );
 }

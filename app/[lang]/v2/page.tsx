@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CalendarGrid } from "@/components/v2/CalendarGrid";
 import { FooterGrid } from "@/components/v2/FooterGrid";
-import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import { MonogramGridHero } from "@/components/v2/MonogramGridHero";
 import { MonogramPatternSection } from "@/components/v2/MonogramPatternSection";
 import { PanelPairGrid } from "@/components/v2/PanelPairGrid";
@@ -72,7 +71,6 @@ export default async function HomeV2({
         <MonogramPatternSection />
         <FooterGrid />
       </div>
-      <GridOverlayToggle />
     </>
   );
 }

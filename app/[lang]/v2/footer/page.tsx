@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { FooterV1 } from "@/components/FooterV1";
 import { FooterGrid } from "@/components/v2/FooterGrid";
-import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 
 /**
  * Test bench: the previous footer (FooterV1), then the v2 one — the site
@@ -20,7 +19,6 @@ export default function FooterComparison() {
       <div className="v2">
         <FooterGrid />
       </div>
-      <GridOverlayToggle />
     </>
   );
 }

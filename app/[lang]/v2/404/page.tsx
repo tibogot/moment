@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
-import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import { NotFoundCells, NotFoundScatter } from "@/components/v2/NotFoundCells";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -34,7 +33,6 @@ export default async function NotFoundV2({
         <NotFoundScatter copy={copy} as="h2" />
       </div>
       <Footer />
-      <GridOverlayToggle />
     </>
   );
 }

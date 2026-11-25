@@ -8,6 +8,7 @@ import { clientDictionary, getDictionary } from "@/lib/i18n/dictionaries";
 import { ConsentScripts } from "@/components/ConsentScripts";
 import { CookieConsent } from "@/components/CookieConsent";
 import { PaletteToggle } from "@/components/PaletteToggle";
+import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import { Navbar } from "@/components/Navbar";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { cn } from "@/lib/utils";
@@ -193,7 +194,10 @@ export default async function RootLayout({
               </main>
               <CookieConsent />
               <ConsentScripts />
+              {/* Review shortcuts (Shift + P, Shift + G) — on every page of the
+                  temporary address, never on the real domain. */}
               {!siteIsIndexable && <PaletteToggle />}
+              {!siteIsIndexable && <GridOverlayToggle />}
           </SmoothScroll>
         </LocaleProvider>
       </body>

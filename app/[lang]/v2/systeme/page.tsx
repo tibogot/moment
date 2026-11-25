@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CalendarCells } from "@/components/v2/CalendarCells";
 import { FooterCells } from "@/components/v2/FooterCells";
-import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import {
   SystemHero,
   SystemHeroCentred,
@@ -56,7 +55,6 @@ export default async function SystemV2({
         <CalendarCells availability={availability} />
         <FooterCells />
       </div>
-      <GridOverlayToggle />
     </>
   );
 }

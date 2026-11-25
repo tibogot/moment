@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { CalendarCells } from "@/components/v2/CalendarCells";
-import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import { GridSpacer } from "@/components/v2/GridSpacer";
 import { IntroCells } from "@/components/v2/IntroCells";
 import { OfferCards } from "@/components/v2/OfferCards";
@@ -241,7 +240,6 @@ export default async function Home({
         <CalendarCells availability={availability} />
       </div>
       <Footer />
-      <GridOverlayToggle />
     </>
   );
 }
