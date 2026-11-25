@@ -158,7 +158,7 @@ export function ShopNavMenu({
     >
       <nav
         aria-label={dict.nav.shop}
-        className="relative col-start-2 col-end-4 flex flex-col gap-1 self-start px-(--grid-gutter) pt-[4svh] pb-[4svh]"
+        className="relative col-start-2 col-end-4 flex flex-col gap-1 self-start px-(--v2-pad) pt-[4svh] pb-[4svh]"
       >
         <Link
           href={routes.shop}
@@ -220,7 +220,7 @@ export function ShopNavMenu({
           {/* The vertical padding lives on the cards, not here, so their hover
               fill reaches the same top and bottom as the rules beside them. */}
           <div
-            className="grid h-full gap-(--preview-gap) px-(--grid-gutter)"
+            className="grid h-full gap-(--preview-gap) px-(--v2-pad)"
             style={previewRowStyle}
           >
             {previewProducts.map((product) => (

@@ -55,6 +55,11 @@
   --grid-band: max(3.25rem, 8.6svh);
   /* Viewport edge -> content, for anything not placed on a column. */
   --grid-inset: calc(var(--grid-margin) + var(--grid-gutter));
+  /* Cell line -> content: the one inset of the v2 grid (25 November 2026).
+     Every text starts a cell's padding in from a cell line — the sections,
+     the navbar, its panels — so they all line up. Defined here as well as on
+     .v2 because the navbar sits outside the .v2 wrapper. */
+  --v2-pad: max(0.75rem, 1.1vw);
 
   /* Track 1 and the last track are the margins; the rest are the columns. */
   --grid-columns: var(--grid-margin) repeat(3, minmax(0, 1fr))
@@ -175,6 +180,15 @@ button:not(:disabled),
   cursor: pointer;
 }
 
+/* A drag carousel whose cards are links (components/v2/ProductCarouselCells):
+   the pointing finger over the cards, as on any link, and the closed hand
+   only while the strip is held and dragged. Here, outside the layers, because
+   the rule above is too: a Tailwind utility cannot beat it. */
+.drag-carousel[data-dragging],
+.drag-carousel[data-dragging] a {
+  cursor: grabbing;
+}
+
 .block-line-wrapper {
   position: relative;
   /**
@@ -216,12 +230,16 @@ button:not(:disabled),
   display: block;
 }
 
+/* Past the line box, above and below (25 November 2026): with the tight
+   leading of the headlines (0.85–0.95) the accents of capitals (É, À, Ç) rise
+   above the line box and the descenders (ç, g, p) drop below it, and showed
+   past a block cut to the box. In em, so it holds at every size. */
 .block-revealer {
   position: absolute;
-  top: 0;
+  top: -0.15em;
   left: 0;
   width: 101%;
-  height: 101%;
+  height: calc(100% + 0.25em);
   pointer-events: none;
   will-change: transform;
   z-index: 1;
@@ -717,4 +735,103 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
 .partner-map .leaflet-bar a {
   border-radius: 0 !important;
   color: var(--color-black);
+}
+
+/* v2 test page */
+@keyframes v2-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * v2 grid — scoped to .v2, nothing outside the test page reads it.
+ *
+ * The layout grid IS the brand grid: one layout column per drawn cell. The
+ * column count steps at two breakpoints only, and a row is always the column
+ * width × 4/3, so every cell in every section is exactly 3/4 portrait. The
+ * hero is the one exception: it is locked to the screen height, so it fits
+ * whole rows and lets them stretch a little.
+ *
+ * .v2 is the size container: cqw resolves against it (no scrollbar), and the
+ * custom properties below are substituted where they are used, so a child
+ * reading --v2-row gets the container's width, not its own.
+ */
+.v2 {
+  container-type: inline-size;
+  --v2-cols: 4;
+  /* Inner padding of a cell, so type never touches a rule. */
+  --v2-pad: max(0.75rem, 1.1vw);
+}
+
+@media (width >= 48rem) {
+  .v2 {
+    --v2-cols: 6;
+  }
+}
+
+@media (width >= 64rem) {
+  .v2 {
+    --v2-cols: 8;
+  }
+}
+
+.v2 {
+  --v2-col: calc((100cqw - 2 * var(--grid-margin)) / var(--v2-cols));
+  --v2-row: calc(var(--v2-col) * 4 / 3);
+  --v2-columns: var(--grid-margin) repeat(var(--v2-cols), minmax(0, 1fr))
+    var(--grid-margin);
+}
+
+/*
+ * One grid for the whole page (/v2/systeme test, 23 November 2026): each
+ * page column cut in two — 16 cells on desktop, 12 on a tablet, the page's 4
+ * on a phone — every cell exactly 3/4, never stretched. A section is a whole
+ * number of rows; on a full screen the bands take what is left over.
+ * Cell n is grid column n + 1 (column 1 is the left margin).
+ */
+.v2 {
+  --s-cols: 4;
+}
+
+@media (width >= 48rem) {
+  .v2 {
+    --s-cols: 12;
+  }
+}
+
+@media (width >= 64rem) {
+  .v2 {
+    --s-cols: 16;
+  }
+}
+
+.v2 {
+  --s-cell-w: calc((100cqw - 2 * var(--grid-margin)) / var(--s-cols));
+  --s-cell-h: calc(var(--s-cell-w) * 4 / 3);
+  --s-grid-columns: var(--grid-margin) repeat(var(--s-cols), minmax(0, 1fr))
+    var(--grid-margin);
+}
+
+/* Grid overlay (Shift + G, dev only): hidden until <html data-v2-grid>. */
+.v2-debug {
+  display: none;
+}
+
+html[data-v2-grid] .v2-debug {
+  display: block;
+}
+
+/*
+ * One cell of first-line indent for a v2 headline, from tablet up. A
+ * percentage, like .intro-headline, not --v2-col: the block's content box is
+ * --v2-span cells minus a gutter each side, so one cell is
+ * (100% + 2 gutters) / span. Set --v2-span to the cells the block spans.
+ */
+@media (width >= 48rem) {
+  .v2-indent {
+    --first-line-indent: calc(
+      (100% + 2 * var(--grid-gutter)) / var(--v2-span, 6)
+    );
+  }
 }

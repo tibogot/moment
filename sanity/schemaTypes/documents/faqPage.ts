@@ -14,11 +14,14 @@ import nl from "@/lib/i18n/dictionaries/nl.json";
  * contract, every one of those would otherwise be a developer's invoice.
  *
  * Prose only, never numbers. Fees, minimums, notice, cut-off and time slots
- * are settings in Shopify, and the page prints them itself in a "Delivery at a
- * glance" block beside these texts. A fee typed into an answer here would be
- * the first sentence on the site to go wrong after a price change — so the
- * field descriptions steer the owners away from it, and the answers point to
- * that block instead of repeating it.
+ * are settings in Shopify, and the page prints them itself in its first
+ * question, "Commander & se faire livrer" (built by the page, not here). A
+ * fee typed into an answer here would be the first sentence on the site to
+ * go wrong after a price change — so the field descriptions steer the owners
+ * away from it.
+ *
+ * The steps sit in one row on the page (since 24 November 2026), so there
+ * are at most 4, each a word or two and one short sentence.
  *
  * Until this document is published, the page shows the same texts from the
  * dictionaries (`faq.steps` / `faq.items`) — and `initialValue` below fills
@@ -55,7 +58,7 @@ const initialValue = () => ({
 });
 
 const NO_NUMBERS =
-  "Pas de prix, de minimum, de délai ni d'horaire dans ce texte : la page les affiche toute seule dans « La livraison en bref », à partir des réglages Shopify, et ils restent ainsi toujours justes.";
+  "Pas de prix, de minimum, de délai ni d'horaire dans ce texte : la page les affiche toute seule dans « Commander & se faire livrer », à partir des réglages Shopify, et ils restent ainsi toujours justes.";
 
 /** French is what every other language falls back to, so it is required. */
 const requireFrench = (value?: { fr?: string }) =>
@@ -74,8 +77,11 @@ export const faqPage = defineType({
       title: "Les étapes de commande",
       type: "array",
       description:
-        "« Commander, pas à pas » : affichées dans cet ordre, numérotées 01, 02… automatiquement. Glissez pour les réordonner.",
-      validation: (rule) => rule.max(10),
+        "Affichées sur une ligne, dans cet ordre, numérotées 01, 02… automatiquement. Quatre au plus, chacune courte : la ligne ne tient qu'avec des textes d'une phrase. Glissez pour les réordonner.",
+      validation: (rule) =>
+        rule
+          .max(4)
+          .error("Quatre étapes au plus : elles tiennent sur une ligne."),
       of: [
         defineArrayMember({
           type: "object",
@@ -92,7 +98,7 @@ export const faqPage = defineType({
               name: "body",
               title: "Explication",
               type: "localeText",
-              description: NO_NUMBERS,
+              description: `Une phrase courte. ${NO_NUMBERS}`,
               validation: (rule) => rule.custom(requireFrench),
             }),
           ],

@@ -219,6 +219,8 @@ export type HomePage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  heroHeadline?: LocaleText;
+  heroLead?: LocaleString;
   heroImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -226,7 +228,35 @@ export type HomePage = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  kitchenImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  deliveryImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  hostingImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
   eventsImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  companiesImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -646,14 +676,22 @@ export type PastEventsQueryResult = Array<{
 
 // Source: lib/sanity/queries.ts
 // Variable: homePageQuery
-// Query: *[_id == "homePage"][0] {  heroImage { ..., "lqip": asset->metadata.lqip },  eventsImage,  coffeeImage}
+// Query: *[_id == "homePage"][0] {  heroHeadline,  heroLead,  heroImage { ..., "lqip": asset->metadata.lqip },  kitchenImage,  deliveryImage,  hostingImage,  eventsImage,  companiesImage,  coffeeImage}
 export type HomePageQueryResult =
   | {
+      heroHeadline: null;
+      heroLead: null;
       heroImage: null;
+      kitchenImage: null;
+      deliveryImage: null;
+      hostingImage: null;
       eventsImage: null;
+      companiesImage: null;
       coffeeImage: null;
     }
   | {
+      heroHeadline: LocaleText | null;
+      heroLead: LocaleString | null;
       heroImage: {
         asset?: SanityImageAssetReference;
         media?: unknown;
@@ -662,7 +700,35 @@ export type HomePageQueryResult =
         _type: "image";
         lqip: string | null;
       } | null;
+      kitchenImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      deliveryImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      hostingImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
       eventsImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      companiesImage: {
         asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
@@ -734,7 +800,7 @@ declare global {
     '*[_type == "menu" && slug.current == $slug][0] {\n  \n  _id,\n  title,\n  slug,\n  format,\n  summary,\n  pricePerPerson,\n  priceNote,\n  minGuests,\n  maxGuests,\n  leadTimeDays,\n  includes,\n  excludes,\n  dietaryNote,\n  image\n,\n  \n  courses[]{\n    _key,\n    title,\n    items\n  }\n\n}': MenuBySlugQueryResult;
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
     '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
-    '*[_id == "homePage"][0] {\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  eventsImage,\n  coffeeImage\n}': HomePageQueryResult;
+    '*[_id == "homePage"][0] {\n  heroHeadline,\n  heroLead,\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  kitchenImage,\n  deliveryImage,\n  hostingImage,\n  eventsImage,\n  companiesImage,\n  coffeeImage\n}': HomePageQueryResult;
     '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
     '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
     '*[_id == "announcement" && enabled == true][0] {\n  message,\n  linkLabel,\n  linkUrl\n}': AnnouncementQueryResult;

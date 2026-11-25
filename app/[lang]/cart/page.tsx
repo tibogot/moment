@@ -24,10 +24,10 @@ export default async function CartPage({
   const { lang } = await params;
   const [cart, { availability, zones, slots, pickupSlots }, dict] =
     await Promise.all([
-    getCart(toLocale(lang), { clearStale: false }),
-    getDeliveryRules(),
-    getDictionary(toLocale(lang)),
-  ]);
+      getCart(toLocale(lang), { clearStale: false }),
+      getDeliveryRules(),
+      getDictionary(toLocale(lang)),
+    ]);
   const isEmpty = !cart || cart.lines.length === 0;
 
   return (
@@ -43,9 +43,17 @@ export default async function CartPage({
               </p>
               <Link
                 href={routes.shop}
-                className="font-owners-medium mt-6 inline-block border border-black px-8 py-4 text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                className="group mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
               >
-                {dict.cart.browseShop}
+                <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] tracking-wide uppercase">
+                  {dict.cart.browseShop}
+                  <span
+                    className="transition-transform duration-500 group-hover:translate-x-1.5"
+                    aria-hidden
+                  >
+                    &rarr;
+                  </span>
+                </span>
               </Link>
             </>
           ) : (

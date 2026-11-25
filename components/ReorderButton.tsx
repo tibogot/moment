@@ -83,7 +83,7 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
         type="button"
         onClick={handleClick}
         disabled={isPending}
-        className="font-owners-medium border border-black px-5 py-2.5 text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60 disabled:opacity-40"
+        className="font-owners-medium border border-sky bg-sky px-3 py-2.5 text-[11px] tracking-wide uppercase transition-colors duration-500 enabled:hover:bg-cream disabled:opacity-40"
       >
         {isPending ? labels.reordering : labels.reorder}
       </button>

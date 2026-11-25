@@ -61,7 +61,22 @@
   "home": {
     "hero": {
       "headline": "Un moment\ngourmand,\nsimplement.",
-      "lead": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, préparés chaque matin et livrés prêts à servir."
+      "lead": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, préparés chaque matin et livrés prêts à servir.",
+      "services": [
+        "Traiteur",
+        "Livraison",
+        "Événements",
+        "Coffee desk"
+      ]
+    },
+    "heroPhoto": {
+      "headline": "Life is\nmoments",
+      "lead": "Choisir son moment, même quand le temps manque.",
+      "intro": "Traiteur à Bruxelles, repas livrés au bureau, à la maison et pour vos événements.",
+      "introBody": [
+        "Salades, petits-déjeuners et jus pressés à froid, préparés chaque matin dans notre atelier de Forest avec des produits de saison, puis livrés prêts à servir à Bruxelles et dans ses environs. Vous choisissez le jour et le créneau, nous nous occupons du reste, au bureau comme à la maison.",
+        "Pour un déjeuner d’équipe qui change du quotidien ou un événement où chaque détail compte, nous composons le menu avec vous et assurons le service, de vingt à deux cents invités. Lancement, réunion ou dîner assis, nous adaptons le format, jamais l’exigence."
+      ]
     },
     "intro": {
       "headline": "Un traiteur bruxellois pour les tables du quotidien et des grands soirs.",
@@ -89,6 +104,27 @@
       "events": "Pour les événements",
       "home": "Pour la maison",
       "office": "Pour le bureau"
+    },
+    "moments": {
+      "brunch": "Brunch",
+      "lunch": "Lunch",
+      "pause": "Pause",
+      "shop": "Toute la boutique"
+    },
+    "offer": {
+      "title": "Pour chaque moment",
+      "events": {
+        "title": "Événements",
+        "body": "Un service traiteur complet, où chaque détail compte."
+      },
+      "companies": {
+        "title": "Entreprises",
+        "body": "Un déjeuner d'équipe qui change du quotidien."
+      },
+      "coffee": {
+        "title": "Coffee desk",
+        "body": "Un café qu'on prend enfin le temps de boire."
+      }
     },
     "statement": {
       "headline": "Des plats qui tiennent la table, pas seulement l'assiette — cuisinés le matin, prêts à servir.",
@@ -147,14 +183,15 @@
       "note": "Choisissez un jour disponible pour l'ajouter à votre commande — inutile d'avoir déjà quelque chose dans le panier. Il nous faut {days} jours de préavis.",
       "prev": "Préc.",
       "next": "Suiv.",
-      "dismiss": "Fermer",
+      "dismiss": "Annuler",
       "deliveryOn": "Livraison le",
       "savedPrefix": "Livraison prévue le",
       "savedSuffix": ". Cette date suit votre commande — modifiable à tout moment avant le paiement.",
       "save": "Enregistrer",
       "saving": "Enregistrement…",
       "choosePlates": "Choisir vos plats",
-      "askAboutDate": "Poser une question sur cette date"
+      "askAboutDate": "Poser une question sur cette date",
+      "today": "Aujourd’hui"
     },
     "panels": {
       "events": {
@@ -186,75 +223,70 @@
   "aboutNav": {
     "story": "Notre histoire",
     "news": "Actualités",
-    "faq": "Comment ça marche ?",
+    "faq": "Comment ça marche & FAQ",
     "findUs": "Où nous trouver",
     "collaborations": "Collaborations"
   },
   "faq": {
-    "title": "Comment ça marche ?",
+    "title": "Comment ça marche & FAQ",
     "lead": "De la boutique jusqu'à votre table, étape par étape. Et juste en dessous, l'essentiel sur la livraison et les questions qu'on nous pose le plus souvent.",
     "stepsTitle": "Commander, pas à pas",
     "steps": [
       {
         "title": "Choisissez",
-        "body": "Parcourez la boutique et nos menus. Chaque produit se commande en plusieurs pièces identiques, pour que chacun à table ait sa part."
+        "body": "La boutique et nos menus, chaque produit en plusieurs pièces."
       },
       {
         "title": "Livraison ou retrait",
-        "body": "Dans le panier, indiquez votre adresse : les frais, le minimum de commande et le montant à partir duquel la livraison est offerte s'affichent selon la distance. Ou venez chercher votre commande à l'atelier, à Forest, sans frais."
+        "body": "Votre adresse, étage et code compris, ou le retrait à l'atelier, à Forest."
       },
       {
-        "title": "Le jour et l'heure",
-        "body": "Choisissez une date dans le calendrier : il n'affiche que les jours que vous pouvez encore réserver. Puis un créneau de deux heures pour la livraison, ou votre heure de passage pour le retrait."
+        "title": "Le jour et le créneau",
+        "body": "Une date dans le calendrier, puis un créneau de deux heures."
       },
       {
-        "title": "Vos précisions",
-        "body": "Ajoutez ce qu'il faut savoir pour vous livrer : étage, code, personne à appeler. C'est aussi l'endroit pour nous signaler les régimes et les allergies."
-      },
-      {
-        "title": "Paiement",
-        "body": "Vous réglez en ligne, sur une page de paiement sécurisée. Votre panier, votre date et votre créneau y sont repris tels que vous les avez choisis."
-      },
-      {
-        "title": "Confirmation",
-        "body": "Vous recevez un e-mail qui récapitule vos produits, la date et le créneau. Avec un compte, vous retrouvez vos commandes passées et recommandez en un clic."
+        "title": "Payez, c'est confirmé",
+        "body": "Paiement en ligne sécurisé, puis un e-mail qui récapitule tout."
       }
     ],
-    "glanceTitle": "La livraison en bref",
     "glance": {
-      "zones": "Zones et frais",
-      "slots": "Créneaux de livraison",
-      "notice": "Préavis",
       "noticeValue": "{days} jours, commandes clôturées à {cutoff}",
-      "closed": "Jours fermés",
-      "pickup": "Retrait à l'atelier",
       "pickupValue": "{address} · sans frais · minimum {minimum} · {slots}",
-      "nextDay": "Retrait la veille",
       "nextDayValue": "Cookies, cakes, snacks, épicerie et jus : commande jusqu'à {cutoff} la veille, minimum {minimum}",
-      "pieces": "Par produit",
       "piecesValue": "{pieces} pièces identiques minimum"
+    },
+    "ordering": {
+      "title": "Commander & se faire livrer",
+      "zones": {
+        "title": "Zones et frais",
+        "body": "Nous livrons Bruxelles et ses environs depuis notre atelier de Forest. Plus loin, nous établissons un devis sur mesure."
+      },
+      "slots": {
+        "title": "Créneaux de livraison",
+        "body": "Vous choisissez un créneau de deux heures au moment de la commande."
+      },
+      "notice": {
+        "title": "Délai pour commander",
+        "body": "Le calendrier n'affiche que les jours encore disponibles. Pour un événement, contactez-nous le plus tôt possible."
+      },
+      "pieces": {
+        "title": "Par produit",
+        "body": "Chaque produit se commande en plusieurs pièces identiques."
+      },
+      "pickup": {
+        "title": "Retrait à l'atelier",
+        "body": "Choisissez « Click & collect » à la commande, puis votre heure de passage."
+      },
+      "nextDay": {
+        "title": "Commander la veille",
+        "body": "Certains produits se commandent la veille, à retirer à l'atelier."
+      }
     },
     "zoneBrussels": "Bruxelles",
     "zoneMinimum": "minimum {amount}",
     "zoneFree": "offerte dès {amount}",
     "questionsTitle": "Questions fréquentes",
     "items": [
-      {
-        "q": "Où livrez-vous ?",
-        "a": "Nous livrons à Bruxelles et dans ses environs, depuis notre atelier de Forest. Les frais, le minimum de commande et le montant à partir duquel la livraison est offerte dépendent de la distance : vous les trouvez dans « La livraison en bref », et le panier les calcule pour votre adresse. Au-delà de notre zone, nous établissons un devis sur mesure."
-      },
-      {
-        "q": "À quelle heure ma commande arrive-t-elle ?",
-        "a": "Vous choisissez un créneau de deux heures au moment de la commande. Un créneau est complet ? Contactez-nous : selon votre adresse et notre tournée, nous pourrons peut-être vous ajouter à une livraison déjà prévue."
-      },
-      {
-        "q": "Combien de temps à l'avance faut-il commander ?",
-        "a": "Le préavis et l'heure limite de commande sont indiqués dans « La livraison en bref ». Le calendrier du site n'affiche que les jours encore disponibles. Pour un événement, contactez-nous le plus tôt possible : les grandes dates partent vite."
-      },
-      {
-        "q": "Puis-je venir chercher ma commande ?",
-        "a": "Oui, à l'atelier, à Forest, sans frais : choisissez « Click & collect » lors de votre commande, puis votre heure de passage. Les cookies, cakes, healthy snacks, produits d'épicerie et jus pressés à froid peuvent même être commandés la veille pour le lendemain ; si la commande contient d'autres produits, le préavis habituel s'applique. Adresse, horaires et minimums : voir « La livraison en bref »."
-      },
       {
         "q": "Puis-je annuler ma commande ?",
         "a": "Oui, gratuitement jusqu'à 24 heures avant la date de livraison prévue : la commande est intégralement remboursée. En deçà de 24 heures, l'annulation ne peut en principe pas être remboursée, les produits étant frais et préparés spécifiquement pour votre commande. Si quelque chose ne va pas avec la livraison ou avec nos produits, appelez-nous immédiatement et nous trouverons une solution."
@@ -271,7 +303,12 @@
         "q": "Travaillez-vous avec les entreprises ?",
         "a": "Oui, une grande partie de notre activité. Lunchs de bureau, réunions, réceptions et événements d'entreprise. Nous facturons avec votre numéro de TVA."
       }
-    ]
+    ],
+    "contactCta": {
+      "title": "Une autre question ?",
+      "body": "Écrivez-nous ou appelez-nous, on vous répond avec plaisir.",
+      "button": "Contactez-nous"
+    }
   },
   "delivery": {
     "calendarNote": "Les jours en bleu sont fermés ou complets — il nous faut {days} jours de préavis.",
@@ -1000,7 +1037,11 @@
       "other": "Partenaire"
     },
     "partnerCta": "Vous souhaitez proposer les produits Moment dans votre établissement ?",
-    "partnerLink": "Contactez-nous"
+    "partnerLink": "Contactez-nous",
+    "zoomIn": "Zoomer",
+    "zoomOut": "Dézoomer",
+    "closePopup": "Fermer",
+    "attribution": "Afficher les crédits de la carte"
   },
   "partner": {
     "title": "Collaborations",

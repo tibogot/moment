@@ -10,9 +10,15 @@ import { HomeIcon } from "@sanity/icons/Home";
  * paragraph moved into the Studio would need writing three times and would go
  * stale in two of them the first time it was edited in a hurry.
  *
- * Only the slots that exist today. The rest of the home page still reads its
- * pictures from `public/images`, and a field offered here that nothing renders
- * would teach the owners not to trust the screen.
+ * Only the slots that exist today, in the order they come down the v2 home
+ * (25 November 2026): the hero, the three beats (la cuisine, la livraison,
+ * la table), the three cards of « Pour chaque moment ». A field offered here
+ * that nothing renders would teach the owners not to trust the screen; an
+ * empty one leaves the built-in photograph in place.
+ *
+ * And the hero's two texts (25 November 2026), the one piece of copy here:
+ * the line most likely to change with the season. Both fall back, field by
+ * field and language by language, to the dictionaries' wording.
  *
  * There is no alt-text field on purpose: every one of these is decorative in
  * the layout — the headline beside the hero and the panel titles carry the
@@ -26,6 +32,22 @@ export const homePage = defineType({
   icon: HomeIcon,
   fields: [
     defineField({
+      name: "heroHeadline",
+      title: "Titre d'ouverture",
+      type: "localeText",
+      description:
+        "Le grand titre au centre de la photo d'ouverture (aujourd'hui « Life is moments »). Court : deux ou trois mots. Un retour à la ligne ici coupe le titre au même endroit sur le site. Laissé vide, le titre actuel reste ; une langue laissée vide affiche le français.",
+    }),
+
+    defineField({
+      name: "heroLead",
+      title: "Phrase d'ouverture",
+      type: "localeString",
+      description:
+        "La phrase sous le titre d'ouverture (aujourd'hui « Choisir son moment, même quand le temps manque. »). Une phrase, sans prix ni horaire. Laissée vide, la phrase actuelle reste.",
+    }),
+
+    defineField({
       name: "heroImage",
       title: "Photo d'ouverture",
       type: "image",
@@ -35,19 +57,55 @@ export const homePage = defineType({
     }),
 
     defineField({
+      name: "kitchenImage",
+      title: "Photo « La cuisine »",
+      type: "image",
+      description:
+        "La grande photo verticale à droite du texte « La cuisine », sous le carrousel des produits.",
+      options: { hotspot: true },
+    }),
+
+    defineField({
+      name: "deliveryImage",
+      title: "Photo « Livraison »",
+      type: "image",
+      description:
+        "La grande photo verticale à gauche du texte « Livraison », sur fond bleu.",
+      options: { hotspot: true },
+    }),
+
+    defineField({
+      name: "hostingImage",
+      title: "Photo « La table »",
+      type: "image",
+      description: "La grande photo verticale à droite du texte « La table ».",
+      options: { hotspot: true },
+    }),
+
+    defineField({
       name: "eventsImage",
       title: "Photo « Événements »",
       type: "image",
       description:
-        "Le panneau de gauche, sous le texte d'introduction, qui mène à la page Événements.",
+        "La carte « Événements » de la section « Pour chaque moment », qui mène à la page Événements.",
+      options: { hotspot: true },
+    }),
+
+    defineField({
+      name: "companiesImage",
+      title: "Photo « Entreprises »",
+      type: "image",
+      description:
+        "La carte « Entreprises » de la section « Pour chaque moment », qui mène à l'espace professionnel.",
       options: { hotspot: true },
     }),
 
     defineField({
       name: "coffeeImage",
-      title: "Photo « Comptoir café »",
+      title: "Photo « Coffee desk »",
       type: "image",
-      description: "Le panneau de droite, qui mène à la page Café.",
+      description:
+        "La carte « Coffee desk » de la section « Pour chaque moment », qui mène à la page Café.",
       options: { hotspot: true },
     }),
   ],

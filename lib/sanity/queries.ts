@@ -29,16 +29,19 @@ const articleListFields = `
  * and an empty page until one exists. That is correct. Showing them French is
  * not a fallback, it is a different article.
  */
-export const articlesQuery = defineQuery(`*[_type == "article" && language == $language] | order(publishedAt desc) {
+export const articlesQuery =
+  defineQuery(`*[_type == "article" && language == $language] | order(publishedAt desc) {
   ${articleListFields}
 }`);
 
-export const articleBySlugQuery = defineQuery(`*[_type == "article" && language == $language && slug.current == $slug][0] {
+export const articleBySlugQuery =
+  defineQuery(`*[_type == "article" && language == $language && slug.current == $slug][0] {
   ${articleListFields},
   body
 }`);
 
-export const articleSlugsQuery = defineQuery(`*[_type == "article" && language == $language && defined(slug.current)]{
+export const articleSlugsQuery =
+  defineQuery(`*[_type == "article" && language == $language && defined(slug.current)]{
   "slug": slug.current
 }`);
 
@@ -110,17 +113,20 @@ const menuCourses = `
   }
 `;
 
-export const menusQuery = defineQuery(`*[_type == "menu"] | order(pricePerPerson asc) {
+export const menusQuery =
+  defineQuery(`*[_type == "menu"] | order(pricePerPerson asc) {
   ${menuFields},
   ${menuCourses}
 }`);
 
-export const menuBySlugQuery = defineQuery(`*[_type == "menu" && slug.current == $slug][0] {
+export const menuBySlugQuery =
+  defineQuery(`*[_type == "menu" && slug.current == $slug][0] {
   ${menuFields},
   ${menuCourses}
 }`);
 
-export const menuSlugsQuery = defineQuery(`*[_type == "menu" && defined(slug.current)]{
+export const menuSlugsQuery =
+  defineQuery(`*[_type == "menu" && defined(slug.current)]{
   "slug": slug.current
 }`);
 
@@ -224,7 +230,8 @@ const pastEventFields = `
  * the dataset another way would otherwise render a caption with a hole where
  * the picture goes.
  */
-export const pastEventsQuery = defineQuery(`*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {
+export const pastEventsQuery =
+  defineQuery(`*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {
   ${pastEventFields}
 }`);
 
@@ -268,26 +275,51 @@ export async function getPastEvents(limit?: number): Promise<PastEvent[]> {
  * grey instead.
  */
 export const homePageQuery = defineQuery(`*[_id == "homePage"][0] {
+  heroHeadline,
+  heroLead,
   heroImage { ..., "lqip": asset->metadata.lqip },
+  kitchenImage,
+  deliveryImage,
+  hostingImage,
   eventsImage,
+  companiesImage,
   coffeeImage
 }`);
 
 export type HomePageImages = {
+  /** The hero's two texts, untouched: the page picks the language. */
+  heroHeadline: LocaleString | null;
+  heroLead: LocaleString | null;
   hero: (SanityImage & { lqip?: string }) | null;
+  kitchen: SanityImage | null;
+  delivery: SanityImage | null;
+  hosting: SanityImage | null;
   events: SanityImage | null;
+  companies: SanityImage | null;
   coffee: SanityImage | null;
 };
 
 const NO_HOME_IMAGES: HomePageImages = {
+  heroHeadline: null,
+  heroLead: null,
   hero: null,
+  kitchen: null,
+  delivery: null,
+  hosting: null,
   events: null,
+  companies: null,
   coffee: null,
 };
 
 type HomePageResponse = {
+  heroHeadline?: LocaleString | null;
+  heroLead?: LocaleString | null;
   heroImage?: (SanityImage & { lqip?: string }) | null;
+  kitchenImage?: SanityImage | null;
+  deliveryImage?: SanityImage | null;
+  hostingImage?: SanityImage | null;
   eventsImage?: SanityImage | null;
+  companiesImage?: SanityImage | null;
   coffeeImage?: SanityImage | null;
 };
 
@@ -312,8 +344,14 @@ export async function getHomePageImages(): Promise<HomePageImages> {
     if (!response) return NO_HOME_IMAGES;
 
     return {
+      heroHeadline: response.heroHeadline ?? null,
+      heroLead: response.heroLead ?? null,
       hero: uploaded(response.heroImage),
+      kitchen: uploaded(response.kitchenImage),
+      delivery: uploaded(response.deliveryImage),
+      hosting: uploaded(response.hostingImage),
       events: uploaded(response.eventsImage),
+      companies: uploaded(response.companiesImage),
       coffee: uploaded(response.coffeeImage),
     };
   } catch {
@@ -368,7 +406,8 @@ export async function getFaqPage(): Promise<FaqPageContent | null> {
  * resolved from the address afterwards, in `lib/partners.ts` — the query only
  * returns what was typed.
  */
-export const partnersQuery = defineQuery(`*[_type == "partner" && visible != false] | order(name asc) {
+export const partnersQuery =
+  defineQuery(`*[_type == "partner" && visible != false] | order(name asc) {
   _id,
   name,
   kind,
@@ -388,7 +427,8 @@ export async function getPartnerDocuments() {
  * root layout, so it is on every page; the `announcement` tag lets a publish
  * in the Studio reach all of them at once.
  */
-export const announcementQuery = defineQuery(`*[_id == "announcement" && enabled == true][0] {
+export const announcementQuery =
+  defineQuery(`*[_id == "announcement" && enabled == true][0] {
   message,
   linkLabel,
   linkUrl
@@ -402,11 +442,12 @@ export type AnnouncementContent = {
 
 export async function getAnnouncement(): Promise<AnnouncementContent | null> {
   try {
-    const response = await sanityClient.fetch<Partial<AnnouncementContent> | null>(
-      announcementQuery,
-      {},
-      sanityCache("announcement"),
-    );
+    const response =
+      await sanityClient.fetch<Partial<AnnouncementContent> | null>(
+        announcementQuery,
+        {},
+        sanityCache("announcement"),
+      );
     if (!response?.message) return null;
     return {
       message: response.message,

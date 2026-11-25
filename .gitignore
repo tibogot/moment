@@ -49,3 +49,9 @@ next-env.d.ts
 # edit. `npm run typegen` rebuilds both.
 schema.json
 .claude/settings.json
+
+# Notes for Rond Carré Studio (the paying client) — not for Moment's repo
+docs/notes-rond-carre.md
+
+# Brand guidelines PDF (8.6 MB): kept locally for design work, not in the repo
+docs/brand/
