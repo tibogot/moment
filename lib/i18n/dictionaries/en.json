@@ -1,7 +1,8 @@
 {
   "nav": {
-    "shop": "Shop",
+    "shop": "Our products",
     "menus": "Menus",
+    "collaborations": "Collaborations",
     "events": "Events",
     "coffee": "Coffee",
     "news": "News",
@@ -107,7 +108,7 @@
       "brunch": "Brunch",
       "lunch": "Lunch",
       "pause": "Break",
-      "shop": "The whole shop",
+      "shop": "All products",
       "heading": "Our products"
     },
     "offer": {
@@ -236,7 +237,7 @@
     "steps": [
       {
         "title": "Choose",
-        "body": "The shop and our menus, each product in several pieces."
+        "body": "Our products, each in several pieces."
       },
       {
         "title": "Delivery or collection",
@@ -380,7 +381,7 @@
     "chooseMethod": "First choose home delivery or click & collect.",
     "securePayment": "Secure payment",
     "empty": "Your cart is empty.",
-    "browseShop": "Browse the shop",
+    "browseShop": "See our products",
     "total": "Total",
     "checkout": "Checkout",
     "change": "Change",
@@ -430,7 +431,7 @@
     "pickSlot": "Choose"
   },
   "shop": {
-    "title": "Shop",
+    "title": "Our products",
     "searchResults": "Results for “{query}”",
     "clearSearch": "Clear search",
     "grid": "Grid",
@@ -520,6 +521,8 @@
     "servingInstructions": "Serving instructions",
     "storage": "Storage",
     "orderPreferencesTitle": "When and how",
+    "priceFrom": "from {price}",
+    "size": "Size",
     "viewImage": "View image {index} of {total}",
     "minimumHint": "Minimum {minimum} pieces per product.",
     "nextDayNote": "Available the day before: order by {cutoff} to collect from the atelier tomorrow.",
@@ -607,6 +610,8 @@
       "message_too_long": "Please keep this under 1200 characters.",
       "too_long": "That is longer than we can store.",
       "company_required": "We need the company name.",
+      "products_required": "Tick at least one product, or name it under “Other”.",
+      "frequency_required": "Choose a delivery frequency.",
       "vat_required": "We need your VAT number to invoice you.",
       "vat_invalid": "A Belgian VAT number is BE followed by ten digits.",
       "address_required": "Please enter your venue's address."
@@ -718,7 +723,7 @@
       ]
     },
     "shop": {
-      "title": "Shop — Plates, Salads & Cold-Pressed Juices",
+      "title": "Our products — Plates, Salads & Cold-Pressed Juices",
       "description": "Order seasonal plates, salads and cold-pressed juices from our Brussels kitchen. Cooked the morning of delivery, ready to serve.",
       "keywords": [
         "lunch delivery Brussels",
@@ -950,7 +955,7 @@
     "accordion": {
       "headline": "For people who care how it tastes — and how it looks, in Brussels.",
       "body": "Prepared each morning and delivered ready to serve. We run events end to end, and keep a coffee desk.",
-      "cta": "See menus",
+      "cta": "See our products",
       "items": [
         {
           "title": "Cooked that morning",
@@ -1105,9 +1110,9 @@
   },
   "partner": {
     "title": "Collaborations",
-    "lead": "Would you like to offer Moment products in your venue, or work with us? For any partnership, supply or restocking request, get in touch through this form. We would love to hear from you!",
+    "lead": "Would you like to offer Moment products in your café, gym, showroom or workspace? We support you with a selection of salads, sandwiches, sweet treats and fresh drinks, delivered regularly to your venue. Together we set the products, quantities and delivery rhythm that suit your customers. Tell us about your venue and what you have in mind, and let's shape a collaboration.",
     "intro": "Become a partner",
-    "body": "Tell us about your venue: we will get back to you shortly.",
+    "body": "Tell us about your venue: we will send you our trade prices.",
     "steps": [
       {
         "title": "Your venue",
@@ -1132,8 +1137,31 @@
     "companyPlaceholder": "Café, deli, hotel…",
     "address": "Venue address",
     "addressPlaceholder": "Street, number, postcode, town",
-    "message": "Your project",
-    "messagePlaceholder": "The products you are interested in, estimated quantities, frequency…",
+    "products": "Which products are you interested in?",
+    "productOptions": {
+      "Cold-pressed juices": "Cold-pressed juices",
+      "Other drinks": "Other drinks",
+      "Salads": "Salads",
+      "Sweet pots": "Sweet pots",
+      "Bagels & sandwiches": "Bagels & sandwiches",
+      "Toasts": "Toasts",
+      "Desserts & sweets": "Desserts & sweets",
+      "Healthy snacks": "Healthy snacks",
+      "Grocery": "Grocery & pantry"
+    },
+    "productsOther": "Other",
+    "productsOtherPlaceholder": "A specific product, a particular request…",
+    "frequency": "How often would you like a delivery?",
+    "frequencies": {
+      "Several times a week": "Several times a week",
+      "Once a week": "Once a week",
+      "Every two weeks": "Every two weeks",
+      "Occasionally": "Occasionally"
+    },
+    "quantities": "Estimated quantities",
+    "quantitiesPlaceholder": "For example: 20 salads and 30 juices a week",
+    "message": "Anything else to tell us?",
+    "messagePlaceholder": "Your venue, your customers, your opening hours…",
     "submit": "Send request"
   },
   "pageIntro": {

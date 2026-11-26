@@ -88,6 +88,11 @@ export default async function CartPage({
                         >
                           {line.title}
                         </Link>
+                        {line.variantTitle && (
+                          <p className="font-archivo-light mt-1 text-[13px] opacity-70">
+                            {line.variantTitle}
+                          </p>
+                        )}
                         <CartLineControls
                           lineId={line.id}
                           quantity={line.quantity}

@@ -40,6 +40,15 @@ const nextConfig: NextConfig = {
     return [
       { source: "/admin", destination: "/studio", permanent: false },
       { source: "/admin/:path*", destination: "/studio", permanent: false },
+      // The catering menus left the site on 27 November 2026 (the owners no
+      // longer offer them). Not permanent: the pages and the Studio data are
+      // kept, and bringing them back means deleting these lines.
+      {
+        source: "/:lang(fr|nl|en)/menus/:path*",
+        destination: "/:lang/events",
+        permanent: false,
+      },
+      { source: "/menus/:path*", destination: "/events", permanent: false },
     ];
   },
 

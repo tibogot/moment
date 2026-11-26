@@ -131,7 +131,7 @@ function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
             the two stay in step — Archivo Light needs the couple of extra px
             over the Owners Medium title above it. */}
         <span className="font-archivo-light text-(length:--card-price)">
-          {product.price}
+          {product.displayPrice}
         </span>
       </div>
     </Link>

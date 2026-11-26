@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { AddToCartButton } from "@/components/AddToCartButton";
+import { ProductPurchase } from "@/components/ProductPurchase";
 import {
   getDeliveryAvailability,
   getMinimumPiecesPerProduct,
@@ -175,26 +175,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {product.title}
           </h1>
 
-          <p className="font-archivo-light mt-4 text-[16px]">{product.price}</p>
-
-          {product.descriptionHtml ? (
-            <div
-              className="product-description font-archivo-light mt-6 text-[18px] leading-[1.6] [&_p+p]:mt-4"
-              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
-            />
-          ) : product.description ? (
-            <p className="font-archivo-light mt-6 text-[18px] leading-[1.6] whitespace-pre-line">
-              {product.description}
-            </p>
-          ) : null}
-
-          <AddToCartButton
-            variantId={product.variantId}
-            available={product.availableForSale}
+          {/* Price, size (when there are several) and Add to cart, with
+              the description between the price and the sizes. */}
+          <ProductPurchase
+            variants={product.variants}
+            defaultVariantId={product.variantId}
             analyticsItem={analyticsItem}
             minimumQuantity={minimumQuantity}
-            className="mt-8"
-          />
+          >
+            {product.descriptionHtml ? (
+              <div
+                className="product-description font-archivo-light mt-6 text-[18px] leading-[1.6] [&_p+p]:mt-4"
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              />
+            ) : product.description ? (
+              <p className="font-archivo-light mt-6 text-[18px] leading-[1.6] whitespace-pre-line">
+                {product.description}
+              </p>
+            ) : null}
+          </ProductPurchase>
           <TrackViewItem item={analyticsItem} />
           {hasNextDayTag(product.tags ?? []) && (
             <p className="font-archivo-light mt-2 text-[13px] opacity-70">

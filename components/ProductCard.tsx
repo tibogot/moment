@@ -109,7 +109,7 @@ export function ProductCard({
           {product.title}
         </Title>
         <span className="font-archivo-light text-(length:--card-price)">
-          {product.price}
+          {product.displayPrice}
         </span>
       </div>
     </Link>

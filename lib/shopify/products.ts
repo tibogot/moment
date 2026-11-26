@@ -2,6 +2,16 @@ import { unstable_cache } from "next/cache";
 import { CACHE_BACKSTOP_SECONDS } from "@/lib/cache";
 import type { Locale } from "@/lib/i18n/config";
 import { formatPriceAmount } from "@/lib/i18n/format";
+import en from "@/lib/i18n/dictionaries/en.json";
+import fr from "@/lib/i18n/dictionaries/fr.json";
+import nl from "@/lib/i18n/dictionaries/nl.json";
+
+/** "dès {price}" per language, read from the dictionaries. */
+const PRICE_FROM: Record<Locale, string> = {
+  fr: fr.product.priceFrom,
+  nl: nl.product.priceFrom,
+  en: en.product.priceFrom,
+};
 import {
   isShopifyConfigured,
   shopifyLanguage,
@@ -38,7 +48,7 @@ export const SHOPIFY_CACHE_TAG = "shopify-products";
  * data cache outlives deployments, so without a new key the old entries keep
  * being served until the backstop expires them.
  */
-export const SHOPIFY_CACHE_VERSION = "v2";
+export const SHOPIFY_CACHE_VERSION = "v3";
 
 /**
  * The price is formatted in the page's language — "5,50 €" in French and
@@ -50,6 +60,22 @@ export function mapProductNode(
   language: Locale,
 ): ShopifyProduct {
   const { amount, currencyCode } = node.priceRange.minVariantPrice;
+  const variants = (node.variants?.edges ?? []).map(({ node: variant }) => ({
+    id: variant.id,
+    title: variant.title,
+    price: formatPriceAmount(
+      language,
+      variant.price.amount,
+      variant.price.currencyCode,
+    ),
+    priceAmount: variant.price.amount,
+    availableForSale: variant.availableForSale,
+  }));
+  const defaultVariant =
+    variants.find((variant) => variant.availableForSale) ?? variants[0];
+  const price = formatPriceAmount(language, amount, currencyCode);
+  const priceVaries =
+    Number(node.priceRange.maxVariantPrice?.amount ?? amount) > Number(amount);
 
   return {
     id: node.id,
@@ -60,13 +86,18 @@ export function mapProductNode(
     shortDescription: node.shortDescription?.value?.trim() ?? "",
     imageUrl: node.featuredImage?.url ?? null,
     imageAlt: node.featuredImage?.altText ?? node.title,
-    price: formatPriceAmount(language, amount, currencyCode),
+    price,
     priceAmount: amount,
     currencyCode,
     productType: node.productType,
     tags: node.tags,
     availableForSale: node.availableForSale,
-    variantId: node.variants?.edges[0]?.node.id ?? null,
+    variantId: defaultVariant?.id ?? null,
+    variants,
+    priceVaries,
+    displayPrice: priceVaries
+      ? PRICE_FROM[language].replace("{price}", price)
+      : price,
   };
 }
 

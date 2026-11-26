@@ -1,7 +1,8 @@
 {
   "nav": {
-    "shop": "Winkel",
+    "shop": "Producten",
     "menus": "Menu's",
+    "collaborations": "Samenwerkingen",
     "events": "Evenementen",
     "coffee": "Koffie",
     "news": "Nieuws",
@@ -107,7 +108,7 @@
       "brunch": "Brunch",
       "lunch": "Lunch",
       "pause": "Pauze",
-      "shop": "De hele winkel",
+      "shop": "Alle producten",
       "heading": "Onze producten"
     },
     "offer": {
@@ -236,7 +237,7 @@
     "steps": [
       {
         "title": "Kies",
-        "body": "De winkel en onze menu's, elk product in meerdere stuks."
+        "body": "Onze producten, elk product in meerdere stuks."
       },
       {
         "title": "Levering of afhalen",
@@ -380,7 +381,7 @@
     "chooseMethod": "Kies eerst levering aan huis of click & collect.",
     "securePayment": "Veilig betalen",
     "empty": "Uw winkelmand is leeg.",
-    "browseShop": "Naar de winkel",
+    "browseShop": "Bekijk onze producten",
     "total": "Totaal",
     "checkout": "Afrekenen",
     "change": "Wijzigen",
@@ -430,7 +431,7 @@
     "pickSlot": "Kiezen"
   },
   "shop": {
-    "title": "Winkel",
+    "title": "Onze producten",
     "searchResults": "Resultaten voor “{query}”",
     "clearSearch": "Zoekopdracht wissen",
     "grid": "Raster",
@@ -520,6 +521,8 @@
     "servingInstructions": "Serveertips",
     "storage": "Bewaren",
     "orderPreferencesTitle": "Wanneer en hoe",
+    "priceFrom": "vanaf {price}",
+    "size": "Formaat",
     "viewImage": "Afbeelding {index} van {total} bekijken",
     "minimumHint": "Minimaal {minimum} stuks per product.",
     "nextDayNote": "De dag ervoor te bestellen: bestel vóór {cutoff} en haal morgen af in het atelier.",
@@ -607,6 +610,8 @@
       "message_too_long": "Houd het onder 1200 tekens.",
       "too_long": "Dat is langer dan wij kunnen bewaren.",
       "company_required": "Wij hebben de bedrijfsnaam nodig.",
+      "products_required": "Vink minstens één product aan, of vul het in bij ‘Andere’.",
+      "frequency_required": "Kies een leveringsfrequentie.",
       "vat_required": "Wij hebben uw btw-nummer nodig om te factureren.",
       "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers.",
       "address_required": "Vul het adres van uw zaak in."
@@ -718,7 +723,7 @@
       ]
     },
     "shop": {
-      "title": "Winkel — Gerechten, salades en koudgeperste sappen",
+      "title": "Onze producten — Gerechten, salades en koudgeperste sappen",
       "description": "Bestel seizoensgerechten, salades en koudgeperste sappen uit onze Brusselse keuken. Bereid op de ochtend zelf, klaar om te serveren.",
       "keywords": [
         "lunchlevering Brussel",
@@ -951,7 +956,7 @@
     "accordion": {
       "headline": "Voor wie geeft om smaak — en om presentatie, in Brussel.",
       "body": "Elke ochtend bereid en klaar om te serveren geleverd. Wij verzorgen evenementen van begin tot eind, en houden een koffiebar.",
-      "cta": "Bekijk de menu's",
+      "cta": "Bekijk onze producten",
       "items": [
         {
           "title": "Gekookt op de ochtend zelf",
@@ -1106,9 +1111,9 @@
   },
   "partner": {
     "title": "Samenwerkingen",
-    "lead": "Wilt u de producten van Moment in uw zaak aanbieden of met ons samenwerken? Voor elke aanvraag voor een partnerschap, bevoorrading of herbevoorrading kunt u ons contacteren via dit formulier. We horen graag van u!",
+    "lead": "Wilt u de producten van Moment aanbieden in uw café, uw sportzaal, uw showroom of uw werkruimte? We begeleiden u met een selectie salades, sandwiches, zoetigheden en frisse dranken, regelmatig geleverd in uw zaak. Samen bepalen we de producten, de hoeveelheden en het leveringsritme die bij uw klanten passen. Vertel ons over uw zaak en uw wensen, en we bedenken samen een samenwerking.",
     "intro": "Partner worden",
-    "body": "Vertel ons over uw zaak: we nemen snel contact met u op.",
+    "body": "Vertel ons over uw zaak: we sturen u onze professionele tarieven.",
     "steps": [
       {
         "title": "Uw zaak",
@@ -1133,8 +1138,31 @@
     "companyPlaceholder": "Café, delicatessenzaak, hotel…",
     "address": "Adres van de zaak",
     "addressPlaceholder": "Straat, nummer, postcode, gemeente",
-    "message": "Uw project",
-    "messagePlaceholder": "De producten die u interesseren, de geschatte hoeveelheden, de frequentie…",
+    "products": "Welke producten interesseren u?",
+    "productOptions": {
+      "Cold-pressed juices": "Koudgeperste sappen",
+      "Other drinks": "Andere dranken",
+      "Salads": "Salades",
+      "Sweet pots": "Sweet pots",
+      "Bagels & sandwiches": "Bagels & sandwiches",
+      "Toasts": "Toasts",
+      "Desserts & sweets": "Desserts & zoetigheden",
+      "Healthy snacks": "Healthy snacks",
+      "Grocery": "Kruidenierswaren"
+    },
+    "productsOther": "Andere",
+    "productsOtherPlaceholder": "Een specifiek product, een bijzondere vraag…",
+    "frequency": "Hoe vaak wilt u geleverd worden?",
+    "frequencies": {
+      "Several times a week": "Meerdere keren per week",
+      "Once a week": "Eén keer per week",
+      "Every two weeks": "Om de twee weken",
+      "Occasionally": "Af en toe"
+    },
+    "quantities": "Geschatte hoeveelheden",
+    "quantitiesPlaceholder": "Bijvoorbeeld: 20 salades en 30 sappen per week",
+    "message": "Wilt u ons nog iets vertellen?",
+    "messagePlaceholder": "Uw zaak, uw klanten, uw openingsuren…",
     "submit": "Aanvraag versturen"
   },
   "pageIntro": {

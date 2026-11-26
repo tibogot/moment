@@ -20,7 +20,10 @@ import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
+  PARTNER_FREQUENCIES,
+  PARTNER_PRODUCTS,
   PARTNER_REQUESTS,
+  PRODUCTS_SEPARATOR,
   PRO_OCCASION,
   type ContactErrorCode,
 } from "@/lib/contact";
@@ -136,6 +139,13 @@ function TextField({
 }
 
 type OccasionChipsProps = {
+  /** The form field. `occasion` unless said otherwise. */
+  name?: "occasion" | "products" | "frequency";
+  /**
+   * Checkboxes instead of radios: several answers, carried in `value` as one
+   * string joined with PRODUCTS_SEPARATOR.
+   */
+  multiple?: boolean;
   label: string;
   options: readonly string[];
   /** Display text for each option value. */
@@ -156,6 +166,8 @@ type OccasionChipsProps = {
  * cell's padding and printed on top of the rule above it.
  */
 function OccasionChips({
+  name = "occasion",
+  multiple = false,
   label,
   options,
   labels,
@@ -163,13 +175,25 @@ function OccasionChips({
   onChange,
   error,
 }: OccasionChipsProps) {
+  const id = `contact-${name}`;
+  const chosen = multiple ? value.split(PRODUCTS_SEPARATOR) : [value];
+  const toggle = (option: string, on: boolean) =>
+    onChange(
+      // Rebuilt from `options` so the order is the list's, not the clicks'.
+      options
+        .filter((candidate) =>
+          candidate === option ? on : chosen.includes(candidate),
+        )
+        .join(PRODUCTS_SEPARATOR),
+    );
+
   return (
     <div
       role="group"
-      aria-labelledby="contact-occasion-label"
+      aria-labelledby={`${id}-label`}
       className={cn(CELL, "md:col-span-2")}
     >
-      <p id="contact-occasion-label" className={LABEL}>
+      <p id={`${id}-label`} className={LABEL}>
         {label}
       </p>
 
@@ -184,12 +208,16 @@ function OccasionChips({
             )}
           >
             <input
-              type="radio"
-              name="occasion"
+              type={multiple ? "checkbox" : "radio"}
+              name={name}
               value={option}
-              checked={value === option}
-              onChange={(event) => onChange(event.target.value)}
-              aria-describedby={error ? "contact-occasion-error" : undefined}
+              checked={chosen.includes(option)}
+              onChange={(event) =>
+                multiple
+                  ? toggle(option, event.target.checked)
+                  : onChange(event.target.value)
+              }
+              aria-describedby={error ? `${id}-error` : undefined}
               className="sr-only"
             />
             {labels[option]}
@@ -198,7 +226,7 @@ function OccasionChips({
       </div>
 
       {error && (
-        <p id="contact-occasion-error" className={ERROR}>
+        <p id={`${id}-error`} className={ERROR}>
           {error}
         </p>
       )}
@@ -541,6 +569,51 @@ export function ContactForm({
                       error={errorText(state.errors.vat)}
                       placeholder={dict.proAccount.vatPlaceholder}
                     />
+
+                    {/* The owners' three questions (27 November 2026): what,
+                        how often, how much. */}
+                    <OccasionChips
+                      name="products"
+                      multiple
+                      label={p.products}
+                      options={PARTNER_PRODUCTS}
+                      labels={p.productOptions}
+                      value={values.products}
+                      onChange={update("products")}
+                      error={errorText(state.errors.products)}
+                    />
+
+                    <TextField
+                      name="productsOther"
+                      label={p.productsOther}
+                      hint={t.optional}
+                      value={values.productsOther}
+                      onChange={update("productsOther")}
+                      error={errorText(state.errors.productsOther)}
+                      placeholder={p.productsOtherPlaceholder}
+                      className="md:col-span-2"
+                    />
+
+                    <OccasionChips
+                      name="frequency"
+                      label={p.frequency}
+                      options={PARTNER_FREQUENCIES}
+                      labels={p.frequencies}
+                      value={values.frequency}
+                      onChange={update("frequency")}
+                      error={errorText(state.errors.frequency)}
+                    />
+
+                    <TextField
+                      name="quantities"
+                      label={p.quantities}
+                      hint={t.optional}
+                      value={values.quantities}
+                      onChange={update("quantities")}
+                      error={errorText(state.errors.quantities)}
+                      placeholder={p.quantitiesPlaceholder}
+                      className="md:col-span-2"
+                    />
                   </>
                 ) : (
                   <>
@@ -611,15 +684,16 @@ export function ContactForm({
                         ? p.message
                         : t.message
                   }
+                  hint={partner ? t.optional : undefined}
                   value={values.message}
                   onChange={update("message")}
                   error={errorText(state.errors.message)}
                   placeholder={
                     partner ? p.messagePlaceholder : t.messagePlaceholder
                   }
-                  rows={6}
+                  rows={partner ? 4 : 6}
                   maxLength={MESSAGE_MAX}
-                  required
+                  required={!partner}
                   className="md:col-span-2"
                 />
 

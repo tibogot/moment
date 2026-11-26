@@ -107,7 +107,13 @@ type RawCart = {
           title: string;
           image: { url: string; altText: string | null } | null;
           price: { amount: string; currencyCode: string };
-          product: { title: string; handle: string; tags?: string[] };
+          product: {
+            title: string;
+            handle: string;
+            tags?: string[];
+            /** Two at most: enough to tell a real size choice from one. */
+            variants?: { edges: { node: { id: string } }[] };
+          };
         };
       };
     }[];
@@ -185,6 +191,13 @@ const CART_FIELDS = `
               title
               handle
               tags
+              variants(first: 2) {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
             }
           }
         }
@@ -305,8 +318,13 @@ function mapCartNode(locale: Locale, node: RawCart): Cart {
         quantity: line.quantity,
         title: merchandise.product.title,
         productHandle: merchandise.product.handle,
+        // Named only when the customer chose it: a product with one variant
+        // carries an admin label ("400", "option végétale") nobody picked.
         variantTitle:
-          merchandise.title === "Default Title" ? "" : merchandise.title,
+          merchandise.title === "Default Title" ||
+          (merchandise.product.variants?.edges.length ?? 0) < 2
+            ? ""
+            : merchandise.title,
         imageUrl: merchandise.image?.url ?? null,
         imageAlt: merchandise.image?.altText ?? merchandise.product.title,
         price: formatPrice(

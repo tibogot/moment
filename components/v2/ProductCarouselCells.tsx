@@ -334,7 +334,7 @@ export function ProductCarouselCells({
                       </p>
                     </div>
                     <span className="font-archivo-light text-[14px]">
-                      {product.price}
+                      {product.displayPrice}
                     </span>
                   </div>
                   {/* The image: the rows under the title, inset by the cell's

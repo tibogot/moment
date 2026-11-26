@@ -123,7 +123,7 @@ const GROUPS: Group[] = [
         ],
         tip: (
           <>
-            Les filtres de la boutique (vegan, végétarien, sans gluten) suivent
+            Les filtres de la page Nos produits (vegan, végétarien, sans gluten) suivent
             les <strong>tags</strong>, pas le texte.
           </>
         ),
@@ -345,7 +345,7 @@ const GROUPS: Group[] = [
           <>
             Une phrase courte, en français, et si possible aussi en néerlandais
             et en anglais (sinon le français s&apos;affiche partout). Un lien si
-            vous voulez (par exemple <code>/menus</code>).
+            vous voulez (par exemple <code>/events</code>).
           </>,
           <>
             Allumez <strong>Afficher le bandeau</strong>, puis{" "}
@@ -465,24 +465,6 @@ const GROUPS: Group[] = [
             N&apos;écrivez ni prix, ni minimum, ni délai, ni horaire dans ces
             textes : la page les affiche elle-même d&apos;après vos réglages
             Shopify, et ils restent ainsi toujours justes.
-          </>
-        ),
-      },
-      {
-        title: "Ajouter ou modifier un menu traiteur",
-        steps: [
-          <>
-            Menu de gauche → <strong>Menus traiteur</strong>.
-          </>,
-          <>
-            Nom, résumé, photo, services et plats, prix par personne, nombre de
-            convives, délai. <strong>Publier</strong>.
-          </>,
-        ],
-        tip: (
-          <>
-            Faites relire le champ « Régimes et allergies » : c&apos;est de
-            l&apos;information de sécurité.
           </>
         ),
       },

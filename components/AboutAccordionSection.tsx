@@ -49,7 +49,7 @@ export function AboutAccordionSection({
         </TextReveal>
 
         <Link
-          href={routes.menus}
+          href={routes.shop}
           className="group mt-6 inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream md:mt-[3svh]"
         >
           <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] uppercase tracking-wide">

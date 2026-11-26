@@ -194,6 +194,9 @@ export const pastEvent = defineType({
       type: "reference",
       group: "links",
       to: [{ type: "menu" }],
+      // Hidden since the menus left the site (27 November 2026); kept so a
+      // link already set is not reported as an unknown field.
+      hidden: true,
       description:
         "Facultatif. La formule du catalogue qui s'en rapproche le plus — la page peut alors renvoyer le lecteur vers son prix.",
     }),

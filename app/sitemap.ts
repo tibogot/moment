@@ -73,7 +73,6 @@ const staticRoutes: {
   { path: routes.home, changeFrequency: "weekly", priority: 1 },
   { path: routes.shop, changeFrequency: "daily", priority: 0.9 },
   { path: routes.collections, changeFrequency: "weekly", priority: 0.8 },
-  { path: routes.menus, changeFrequency: "monthly", priority: 0.9 },
   { path: routes.events, changeFrequency: "monthly", priority: 0.8 },
   { path: routes.coffee, changeFrequency: "monthly", priority: 0.7 },
   { path: routes.about, changeFrequency: "monthly", priority: 0.7 },
@@ -82,7 +81,7 @@ const staticRoutes: {
   { path: routes.faq, changeFrequency: "monthly", priority: 0.6 },
   { path: routes.proAccount, changeFrequency: "yearly", priority: 0.7 },
   { path: routes.findUs, changeFrequency: "monthly", priority: 0.6 },
-  { path: routes.collaborations, changeFrequency: "yearly", priority: 0.6 },
+  { path: routes.collaborations, changeFrequency: "monthly", priority: 0.7 },
   {
     path: routes.legal,
     changeFrequency: "yearly",
@@ -132,7 +131,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // same in all three.
     safely(() => getProducts(DEFAULT_LOCALE), "products"),
     safely(() => getCollections(DEFAULT_LOCALE), "collections"),
-    safely(getMenus, "menus"),
+    // The catering menus are off the site since 27 November 2026 (redirected
+    // to /events, see next.config.ts): nothing to list.
+    Promise.resolve([] as Awaited<ReturnType<typeof getMenus>>),
     Promise.all(
       LOCALES.map(async (locale) => ({
         locale,

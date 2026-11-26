@@ -85,7 +85,10 @@ export const routes = {
  */
 export const mainNav = [
   { key: "shop", menu: "shop" as const },
-  { key: "menus", href: routes.menus },
+  // In place of Menus since 27 November 2026: the owners dropped the catering
+  // menus and asked for the venue partnerships here instead. The /menus pages
+  // redirect to /events (next.config.ts); their code and Studio data are kept.
+  { key: "collaborations", href: routes.collaborations },
   { key: "events", href: routes.events },
   { key: "coffee", href: routes.coffee },
   { key: "about", menu: "about" as const },
@@ -111,7 +114,6 @@ export const aboutNav = [
   { key: "news", href: routes.news },
   { key: "faq", href: routes.faq },
   { key: "findUs", href: routes.findUs },
-  { key: "collaborations", href: routes.collaborations },
 ] as const;
 
 /** Footer legal strip — required for a Belgian ecommerce site. */

@@ -3,6 +3,8 @@
 import {
   CONTACT_FIELDS,
   HONEYPOT_FIELD,
+  PARTNER_PRODUCTS,
+  PRODUCTS_SEPARATOR,
   validateContact,
   type ContactFormState,
   type ContactValues,
@@ -23,6 +25,15 @@ function readField(formData: FormData, name: string) {
 
 /** Plain text rather than HTML: this mail is read by the kitchen, not designed. */
 function composeBody(values: ContactValues) {
+  // Only a collaboration request has these; the other forms keep their mail.
+  const partnerLines = [
+    values.products || values.productsOther
+      ? `Products: ${[values.products, values.productsOther].filter(Boolean).join(PRODUCTS_SEPARATOR)}`
+      : "",
+    values.frequency ? `Delivery: ${values.frequency}` : "",
+    values.quantities ? `Quantity: ${values.quantities}` : "",
+  ].filter(Boolean);
+
   return [
     `Name:     ${values.name}`,
     `Email:    ${values.email}`,
@@ -33,8 +44,9 @@ function composeBody(values: ContactValues) {
     `For:      ${values.occasion}`,
     `Date:     ${values.date || "—"}`,
     `People:   ${values.guests || "—"}`,
+    ...partnerLines,
     "",
-    values.message,
+    values.message || "—",
   ].join("\n");
 }
 
@@ -56,6 +68,12 @@ export async function sendContactRequest(
   const values = Object.fromEntries(
     CONTACT_FIELDS.map((field) => [field, readField(formData, field)]),
   ) as ContactValues;
+
+  // Checkboxes send one entry per tick; keep only the known ones, in order.
+  const ticked = new Set(formData.getAll("products"));
+  values.products = PARTNER_PRODUCTS.filter((product) =>
+    ticked.has(product),
+  ).join(PRODUCTS_SEPARATOR);
 
   const errors = validateContact(values);
 

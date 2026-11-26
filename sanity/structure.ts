@@ -10,7 +10,6 @@ import { HomeIcon } from "@sanity/icons/Home";
 import { ImagesIcon } from "@sanity/icons/Images";
 import { PinIcon } from "@sanity/icons/Pin";
 import { TagIcon } from "@sanity/icons/Tag";
-import { UlistIcon } from "@sanity/icons/Ulist";
 import { UsersIcon } from "@sanity/icons/Users";
 import { GuidePane } from "@/sanity/components/GuidePane";
 import { ShopifyPane } from "@/sanity/components/ShopifyPane";
@@ -103,11 +102,13 @@ export const structure: StructureResolver = (S) =>
 
       S.divider().title("Contenus"),
 
-      S.listItem()
-        .title("Menus traiteur")
-        .icon(UlistIcon)
-        .schemaType("menu")
-        .child(S.documentTypeList("menu").title("Menus traiteur")),
+      // "Menus traiteur" left the sidebar on 27 November 2026 with the menus
+      // pages (the owners dropped them). The `menu` type and its documents are
+      // kept, so bringing it back is this list item and the redirect in
+      // next.config.ts:
+      //   S.listItem().title("Menus traiteur").icon(UlistIcon)
+      //     .schemaType("menu")
+      //     .child(S.documentTypeList("menu").title("Menus traiteur")),
 
       /**
        * Ordered by date rather than by Sanity's default, which is last-edited.

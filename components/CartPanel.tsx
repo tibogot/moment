@@ -659,10 +659,13 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     >
                       {line.title}
                     </Link>
-                    {/* No variant name: the product page sells one variant per
-                        product and shows no size picker, so a name here
-                        ("400", "option végétale") was an admin label the
-                        customer never chose. Back with a size picker. */}
+                    {/* The size the customer picked; empty for a product
+                        with one variant (see lib/shopify/cart.ts). */}
+                    {line.variantTitle && (
+                      <p className="font-archivo-light mt-1 text-[13px] opacity-70">
+                        {line.variantTitle}
+                      </p>
+                    )}
 
                     <div className="mt-auto flex items-center justify-between gap-3 pt-3">
                       <div className="flex items-center border border-sky">

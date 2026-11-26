@@ -38,6 +38,35 @@ export const PARTNER_REQUESTS = ["Partnership", "Supply", "Restock"] as const;
 
 export type PartnerRequest = (typeof PARTNER_REQUESTS)[number];
 
+/**
+ * What a venue can tick under "Quels produits vous intéressent ?" — the
+ * owners' families, 27 November 2026. English for the mail, like the requests;
+ * the labels come from `partner.productOptions`. Several can be ticked, and
+ * `productsOther` takes anything the list does not name.
+ */
+export const PARTNER_PRODUCTS = [
+  "Cold-pressed juices",
+  "Other drinks",
+  "Salads",
+  "Sweet pots",
+  "Bagels & sandwiches",
+  "Toasts",
+  "Desserts & sweets",
+  "Healthy snacks",
+  "Grocery",
+] as const;
+
+/** How often the venue wants a delivery. One choice; labels in `partner.frequencies`. */
+export const PARTNER_FREQUENCIES = [
+  "Several times a week",
+  "Once a week",
+  "Every two weeks",
+  "Occasionally",
+] as const;
+
+/** Joins the ticked products into the one string the form carries. */
+export const PRODUCTS_SEPARATOR = ", ";
+
 export function isPartnerRequest(value: string): value is PartnerRequest {
   return (PARTNER_REQUESTS as readonly string[]).includes(value);
 }
@@ -56,6 +85,11 @@ export const CONTACT_FIELDS = [
   /** Professional applications only; the enquiry form never renders these. */
   "vat",
   "address",
+  /** Collaboration requests only (/collaborations). */
+  "products",
+  "productsOther",
+  "frequency",
+  "quantities",
 ] as const;
 
 export type ContactField = (typeof CONTACT_FIELDS)[number];
@@ -78,6 +112,8 @@ export type ContactErrorCode =
   | "message_too_long"
   | "too_long"
   | "company_required"
+  | "products_required"
+  | "frequency_required"
   | "address_required"
   | "vat_required"
   | "vat_invalid";
@@ -109,6 +145,10 @@ export const EMPTY_CONTACT_VALUES: ContactValues = {
   date: "",
   guests: "",
   message: "",
+  products: "",
+  productsOther: "",
+  frequency: "",
+  quantities: "",
 };
 
 /**
@@ -180,17 +220,40 @@ export function validateContact(values: ContactValues): ContactErrors {
     if (values.vat && !BE_VAT.test(normaliseVat(values.vat))) {
       errors.vat = "vat_invalid";
     }
+
+    // The owners' questions (27 November 2026): what, and how often. A tick
+    // or the "Autre" box answers the first; quantities stay optional, since a
+    // venue that has never sold the products can only guess.
+    if (!values.products && !values.productsOther) {
+      errors.products = "products_required";
+    }
+    if (
+      !(PARTNER_FREQUENCIES as readonly string[]).includes(values.frequency)
+    ) {
+      errors.frequency = "frequency_required";
+    }
   } else if (!OCCASIONS.includes(values.occasion as Occasion)) {
     errors.occasion = "occasion_required";
   }
 
+  // A collaboration request has said what it needs in its own fields; the
+  // message is there for the rest.
   if (!values.message) {
-    errors.message = "message_required";
+    if (!isPartner) errors.message = "message_required";
   } else if (values.message.length > MESSAGE_MAX) {
     errors.message = "message_too_long";
   }
 
-  for (const field of ["phone", "company", "date", "guests", "vat", "address"] as const) {
+  for (const field of [
+    "phone",
+    "company",
+    "date",
+    "guests",
+    "vat",
+    "address",
+    "productsOther",
+    "quantities",
+  ] as const) {
     if (!errors[field] && values[field].length > SHORT_MAX) {
       errors[field] = "too_long";
     }

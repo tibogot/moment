@@ -107,6 +107,11 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
 
 - [ ] `https://www.moment-lab.be` s'ouvre, `moment-lab.be` et l'adresse
       vercel.app redirigent vers www.
+- [ ] Le site s'ouvre **dans une fenêtre privée, sans être connecté à
+      Vercel**. Le nouveau projet doit rester en *Deployment Protection →
+      Standard Protection* (le réglage par défaut). Le projet de test, lui, est
+      en *All Deployments* depuis le 27 novembre : il ne sert pas pour le
+      lancement et reste privé.
 - [ ] `/robots.txt` autorise l'indexation et donne la ligne `Sitemap:` ;
       `/sitemap.xml` ne contient que des adresses en `www.moment-lab.be`.
 - [ ] Une page au hasard : `<meta name="robots">` vaut `index, follow`.

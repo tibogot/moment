@@ -42,14 +42,38 @@ export type ShopifyProduct = {
   productType: string;
   tags: string[];
   availableForSale: boolean;
-  /** First variant — traiteur products are single-variant, so this is the one. */
+  /**
+   * The default variant: the first one for sale, else the first. Kept for the
+   * single-variant products (most of them) and the places that add straight
+   * to the cart.
+   */
   variantId: string | null;
+  /**
+   * Every variant the owners set up, in Shopify's order — a salad in M and L
+   * (26 November 2026). One entry, titled "Default Title", for a product
+   * without options.
+   */
+  variants: ShopifyVariant[];
+  /** Variants at different prices: cards print "dès 9,00 €". */
+  priceVaries: boolean;
+  /** `price`, or "dès 9,00 €" when the variants' prices differ — the cards'. */
+  displayPrice: string;
   /** Full gallery — only fetched on the product detail page. */
   images?: ShopifyProductImage[];
   /** Rich description from Shopify — only fetched on the product detail page. */
   descriptionHtml?: string | null;
   /** Ingredients, allergens, etc. — only fetched on the product detail page. */
   details?: ShopifyProductDetails;
+};
+
+export type ShopifyVariant = {
+  id: string;
+  /** "M", "L" — or "Default Title" for a product without options. */
+  title: string;
+  /** Formatted for display, e.g. "9,00 €". */
+  price: string;
+  priceAmount: string;
+  availableForSale: boolean;
 };
 
 export type ShopifyProductNode = {
@@ -65,10 +89,18 @@ export type ShopifyProductNode = {
   availableForSale: boolean;
   priceRange: {
     minVariantPrice: { amount: string; currencyCode: string };
+    maxVariantPrice: { amount: string; currencyCode: string };
   };
   featuredImage: { url: string; altText: string | null } | null;
   variants: {
-    edges: { node: { id: string; availableForSale: boolean } }[];
+    edges: {
+      node: {
+        id: string;
+        title: string;
+        availableForSale: boolean;
+        price: { amount: string; currencyCode: string };
+      };
+    }[];
   };
 };
 
@@ -118,16 +150,25 @@ const PRODUCT_FIELDS = `
       amount
       currencyCode
     }
+    maxVariantPrice {
+      amount
+      currencyCode
+    }
   }
   featuredImage {
     url
     altText
   }
-  variants(first: 1) {
+  variants(first: 10) {
     edges {
       node {
         id
+        title
         availableForSale
+        price {
+          amount
+          currencyCode
+        }
       }
     }
   }

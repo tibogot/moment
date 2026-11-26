@@ -1,7 +1,8 @@
 {
   "nav": {
-    "shop": "Boutique",
+    "shop": "Nos produits",
     "menus": "Menus",
+    "collaborations": "Collaborations",
     "events": "Événements",
     "coffee": "Café",
     "news": "Actualités",
@@ -107,7 +108,7 @@
       "brunch": "Brunch",
       "lunch": "Lunch",
       "pause": "Pause",
-      "shop": "Toute la boutique",
+      "shop": "Tous les produits",
       "heading": "Nos produits"
     },
     "offer": {
@@ -236,7 +237,7 @@
     "steps": [
       {
         "title": "Choisissez",
-        "body": "La boutique et nos menus, chaque produit en plusieurs pièces."
+        "body": "Nos produits, chaque produit en plusieurs pièces."
       },
       {
         "title": "Livraison ou retrait",
@@ -380,7 +381,7 @@
     "chooseMethod": "Choisissez d'abord la livraison à domicile ou le click & collect.",
     "securePayment": "Paiement sécurisé",
     "empty": "Votre panier est vide.",
-    "browseShop": "Voir la boutique",
+    "browseShop": "Voir nos produits",
     "total": "Total",
     "checkout": "Commander",
     "change": "Modifier",
@@ -430,7 +431,7 @@
     "pickSlot": "Choisir"
   },
   "shop": {
-    "title": "Boutique",
+    "title": "Nos produits",
     "searchResults": "Résultats pour « {query} »",
     "clearSearch": "Effacer la recherche",
     "grid": "Grille",
@@ -520,6 +521,8 @@
     "servingInstructions": "Conseils de service",
     "storage": "Conservation",
     "orderPreferencesTitle": "Quand et comment",
+    "priceFrom": "dès {price}",
+    "size": "Taille",
     "viewImage": "Voir l'image {index} sur {total}",
     "minimumHint": "Minimum {minimum} pièces par produit.",
     "nextDayNote": "Disponible la veille : commandez avant {cutoff} pour un retrait à l'atelier le lendemain.",
@@ -607,6 +610,8 @@
       "message_too_long": "Merci de rester sous 1200 caractères.",
       "too_long": "C'est plus long que ce que nous pouvons enregistrer.",
       "company_required": "Il nous faut le nom de la société.",
+      "products_required": "Cochez au moins un produit, ou précisez-le dans « Autre ».",
+      "frequency_required": "Choisissez une fréquence de livraison.",
       "vat_required": "Il nous faut votre numéro de TVA pour facturer.",
       "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres.",
       "address_required": "Indiquez l'adresse de votre établissement."
@@ -718,7 +723,7 @@
       ]
     },
     "shop": {
-      "title": "Boutique — Plats, salades et jus pressés à froid",
+      "title": "Nos produits — Plats, salades et jus pressés à froid",
       "description": "Commandez des plats de saison, des salades et des jus pressés à froid depuis notre cuisine bruxelloise. Cuisinés le matin même, prêts à servir.",
       "keywords": [
         "livraison lunch Bruxelles",
@@ -951,7 +956,7 @@
     "accordion": {
       "headline": "Pour ceux qui soignent le goût — et l'allure, à Bruxelles.",
       "body": "Préparé chaque matin et livré prêt à servir. Nous orchestrons vos événements de bout en bout, et gardons un comptoir café.",
-      "cta": "Voir les menus",
+      "cta": "Voir nos produits",
       "items": [
         {
           "title": "Cuisiné le matin même",
@@ -1106,9 +1111,9 @@
   },
   "partner": {
     "title": "Collaborations",
-    "lead": "Vous souhaitez proposer les produits Moment dans votre établissement ou développer une collaboration avec nous ? Pour toute demande de partenariat, d'approvisionnement ou de réapprovisionnement, contactez-nous via notre formulaire dédié. Nous serions ravis d'échanger avec vous !",
+    "lead": "Vous souhaitez proposer les produits Moment dans votre café, votre salle de sport, votre showroom ou votre espace de travail ? Nous vous accompagnons avec une sélection de salades, sandwichs, douceurs et boissons fraîches, livrés régulièrement dans votre établissement. Nous définissons ensemble les produits, les quantités et le rythme de livraison adaptés à votre clientèle. Parlez-nous de votre lieu et de vos envies pour imaginer une collaboration.",
     "intro": "Devenir partenaire",
-    "body": "Parlez-nous de votre établissement : nous revenons vers vous rapidement.",
+    "body": "Parlez-nous de votre lieu : nous revenons vers vous avec nos tarifs professionnels.",
     "steps": [
       {
         "title": "Votre établissement",
@@ -1133,8 +1138,31 @@
     "companyPlaceholder": "Café, épicerie, hôtel…",
     "address": "Adresse de l'établissement",
     "addressPlaceholder": "Rue, numéro, code postal, commune",
-    "message": "Votre projet",
-    "messagePlaceholder": "Les produits qui vous intéressent, les quantités estimées, la fréquence…",
+    "products": "Quels produits vous intéressent ?",
+    "productOptions": {
+      "Cold-pressed juices": "Jus pressés à froid",
+      "Other drinks": "Autres boissons",
+      "Salads": "Salades",
+      "Sweet pots": "Sweet pots",
+      "Bagels & sandwiches": "Bagels & sandwichs",
+      "Toasts": "Toasts",
+      "Desserts & sweets": "Desserts & douceurs",
+      "Healthy snacks": "Healthy snacks",
+      "Grocery": "Épicerie"
+    },
+    "productsOther": "Autre",
+    "productsOtherPlaceholder": "Un produit précis, une demande particulière…",
+    "frequency": "À quelle fréquence souhaitez-vous être livré ?",
+    "frequencies": {
+      "Several times a week": "Plusieurs fois par semaine",
+      "Once a week": "Une fois par semaine",
+      "Every two weeks": "Toutes les deux semaines",
+      "Occasionally": "Ponctuellement"
+    },
+    "quantities": "Estimation des quantités",
+    "quantitiesPlaceholder": "Par exemple : 20 salades et 30 jus par semaine",
+    "message": "Autre chose à nous dire ?",
+    "messagePlaceholder": "Votre lieu, votre clientèle, vos horaires…",
     "submit": "Envoyer la demande"
   },
   "pageIntro": {

@@ -97,9 +97,12 @@ export default defineConfig({
       hasSitePage(context.schemaType)
         ? [...previous, ViewOnSiteAction]
         : previous,
+    // `menu` too, since the menus left the site (27 November 2026): its
+    // documents are kept, but nobody should start a new one.
     newDocumentOptions: (previous) =>
       previous.filter(
         (item) =>
+          item.templateId !== "menu" &&
           !SINGLETONS.includes(item.templateId as (typeof SINGLETONS)[number]),
       ),
   },
