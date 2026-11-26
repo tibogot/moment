@@ -262,7 +262,7 @@
       "title": "Commander & se faire livrer",
       "zones": {
         "title": "Zones et frais",
-        "body": "Nous livrons Bruxelles et ses environs depuis notre atelier de Forest. Plus loin, nous établissons un devis sur mesure."
+        "body": "Nous livrons à l'adresse de votre choix. Les frais de livraison varient selon votre localisation et sont calculés lors de la commande."
       },
       "slots": {
         "title": "Créneaux de livraison",
@@ -292,7 +292,7 @@
     "items": [
       {
         "q": "Puis-je annuler ma commande ?",
-        "a": "Oui, gratuitement jusqu'à 24 heures avant la date de livraison prévue : la commande est intégralement remboursée. En deçà de 24 heures, l'annulation ne peut en principe pas être remboursée, les produits étant frais et préparés spécifiquement pour votre commande. Si quelque chose ne va pas avec la livraison ou avec nos produits, appelez-nous immédiatement et nous trouverons une solution."
+        "a": "Oui. Pour les commandes passées sur le site : plus de 24 heures avant la livraison, la commande est intégralement remboursée ; entre 24 et 12 heures avant, nous remboursons 50 % du montant ; moins de 12 heures avant, aucun remboursement n'est possible, les produits étant frais et préparés spécialement pour votre commande. Si quelque chose ne va pas avec la livraison ou avec nos produits, appelez-nous immédiatement et nous trouverons une solution."
       },
       {
         "q": "Puis-je modifier ma commande après l'avoir passée ?",
@@ -316,7 +316,7 @@
       },
       {
         "q": "Comment se passe un devis pour un événement ?",
-        "a": "Les menus événementiels sont chiffrés, pas commandés en ligne. Dites-nous la date, le nombre de personnes et le lieu, et nous revenons vers vous avec le menu costé, service et matériel compris."
+        "a": "Remplissez le formulaire de la page Événements : la date, le nombre de personnes et, si vous le connaissez, votre budget par personne. Nous revenons vers vous avec une proposition sur mesure."
       },
       {
         "q": "Travaillez-vous avec les entreprises ?",
@@ -556,7 +556,7 @@
   },
   "contact": {
     "title": "Demander un devis",
-    "lead": "Dites-nous la date, le nombre de personnes et à peu près ce que vous imaginez. Nous revenons vers vous avec un menu et un prix.",
+    "lead": "Une question, un projet ou une occasion particulière ? Que ce soit pour une commande, un événement ou une collaboration, nous serions ravis d'en discuter avec vous.",
     "intro": "Dites-nous ce que vous imaginez.",
     "notice": "Il nous faut {days} jours de préavis pour une livraison. Pour un événement, dites-nous la date : nous vous dirons tout de suite si c'est jouable.",
     "steps": [
@@ -716,7 +716,7 @@
     },
     "about": {
       "title": "À propos — Traiteur et cuisine de catering à Bruxelles",
-      "description": "Traiteur bruxellois : plats de saison, salades et jus pressés à froid cuisinés chaque matin pour particuliers, bureaux et événements, livrés prêts à servir.",
+      "description": "Moment, traiteur à Forest (Bruxelles) : petits-déjeuners, brunchs, lunchs et jus pressés à froid, préparés dans notre atelier et livrés chez vous, au bureau ou pour vos événements.",
       "keywords": [
         "traiteur Bruxelles",
         "catering Bruxelles",
@@ -785,7 +785,7 @@
     },
     "contact": {
       "title": "Contact et devis traiteur",
-      "description": "Demandez un devis à Moment, traiteur à Bruxelles. Dites-nous la date, le nombre de personnes et ce que vous imaginez — nous revenons avec un menu et un prix.",
+      "description": "Une question, un projet ou une occasion particulière ? Écrivez à Moment, traiteur à Bruxelles, pour une commande, un événement ou une collaboration.",
       "keywords": [
         "traiteur Bruxelles contact",
         "devis traiteur Bruxelles"
@@ -922,38 +922,38 @@
   "about": {
     "hero": {
       "title": "À propos",
-      "lead": "Moment est un traiteur bruxellois. Nous cuisinons pour les particuliers et pour les entreprises qui veulent que la table dise quelque chose d'elles."
+      "lead": "Moment est un traiteur dont l'atelier se situe à Forest, axé sur les petits-déjeuners, les brunchs, les lunchs et les jus pressés à froid."
     },
     "intro": {
-      "headline": "Nous cuisinons pour ceux qui doivent nourrir la salle.",
+      "headline": "Pourquoi ( moment ) ?",
       "body": [
-        "Moment est un traiteur et une cuisine de catering à Bruxelles. Chaque matin nous préparons des plats de saison, des salades, des pâtisseries et des jus pressés à froid, puis nous les envoyons à travers la ville — vers les bureaux du quartier européen, vers les studios de Saint-Gilles, vers les tables de cuisine entre les deux.",
-        "Certaines semaines, c'est quarante déjeuners avant dix heures du matin. D'autres, c'est un dîner assis pour trente, un lancement pour deux cents, ou un comptoir café ouvert jusqu'à ce que la salle se vide. La logistique change. La cuisine derrière, non."
+        "Nous avons créé Moment à deux, portés par une passion commune pour la cuisine. Notre rencontre, nos parcours personnels et les épreuves que nous avons traversées ensemble ont donné du sens à ce projet. Lorsque nous avons rencontré des difficultés de santé, prendre soin de notre alimentation a été un véritable appui au quotidien. Cette expérience a fait évoluer notre façon de cuisiner et la place que nous accordons aux repas.",
+        "Nous attachons beaucoup d'importance au temps. Celui que l'on prend pour préparer, mais aussi celui que l'on s'accorde pour manger, partager et faire une pause. Un petit-déjeuner, un lunch ou un brunch sont autant d'occasions de ralentir et de profiter d'un moment qui fait du bien."
       ]
     },
     "statement": {
-      "headline": "La table est le premier endroit où l'on vous rencontre."
+      "headline": "Les parenthèses de notre logo invitent à mettre les préoccupations du quotidien entre parenthèses, le temps d'un repas."
     },
     "values": {
-      "label": "À propos",
-      "lead": "Nous cuisinons pour les particuliers et les entreprises de toute la ville. Plats de saison, salades et jus pressés à froid, préparés chaque matin et livrés prêts à servir.",
-      "aside": "Nous orchestrons vos événements de bout en bout, et installons notre comptoir café le temps de votre événement.",
+      "label": "Ce que nous faisons",
+      "lead": "Nous préparons nos produits à partir d'ingrédients frais, choisis avec soin, et nous vous les livrons directement chez vous, au bureau ou sur le lieu de votre événement. De la préparation à la livraison, nous veillons à leur fraîcheur et à leur présentation.",
+      "aside": "Pour un petit-déjeuner en entreprise, un lunch d'équipe ou un événement privé, nous proposons un assortiment de produits de qualité, préparés de façon à la fois saine et gourmande.",
       "cards": [
         {
-          "title": "Une table qui parle de vous",
-          "body": "Menus sur mesure, dressage soigné, service discret — la salle vous ressemble dès le premier plateau."
+          "title": "Livraison",
+          "body": "Nous livrons vos commandes avec soin, à la date et au créneau choisis. Chez vous, au bureau ou sur le lieu de votre événement, vos produits arrivent frais et prêts à déguster."
         },
         {
-          "title": "Du marché à votre bureau",
-          "body": "Produits de saison, cuisinés le matin, livrés à travers Bruxelles avant que vos invités s'assoient."
+          "title": "Événements",
+          "body": "Des buffets salés et sucrés pour vos événements privés ou professionnels : de la livraison à la mise en place, en passant par la décoration et les fleurs."
         },
         {
-          "title": "Événements de bout en bout",
-          "body": "De la proposition au dernier café servi — on gère le rythme pour que vous gardiez vos hôtes."
+          "title": "Comptoir café",
+          "body": "Un barista, un équipement professionnel complet, des boissons à base de café et du matcha de cérémonie, préparés sur place pour vos invités."
         },
         {
-          "title": "Un comptoir café qui se déplace",
-          "body": "Un barista, une machine professionnelle, des cafés et du matcha de cérémonie : le comptoir s'installe au cœur de votre événement."
+          "title": "Collaborations",
+          "body": "Une sélection de salades, sandwichs, douceurs et boissons fraîches, livrés régulièrement dans votre café, votre salle de sport ou votre espace de travail."
         }
       ]
     },
@@ -978,27 +978,27 @@
     },
     "story": {
       "label": "Notre histoire",
-      "title": "Tout a commencé avec une table de trop.",
-      "body": "Moment est né dans une cuisine louée près de la Chaussée d'Ixelles, à préparer le déjeuner du vendredi pour un studio de design à court d'options correctes. Le bouche-à-oreille a fait le reste, comme ici — un bureau en a parlé à un autre, puis il y a eu un lancement, puis un mariage. Nous cuisinons toujours à la commande, nous limitons toujours le nombre de couverts à ce que nous pouvons dresser correctement, et nous n'envoyons toujours rien que nous ne mangerions pas volontiers debout au passe."
+      "title": "C'est de cette idée qu'est né ( moment ).",
+      "body": "Aujourd'hui, depuis notre atelier à Forest, nous partageons notre vision à travers une cuisine fraîche, saine et gourmande. Nous souhaitons faire du « bien manger » un plaisir accessible au quotidien, où le goût et les saveurs ne sont pas sacrifiés."
     },
     "principles": {
-      "label": "Notre façon de travailler",
+      "label": "Nos valeurs",
       "items": [
         {
-          "title": "De saison, ou pas du tout",
-          "body": "Le menu suit le marché, et non l'inverse. Les asperges en mai, les tomates quand elles ont vraiment du goût, le chicon et le gibier tout l'hiver. Si ce n'est pas bon cette semaine, ce n'est pas à la carte cette semaine."
+          "title": "La qualité des ingrédients",
+          "body": "Nous privilégions des ingrédients frais et de qualité, aussi peu transformés que possible. Nous choisissons autant que possible des produits issus de l'agriculture biologique et travaillons avec des fournisseurs locaux."
         },
         {
-          "title": "Cuisiné, jamais assemblé",
-          "body": "Des fonds réduits la nuit, des vinaigrettes montées à la dernière minute, une pâte feuilletée tournée à la main. Tout sort de notre propre cuisine à Bruxelles, fait à partir de produits bruts le matin même — rien de réchauffé, rien acheté tout prêt."
+          "title": "Une préparation artisanale",
+          "body": "Dans notre atelier à Forest, nous préparons nous-mêmes la totalité de nos recettes et pressons nos jus à froid sur place. La plupart de nos préparations sont réalisées le jour même. Pour les pains de nos bagels, sandwichs et toasts, nous faisons confiance à des boulangeries artisanales sélectionnées pour leur savoir-faire et la qualité de leurs produits."
         },
         {
-          "title": "Livré prêt à servir",
-          "body": "Boîtes isothermes, portions déjà dressées, garnitures à part. Vous ouvrez, vous disposez, vous servez. Aucune cuisine nécessaire chez vous, et rien à dresser par quelqu'un qui préférerait recevoir ses invités."
+          "title": "L'équilibre du sain et de la gourmandise",
+          "body": "Nous pensons qu'une alimentation équilibrée doit rester un plaisir pour devenir une alimentation sur le long terme. Nous soignons les associations de goûts et de textures pour proposer des recettes à la fois saines et gourmandes, tout en laissant une place aux douceurs et aux petits plaisirs sucrés."
         },
         {
-          "title": "Une cuisine, un standard",
-          "body": "La même cuisine part pour un déjeuner à deux au bureau et pour une réception de deux cents personnes. L'échelle change le nombre de mains et l'heure à laquelle nous commençons, pas la recette ni ce que nous acceptons d'envoyer."
+          "title": "Ralentir, le temps d'un repas",
+          "body": "Avec des rythmes de vie toujours plus rapides, les repas deviennent parfois une tâche à cocher avant de passer à la suivante. Nous souhaitons leur redonner l'importance qu'ils ont peu à peu perdue. Prendre le temps de savourer, d'échanger ou simplement de profiter de son repas, c'est ouvrir une parenthèse dans le quotidien et être pleinement présent à ce que l'on vit."
         }
       ]
     },
@@ -1020,7 +1020,7 @@
     },
     "facts": {
       "label": "En bref",
-      "headline": "Ce qu'on nous demande avant de demander un menu.",
+      "headline": "Moment, en quelques mots.",
       "terms": {
         "based": "Basés à",
         "cookFor": "Nous cuisinons pour",
@@ -1031,18 +1031,18 @@
         "languages": "Langues"
       },
       "values": {
-        "based": "Bruxelles, Belgique",
-        "cookFor": "Particuliers, bureaux, agences, ambassades",
-        "services": "Livraison quotidienne, traiteur événementiel, comptoir café",
+        "based": "Forest, Bruxelles",
+        "cookFor": "Particuliers, entreprises et lieux événementiels",
+        "services": "Livraison, buffets pour vos événements, comptoir café, collaborations",
         "deliveryArea": "Bruxelles et jusqu'à 70 km autour de l'atelier, au-delà sur devis",
         "leadTime": "48 heures pour une livraison, sur demande pour un événement",
-        "diets": "Végétarien, végane et sans gluten sur chaque menu",
+        "diets": "Des options végétariennes, véganes et sans gluten",
         "languages": "Français, Nederlands, English"
       }
     },
     "cta": {
-      "headline": "Dites-nous ce que vous préparez.",
-      "body": "Une date, un nombre de convives et une idée approximative du lieu suffisent pour commencer. Nous revenons vers vous avec un menu, un prix, et ce qu'il faut pour le mettre sur la table.",
+      "headline": "Une question, un projet ou une occasion particulière ?",
+      "body": "Que ce soit pour une commande, un événement ou une collaboration, nous serions ravis d'en discuter avec vous.",
       "links": {
         "events": "Organiser un événement",
         "delivery": "Commander une livraison",

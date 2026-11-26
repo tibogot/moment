@@ -1,4 +1,3 @@
-import { AboutAccordionSection } from "@/components/AboutAccordionSection";
 import { AboutCta } from "@/components/AboutCta";
 import { AboutFacts } from "@/components/AboutFacts";
 import { AboutHero } from "@/components/AboutHero";
@@ -87,9 +86,23 @@ export default async function AboutPage({
 
       <AboutStatement headline={about.statement.headline} />
 
+      {/* The owners' order (27 November 2026): why Moment, the parentheses,
+          "c'est de cette idée qu'est né ( moment )", then their values. */}
+      <StickyTitleSection
+        label={about.story.label}
+        title={about.story.title}
+        body={about.story.body}
+        src="/images/anita-austvika.jpg"
+      />
+
+      <AboutPrinciples copy={about.principles} />
+
+      {/* What Moment does, in the owners' own sentences. */}
       <AboutValuesSection copy={about.values} />
 
-      <AboutAccordionSection copy={about.accordion} />
+      {/* The accordion ("Cuisiné le matin même"…) left on 27 November 2026:
+          its claims were placeholders, and the owners' text document says
+          the same things in the sections around it. */}
 
       {/* Mirror of the home page's split blocks, flipped: the large image sits
           on the right half here, with the smaller one answering on the left. */}
@@ -124,23 +137,9 @@ export default async function AboutPage({
         fullBleedBottom
       />
 
-      <StickyTitleSection
-        label={about.story.label}
-        title={about.story.title}
-        body={about.story.body}
-        src="/images/anita-austvika.jpg"
-      />
-
-      <AboutPrinciples copy={about.principles} />
-
-      <StickyTitleSection
-        theme="sky"
-        imagePosition="left"
-        label={about.sourcing.label}
-        title={about.sourcing.title}
-        body={about.sourcing.body}
-        src="/images/kateryna-hliznitsova.jpg"
-      />
+      {/* "Approvisionnement" left on 27 November 2026: it named suppliers the
+          owners never mentioned. Their values (below the story) say what is
+          true: organic where possible, local suppliers, artisan bakeries. */}
 
       {/* Full-height breath before the practical half of the page. */}
       <FullBleedImageSection src="/images/svitlana.jpg" />

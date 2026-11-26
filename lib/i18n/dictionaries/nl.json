@@ -262,7 +262,7 @@
       "title": "Bestellen & leveren",
       "zones": {
         "title": "Zones en kosten",
-        "body": "We leveren in Brussel en omgeving vanuit ons atelier in Vorst. Verder weg maken we een offerte op maat."
+        "body": "We leveren op het adres van uw keuze. De leveringskosten hangen af van uw locatie en worden berekend bij de bestelling."
       },
       "slots": {
         "title": "Levertijdsloten",
@@ -292,7 +292,7 @@
     "items": [
       {
         "q": "Kan ik mijn bestelling annuleren?",
-        "a": "Ja, kosteloos tot 24 uur voor de voorziene leverdatum: het volledige bedrag wordt terugbetaald. Binnen 24 uur is terugbetaling in principe niet mogelijk, omdat de producten vers zijn en speciaal voor uw bestelling bereid worden. Klopt er iets niet aan de levering of aan onze producten, bel ons dan meteen — dan zoeken we een oplossing."
+        "a": "Ja. Voor bestellingen op de website: meer dan 24 uur vóór de levering wordt de bestelling volledig terugbetaald; tussen 24 en 12 uur vooraf betalen we 50 % van het bedrag terug; minder dan 12 uur vooraf is geen terugbetaling mogelijk, omdat de producten vers zijn en speciaal voor uw bestelling worden bereid. Loopt er iets mis met de levering of met onze producten, bel ons dan meteen en we vinden een oplossing."
       },
       {
         "q": "Kan ik mijn bestelling nog wijzigen?",
@@ -316,7 +316,7 @@
       },
       {
         "q": "Hoe verloopt een offerte voor een evenement?",
-        "a": "Evenementmenu's worden geoffreerd, niet online besteld. Geef ons de datum, het aantal personen en de locatie, en wij komen terug met het menu, service en materiaal inbegrepen."
+        "a": "Vul het formulier op de pagina Evenementen in: de datum, het aantal personen en, als u het al weet, uw budget per persoon. We komen bij u terug met een voorstel op maat."
       },
       {
         "q": "Werken jullie met bedrijven?",
@@ -556,7 +556,7 @@
   },
   "contact": {
     "title": "Offerte aanvragen",
-    "lead": "Vertel ons de datum, het aantal personen en ongeveer wat u voor ogen heeft. Wij komen terug met een menu en een prijs.",
+    "lead": "Een vraag, een project of een bijzondere gelegenheid? Of het nu gaat om een bestelling, een evenement of een samenwerking: we bespreken het graag met u.",
     "intro": "Vertel ons wat u voor ogen heeft.",
     "notice": "We hebben {days} dagen op voorhand nodig voor een levering. Voor een evenement: geef ons de datum, en we laten meteen weten of het lukt.",
     "steps": [
@@ -716,7 +716,7 @@
     },
     "about": {
       "title": "Over ons — Traiteur en cateringkeuken in Brussel",
-      "description": "Brusselse traiteur: seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid voor particulieren, kantoren en evenementen, klaar om te serveren.",
+      "description": "Moment, traiteur in Vorst (Brussel): ontbijt, brunch, lunch en koudgeperste sappen, bereid in ons atelier en geleverd bij u thuis, op kantoor of voor uw evenementen.",
       "keywords": [
         "traiteur Brussel",
         "catering Brussel",
@@ -785,7 +785,7 @@
     },
     "contact": {
       "title": "Contact en offerte catering",
-      "description": "Vraag een offerte aan bij Moment, traiteur in Brussel. Laat ons de datum, het aantal personen en uw plannen weten — wij komen terug met een menu en een prijs.",
+      "description": "Een vraag, een project of een bijzondere gelegenheid? Schrijf Moment, traiteur in Brussel, voor een bestelling, een evenement of een samenwerking.",
       "keywords": [
         "traiteur Brussel contact",
         "catering offerte Brussel"
@@ -922,38 +922,38 @@
   "about": {
     "hero": {
       "title": "Over ons",
-      "lead": "Moment is een traiteur in Brussel. Wij koken voor particulieren en voor bedrijven die willen dat het eten iets over hen zegt."
+      "lead": "Moment is een traiteur met een atelier in Vorst, gespecialiseerd in ontbijt, brunch, lunch en koudgeperste sappen."
     },
     "intro": {
-      "headline": "Wij koken voor wie de zaal moet voeden.",
+      "headline": "Waarom ( moment )?",
       "body": [
-        "Moment is een traiteur en cateringkeuken in Brussel. Elke ochtend bereiden wij seizoensgerechten, salades, gebak en koudgeperste sappen, en sturen die de stad in — naar kantoren in de Europese wijk, naar studio's in Sint-Gillis, naar keukentafels daartussenin.",
-        "Sommige weken zijn dat veertig lunches voor tien uur 's ochtends. Andere weken is het een zittend diner voor dertig, een lancering voor tweehonderd, of een koffiebar die open blijft tot de zaal leegloopt. De logistiek verandert. De keuken erachter niet."
+        "We hebben Moment met z'n tweeën opgericht, gedreven door een gedeelde passie voor koken. Onze ontmoeting, onze persoonlijke trajecten en de beproevingen die we samen hebben doorstaan, hebben dit project zin gegeven. Toen we met gezondheidsproblemen te maken kregen, was zorg dragen voor onze voeding een echte steun in het dagelijks leven. Die ervaring heeft onze manier van koken veranderd, en de plaats die we aan maaltijden geven.",
+        "We hechten veel belang aan tijd. De tijd die je neemt om te bereiden, maar ook de tijd die je jezelf gunt om te eten, te delen en even te pauzeren. Een ontbijt, een lunch of een brunch zijn telkens kansen om te vertragen en te genieten van een moment dat deugd doet."
       ]
     },
     "statement": {
-      "headline": "De tafel is de eerste plek waar men u ontmoet."
+      "headline": "De haakjes in ons logo nodigen uit om de zorgen van alledag even tussen haakjes te zetten, de tijd van een maaltijd."
     },
     "values": {
-      "label": "Over ons",
-      "lead": "Wij koken voor particulieren en bedrijven in heel de stad. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd.",
-      "aside": "Wij verzorgen evenementen van begin tot eind, en zetten onze koffiebar op tijdens uw evenement.",
+      "label": "Wat we doen",
+      "lead": "We bereiden onze producten met verse, zorgvuldig gekozen ingrediënten en leveren ze rechtstreeks bij u thuis, op kantoor of op de locatie van uw evenement. Van de bereiding tot de levering waken we over hun versheid en presentatie.",
+      "aside": "Voor een bedrijfsontbijt, een teamlunch of een privéfeest bieden we een assortiment kwaliteitsproducten, tegelijk gezond en lekker bereid.",
       "cards": [
         {
-          "title": "Een tafel die over u spreekt",
-          "body": "Menu's op maat, zorgvuldig opgemaakt, discrete service — de zaal lijkt op u vanaf het eerste bord."
+          "title": "Levering",
+          "body": "We leveren uw bestellingen met zorg, op de gekozen datum en het gekozen tijdslot. Thuis, op kantoor of op de locatie van uw evenement: uw producten komen vers en klaar om te proeven aan."
         },
         {
-          "title": "Van de markt naar uw bureau",
-          "body": "Seizoensproducten, die ochtend gekookt, geleverd door Brussel voor uw gasten plaatsnemen."
+          "title": "Evenementen",
+          "body": "Hartige en zoete buffetten voor uw private of professionele evenementen: van de levering tot de opstelling, met de decoratie en de bloemen erbij."
         },
         {
-          "title": "Evenementen van begin tot eind",
-          "body": "Van het eerste voorstel tot de laatste koffie — wij houden het ritme, u houdt uw gasten."
+          "title": "Koffiebar",
+          "body": "Een barista, volledig professioneel materiaal, koffiedranken en ceremoniële matcha, ter plaatse bereid voor uw gasten."
         },
         {
-          "title": "Een koffiebar die naar u komt",
-          "body": "Een barista, een professionele machine, koffie en ceremoniële matcha: de koffiebar komt naar het hart van uw evenement."
+          "title": "Samenwerkingen",
+          "body": "Een selectie salades, sandwiches, zoetigheden en frisse dranken, regelmatig geleverd in uw café, uw sportzaal of uw werkruimte."
         }
       ]
     },
@@ -978,27 +978,27 @@
     },
     "story": {
       "label": "Ons verhaal",
-      "title": "Het begon met één tafel te veel.",
-      "body": "Moment ontstond in een gehuurde keuken vlak bij de Elsensesteenweg, met de vrijdaglunch voor een designstudio die door zijn fatsoenlijke opties heen was. Het ging van mond tot mond zoals dat hier gaat — het ene kantoor vertelde het aan het andere, dan volgde een lancering, dan een huwelijk. Wij koken nog altijd op bestelling, houden het aantal couverts nog altijd bij wat wij deftig kunnen opmaken, en sturen nog altijd niets buiten dat wij niet zelf met plezier aan de doorgeefkast zouden opeten."
+      "title": "Uit dat idee is ( moment ) geboren.",
+      "body": "Vandaag delen we vanuit ons atelier in Vorst onze visie via een verse, gezonde en lekkere keuken. We willen van 'goed eten' een dagelijks, toegankelijk plezier maken, zonder in te leveren op smaak."
     },
     "principles": {
-      "label": "Hoe wij werken",
+      "label": "Onze waarden",
       "items": [
         {
-          "title": "Van het seizoen, of niet",
-          "body": "Het menu volgt de markt, en niet omgekeerd. Asperges in mei, tomaten wanneer ze echt naar iets smaken, witloof en wild de hele winter door. Is het deze week niet goed, dan staat het deze week niet op de kaart."
+          "title": "De kwaliteit van de ingrediënten",
+          "body": "We kiezen voor verse kwaliteitsingrediënten, zo weinig mogelijk bewerkt. Waar mogelijk kiezen we voor biologische producten en werken we met lokale leveranciers."
         },
         {
-          "title": "Gekookt, nooit samengesteld",
-          "body": "Fonds die 's nachts inkoken, dressings op het laatste moment aangemaakt, deeg met de hand getoerd. Alles verlaat onze eigen keuken in Brussel, diezelfde ochtend gemaakt van verse producten — niets opgewarmd, niets kant-en-klaar ingekocht."
+          "title": "Een ambachtelijke bereiding",
+          "body": "In ons atelier in Vorst bereiden we al onze recepten zelf en persen we onze sappen ter plaatse koud. De meeste bereidingen gebeuren op de dag zelf. Voor het brood van onze bagels, sandwiches en toasts vertrouwen we op ambachtelijke bakkerijen, gekozen om hun vakmanschap en de kwaliteit van hun producten."
         },
         {
-          "title": "Geleverd, klaar om te serveren",
-          "body": "Isothermische dozen, porties al opgemaakt, garnituur apart. U pakt uit, schikt en serveert. Geen keuken nodig bij u, en niets dat moet worden opgemaakt door iemand die liever gastheer zou zijn."
+          "title": "Het evenwicht tussen gezond en lekker",
+          "body": "We geloven dat evenwichtige voeding een plezier moet blijven om ze op lange termijn vol te houden. We verzorgen de combinaties van smaken en texturen om recepten te maken die gezond en lekker tegelijk zijn, met ook plaats voor zoetigheden en kleine zoete pleziertjes."
         },
         {
-          "title": "Eén keuken, één standaard",
-          "body": "Hetzelfde eten gaat naar een bureaulunch voor twee en naar een receptie voor tweehonderd. De schaal verandert het aantal handen en het uur waarop wij beginnen, niet het recept of wat wij bereid zijn buiten te sturen."
+          "title": "Vertragen, de tijd van een maaltijd",
+          "body": "Met een steeds sneller levensritme worden maaltijden soms een taak om af te vinken voor je aan de volgende begint. We willen ze het belang teruggeven dat ze stilaan verloren zijn. De tijd nemen om te proeven, te praten of gewoon van je maaltijd te genieten, is een haakje openen in het dagelijks leven en volledig aanwezig zijn bij wat je beleeft."
         }
       ]
     },
@@ -1020,7 +1020,7 @@
     },
     "facts": {
       "label": "In het kort",
-      "headline": "Wat men vraagt voor men om een menu vraagt.",
+      "headline": "Moment in een paar woorden.",
       "terms": {
         "based": "Gevestigd in",
         "cookFor": "Wij koken voor",
@@ -1031,18 +1031,18 @@
         "languages": "Talen"
       },
       "values": {
-        "based": "Brussel, België",
-        "cookFor": "Particulieren, kantoren, bureaus, ambassades",
-        "services": "Dagelijkse levering, evenementencatering, koffiebar",
+        "based": "Vorst, Brussel",
+        "cookFor": "Particulieren, bedrijven en evenementlocaties",
+        "services": "Levering, buffetten voor uw evenementen, koffiebar, samenwerkingen",
         "deliveryArea": "Brussel en tot 70 km rond het atelier, verder op offerte",
         "leadTime": "48 uur voor een levering, op aanvraag voor een evenement",
-        "diets": "Vegetarisch, veganistisch en glutenvrij op elk menu",
+        "diets": "Vegetarische, veganistische en glutenvrije opties",
         "languages": "Français, Nederlands, English"
       }
     },
     "cta": {
-      "headline": "Vertel ons wat u plant.",
-      "body": "Een datum, een aantal personen en een ruw idee van de locatie volstaan om te beginnen. Wij komen terug met een menu, een prijs, en wat er nodig is om het op tafel te krijgen.",
+      "headline": "Een vraag, een project of een bijzondere gelegenheid?",
+      "body": "Of het nu gaat om een bestelling, een evenement of een samenwerking: we bespreken het graag met u.",
       "links": {
         "events": "Een evenement plannen",
         "delivery": "Een levering bestellen",

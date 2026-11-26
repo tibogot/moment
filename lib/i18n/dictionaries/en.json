@@ -262,7 +262,7 @@
       "title": "Ordering & delivery",
       "zones": {
         "title": "Zones and fees",
-        "body": "We deliver across Brussels and its surroundings from our atelier in Forest. Further afield, we send a tailored quote."
+        "body": "We deliver to the address of your choice. Delivery fees depend on your location and are calculated when you order."
       },
       "slots": {
         "title": "Delivery slots",
@@ -292,7 +292,7 @@
     "items": [
       {
         "q": "Can I cancel my order?",
-        "a": "Yes, free of charge up to 24 hours before the delivery date, and we refund the order in full. Inside 24 hours we cannot normally refund, because the food is fresh and made for your order specifically. If anything is wrong with what arrives, or with our service, call us straight away and we will put it right."
+        "a": "Yes. For orders placed on the website: more than 24 hours before delivery, the order is refunded in full; between 24 and 12 hours before, we refund 50% of the amount; less than 12 hours before, no refund is possible, as the products are fresh and prepared specifically for your order. If anything is wrong with the delivery or our products, call us straight away and we will find a solution."
       },
       {
         "q": "Can I change my order after placing it?",
@@ -316,7 +316,7 @@
       },
       {
         "q": "How does a quote for an event work?",
-        "a": "Event menus are quoted rather than ordered online. Tell us the date, the headcount and the venue, and we come back with the menu costed, service and equipment included."
+        "a": "Fill in the form on the Events page: the date, the number of people and, if you know it, your budget per person. We will come back to you with a tailored proposal."
       },
       {
         "q": "Do you work with companies?",
@@ -556,7 +556,7 @@
   },
   "contact": {
     "title": "Request a quote",
-    "lead": "Tell us the date, the number of people and roughly what you have in mind. We will come back with a menu and a price.",
+    "lead": "A question, a project or a special occasion? Whether it is about an order, an event or a collaboration, we would be delighted to talk it through with you.",
     "intro": "Tell us the shape of it.",
     "notice": "We need {days} days' notice for delivery. For an event, tell us the date: we will let you know straight away whether we can.",
     "steps": [
@@ -716,7 +716,7 @@
     },
     "about": {
       "title": "About — Traiteur & Catering Kitchen in Brussels",
-      "description": "A Brussels traiteur cooking seasonal plates, salads and cold-pressed juices every morning for homes, offices and events, delivered ready to serve.",
+      "description": "Moment, a caterer in Forest (Brussels): breakfasts, brunches, lunches and cold-pressed juices, made in our atelier and delivered to your home, office or event.",
       "keywords": [
         "traiteur Brussels",
         "catering Brussels",
@@ -784,7 +784,7 @@
     },
     "contact": {
       "title": "Contact and catering quotes",
-      "description": "Request a quote from Moment, traiteur in Brussels. Tell us the date, the number of people and what you have in mind — we come back with a menu and a price.",
+      "description": "A question, a project or a special occasion? Write to Moment, caterer in Brussels, about an order, an event or a collaboration.",
       "keywords": [
         "traiteur Brussels contact",
         "catering quote Brussels"
@@ -921,38 +921,38 @@
   "about": {
     "hero": {
       "title": "About",
-      "lead": "Moment is a traiteur in Brussels. We cook for private hosts and for companies who want the food to say something about them."
+      "lead": "Moment is a caterer with its atelier in Forest, focused on breakfasts, brunches, lunches and cold-pressed juices."
     },
     "intro": {
-      "headline": "We cook for whoever has to feed the room.",
+      "headline": "Why ( moment )?",
       "body": [
-        "Moment is a traiteur and catering kitchen in Brussels. Every morning we cook seasonal plates, salads, pastries and cold-pressed juices, then send them out across the city — to offices in the European quarter, to studios in Saint-Gilles, to kitchen tables in between.",
-        "Some weeks that is forty lunches before ten in the morning. Some weeks it is a seated dinner for thirty, a launch for two hundred, or a coffee desk open until the room empties. The logistics change. The kitchen behind them does not."
+        "The two of us created Moment, driven by a shared passion for cooking. How we met, our own paths and the hardships we went through together gave this project its meaning. When we faced health difficulties, taking care of what we ate became real everyday support. That experience changed the way we cook, and the place we give to meals.",
+        "Time matters a great deal to us. The time you take to prepare, but also the time you allow yourself to eat, to share and to take a break. A breakfast, a lunch or a brunch are all chances to slow down and enjoy a moment that does you good."
       ]
     },
     "statement": {
-      "headline": "The table is the first place people meet you."
+      "headline": "The parentheses in our logo invite you to put everyday worries in brackets, for the length of a meal."
     },
     "values": {
-      "label": "About",
-      "lead": "We cook for private hosts and companies across the city. Seasonal plates, salads and cold-pressed juices, prepared each morning and delivered ready to serve.",
-      "aside": "We run events end to end, and bring our coffee cart to yours.",
+      "label": "What we do",
+      "lead": "We make our products from fresh, carefully chosen ingredients and deliver them straight to your home, your office or the venue of your event. From preparation to delivery, we look after their freshness and their presentation.",
+      "aside": "For a company breakfast, a team lunch or a private event, we offer a range of quality products, made to be both healthy and indulgent.",
       "cards": [
         {
-          "title": "A table that speaks for you",
-          "body": "Menus shaped around you, careful plating, quiet service — the room feels like yours from the first plate."
+          "title": "Delivery",
+          "body": "We deliver your orders with care, on the date and in the time slot you choose. At home, at the office or at your event's venue, your products arrive fresh and ready to enjoy."
         },
         {
-          "title": "From the market to your desk",
-          "body": "Seasonal produce, cooked that morning, delivered across Brussels before your guests sit down."
+          "title": "Events",
+          "body": "Savoury and sweet buffets for your private or corporate events: from delivery to set-up, decoration and flowers included."
         },
         {
-          "title": "Events run end to end",
-          "body": "From the first proposal to the last coffee poured — we hold the timing so you can hold the room."
+          "title": "Coffee cart",
+          "body": "A barista, full professional equipment, coffee drinks and ceremonial matcha, made on the spot for your guests."
         },
         {
-          "title": "A coffee cart that comes to you",
-          "body": "A barista, a professional machine, coffee and ceremonial matcha: the cart sets up at the heart of your event."
+          "title": "Collaborations",
+          "body": "A selection of salads, sandwiches, sweet treats and fresh drinks, delivered regularly to your café, gym or workspace."
         }
       ]
     },
@@ -977,27 +977,27 @@
     },
     "story": {
       "label": "Our story",
-      "title": "It began with one table too many.",
-      "body": "Moment started in a rented kitchen off the Chaussée d'Ixelles, cooking Friday lunch for a design studio that had run out of decent options. Word travelled the way it does here — one office told another, then someone's launch, then someone's wedding. We still cook to order, still cap the covers at what we can plate properly, and still send out nothing we would not happily eat standing at the pass."
+      "title": "That idea is how ( moment ) was born.",
+      "body": "Today, from our atelier in Forest, we share our vision through fresh, healthy and indulgent food. We want to make eating well an everyday pleasure within reach, without ever sacrificing taste or flavour."
     },
     "principles": {
-      "label": "How we work",
+      "label": "Our values",
       "items": [
         {
-          "title": "Seasonal, or not at all",
-          "body": "The menu follows the market rather than the other way round. Asparagus in May, tomatoes when they actually taste of something, chicory and game through the winter. If it is not good this week, it is not on the list this week."
+          "title": "Quality ingredients",
+          "body": "We favour fresh, quality ingredients, as little processed as possible. Wherever we can, we choose organic produce and work with local suppliers."
         },
         {
-          "title": "Cooked, never assembled",
-          "body": "Stocks reduced overnight, dressings mixed at the last minute, pastry laminated by hand. Everything leaves our own kitchen in Brussels, made from raw ingredients that same morning — nothing reheated, nothing bought in finished."
+          "title": "Made by hand",
+          "body": "In our atelier in Forest, we make every one of our recipes ourselves and cold-press our juices on site. Most of our dishes are made on the day. For the bread in our bagels, sandwiches and toasts, we rely on artisan bakeries chosen for their craft and the quality of their products."
         },
         {
-          "title": "Delivered ready to serve",
-          "body": "Insulated boxes, portions already set, garnishes kept separate. You unwrap it, arrange it and serve it. No kitchen needed at your end, and nothing that has to be plated by someone who would rather be hosting."
+          "title": "Healthy and indulgent, in balance",
+          "body": "We believe a balanced diet has to stay a pleasure to last in the long run. We take care over pairings of flavours and textures to create recipes that are both healthy and indulgent, while leaving room for sweet treats and small indulgences."
         },
         {
-          "title": "One kitchen, one standard",
-          "body": "The same food goes to a two-person desk lunch and a two-hundred-guest reception. Scale changes the number of hands and the hour we start, not the recipe or what we are willing to send out."
+          "title": "Slowing down, for the length of a meal",
+          "body": "As life moves ever faster, meals sometimes become a box to tick before moving on to the next thing. We want to give them back the importance they have gradually lost. Taking the time to savour, to talk or simply to enjoy your meal is opening a parenthesis in everyday life and being fully present in what you are living."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     },
     "facts": {
       "label": "At a glance",
-      "headline": "The details people ask before they ask for a menu.",
+      "headline": "Moment, in a few words.",
       "terms": {
         "based": "Based",
         "cookFor": "We cook for",
@@ -1030,18 +1030,18 @@
         "languages": "Languages"
       },
       "values": {
-        "based": "Brussels, Belgium",
-        "cookFor": "Private hosts, offices, agencies, embassies",
-        "services": "Daily delivery, event catering, coffee desk",
+        "based": "Forest, Brussels",
+        "cookFor": "Private clients, companies and event venues",
+        "services": "Delivery, buffets for your events, coffee cart, collaborations",
         "deliveryArea": "Brussels and up to 70 km from the atelier, further on quotation",
         "leadTime": "48 hours for delivery, on request for an event",
-        "diets": "Vegetarian, vegan and gluten-free on every menu",
+        "diets": "Vegetarian, vegan and gluten-free options",
         "languages": "Français, Nederlands, English"
       }
     },
     "cta": {
-      "headline": "Tell us what you are planning.",
-      "body": "A date, a headcount and a rough idea of the room is enough to start. We come back with a menu, a price and what it takes to put it on the table.",
+      "headline": "A question, a project or a special occasion?",
+      "body": "Whether it is about an order, an event or a collaboration, we would be delighted to talk it through with you.",
       "links": {
         "events": "Plan an event",
         "delivery": "Order delivery",
