@@ -3,6 +3,7 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import type { CSSProperties, MouseEvent } from "react";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
+import { DietBadges, type DietLabels } from "@/components/DietBadges";
 
 type ProductCardProps = {
   product: ShopifyProduct;
@@ -16,6 +17,8 @@ type ProductCardProps = {
    * a client component to translate two words.
    */
   soldOutLabel: string;
+  /** Diet badges over the photo (Vegan, Sans gluten…); none when omitted. */
+  dietLabels?: DietLabels;
   /**
    * What the title is, structurally. A heading on the pages where the card is
    * content — the shop grid, the product rows — under the section heading
@@ -44,6 +47,7 @@ export function ProductCard({
   sizes = "(max-width: 768px) 50vw, 33vw",
   compact = false,
   soldOutLabel,
+  dietLabels,
   titleAs: Title = "h3",
   onNavigate,
   onClick,
@@ -65,7 +69,9 @@ export function ProductCard({
       href={routes.product(product.handle)}
       onClick={handleClick}
       className="group block h-full py-(--card-pad)"
-      style={compact ? ({ "--card-pad": "1.25rem" } as CSSProperties) : undefined}
+      style={
+        compact ? ({ "--card-pad": "1.25rem" } as CSSProperties) : undefined
+      }
     >
       <div className="px-(--card-gutter)">
         <div className="product-card__image relative aspect-4/5 w-full overflow-hidden">
@@ -82,6 +88,13 @@ export function ProductCard({
             <span className="font-owners-medium absolute top-3 left-3 bg-cream px-2 py-1 text-[10px] uppercase">
               {soldOutLabel}
             </span>
+          )}
+          {dietLabels && (
+            <DietBadges
+              tags={product.tags ?? []}
+              labels={dietLabels}
+              className="absolute bottom-3 left-3"
+            />
           )}
         </div>
       </div>

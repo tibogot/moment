@@ -53,6 +53,36 @@ export const localeText = defineType({
 });
 
 /**
+ * A `localeString` / `localeText`-shaped field (fr, nl, en) whose empty
+ * boxes show, greyed, what the site prints when they are left empty
+ * (26 November 2026). The home document was created before its fields had
+ * defaults, so it opened blank while the site showed "Life is moments" — an
+ * owner could not tell what was live. A placeholder is not a value: nothing
+ * is saved until they type, and an empty box keeps the site's own text.
+ *
+ * Same shape as the named types ({ fr, nl, en }), so the GROQ projections and
+ * `pick()` read it the same way.
+ */
+export function localeFieldWithPlaceholders(
+  kind: "string" | "text",
+  placeholders: Record<(typeof LANGUAGES)[number]["name"], string>,
+) {
+  return {
+    type: "object" as const,
+    options: OPTIONS,
+    fields: LANGUAGES.map(({ name, title }) =>
+      defineField({
+        name,
+        title,
+        type: kind,
+        placeholder: placeholders[name],
+        ...(kind === "text" ? { rows: 3 } : {}),
+      }),
+    ),
+  };
+}
+
+/**
  * A list of lines — the dishes in a course, what a price includes.
  *
  * The three lists are independent, so a Dutch translation can merge two lines

@@ -23,6 +23,7 @@ import { urlFor } from "@/lib/sanity/image";
 import { pick, type LocaleString } from "@/lib/sanity/locale";
 import { getHomePageImages, getTestimonials } from "@/lib/sanity/queries";
 import { TestimonialCells } from "@/components/v2/TestimonialCells";
+import { NewsletterCells } from "@/components/v2/NewsletterCells";
 import { SAMPLE_TESTIMONIALS } from "@/lib/testimonial-samples";
 import { siteIsIndexable } from "@/lib/site";
 import type { SanityImage } from "@/lib/sanity/types";
@@ -163,11 +164,8 @@ export default async function Home({
 
       <div className="v2">
         <PhotoHero
-          headline={studioText(
-            images.heroHeadline,
-            locale,
-            home.heroPhoto.headline,
-          )}
+          // The slogan: one value for all three languages.
+          headline={images.heroHeadline?.trim() || home.heroPhoto.headline}
           // From the brief, not the intro's wording: the intro just below
           // explains; the hero only sets the tone.
           lead={studioText(images.heroLead, locale, home.heroPhoto.lead)}
@@ -274,6 +272,8 @@ export default async function Home({
         />
         {/* The delivery calendar, every day a cell. */}
         <CalendarCells availability={availability} />
+        {/* The newsletter, last before the footer — a first version. */}
+        <NewsletterCells copy={home.newsletter} />
       </div>
       <Footer />
     </>

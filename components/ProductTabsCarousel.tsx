@@ -5,6 +5,7 @@ import { useId, useRef, useState } from "react";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { GridSection } from "@/components/GridSection";
 import { ProductCard } from "@/components/ProductCard";
+import type { DietLabels } from "@/components/DietBadges";
 import { gsap } from "@/lib/gsap";
 import {
   loadDraggable,
@@ -25,6 +26,7 @@ type ProductTabsCarouselProps = {
   tabs: ProductCarouselTab[];
   viewAllLabel: string;
   soldOutLabel: string;
+  dietLabels?: DietLabels;
   prevLabel: string;
   nextLabel: string;
   defaultTabId?: string;
@@ -40,6 +42,7 @@ export function ProductTabsCarousel({
   tabs,
   viewAllLabel,
   soldOutLabel,
+  dietLabels,
   prevLabel,
   nextLabel,
   defaultTabId,
@@ -265,9 +268,7 @@ export function ProductTabsCarousel({
         ref={containerRef}
         id={panelId}
         role={showTabs ? "tabpanel" : undefined}
-        aria-labelledby={
-          showTabs ? `${reactId}-tab-${active.id}` : undefined
-        }
+        aria-labelledby={showTabs ? `${reactId}-tab-${active.id}` : undefined}
         className="col-start-2 col-end-5 min-w-0 md:col-end-9"
       >
         {active.products.length === 0 ? (
@@ -290,6 +291,7 @@ export function ProductTabsCarousel({
                   <ProductCard
                     product={product}
                     soldOutLabel={soldOutLabel}
+                    dietLabels={dietLabels}
                     sizes="(max-width: 768px) 50vw, 33vw"
                     onClick={(event) => {
                       if (timeSinceDrag() < 0.15) event.preventDefault();

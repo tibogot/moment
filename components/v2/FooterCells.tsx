@@ -9,6 +9,7 @@ import { CellGrid } from "@/components/v2/CellGrid";
 import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import { aboutNav, legalNav, routes } from "@/lib/routes";
 import { useSiteDetails } from "@/components/SiteDetailsProvider";
+import { PaymentMethodsRow } from "@/components/PaymentMethods";
 import { cn } from "@/lib/utils";
 
 /**
@@ -263,6 +264,11 @@ export function FooterCells() {
           {ENABLED_CONSENT_CATEGORIES.length > 0 && (
             <CookiePreferencesButton className={LEGAL} />
           )}
+          {/* The checkout's payment methods, from Shopify. */}
+          <PaymentMethodsRow
+            label={dict.cart.securePayment}
+            className="md:ml-2"
+          />
         </div>
       </div>
 

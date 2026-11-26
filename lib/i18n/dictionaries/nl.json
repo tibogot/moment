@@ -18,7 +18,9 @@
     "all": "Alles",
     "home": "Home",
     "openMenu": "Menu openen",
-    "menu": "Menu"
+    "menu": "Menu",
+    "byMoment": "Per moment",
+    "byOccasion": "Per gelegenheid"
   },
   "legalNav": {
     "legal": "Wettelijke vermeldingen",
@@ -375,6 +377,7 @@
   "cart": {
     "title": "Winkelmand",
     "chooseMethod": "Kies eerst levering aan huis of click & collect.",
+    "securePayment": "Veilig betalen",
     "empty": "Uw winkelmand is leeg.",
     "browseShop": "Naar de winkel",
     "total": "Totaal",

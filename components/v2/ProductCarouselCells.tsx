@@ -6,6 +6,8 @@ import { CdnImage as Image } from "@/components/CdnImage";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import type { ProductCarouselTab } from "@/components/ProductTabsCarousel";
 import { CellGrid } from "@/components/v2/CellGrid";
+import { DietBadges } from "@/components/DietBadges";
+import { useDictionary } from "@/components/LocaleProvider";
 import { gsap } from "@/lib/gsap";
 import {
   loadDraggable,
@@ -66,6 +68,7 @@ export function ProductCarouselCells({
   joined = false,
 }: ProductCarouselCellsProps) {
   const reactId = useId();
+  const dietLabels = useDictionary().shop.filters.tags;
   const panelId = `${reactId}-carousel`;
   const [activeId, setActiveId] = useState(
     () => defaultTabId ?? tabs[0]?.id ?? "",
@@ -346,6 +349,11 @@ export function ProductCarouselCells({
                           {soldOutLabel}
                         </span>
                       )}
+                      <DietBadges
+                        tags={product.tags ?? []}
+                        labels={dietLabels}
+                        className="absolute bottom-3 left-3"
+                      />
                     </div>
                   </div>
                 </Link>

@@ -1,5 +1,9 @@
 import { defineField, defineType } from "sanity";
 import { HomeIcon } from "@sanity/icons/Home";
+import en from "@/lib/i18n/dictionaries/en.json";
+import fr from "@/lib/i18n/dictionaries/fr.json";
+import nl from "@/lib/i18n/dictionaries/nl.json";
+import { localeFieldWithPlaceholders } from "../objects/locale";
 
 /**
  * The photographs on the home page. A singleton, pinned by
@@ -34,17 +38,26 @@ export const homePage = defineType({
     defineField({
       name: "heroHeadline",
       title: "Titre d'ouverture",
-      type: "localeText",
+      // One box, not three: the headline is the brand's slogan ("Life is
+      // moments"), in English and the same on all three versions of the site.
+      // The site's wording shown, greyed, while the box is empty.
+      type: "text",
+      rows: 2,
+      placeholder: fr.home.heroPhoto.headline,
       description:
-        "Le grand titre au centre de la photo d'ouverture (aujourd'hui « Life is moments »). Court : deux ou trois mots. Un retour à la ligne ici coupe le titre au même endroit sur le site. Laissé vide, le titre actuel reste ; une langue laissée vide affiche le français.",
+        "Le grand titre au centre de la photo d'ouverture, le même dans les trois langues (c'est votre slogan). Le texte en gris est celui affiché aujourd'hui : laissez la case vide pour le garder, ou écrivez par-dessus. Court : deux ou trois mots ; un retour à la ligne coupe le titre au même endroit sur le site.",
     }),
 
     defineField({
       name: "heroLead",
       title: "Phrase d'ouverture",
-      type: "localeString",
+      ...localeFieldWithPlaceholders("string", {
+        fr: fr.home.heroPhoto.lead,
+        nl: nl.home.heroPhoto.lead,
+        en: en.home.heroPhoto.lead,
+      }),
       description:
-        "La phrase sous le titre d'ouverture (aujourd'hui « Choisir son moment, même quand le temps manque. »). Une phrase, sans prix ni horaire. Laissée vide, la phrase actuelle reste.",
+        "La phrase sous le titre. Le texte en gris est celui affiché aujourd'hui : laissez vide pour le garder, ou écrivez par-dessus. Une phrase, sans prix ni horaire. Même règle pour les langues que pour le titre.",
     }),
 
     defineField({

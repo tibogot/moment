@@ -13,6 +13,7 @@ import { LocaleLink } from "@/components/LocaleLink";
 import { routes } from "@/lib/routes";
 import { CheckoutBlockerNotice } from "@/components/CheckoutBlockerNotice";
 import { CheckoutButton } from "@/components/CheckoutButton";
+import { PaymentMethodsRow } from "@/components/PaymentMethods";
 import {
   CheckoutNotice,
   CheckoutNoticeAction,
@@ -600,6 +601,7 @@ export function CartDeliverySection({
           }}
         />
       )}
+      <PaymentMethodsRow label={t.securePayment} className="mt-5" />
     </>
   );
 }

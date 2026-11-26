@@ -18,7 +18,9 @@
     "all": "Tout",
     "home": "Accueil",
     "openMenu": "Ouvrir le menu",
-    "menu": "Menu"
+    "menu": "Menu",
+    "byMoment": "Par moment",
+    "byOccasion": "Par occasion"
   },
   "legalNav": {
     "legal": "Mentions légales",
@@ -375,6 +377,7 @@
   "cart": {
     "title": "Panier",
     "chooseMethod": "Choisissez d'abord la livraison à domicile ou le click & collect.",
+    "securePayment": "Paiement sécurisé",
     "empty": "Votre panier est vide.",
     "browseShop": "Voir la boutique",
     "total": "Total",

@@ -18,7 +18,9 @@
     "all": "All",
     "home": "Home",
     "openMenu": "Open menu",
-    "menu": "Menu"
+    "menu": "Menu",
+    "byMoment": "By moment",
+    "byOccasion": "By occasion"
   },
   "legalNav": {
     "legal": "Legal notice",
@@ -375,6 +377,7 @@
   "cart": {
     "title": "Cart",
     "chooseMethod": "First choose home delivery or click & collect.",
+    "securePayment": "Secure payment",
     "empty": "Your cart is empty.",
     "browseShop": "Browse the shop",
     "total": "Total",

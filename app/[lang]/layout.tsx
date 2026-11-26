@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 import { getAnnouncement } from "@/lib/sanity/queries";
 import { getSiteDetails } from "@/lib/site-details";
 import { SiteDetailsProvider } from "@/components/SiteDetailsProvider";
+import { PaymentMethodsProvider } from "@/components/PaymentMethods";
+import { getPaymentMethods } from "@/lib/shopify/payments";
 import SmoothScroll from "@/components/SmoothScroll";
 import { NavCatalogProvider } from "@/components/NavCatalogProvider";
 import { getCollectionLinks } from "@/lib/shopify/collections";
@@ -129,12 +131,13 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [collections, dictionary, announcement, siteDetails] =
+  const [collections, dictionary, announcement, siteDetails, paymentMethods] =
     await Promise.all([
       getCollectionLinks(lang),
       getDictionary(lang),
       getAnnouncement(),
       getSiteDetails(),
+      getPaymentMethods(),
     ]);
 
   /*
@@ -188,24 +191,26 @@ export default async function RootLayout({
         </a>
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
           <SiteDetailsProvider details={siteDetails}>
-            <SmoothScroll>
-              <ScrollToTop />
-              {announcement && (
-                <AnnouncementBar announcement={announcement} locale={lang} />
-              )}
-              <NavCatalogProvider collections={navCollections}>
-                <Navbar />
-              </NavCatalogProvider>
-              <main id="main" className="relative flex flex-1 flex-col">
-                {children}
-              </main>
-              <CookieConsent />
-              <ConsentScripts />
-              {/* Review shortcuts (Shift + P, Shift + G) — on every page of the
+            <PaymentMethodsProvider methods={paymentMethods}>
+              <SmoothScroll>
+                <ScrollToTop />
+                {announcement && (
+                  <AnnouncementBar announcement={announcement} locale={lang} />
+                )}
+                <NavCatalogProvider collections={navCollections}>
+                  <Navbar />
+                </NavCatalogProvider>
+                <main id="main" className="relative flex flex-1 flex-col">
+                  {children}
+                </main>
+                <CookieConsent />
+                <ConsentScripts />
+                {/* Review shortcuts (Shift + P, Shift + G) — on every page of the
                   temporary address, never on the real domain. */}
-              {!siteIsIndexable && <PaletteToggle />}
-              {!siteIsIndexable && <GridOverlayToggle />}
-            </SmoothScroll>
+                {!siteIsIndexable && <PaletteToggle />}
+                {!siteIsIndexable && <GridOverlayToggle />}
+              </SmoothScroll>
+            </PaymentMethodsProvider>
           </SiteDetailsProvider>
         </LocaleProvider>
       </body>

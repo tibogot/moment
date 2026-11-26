@@ -289,7 +289,8 @@ export const homePageQuery = defineQuery(`*[_id == "homePage"][0] {
 
 export type HomePageImages = {
   /** The hero's two texts, untouched: the page picks the language. */
-  heroHeadline: LocaleString | null;
+  /** The slogan, one value for every language. */
+  heroHeadline: string | null;
   heroLead: LocaleString | null;
   hero: (SanityImage & { lqip?: string }) | null;
   /** "light": dark type over a light photo. Defaults to "dark". */
@@ -316,7 +317,7 @@ const NO_HOME_IMAGES: HomePageImages = {
 };
 
 type HomePageResponse = {
-  heroHeadline?: LocaleString | null;
+  heroHeadline?: string | null;
   heroLead?: LocaleString | null;
   heroImage?: (SanityImage & { lqip?: string }) | null;
   heroTone?: string | null;
@@ -349,7 +350,11 @@ export async function getHomePageImages(): Promise<HomePageImages> {
     if (!response) return NO_HOME_IMAGES;
 
     return {
-      heroHeadline: response.heroHeadline ?? null,
+      // A string; an older document held { fr, nl, en } — read its French.
+      heroHeadline:
+        typeof response.heroHeadline === "string"
+          ? response.heroHeadline
+          : ((response.heroHeadline as { fr?: string } | null)?.fr ?? null),
       heroLead: response.heroLead ?? null,
       hero: uploaded(response.heroImage),
       heroTone: response.heroTone === "light" ? "light" : "dark",

@@ -484,6 +484,7 @@ export function ProductGrid({
                 <ProductCard
                   product={product}
                   soldOutLabel={dict.product.soldOut}
+                  dietLabels={dict.shop.filters.tags}
                 />
               </li>
             ))}

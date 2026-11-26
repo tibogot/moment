@@ -247,8 +247,12 @@ export type HomePage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  heroHeadline?: LocaleText;
-  heroLead?: LocaleString;
+  heroHeadline?: string;
+  heroLead?: {
+    fr?: string;
+    nl?: string;
+    en?: string;
+  };
   heroImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -722,8 +726,12 @@ export type HomePageQueryResult =
       coffeeImage: null;
     }
   | {
-      heroHeadline: LocaleText | null;
-      heroLead: LocaleString | null;
+      heroHeadline: string | null;
+      heroLead: {
+        fr?: string;
+        nl?: string;
+        en?: string;
+      } | null;
       heroImage: {
         asset?: SanityImageAssetReference;
         media?: unknown;

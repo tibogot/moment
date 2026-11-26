@@ -25,6 +25,7 @@ import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { type SiteDetails } from "@/lib/site";
+import { SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
 import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
@@ -208,11 +209,21 @@ export function MobileNavMenu({
   const menuChildren: Record<NavMenuKey, { href: string; label: string }[]> = {
     shop: [
       { href: routes.shop, label: dict.nav.all },
+      // The same two groups as the desktop menu, flattened: moments, then
+      // occasions, then every collection (lib/shopify/nav-groups.ts).
+      ...SHOP_NAV_GROUPS.flatMap((group) => {
+        const labels =
+          group.source === "moments" ? dict.home.moments : dict.home.selections;
+        return group.items
+          .filter((item) =>
+            collections.some((collection) => collection.handle === item.handle),
+          )
+          .map((item) => ({
+            href: routes.collection(item.handle),
+            label: labels[item.label as keyof typeof labels],
+          }));
+      }),
       { href: routes.collections, label: dict.nav.collections },
-      ...collections.map((collection) => ({
-        href: routes.collection(collection.handle),
-        label: collection.title,
-      })),
     ],
     about: aboutNav.map(({ key, href }) => ({
       href,

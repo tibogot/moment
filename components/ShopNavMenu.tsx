@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { routes } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
 import { NAV_PREVIEW_COUNT } from "@/lib/shopify/queries";
+import { SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
 type ShopNavMenuProps = {
@@ -172,27 +173,49 @@ export function ShopNavMenu({
         >
           <span className={linkLabelClassName}>{dict.nav.all}</span>
         </Link>
+        {/* Two groups, not every collection: the moments of the day and
+            the occasions (lib/shopify/nav-groups.ts). The product types are
+            under "Collections" and in the shop's filters. */}
+        {SHOP_NAV_GROUPS.map((group) => {
+          const items = group.items.filter((item) =>
+            collections.some((collection) => collection.handle === item.handle),
+          );
+          if (items.length === 0) return null;
+          const labels =
+            group.source === "moments"
+              ? dict.home.moments
+              : dict.home.selections;
+          return (
+            <div key={group.key} className="mt-4 flex flex-col gap-1">
+              <p className="font-archivo-light text-[12px] opacity-60">
+                {dict.nav[group.key]}
+              </p>
+              {items.map((item) => (
+                <Link
+                  key={item.handle}
+                  href={routes.collection(item.handle)}
+                  className={linkClassName}
+                  onMouseEnter={setHover(item.handle)}
+                  onFocus={setHover(item.handle)}
+                  onClick={onNavigate}
+                >
+                  <span className={linkLabelClassName}>
+                    {labels[item.label as keyof typeof labels]}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          );
+        })}
         <Link
           href={routes.collections}
-          className={linkClassName}
+          className={`${linkClassName} mt-4`}
           onMouseEnter={setHover("collections")}
           onFocus={setHover("collections")}
           onClick={onNavigate}
         >
           <span className={linkLabelClassName}>{dict.nav.collections}</span>
         </Link>
-        {collections.map((collection) => (
-          <Link
-            key={collection.id}
-            href={routes.collection(collection.handle)}
-            className={linkClassName}
-            onMouseEnter={setHover(collection.handle)}
-            onFocus={setHover(collection.handle)}
-            onClick={onNavigate}
-          >
-            <span className={linkLabelClassName}>{collection.title}</span>
-          </Link>
-        ))}
       </nav>
 
       {previewProducts.length > 0 && (

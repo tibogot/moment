@@ -76,6 +76,7 @@ export function ProductRelatedSection({
       defaultTabId="similar"
       viewAllLabel={dict.common.seeEverything}
       soldOutLabel={dict.product.soldOut}
+      dietLabels={dict.shop.filters.tags}
       prevLabel={dict.home.calendar.prev}
       nextLabel={dict.home.calendar.next}
     />

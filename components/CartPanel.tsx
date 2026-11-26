@@ -35,6 +35,7 @@ import {
 } from "@/lib/cart-store";
 import { AddressPanel } from "@/components/AddressPanel";
 import { CheckoutButton } from "@/components/CheckoutButton";
+import { PaymentMethodsRow } from "@/components/PaymentMethods";
 import { CheckoutBlockerNotice } from "@/components/CheckoutBlockerNotice";
 import { DeliveryMethodToggle } from "@/components/DeliveryMethodToggle";
 import {
@@ -929,6 +930,11 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   }}
                 />
               )}
+              {/* Under the button: how they will pay, before they get there. */}
+              <PaymentMethodsRow
+                label={t.securePayment}
+                className="mt-4 justify-center"
+              />
             </div>
           </div>
         )}
