@@ -1097,7 +1097,11 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "closePopup": "Close",
-    "attribution": "Show map credits"
+    "attribution": "Show map credits",
+    "legendAtelier": "Moment atelier — collect your order",
+    "legendPartners": "Stockists — where to find our products",
+    "atelierNote": "Collection by order, at the time you choose online.",
+    "orderPickup": "Order for click & collect"
   },
   "partner": {
     "title": "Collaborations",

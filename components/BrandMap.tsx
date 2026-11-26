@@ -7,8 +7,17 @@ import type { Map as MapLibreMap } from "maplibre-gl";
 import type { MapPoint } from "@/components/PartnerMap";
 import { brandStyle, MAP_COLORS } from "@/lib/map/brandStyle";
 
+/**
+ * A point, plus what only the atelier has: a line about collection and a
+ * link to order (26 November 2026).
+ */
+export type BrandMapPoint = MapPoint & {
+  note?: string;
+  cta?: { href: string; label: string };
+};
+
 type BrandMapProps = {
-  points: MapPoint[];
+  points: BrandMapPoint[];
   /** Geoapify's vector style URL, key included. */
   styleUrl: string;
   labels: {
@@ -19,6 +28,9 @@ type BrandMapProps = {
     zoomOut: string;
     closePopup: string;
     attribution: string;
+    /** The legend above the map: what the two kinds of marker mean. */
+    legendAtelier: string;
+    legendPartners: string;
   };
 };
 
@@ -106,6 +118,11 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
         element.type = "button";
         element.className = `brand-marker${point.primary ? " brand-marker--primary" : ""}`;
         element.setAttribute("aria-label", point.name);
+        // The atelier: the site's mark — the favicon's ( m ) on sky — with
+        // its name always beside it, so the map reads without a click.
+        if (point.primary) {
+          element.innerHTML = `<img src="/brand/map-marker.png" alt="" class="brand-marker__mark" /><span class="brand-marker__label" aria-hidden="true"><strong>${escapeHtml(point.name)}</strong><span>${escapeHtml(point.kindLabel)}</span></span>`;
+        }
 
         const links = [
           `<a href="${directionsUrl(point)}" target="_blank" rel="noopener noreferrer">${escapeHtml(labels.directions)}</a>`,
@@ -115,6 +132,12 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
         ]
           .filter(Boolean)
           .join(" · ");
+        const note = point.note
+          ? `<p class="brand-popup__note">${escapeHtml(point.note)}</p>`
+          : "";
+        const cta = point.cta
+          ? `<p class="brand-popup__cta"><a href="${escapeHtml(point.cta.href)}">${escapeHtml(point.cta.label)} →</a></p>`
+          : "";
 
         const popup = new maplibre.Popup({
           offset: 14,
@@ -124,7 +147,9 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
           `<p class="brand-popup__kind">${escapeHtml(point.kindLabel)}</p>
            <p class="brand-popup__name">${escapeHtml(point.name)}</p>
            <p>${escapeHtml(point.address)}</p>
-           <p class="brand-popup__links">${links}</p>`,
+           ${note}
+           <p class="brand-popup__links">${links}</p>
+           ${cta}`,
         );
 
         new maplibre.Marker({ element })
@@ -148,14 +173,34 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
     };
   }, [points, styleUrl, labels]);
 
+  const hasPartners = points.some((point) => !point.primary);
+
   return (
-    <div
-      ref={containerRef}
-      data-lenis-prevent
-      aria-label={labels.mapLabel}
-      className="brand-map h-[60svh] min-h-80 w-full border border-black"
-      // The ground colour before the tiles arrive, so there is no flash.
-      style={{ backgroundColor: MAP_COLORS.ground }}
-    />
+    <div>
+      {/* What the markers mean, before anyone has to click one. */}
+      <ul className="font-archivo-light mb-3 flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
+        <li className="flex items-center gap-2">
+          <span aria-hidden className="brand-legend brand-legend--atelier">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/map-marker.png" alt="" />
+          </span>
+          {labels.legendAtelier}
+        </li>
+        {hasPartners && (
+          <li className="flex items-center gap-2">
+            <span aria-hidden className="brand-legend brand-legend--partner" />
+            {labels.legendPartners}
+          </li>
+        )}
+      </ul>
+      <div
+        ref={containerRef}
+        data-lenis-prevent
+        aria-label={labels.mapLabel}
+        className="brand-map h-[60svh] min-h-80 w-full border border-black"
+        // The ground colour before the tiles arrive, so there is no flash.
+        style={{ backgroundColor: MAP_COLORS.ground }}
+      />
+    </div>
   );
 }

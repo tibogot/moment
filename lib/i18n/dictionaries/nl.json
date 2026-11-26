@@ -1098,7 +1098,11 @@
     "zoomIn": "Inzoomen",
     "zoomOut": "Uitzoomen",
     "closePopup": "Sluiten",
-    "attribution": "Kaartvermeldingen tonen"
+    "attribution": "Kaartvermeldingen tonen",
+    "legendAtelier": "Atelier Moment — uw bestelling afhalen",
+    "legendPartners": "Verkooppunten — waar u onze producten vindt",
+    "atelierNote": "Afhalen op bestelling, op het uur dat u online kiest.",
+    "orderPickup": "Bestellen met click & collect"
   },
   "partner": {
     "title": "Samenwerkingen",

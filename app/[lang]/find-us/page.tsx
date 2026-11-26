@@ -2,8 +2,9 @@ import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { LocaleLink } from "@/components/LocaleLink";
 import { PageIntro } from "@/components/PageIntro";
-import { PartnerMap, type MapPoint } from "@/components/PartnerMap";
-import { BrandMap } from "@/components/BrandMap";
+import { PartnerMap } from "@/components/PartnerMap";
+import { BrandMap, type BrandMapPoint } from "@/components/BrandMap";
+import { withLocale } from "@/lib/i18n/config";
 import { DEFAULT_ATELIER } from "@/lib/delivery/zones";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -93,7 +94,7 @@ export default async function FindUsPage({
 
   // The atelier first and drawn differently: it is where click & collect
   // orders are picked up, which is a real answer to "where do I find you".
-  const points: MapPoint[] = [
+  const points: BrandMapPoint[] = [
     {
       id: "atelier",
       name: t.atelier,
@@ -103,6 +104,9 @@ export default async function FindUsPage({
       longitude: DEFAULT_ATELIER.longitude,
       url: null,
       primary: true,
+      // The atelier's popup says how collection works and leads to the shop.
+      note: t.atelierNote,
+      cta: { href: withLocale(routes.shop, locale), label: t.orderPickup },
     },
     ...partners.flatMap((partner) =>
       partner.coordinates
@@ -139,6 +143,8 @@ export default async function FindUsPage({
                 zoomOut: t.zoomOut,
                 closePopup: t.closePopup,
                 attribution: t.attribution,
+                legendAtelier: t.legendAtelier,
+                legendPartners: t.legendPartners,
               }}
             />
           )}

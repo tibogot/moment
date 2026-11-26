@@ -1098,7 +1098,11 @@
     "zoomIn": "Zoomer",
     "zoomOut": "Dézoomer",
     "closePopup": "Fermer",
-    "attribution": "Afficher les crédits de la carte"
+    "attribution": "Afficher les crédits de la carte",
+    "legendAtelier": "Atelier Moment — retrait de vos commandes",
+    "legendPartners": "Points de vente — où trouver nos produits",
+    "atelierNote": "Retrait sur commande, à l'heure choisie en ligne.",
+    "orderPickup": "Commander en click & collect"
   },
   "partner": {
     "title": "Collaborations",
