@@ -424,11 +424,11 @@ export async function getPartnerDocuments() {
 
 /**
  * Published customer reviews for the home page, in the owners' order: those
- * with a number first (1, 2…), then the rest, newest first. Six at most —
- * the section is a first version and shows three on desktop.
+ * with a number first (1, 2…), then the rest, newest first. Twelve at most —
+ * the carousel shows four at a time on desktop.
  */
 export const testimonialsQuery =
-  defineQuery(`*[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...6] {
+  defineQuery(`*[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...12] {
   _id,
   quote,
   name,

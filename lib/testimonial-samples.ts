@@ -11,7 +11,9 @@ import type { TestimonialContent } from "@/lib/sanity/queries";
  * They live in code rather than in the Studio for that reason — a sample in
  * Sanity would stay on the live site until someone deleted it.
  *
- * Six, so a carousel has something to scroll. The names are placeholders.
+ * Six, so a carousel has something to scroll. The names are placeholders,
+ * unmarked so the section can be judged as it will look; the two conditions
+ * above are what keep them off the live site.
  */
 export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
   {
@@ -21,7 +23,7 @@ export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
       nl: "Elke donderdag lunch voor het hele team: vers, mooi en altijd op tijd. Onze vergaderingen waren nog nooit zo populair.",
       en: "Lunch for the whole team every Thursday: fresh, beautiful, always on time. Our meetings have never been so popular.",
     },
-    name: "Exemple — Camille D.",
+    name: "Camille D.",
     company: "Office manager",
   },
   {
@@ -31,7 +33,7 @@ export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
       nl: "Een receptie voor tachtig gasten, en iedereen vroeg ons wie de catering deed.",
       en: "Drinks for eighty guests, and everyone asked us who the caterer was.",
     },
-    name: "Exemple — Julien M.",
+    name: "Julien M.",
     company: "Lancement de produit",
   },
   {
@@ -41,7 +43,7 @@ export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
       nl: "De koudgeperste sappen zijn ons ochtendritueel op kantoor geworden.",
       en: "The cold-pressed juices have become our morning ritual at the office.",
     },
-    name: "Exemple — Sarah L.",
+    name: "Sarah L.",
     company: "Agence de design",
   },
   {
@@ -51,7 +53,7 @@ export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
       nl: "'s Ochtends besteld voor de volgende dag, in vijf minuten afgehaald in het atelier. Eenvoudig en heerlijk.",
       en: "Ordered in the morning for the next day, collected from the atelier in five minutes. Simple and delicious.",
     },
-    name: "Exemple — Thomas V.",
+    name: "Thomas V.",
     company: null,
   },
   {
@@ -61,7 +63,7 @@ export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
       nl: "Vegetarische en glutenvrije opties die niet als noodoplossing aanvoelen: iedereen kwam aan zijn trekken.",
       en: "Vegetarian and gluten-free options that never felt like plan B: everyone was looked after.",
     },
-    name: "Exemple — Inès B.",
+    name: "Inès B.",
     company: "Séminaire d'entreprise",
   },
   {
@@ -71,7 +73,7 @@ export const SAMPLE_TESTIMONIALS: TestimonialContent[] = [
       nl: "Een attent team, van het eerste bericht tot de levering. Een aanrader.",
       en: "An attentive team from the first message to the delivery. We recommend them without hesitation.",
     },
-    name: "Exemple — Marc et Léa",
+    name: "Marc et Léa",
     company: "Dîner privé",
   },
 ];

@@ -228,14 +228,27 @@ export default async function Home({
         <TestimonialCells
           // Sample reviews only on the test address and only while no real
           // one is published — never on the real domain (see
-          // lib/testimonial-samples.ts).
-          testimonials={
-            testimonials.length > 0 || siteIsIndexable
-              ? testimonials
-              : SAMPLE_TESTIMONIALS
-          }
-          locale={locale}
+          // lib/testimonial-samples.ts). Resolved to this page's language
+          // here, so the client gets one string per quote, not three.
+          items={(testimonials.length > 0 || siteIsIndexable
+            ? testimonials
+            : SAMPLE_TESTIMONIALS
+          ).flatMap((testimonial) => {
+            const quote = pick(testimonial.quote, locale)?.trim();
+            return quote
+              ? [
+                  {
+                    id: testimonial._id,
+                    quote,
+                    name: testimonial.name,
+                    company: testimonial.company,
+                  },
+                ]
+              : [];
+          })}
           label={home.testimonials.label}
+          prevLabel={home.calendar.prev}
+          nextLabel={home.calendar.next}
         />
         <OfferCards
           title={home.offer.title}

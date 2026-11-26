@@ -1,88 +1,269 @@
-import { CellGrid } from "@/components/v2/CellGrid";
-import type { Locale } from "@/lib/i18n/config";
-import { pick } from "@/lib/sanity/locale";
-import type { TestimonialContent } from "@/lib/sanity/queries";
+"use client";
 
-type TestimonialCellsProps = {
-  testimonials: TestimonialContent[];
-  locale: Locale;
-  label: string;
+import { useGSAP } from "@gsap/react";
+import { useRef, useState } from "react";
+import { CellGrid } from "@/components/v2/CellGrid";
+import { gsap } from "@/lib/gsap";
+import { loadDraggable, type DraggableInstance } from "@/lib/gsap/draggable";
+import { cn } from "@/lib/utils";
+
+export type TestimonialItem = {
+  id: string;
+  /** Already in the page's language (resolved on the server). */
+  quote: string;
+  name: string;
+  company: string | null;
 };
 
+type TestimonialCellsProps = {
+  items: TestimonialItem[];
+  label: string;
+  prevLabel: string;
+  nextLabel: string;
+};
+
+/** Copies of the list in the track: the real one in the middle. */
+const COPIES = 3;
+
 /**
- * Customer reviews on the 16 / 12 / 4 grid — a first version, to be
- * redesigned (26 November 2026). Written from the Studio ("Avis clients").
+ * Customer reviews on the 16 / 12 / 4 grid, as an endless carousel — a first
+ * version, to be redesigned (26 November 2026). Written from the Studio
+ * ("Avis clients").
  *
- * Renders nothing without a review: an empty "Ils nous font confiance" is
- * worse than no section.
+ * The feel of the home's product carousel (ProductCarouselCells) — drag and
+ * swipe with inertia, arrows from a tablet up, every throw ending on a whole
+ * card so its edges fall on grid lines — except that it never ends: past the
+ * last review comes the first again, both ways. Nothing moves on its own.
  *
- *   desktop  label cells 1–16; three quotes, cells 1–5, 6–10, 11–15
- *   tablet   two quotes, cells 1–6 and 7–12
- *   phone    one under the other, across the 4 cells
+ * How: the list is rendered three times; Draggable moves an invisible proxy,
+ * and the track follows the proxy's x wrapped into the middle copy's range,
+ * so the strip always has cards on both sides. The two outer copies are
+ * hidden from assistive tech — a screen reader reads each review once.
  *
- * The frame only (no drawn cells), like the intro; text a cell's padding in.
+ * When the reviews do not fill the strip (three cards on a desktop where four
+ * fit), there is nothing to loop: one copy, no drag, no arrows — otherwise the
+ * same review would sit next to itself.
+ *
+ *   row 1     the label and the arrows
+ *   rows 2–4  the cards: 4 cells wide on desktop (four in view), 6 on a
+ *             tablet (two), 3 on a phone (one and a cut one: there is more
+ *             to swipe)
+ *
+ * Renders nothing without a review. The cards move, so they draw their own
+ * rule on the right edge; the strip is a `data-grid-hole`.
  */
 export function TestimonialCells({
-  testimonials,
-  locale,
+  items,
   label,
+  prevLabel,
+  nextLabel,
 }: TestimonialCellsProps) {
-  const shown = testimonials.slice(0, 3);
-  if (shown.length === 0) return null;
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLUListElement>(null);
+  const proxyRef = useRef<HTMLDivElement>(null);
+  // Decided after measuring: do the reviews overflow the strip?
+  const [loops, setLoops] = useState(false);
+  const stepRef = useRef<(direction: -1 | 1) => void>(() => {});
+
+  useGSAP(
+    () => {
+      const track = trackRef.current;
+      const viewport = viewportRef.current;
+      const proxy = proxyRef.current;
+      if (!track || !viewport || !proxy || items.length === 0) return;
+
+      let cancelled = false;
+      let draggable: DraggableInstance | null = null;
+
+      const cardWidth = () =>
+        track.querySelector<HTMLElement>("li")?.offsetWidth ?? 1;
+      /** Width of one copy of the list. */
+      const setWidth = () => cardWidth() * items.length;
+      const overflows = () => setWidth() > viewport.clientWidth + 1;
+
+      // The track sits on the middle copy: x in [-2W, -W).
+      const place = () => {
+        const w = setWidth();
+        const x = Number(gsap.getProperty(proxy, "x") ?? 0);
+        gsap.set(track, { x: gsap.utils.wrap(-2 * w, -w, x - w) });
+      };
+
+      const setup = () => {
+        const shouldLoop = overflows();
+        setLoops(shouldLoop);
+        if (!shouldLoop) {
+          draggable?.disable();
+          gsap.set(track, { x: 0 });
+          return;
+        }
+        draggable?.enable();
+        // Back onto a whole card after a resize.
+        const x = Number(gsap.getProperty(proxy, "x") ?? 0);
+        gsap.set(proxy, { x: Math.round(x / cardWidth()) * cardWidth() });
+        place();
+      };
+
+      stepRef.current = (direction) => {
+        const x = Number(gsap.getProperty(proxy, "x") ?? 0);
+        const target = Math.round(x / cardWidth()) * cardWidth();
+        gsap.to(proxy, {
+          x: target - direction * cardWidth(),
+          duration: 0.6,
+          ease: "power2.out",
+          onUpdate: place,
+        });
+      };
+
+      gsap.set(proxy, { x: 0 });
+
+      loadDraggable().then((Draggable) => {
+        if (cancelled) return;
+        const reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        draggable = Draggable.create(proxy, {
+          type: "x",
+          trigger: viewport,
+          inertia: !reduceMotion,
+          allowNativeTouchScrolling: true,
+          cursor: "grab",
+          activeCursor: "grabbing",
+          // No bounds: it loops. Every throw still ends on a whole card.
+          snap: {
+            x: (value: number) => Math.round(value / cardWidth()) * cardWidth(),
+          },
+          onDrag: place,
+          onThrowUpdate: place,
+          onPress: () => viewport.setAttribute("data-dragging", ""),
+          onRelease: () => viewport.removeAttribute("data-dragging"),
+        })[0];
+        setup();
+      });
+
+      const observer = new ResizeObserver(setup);
+      observer.observe(viewport);
+      return () => {
+        cancelled = true;
+        observer.disconnect();
+        draggable?.kill();
+        gsap.set(track, { clearProps: "transform" });
+      };
+    },
+    { scope: viewportRef, dependencies: [items.length] },
+  );
+
+  if (items.length === 0) return null;
+
+  const LABEL = "font-owners-medium text-[12px] uppercase tracking-wide";
+  const BUTTON =
+    "font-owners-medium px-3 py-2.5 text-[11px] uppercase tracking-wide transition-colors duration-500 hover:bg-sky/30";
+
+  // Three copies when it loops, so there are always cards on both sides.
+  const copies = loops ? COPIES : 1;
 
   return (
     <section
       aria-labelledby="testimonials-title"
-      className="relative w-full bg-cream"
+      className="relative z-1 -mb-(--grid-line) w-full border-b border-sky bg-cream"
     >
       <CellGrid
         lineClassName="bg-sky"
         bands={false}
-        cells={false}
         readout={false}
         subdivide={2}
+        linesOnTop
       />
       <div
-        className="relative grid gap-y-[calc(var(--s-cell-h)/2)] py-[calc(var(--s-cell-h)/2)]"
-        style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
+        className="relative grid [--rows:4]"
+        style={{
+          gridTemplateColumns: "var(--s-grid-columns)",
+          gridTemplateRows: "repeat(var(--rows), var(--s-cell-h))",
+        }}
       >
-        <h2
-          id="testimonials-title"
-          className="font-owners-medium col-[2/span_4] px-(--v2-pad) text-[12px] tracking-wide uppercase md:col-[2/span_12] lg:col-[2/span_16]"
+        {/* Row 1: the label and the arrows. */}
+        <div
+          data-grid-hole
+          className="col-[2/span_4] row-[1] flex min-w-0 items-end justify-between gap-3 p-(--v2-pad) md:col-[2/span_12] lg:col-[2/span_16]"
         >
-          {label}
-        </h2>
+          <h2 id="testimonials-title" className={LABEL}>
+            {label}
+          </h2>
+          {loops && (
+            <div className="hidden border border-sky bg-cream md:flex">
+              <button
+                type="button"
+                onClick={() => stepRef.current(-1)}
+                aria-label={prevLabel}
+                className={cn(BUTTON, "border-r border-sky")}
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => stepRef.current(1)}
+                aria-label={nextLabel}
+                className={BUTTON}
+              >
+                →
+              </button>
+            </div>
+          )}
+        </div>
 
-        <ul className="col-[2/span_4] grid gap-y-[6svh] md:col-[2/span_12] md:grid-cols-12 lg:col-[2/span_16] lg:grid-cols-16">
-          {shown.map((testimonial, index) => (
-            <li
-              key={testimonial._id}
-              className={
-                index === 0
-                  ? "min-w-0 px-(--v2-pad) md:col-[1/span_6] lg:col-[1/span_5]"
-                  : index === 1
-                    ? "min-w-0 px-(--v2-pad) md:col-[7/span_6] lg:col-[6/span_5]"
-                    : "min-w-0 px-(--v2-pad) md:hidden lg:col-[11/span_5] lg:block"
-              }
-            >
-              <figure>
-                <blockquote className="font-archivo-light text-(length:--body-text) leading-normal text-pretty">
-                  « {pick(testimonial.quote, locale)?.trim()} »
-                </blockquote>
-                <figcaption className="mt-4">
-                  <span className="font-owners-medium block text-[12px] tracking-wide uppercase">
-                    {testimonial.name}
-                  </span>
-                  {testimonial.company && (
-                    <span className="font-archivo-light mt-1 block text-[13px] opacity-70">
-                      {testimonial.company}
-                    </span>
-                  )}
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+        {/* The strip the cards run in: rows 2 to the end, the full width. */}
+        <div
+          ref={viewportRef}
+          data-grid-hole
+          className={cn(
+            "relative col-[2/span_4] row-[2/-1] min-w-0 overflow-hidden md:col-[2/span_12] lg:col-[2/span_16]",
+            loops && "drag-carousel",
+          )}
+          style={{ touchAction: "pan-y" }}
+        >
+          {/* What Draggable actually moves; the track follows it, wrapped. */}
+          <div ref={proxyRef} aria-hidden className="absolute size-0" />
+          <ul
+            ref={trackRef}
+            className="flex h-full w-max will-change-transform"
+          >
+            {Array.from({ length: copies }, (_, copy) =>
+              items.map((item) => {
+                // The middle copy is the real list; the others are filler.
+                const isReal = copies === 1 || copy === 1;
+                return (
+                  <li
+                    key={`${copy}-${item.id}`}
+                    aria-hidden={isReal ? undefined : true}
+                    className="relative h-full w-[calc(var(--s-cell-w)*3)] shrink-0 select-none md:w-[calc(var(--s-cell-w)*6)] lg:w-[calc(var(--s-cell-w)*4)]"
+                  >
+                    <figure className="flex h-full flex-col justify-between p-(--v2-pad)">
+                      <blockquote className="font-archivo-light line-clamp-7 text-(length:--body-text) leading-normal text-pretty">
+                        « {item.quote} »
+                      </blockquote>
+                      <figcaption>
+                        <span className="font-owners-medium block text-[12px] tracking-wide uppercase">
+                          {item.name}
+                        </span>
+                        {/* Always there, a blank space when there is no
+                            company: the names then sit on one line across
+                            the cards. */}
+                        <span className="font-archivo-light mt-1 block text-[13px] opacity-70">
+                          {item.company || " "}
+                        </span>
+                      </figcaption>
+                    </figure>
+                    {/* The card's own rule on its right edge, centred on
+                        the line like the grid's. */}
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) translate-x-1/2 bg-sky"
+                    />
+                  </li>
+                );
+              }),
+            )}
+          </ul>
+        </div>
       </div>
     </section>
   );
