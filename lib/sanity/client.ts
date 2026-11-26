@@ -36,6 +36,8 @@ export const SANITY_TAGS = [
   "category",
   "faqPage",
   "announcement",
+  "practicalInfo",
+  "testimonial",
 ] as const;
 
 export type SanityTag = (typeof SANITY_TAGS)[number];

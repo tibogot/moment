@@ -21,7 +21,7 @@ import { getMenuBySlug } from "@/lib/sanity/queries";
 import { getDeliveryRules } from "@/lib/shopify/zones";
 import { breadcrumbSchema, graph, organizationSchema } from "@/lib/schema";
 import { absoluteUrl, fullTitle, localizedMetadata } from "@/lib/seo";
-import { SITE_DETAILS } from "@/lib/site";
+import { getSiteDetails } from "@/lib/site-details";
 
 export const generateMetadata = localizedMetadata("contact", {
   path: routes.contact,
@@ -96,6 +96,8 @@ export default async function ContactPage({
   params,
   searchParams,
 }: ContactPageProps) {
+  // Phone, e-mail, hours and social from the Studio ("Infos pratiques").
+  const siteDetails = await getSiteDetails();
   const { lang } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
@@ -112,7 +114,10 @@ export default async function ContactPage({
             "@type": "ContactPage",
             url: absoluteUrl(withLocale(routes.contact, locale)),
             name: fullTitle(dict.nav.contact),
-            about: organizationSchema(SITE_DETAILS, dict.meta.contact.description),
+            about: organizationSchema(
+              siteDetails,
+              dict.meta.contact.description,
+            ),
           },
           breadcrumbSchema(locale, [
             { name: dict.nav.home, path: routes.home },
@@ -121,7 +126,10 @@ export default async function ContactPage({
         )}
       />
 
-      <PageIntro title={dict.pageIntro.contact.title} lead={dict.contact.lead} />
+      <PageIntro
+        title={dict.pageIntro.contact.title}
+        lead={dict.contact.lead}
+      />
 
       <ContactForm
         initialValues={initialValues}
@@ -134,7 +142,7 @@ export default async function ContactPage({
           were on the site only inside the legal notice and a FAQ answer. */}
       <ContactDetails
         t={dict.contact}
-        details={SITE_DETAILS}
+        details={siteDetails}
         pickupWindow={pickupWindow}
       />
 

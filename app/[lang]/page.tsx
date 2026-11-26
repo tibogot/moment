@@ -18,10 +18,11 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { siteGraph } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { SITE_DETAILS } from "@/lib/site";
+import { getSiteDetails } from "@/lib/site-details";
 import { urlFor } from "@/lib/sanity/image";
 import { pick, type LocaleString } from "@/lib/sanity/locale";
-import { getHomePageImages } from "@/lib/sanity/queries";
+import { getHomePageImages, getTestimonials } from "@/lib/sanity/queries";
+import { TestimonialCells } from "@/components/v2/TestimonialCells";
 import type { SanityImage } from "@/lib/sanity/types";
 import { getCollectionByHandle } from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
@@ -122,18 +123,22 @@ export default async function Home({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  // Phone, e-mail, hours and social from the Studio ("Infos pratiques").
+  const siteDetails = await getSiteDetails();
   const locale = toLocale((await params).lang);
-  const [dict, collections, availability, images] = await Promise.all([
-    getDictionary(locale),
-    Promise.all(
-      MOMENTS.map(({ handle }) =>
-        // A collection that fails to load is left out, as on the live home.
-        getCollectionByHandle(locale, handle).catch(() => null),
+  const [dict, collections, availability, images, testimonials] =
+    await Promise.all([
+      getDictionary(locale),
+      Promise.all(
+        MOMENTS.map(({ handle }) =>
+          // A collection that fails to load is left out, as on the live home.
+          getCollectionByHandle(locale, handle).catch(() => null),
+        ),
       ),
-    ),
-    getDeliveryAvailability(),
-    getHomePageImages(),
-  ]);
+      getDeliveryAvailability(),
+      getHomePageImages(),
+      getTestimonials(),
+    ]);
   const home = dict.home;
 
   const tabs = MOMENTS.flatMap(({ key, handle }, index) => {
@@ -152,7 +157,7 @@ export default async function Home({
     <>
       {/* Defines the organisation, website and business nodes the rest of the
           site's structured data refers back to by @id. */}
-      <JsonLd data={siteGraph(SITE_DETAILS, dict.meta.home.description)} />
+      <JsonLd data={siteGraph(siteDetails, dict.meta.home.description)} />
 
       <div className="v2">
         <PhotoHero
@@ -215,6 +220,13 @@ export default async function Home({
           title={home.hosting.title}
           body={home.hosting.body}
           src={photo(images.hosting, hostingImage)}
+        />
+        {/* Reviews from the Studio — nothing until one is published. A first
+            version, to be redesigned. */}
+        <TestimonialCells
+          testimonials={testimonials}
+          locale={locale}
+          label={home.testimonials.label}
         />
         <OfferCards
           title={home.offer.title}

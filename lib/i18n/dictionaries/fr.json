@@ -207,6 +207,9 @@
       "submit": "S'inscrire",
       "success": "Merci — on vous écrit dès qu'il y a du nouveau.",
       "error": "L'inscription n'a pas abouti. Vérifiez l'adresse et réessayez."
+    },
+    "testimonials": {
+      "label": "Ils nous font confiance"
     }
   },
   "footer": {

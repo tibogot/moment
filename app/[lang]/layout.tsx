@@ -13,6 +13,8 @@ import { Navbar } from "@/components/Navbar";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { cn } from "@/lib/utils";
 import { getAnnouncement } from "@/lib/sanity/queries";
+import { getSiteDetails } from "@/lib/site-details";
+import { SiteDetailsProvider } from "@/components/SiteDetailsProvider";
 import SmoothScroll from "@/components/SmoothScroll";
 import { NavCatalogProvider } from "@/components/NavCatalogProvider";
 import { getCollectionLinks } from "@/lib/shopify/collections";
@@ -127,11 +129,13 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [collections, dictionary, announcement] = await Promise.all([
-    getCollectionLinks(lang),
-    getDictionary(lang),
-    getAnnouncement(),
-  ]);
+  const [collections, dictionary, announcement, siteDetails] =
+    await Promise.all([
+      getCollectionLinks(lang),
+      getDictionary(lang),
+      getAnnouncement(),
+      getSiteDetails(),
+    ]);
 
   /*
    * Titles and handles only. The nav needs the links in the HTML — they are
@@ -169,7 +173,9 @@ export default async function RootLayout({
       <body
         className={cn(
           "min-h-svh flex flex-col pt-(--announcement-h)",
-          announcement ? "[--announcement-h:2.25rem]" : "[--announcement-h:0px]",
+          announcement
+            ? "[--announcement-h:2.25rem]"
+            : "[--announcement-h:0px]",
         )}
       >
         {/* First thing a keyboard reaches: past a navbar of six menus. Hidden
@@ -181,7 +187,8 @@ export default async function RootLayout({
           {dictionary.common.skipToContent}
         </a>
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
-          <SmoothScroll>
+          <SiteDetailsProvider details={siteDetails}>
+            <SmoothScroll>
               <ScrollToTop />
               {announcement && (
                 <AnnouncementBar announcement={announcement} locale={lang} />
@@ -198,7 +205,8 @@ export default async function RootLayout({
                   temporary address, never on the real domain. */}
               {!siteIsIndexable && <PaletteToggle />}
               {!siteIsIndexable && <GridOverlayToggle />}
-          </SmoothScroll>
+            </SmoothScroll>
+          </SiteDetailsProvider>
         </LocaleProvider>
       </body>
     </html>

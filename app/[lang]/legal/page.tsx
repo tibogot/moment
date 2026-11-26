@@ -4,7 +4,7 @@ import { toLocale, type Locale } from "@/lib/i18n/config";
 import { colon, COMPANY_REGISTRY, HOSTING_PROVIDER } from "@/lib/legal";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
-import { SITE_DETAILS } from "@/lib/site";
+import { getSiteDetails } from "@/lib/site-details";
 
 export const generateMetadata = localizedMetadata("legal", {
   path: routes.legal,
@@ -89,9 +89,11 @@ export default async function LegalPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  // Phone, e-mail, hours and social from the Studio ("Infos pratiques").
+  const siteDetails = await getSiteDetails();
   const locale = toLocale((await params).lang);
   const t = COPY[locale];
-  const { contact, legal } = SITE_DETAILS;
+  const { contact, legal } = siteDetails;
   const c = colon(locale);
 
   return (
@@ -103,20 +105,21 @@ export default async function LegalPage({
         </p>
         <p>
           {t.seat}
-          {c}{legal.registeredOffice.street},{" "}
-          {legal.registeredOffice.postalCode} {legal.registeredOffice.city},{" "}
-          {t.country}
+          {c}
+          {legal.registeredOffice.street}, {legal.registeredOffice.postalCode}{" "}
+          {legal.registeredOffice.city}, {t.country}
         </p>
         <p>
           {t.atelier}
-          {c}{contact.street},{" "}
-          {contact.postalCode} {t.city},{" "}
-          {t.country}
+          {c}
+          {contact.street}, {contact.postalCode} {t.city}, {t.country}
         </p>
         <p>
           {t.contact}
           {c}
-          <LegalLink href={`mailto:${contact.email}`}>{contact.email}</LegalLink>
+          <LegalLink href={`mailto:${contact.email}`}>
+            {contact.email}
+          </LegalLink>
           {" · "}
           <LegalLink href={`tel:${contact.phone.replace(/\s+/g, "")}`}>
             {contact.phone}
@@ -127,15 +130,18 @@ export default async function LegalPage({
       <LegalSection title={t.registration}>
         <p>
           {t.enterprise}
-          {c}{legal.enterpriseNumber}
+          {c}
+          {legal.enterpriseNumber}
         </p>
         <p>
           {t.vat}
-          {c}{legal.vatNumber}
+          {c}
+          {legal.vatNumber}
         </p>
         <p>
           {t.register}
-          {c}{COMPANY_REGISTRY[locale]}
+          {c}
+          {COMPANY_REGISTRY[locale]}
         </p>
       </LegalSection>
 

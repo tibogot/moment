@@ -2,6 +2,8 @@ import type { StructureResolver } from "sanity/structure";
 import { BasketIcon } from "@sanity/icons/Basket";
 import { BellIcon } from "@sanity/icons/Bell";
 import { BookIcon } from "@sanity/icons/Book";
+import { ClockIcon } from "@sanity/icons/Clock";
+import { CommentIcon } from "@sanity/icons/Comment";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { OlistIcon } from "@sanity/icons/Olist";
 import { HomeIcon } from "@sanity/icons/Home";
@@ -63,6 +65,18 @@ export const structure: StructureResolver = (S) =>
             .schemaType("announcement")
             .documentId("announcement")
             .title("Bandeau d'annonce"),
+        ),
+
+      // Phone, e-mail, hours, social — the facts that change without
+      // warning. Next to the bar: both are the "quick fix" entries.
+      S.listItem()
+        .title("Infos pratiques")
+        .icon(ClockIcon)
+        .child(
+          S.document()
+            .schemaType("practicalInfo")
+            .documentId("practicalInfo")
+            .title("Infos pratiques"),
         ),
 
       S.divider().title("Pages du site"),
@@ -145,6 +159,17 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("author").title("Auteurs des articles"),
                 ),
             ]),
+        ),
+
+      /** In the order the home page shows them. */
+      S.listItem()
+        .title("Avis clients")
+        .icon(CommentIcon)
+        .schemaType("testimonial")
+        .child(
+          S.documentTypeList("testimonial")
+            .title("Avis clients")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
         ),
 
       /**

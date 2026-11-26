@@ -89,6 +89,34 @@ export type BlockContent = Array<
     }
 >;
 
+export type Testimonial = {
+  _id: string;
+  _type: "testimonial";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  quote?: LocaleText;
+  name: string;
+  company?: string;
+  order?: number;
+  visible?: boolean;
+};
+
+export type PracticalInfo = {
+  _id: string;
+  _type: "practicalInfo";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  phone: string;
+  email: string;
+  opensAt: string;
+  closesAt: string;
+  openDays: Array<string>;
+  instagram?: string;
+  facebook?: string;
+};
+
 export type MenuReference = {
   _ref: string;
   _type: "reference";
@@ -477,6 +505,8 @@ export type AllSanitySchemaTypes =
   | ArticleReference
   | SanityImageAssetReference
   | BlockContent
+  | Testimonial
+  | PracticalInfo
   | MenuReference
   | PastEvent
   | SanityImageCrop
@@ -782,6 +812,40 @@ export type PartnersQueryResult = Array<{
 }>;
 
 // Source: lib/sanity/queries.ts
+// Variable: testimonialsQuery
+// Query: *[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...6] {  _id,  quote,  name,  company}
+export type TestimonialsQueryResult = Array<{
+  _id: string;
+  quote: LocaleText | null;
+  name: string;
+  company: string | null;
+}>;
+
+// Source: lib/sanity/queries.ts
+// Variable: practicalInfoQuery
+// Query: *[_id == "practicalInfo"][0] {  phone,  email,  opensAt,  closesAt,  openDays,  instagram,  facebook}
+export type PracticalInfoQueryResult =
+  | {
+      phone: null;
+      email: null;
+      opensAt: null;
+      closesAt: null;
+      openDays: null;
+      instagram: null;
+      facebook: null;
+    }
+  | {
+      phone: string;
+      email: string;
+      opensAt: string;
+      closesAt: string;
+      openDays: Array<string>;
+      instagram: string | null;
+      facebook: string | null;
+    }
+  | null;
+
+// Source: lib/sanity/queries.ts
 // Variable: announcementQuery
 // Query: *[_id == "announcement" && enabled == true][0] {  message,  linkLabel,  linkUrl}
 export type AnnouncementQueryResult = {
@@ -803,6 +867,8 @@ declare global {
     '*[_id == "homePage"][0] {\n  heroHeadline,\n  heroLead,\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  kitchenImage,\n  deliveryImage,\n  hostingImage,\n  eventsImage,\n  companiesImage,\n  coffeeImage\n}': HomePageQueryResult;
     '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
     '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
+    '*[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...6] {\n  _id,\n  quote,\n  name,\n  company\n}': TestimonialsQueryResult;
+    '*[_id == "practicalInfo"][0] {\n  phone,\n  email,\n  opensAt,\n  closesAt,\n  openDays,\n  instagram,\n  facebook\n}': PracticalInfoQueryResult;
     '*[_id == "announcement" && enabled == true][0] {\n  message,\n  linkLabel,\n  linkUrl\n}': AnnouncementQueryResult;
   }
 }

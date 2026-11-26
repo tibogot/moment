@@ -16,7 +16,7 @@ import {
   type ContactFormState,
   type ContactValues,
 } from "@/lib/contact";
-import { SITE_DETAILS } from "@/lib/site";
+import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
@@ -40,7 +40,8 @@ const FORM_COLUMNS = "md:col-span-4";
  * paint cream, so the 1px gaps between them *are* the rules. Same construction
  * as the search results grid — it means no cell ever doubles a neighbour's line.
  */
-const CELL = "bg-cream px-(--grid-gutter) py-[3.2svh] transition-colors duration-300 focus-within:bg-sky/20";
+const CELL =
+  "bg-cream px-(--grid-gutter) py-[3.2svh] transition-colors duration-300 focus-within:bg-sky/20";
 
 const LABEL = "font-owners-medium block text-[14px] uppercase tracking-wide";
 
@@ -116,7 +117,11 @@ function TextField({
       </label>
 
       {rows ? (
-        <textarea {...shared} rows={rows} className={cn(CONTROL, "resize-none")} />
+        <textarea
+          {...shared}
+          rows={rows}
+          className={cn(CONTROL, "resize-none")}
+        />
       ) : (
         <input {...shared} type={type} />
       )}
@@ -290,7 +295,7 @@ export function ContactForm({
 
   // Either may still be empty — the block that renders them is guarded on
   // that, rather than printing a label with nothing after it.
-  const { email, phone } = SITE_DETAILS.contact;
+  const { email, phone } = useSiteDetails().contact;
 
   return (
     <GridSection className="pb-[16svh]">
@@ -407,7 +412,10 @@ export function ContactForm({
                   {t.sentTitle}
                 </p>
 
-                <div className="mt-4 mb-[4svh] h-(--grid-line) bg-sky" aria-hidden />
+                <div
+                  className="mt-4 mb-[4svh] h-(--grid-line) bg-sky"
+                  aria-hidden
+                />
 
                 <div className="min-w-0 text-left">
                   <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
@@ -490,7 +498,9 @@ export function ContactForm({
                   value={values.company}
                   onChange={update("company")}
                   error={errorText(state.errors.company)}
-                  placeholder={partner ? p.companyPlaceholder : t.companyPlaceholder}
+                  placeholder={
+                    partner ? p.companyPlaceholder : t.companyPlaceholder
+                  }
                   autoComplete="organization"
                   required={partner}
                 />
@@ -534,37 +544,37 @@ export function ContactForm({
                   </>
                 ) : (
                   <>
-                  <OccasionChips
-                    label={t.occasion}
-                    options={OCCASIONS}
-                    labels={t.occasions}
-                    value={values.occasion}
-                    onChange={update("occasion")}
-                    error={errorText(state.errors.occasion)}
-                  />
+                    <OccasionChips
+                      label={t.occasion}
+                      options={OCCASIONS}
+                      labels={t.occasions}
+                      value={values.occasion}
+                      onChange={update("occasion")}
+                      error={errorText(state.errors.occasion)}
+                    />
 
-                  {/* Free text, not a date input: at quote stage the day is
+                    {/* Free text, not a date input: at quote stage the day is
                       usually still approximate, and "a week in March" is a more
                       useful answer than a picker will accept. */}
-                  <TextField
-                    name="date"
-                    label={t.date}
-                    hint={t.dateHint}
-                    value={values.date}
-                    onChange={update("date")}
-                    error={errorText(state.errors.date)}
-                    placeholder={t.datePlaceholder}
-                  />
+                    <TextField
+                      name="date"
+                      label={t.date}
+                      hint={t.dateHint}
+                      value={values.date}
+                      onChange={update("date")}
+                      error={errorText(state.errors.date)}
+                      placeholder={t.datePlaceholder}
+                    />
 
-                  <TextField
-                    name="guests"
-                    label={t.guests}
-                    hint={t.optional}
-                    value={values.guests}
-                    onChange={update("guests")}
-                    error={errorText(state.errors.guests)}
-                    placeholder={t.guestsPlaceholder}
-                  />
+                    <TextField
+                      name="guests"
+                      label={t.guests}
+                      hint={t.optional}
+                      value={values.guests}
+                      onChange={update("guests")}
+                      error={errorText(state.errors.guests)}
+                      placeholder={t.guestsPlaceholder}
+                    />
                   </>
                 )}
 
@@ -592,11 +602,14 @@ export function ContactForm({
                   />
                 )}
 
-
                 <TextField
                   name="message"
                   label={
-                    pro ? dict.proAccount.message : partner ? p.message : t.message
+                    pro
+                      ? dict.proAccount.message
+                      : partner
+                        ? p.message
+                        : t.message
                   }
                   value={values.message}
                   onChange={update("message")}

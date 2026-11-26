@@ -89,6 +89,19 @@ export const siteIsIndexable =
   (process.env.VERCEL_ENV === undefined ||
     process.env.VERCEL_ENV === "production");
 
+/** Days of the week, in the order the Studio and the JSON-LD list them. */
+export const WEEKDAYS = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+] as const;
+
+export type Weekday = (typeof WEEKDAYS)[number];
+
 /**
  * The company's own facts.
  *
@@ -116,6 +129,8 @@ export type SiteDetails = {
   hours: {
     opensAt: string;
     closesAt: string;
+    /** The days those hours apply to. */
+    days: readonly Weekday[];
   };
   legal: {
     companyName: string;
@@ -139,8 +154,19 @@ export type SiteDetails = {
 };
 
 /**
- * The company's facts, as given by the owners. **The single source of truth —
- * there is no CMS copy of any of this.**
+ * The company's facts, as given by the owners.
+ *
+ * Since 26 November 2026 the phone, the e-mail, the hours and the social
+ * accounts are editable in the Studio ("Infos pratiques",
+ * sanity/schemaTypes/documents/practicalInfo.ts). Read them through
+ * `getSiteDetails()` (server) or `useSiteDetails()` (client), never from
+ * here directly: the values below are only the fallback until that document is
+ * published, and the form's starting values. Once published, the Studio wins
+ * whole — no field-by-field merge — and its required fields keep it from
+ * publishing a blank phone or e-mail, which is what made the merge below a
+ * bad idea. The address and the legal facts stay here only.
+ *
+ * The note that follows is about those: the address and legal facts.
  *
  * A Studio copy merged over defaults here would put the same fact in two
  * places, and a precedence rule between them buys bugs and no benefit: if a
@@ -176,6 +202,7 @@ export const SITE_DETAILS: SiteDetails = {
   hours: {
     opensAt: "08:00",
     closesAt: "16:00",
+    days: WEEKDAYS,
   },
   legal: {
     companyName: "MOMENT LAB",

@@ -18,6 +18,8 @@ import type { DocumentActionComponent, SanityDocument } from "sanity";
 const PATHS: Record<string, (doc: SanityDocument) => string | null> = {
   homePage: () => "/fr",
   announcement: () => "/fr",
+  practicalInfo: () => "/fr/contact",
+  testimonial: () => "/fr",
   faqPage: () => "/fr/faq",
   partner: () => "/fr/find-us",
   menu: (doc) => {

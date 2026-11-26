@@ -207,6 +207,9 @@
       "submit": "Inschrijven",
       "success": "Dank u — wij schrijven wanneer er iets nieuws is.",
       "error": "Dat is niet gelukt. Controleer het adres en probeer het opnieuw."
+    },
+    "testimonials": {
+      "label": "Zij vertrouwen ons"
     }
   },
   "footer": {

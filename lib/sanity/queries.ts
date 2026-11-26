@@ -423,6 +423,92 @@ export async function getPartnerDocuments() {
 }
 
 /**
+ * Published customer reviews for the home page, in the owners' order: those
+ * with a number first (1, 2…), then the rest, newest first. Six at most —
+ * the section is a first version and shows three on desktop.
+ */
+export const testimonialsQuery =
+  defineQuery(`*[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...6] {
+  _id,
+  quote,
+  name,
+  company
+}`);
+
+export type TestimonialContent = {
+  _id: string;
+  quote: LocaleString;
+  name: string;
+  company: string | null;
+};
+
+export async function getTestimonials(): Promise<TestimonialContent[]> {
+  try {
+    const docs = await sanityClient.fetch<TestimonialContent[] | null>(
+      testimonialsQuery,
+      {},
+      sanityCache("testimonial"),
+    );
+    return docs ?? [];
+  } catch {
+    // No reviews readable: the section simply does not appear.
+    return [];
+  }
+}
+
+/**
+ * "Infos pratiques" — phone, e-mail, hours, social accounts — or null when the
+ * document has never been published (the site then uses lib/site.ts). See
+ * sanity/schemaTypes/documents/practicalInfo.ts for why it wins whole.
+ */
+export const practicalInfoQuery = defineQuery(`*[_id == "practicalInfo"][0] {
+  phone,
+  email,
+  opensAt,
+  closesAt,
+  openDays,
+  instagram,
+  facebook
+}`);
+
+export type PracticalInfo = {
+  phone: string;
+  email: string;
+  opensAt: string;
+  closesAt: string;
+  openDays: string[];
+  instagram: string | null;
+  facebook: string | null;
+};
+
+export async function getPracticalInfo(): Promise<PracticalInfo | null> {
+  try {
+    const doc = await sanityClient.fetch<Partial<PracticalInfo> | null>(
+      practicalInfoQuery,
+      {},
+      sanityCache("practicalInfo"),
+    );
+    // Required in the Studio; a document missing them is a draft that never
+    // validated, not an answer — fall back rather than print blanks.
+    if (!doc?.phone || !doc.email || !doc.opensAt || !doc.closesAt) {
+      return null;
+    }
+    return {
+      phone: doc.phone,
+      email: doc.email,
+      opensAt: doc.opensAt,
+      closesAt: doc.closesAt,
+      openDays: doc.openDays ?? [],
+      instagram: doc.instagram ?? null,
+      facebook: doc.facebook ?? null,
+    };
+  } catch {
+    // Sanity unreachable: the code's values, never a page without a phone.
+    return null;
+  }
+}
+
+/**
  * The announcement bar, or null when it is switched off or empty. Read by the
  * root layout, so it is on every page; the `announcement` tag lets a publish
  * in the Studio reach all of them at once.

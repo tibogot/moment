@@ -207,6 +207,9 @@
       "submit": "Sign up",
       "success": "Thank you — we will write when there is something new.",
       "error": "That did not go through. Check the address and try again."
+    },
+    "testimonials": {
+      "label": "What our customers say"
     }
   },
   "footer": {

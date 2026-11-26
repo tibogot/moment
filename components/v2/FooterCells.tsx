@@ -8,14 +8,8 @@ import { useDictionary } from "@/components/LocaleProvider";
 import { CellGrid } from "@/components/v2/CellGrid";
 import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
 import { aboutNav, legalNav, routes } from "@/lib/routes";
-import { SITE_DETAILS } from "@/lib/site";
+import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { cn } from "@/lib/utils";
-
-const { contact, social } = SITE_DETAILS;
-const socialLinks = [
-  { label: "Instagram", href: social.instagram },
-  { label: "Facebook", href: social.facebook },
-].filter((link) => Boolean(link.href));
 
 /**
  * The site footer since 24 November 2026 (via components/Footer.tsx), after
@@ -59,6 +53,12 @@ const LEGAL =
 
 export function FooterCells() {
   const dict = useDictionary();
+  // From the Studio's "Infos pratiques" once published, else lib/site.ts.
+  const { contact, social } = useSiteDetails();
+  const socialLinks = [
+    { label: "Instagram", href: social.instagram },
+    { label: "Facebook", href: social.facebook },
+  ].filter((link) => Boolean(link.href));
   return (
     <footer className="relative w-full bg-cream text-black">
       <CellGrid

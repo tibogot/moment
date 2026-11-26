@@ -7,6 +7,8 @@ import { homePage } from "./documents/homePage";
 import { menu } from "./documents/menu";
 import { partner } from "./documents/partner";
 import { pastEvent } from "./documents/pastEvent";
+import { practicalInfo } from "./documents/practicalInfo";
+import { testimonial } from "./documents/testimonial";
 import { blockContent } from "./objects/blockContent";
 import { localeString, localeStringList, localeText } from "./objects/locale";
 
@@ -27,6 +29,8 @@ export const schemaTypes = [
   menu,
   partner,
   pastEvent,
+  practicalInfo,
+  testimonial,
   blockContent,
   localeString,
   localeText,

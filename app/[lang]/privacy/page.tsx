@@ -11,12 +11,11 @@ import { toLocale, type Locale } from "@/lib/i18n/config";
 import { colon, DATA_PROTECTION_AUTHORITY } from "@/lib/legal";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
-import { SITE_DETAILS } from "@/lib/site";
+import { getSiteDetails } from "@/lib/site-details";
 
 export const generateMetadata = localizedMetadata("privacy", {
   path: routes.privacy,
 });
-
 
 /**
  * One row per processing activity, carrying what art. 13 GDPR asks to be told
@@ -307,7 +306,8 @@ const COPY = {
     controllerBody:
       "Le responsable du traitement de vos données est MOMENT LAB SRL, dont le siège est situé",
     enterprise: "numéro d’entreprise",
-    contactUs: "Pour toute question ou demande relative à vos données, écrivez-nous à",
+    contactUs:
+      "Pour toute question ou demande relative à vos données, écrivez-nous à",
     activities: "Ce que nous traitons, pourquoi et combien de temps",
     data: "Données",
     purpose: "Finalité",
@@ -357,7 +357,8 @@ const COPY = {
     controllerBody:
       "De verwerkingsverantwoordelijke voor uw gegevens is MOMENT LAB SRL, met zetel te",
     enterprise: "ondernemingsnummer",
-    contactUs: "Voor elke vraag of elk verzoek over uw gegevens kunt u ons schrijven op",
+    contactUs:
+      "Voor elke vraag of elk verzoek over uw gegevens kunt u ons schrijven op",
     activities: "Wat we verwerken, waarom en hoelang",
     data: "Gegevens",
     purpose: "Doel",
@@ -457,10 +458,12 @@ export default async function PrivacyPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  // Phone, e-mail, hours and social from the Studio ("Infos pratiques").
+  const siteDetails = await getSiteDetails();
   const locale = toLocale((await params).lang);
   const t = COPY[locale];
   const c = colon(locale);
-  const { contact, legal } = SITE_DETAILS;
+  const { contact, legal } = siteDetails;
   const authority = DATA_PROTECTION_AUTHORITY;
 
   return (
@@ -469,12 +472,13 @@ export default async function PrivacyPage({
         <p>
           {t.controllerBody} {legal.registeredOffice.street},{" "}
           {legal.registeredOffice.postalCode} {legal.registeredOffice.city} (
-          {t.enterprise}{" "}
-          {legal.enterpriseNumber}).
+          {t.enterprise} {legal.enterpriseNumber}).
         </p>
         <p>
           {t.contactUs}{" "}
-          <LegalLink href={`mailto:${contact.email}`}>{contact.email}</LegalLink>
+          <LegalLink href={`mailto:${contact.email}`}>
+            {contact.email}
+          </LegalLink>
           .
         </p>
       </LegalSection>

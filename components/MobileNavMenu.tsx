@@ -24,7 +24,8 @@ import { aboutNav, mainNav, routes, type NavMenuKey } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
-import { SITE_DETAILS, type SiteDetails } from "@/lib/site";
+import { type SiteDetails } from "@/lib/site";
+import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
 import { useDialogFocus } from "@/lib/hooks/useDialogFocus";
@@ -84,8 +85,9 @@ export function MobileNavMenu({
   onClose,
   collections = [],
 }: MobileNavMenuProps) {
-  const socialLinks = socialLinksFor(SITE_DETAILS);
-  const phone = SITE_DETAILS.contact.phone;
+  const siteDetails = useSiteDetails();
+  const socialLinks = socialLinksFor(siteDetails);
+  const phone = siteDetails.contact.phone;
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);

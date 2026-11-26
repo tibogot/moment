@@ -93,17 +93,13 @@ function openingHours(details: SiteDetails) {
   const { opensAt, closesAt } = details.hours;
   if (!opensAt || !closesAt) return undefined;
 
+  const days = details.hours.days;
+  if (days.length === 0) return undefined;
+
   return {
     "@type": "OpeningHoursSpecification",
-    dayOfWeek: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
+    // "monday" → "Monday", the schema.org day names.
+    dayOfWeek: days.map((day) => day[0].toUpperCase() + day.slice(1)),
     opens: opensAt,
     closes: closesAt,
   };

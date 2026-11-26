@@ -360,6 +360,27 @@ const GROUPS: Group[] = [
         ),
       },
       {
+        title: "Changer les horaires, le téléphone, l'e-mail ou les réseaux",
+        steps: [
+          <>
+            Menu de gauche → <strong>Infos pratiques</strong>.
+          </>,
+          <>
+            Modifiez ce qui a changé : téléphone, e-mail, heures
+            d&apos;ouverture (au format 08:00), jours d&apos;ouverture, liens
+            Instagram et Facebook. <strong>Publier</strong>.
+          </>,
+        ],
+        tip: (
+          <>
+            Ils changent partout : bas de page, menu, page Contact, et ce que
+            Google affiche. Les vacances ne se mettent pas ici, mais dans les
+            fermetures Shopify. L&apos;adresse et la TVA, elles, demandent un
+            développeur.
+          </>
+        ),
+      },
+      {
         title: "Ajouter un partenaire sur la carte « Où nous trouver »",
         steps: [
           <>
@@ -400,6 +421,27 @@ const GROUPS: Group[] = [
           <>
             Ils apparaissent sur la page Événements : c&apos;est la preuve qui
             rassure un futur client.
+          </>
+        ),
+      },
+      {
+        title: "Ajouter un avis client",
+        when: "Un client content vous a écrit ? Avec son accord, montrez-le.",
+        steps: [
+          <>
+            Menu de gauche → <strong>Avis clients</strong> → le crayon.
+          </>,
+          <>
+            Ses mots tels quels (une à trois phrases), son nom comme il accepte
+            d&apos;être cité (« Sophie D. »), et si vous voulez son entreprise ou
+            l&apos;occasion. <strong>Publier</strong>.
+          </>,
+        ],
+        tip: (
+          <>
+            Les trois premiers s&apos;affichent sur la page d&apos;accueil (le
+            champ « Ordre d&apos;affichage » choisit lesquels). Uniquement de
+            vrais avis : un avis inventé est interdit, et se repère.
           </>
         ),
       },
@@ -496,11 +538,11 @@ const GROUPS: Group[] = [
         title: "Ce que vous ne pouvez pas changer vous-mêmes",
         body: (
           <p style={P}>
-            Les textes des pages (accueil, à propos, événements, café…), les
-            coordonnées (adresse, téléphone, e-mail, horaires), les pages
-            légales, la mise en page et toute nouvelle fonction demandent un
-            développeur. Le site est livré sans contrat de maintenance : ces
-            demandes se font sur devis.
+            Les textes des pages (accueil, à propos, événements, café…),
+            l&apos;adresse et les informations légales (TVA, numéro
+            d&apos;entreprise), les pages légales, la mise en page et toute
+            nouvelle fonction demandent un développeur. Le site est livré sans
+            contrat de maintenance : ces demandes se font sur devis.
           </p>
         ),
       },
@@ -535,7 +577,6 @@ const GROUPS: Group[] = [
     ],
   },
 ];
-
 
 const card: CSSProperties = {
   border: "1px solid rgba(127, 127, 127, 0.25)",

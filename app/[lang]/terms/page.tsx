@@ -10,7 +10,7 @@ import { toLocale, type Locale } from "@/lib/i18n/config";
 import { CONSUMER_MEDIATION } from "@/lib/legal";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
-import { SITE_DETAILS } from "@/lib/site";
+import { getSiteDetails } from "@/lib/site-details";
 
 export const generateMetadata = localizedMetadata("terms", {
   path: routes.terms,
@@ -261,9 +261,11 @@ export default async function TermsPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  // Phone, e-mail, hours and social from the Studio ("Infos pratiques").
+  const siteDetails = await getSiteDetails();
   const locale = toLocale((await params).lang);
   const t = COPY[locale];
-  const { contact } = SITE_DETAILS;
+  const { contact } = siteDetails;
   const city = locale === "nl" ? "Vorst" : "Forest";
   const address = `${contact.street}, ${contact.postalCode} ${city}`;
   const fill = (text: string) =>
@@ -335,8 +337,7 @@ export default async function TermsPage({
       <LegalSection title={t.complaints}>
         <p>{fill(t.complaintsBody)}</p>
         <p>
-          {t.mediation} {mediation.name[locale]}, {mediation.address[locale]}{" "}
-          —{" "}
+          {t.mediation} {mediation.name[locale]}, {mediation.address[locale]} —{" "}
           <LegalLink href={mediation.url[locale]}>
             {mediation.url[locale].replace(/^https:\/\//, "")}
           </LegalLink>
