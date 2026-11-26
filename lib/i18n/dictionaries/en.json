@@ -487,7 +487,13 @@
     "orderPreferencesTitle": "When and how",
     "viewImage": "View image {index} of {total}",
     "minimumHint": "Minimum {minimum} pieces per product.",
-    "nextDayNote": "Available the day before: order by {cutoff} to collect from the atelier tomorrow."
+    "nextDayNote": "Available the day before: order by {cutoff} to collect from the atelier tomorrow.",
+    "orderRules": {
+      "line": "Delivery from a {minimum} order, {fee} · free collection at the atelier from {pickup}.",
+      "feeOne": "fee {fee}",
+      "feeRange": "fee {min} to {max} depending on distance",
+      "link": "Zones and terms"
+    }
   },
   "errors": {
     "not_configured": "The shop is not configured yet. Please try again later.",
@@ -785,7 +791,9 @@
       "product": "{title} from the Moment kitchen in Brussels.",
       "collection": "{title} from Moment — cooked each morning in Brussels and delivered across the city.",
       "article": "{title} — from the Moment kitchen in Brussels.",
-      "menu": "Catering menu"
+      "menu": "Catering menu",
+      "productTitle": "{title} — delivery in Brussels",
+      "productSuffix": "Delivered in Brussels or collected from our atelier in Forest."
     },
     "findUs": {
       "title": "Find us",
@@ -1005,11 +1013,11 @@
     "noResults": "No products match “{query}”.",
     "suggestions": [
       "Jus",
-      "Granola",
       "Salade",
-      "Café",
-      "Soupe",
-      "Quiche"
+      "Cookie",
+      "Cake",
+      "Granola",
+      "Café"
     ],
     "popularSearches": "Popular searches",
     "fieldLabel": "Search products"

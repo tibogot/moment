@@ -487,7 +487,13 @@
     "orderPreferencesTitle": "Quand et comment",
     "viewImage": "Voir l'image {index} sur {total}",
     "minimumHint": "Minimum {minimum} pièces par produit.",
-    "nextDayNote": "Disponible la veille : commandez avant {cutoff} pour un retrait à l'atelier le lendemain."
+    "nextDayNote": "Disponible la veille : commandez avant {cutoff} pour un retrait à l'atelier le lendemain.",
+    "orderRules": {
+      "line": "Livraison dès {minimum} de commande, {fee} · retrait gratuit à l'atelier dès {pickup}.",
+      "feeOne": "frais de {fee}",
+      "feeRange": "frais de {min} à {max} selon la distance",
+      "link": "Zones et conditions"
+    }
   },
   "errors": {
     "not_configured": "La boutique n'est pas encore configurée. Merci de réessayer plus tard.",
@@ -786,7 +792,9 @@
       "product": "{title} depuis la cuisine de Moment à Bruxelles.",
       "collection": "{title} chez Moment — cuisiné chaque matin à Bruxelles et livré dans toute la ville.",
       "article": "{title} — depuis la cuisine de Moment à Bruxelles.",
-      "menu": "Menu traiteur"
+      "menu": "Menu traiteur",
+      "productTitle": "{title} — livraison à Bruxelles",
+      "productSuffix": "Livraison à Bruxelles ou retrait à l'atelier de Forest."
     },
     "findUs": {
       "title": "Où nous trouver",
@@ -1006,11 +1014,11 @@
     "noResults": "Aucun produit ne correspond à « {query} ».",
     "suggestions": [
       "Jus",
-      "Granola",
       "Salade",
-      "Café",
-      "Soupe",
-      "Quiche"
+      "Cookie",
+      "Cake",
+      "Granola",
+      "Café"
     ],
     "popularSearches": "Recherches fréquentes",
     "fieldLabel": "Rechercher des produits"

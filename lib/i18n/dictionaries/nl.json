@@ -487,7 +487,13 @@
     "orderPreferencesTitle": "Wanneer en hoe",
     "viewImage": "Afbeelding {index} van {total} bekijken",
     "minimumHint": "Minimaal {minimum} stuks per product.",
-    "nextDayNote": "De dag ervoor te bestellen: bestel vóór {cutoff} en haal morgen af in het atelier."
+    "nextDayNote": "De dag ervoor te bestellen: bestel vóór {cutoff} en haal morgen af in het atelier.",
+    "orderRules": {
+      "line": "Levering vanaf {minimum} bestelwaarde, {fee} · gratis afhalen in het atelier vanaf {pickup}.",
+      "feeOne": "kosten {fee}",
+      "feeRange": "kosten van {min} tot {max} afhankelijk van de afstand",
+      "link": "Zones en voorwaarden"
+    }
   },
   "errors": {
     "not_configured": "De winkel is nog niet geconfigureerd. Probeer het later opnieuw.",
@@ -786,7 +792,9 @@
       "product": "{title} uit de keuken van Moment in Brussel.",
       "collection": "{title} bij Moment — elke ochtend bereid in Brussel en in heel de stad geleverd.",
       "article": "{title} — uit de keuken van Moment in Brussel.",
-      "menu": "Cateringmenu"
+      "menu": "Cateringmenu",
+      "productTitle": "{title} — levering in Brussel",
+      "productSuffix": "Levering in Brussel of afhalen in het atelier in Vorst."
     },
     "findUs": {
       "title": "Waar vindt u ons",
@@ -1006,11 +1014,11 @@
     "noResults": "Geen producten gevonden voor „{query}”.",
     "suggestions": [
       "Jus",
-      "Granola",
       "Salade",
-      "Café",
-      "Soupe",
-      "Quiche"
+      "Cookie",
+      "Cake",
+      "Granola",
+      "Café"
     ],
     "popularSearches": "Populaire zoekopdrachten",
     "fieldLabel": "Producten zoeken"

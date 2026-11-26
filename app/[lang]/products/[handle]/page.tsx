@@ -5,6 +5,8 @@ import {
   getDeliveryAvailability,
   getMinimumPiecesPerProduct,
 } from "@/lib/shopify/delivery";
+import { getZoneTable } from "@/lib/shopify/zones";
+import { OrderRulesNote } from "@/components/OrderRulesNote";
 import {
   DEFAULT_NEXT_DAY_CUTOFF_HOUR,
   formatCutoffHour,
@@ -51,12 +53,25 @@ export async function generateMetadata({
 
   if (!product) return notFoundMetadata(dict.common.notFound.title);
 
+  // "Carrot cake — Moment" said nothing a search for "carrot cake livraison
+  // Bruxelles" could match; the place goes in the title. Short Shopify
+  // descriptions (most are one line) get the delivery sentence after them.
+  const described = toDescription(product.description);
+  const description =
+    described && described.length < 110
+      ? toDescription(
+          `${described.replace(/[.!\s]*$/, ".")} ${dict.meta.fallback.productSuffix}`,
+        )
+      : described;
+
   return pageMetadata({
     locale,
-    title: product.title,
+    title: interpolate(dict.meta.fallback.productTitle, {
+      title: product.title,
+    }),
     // Shopify descriptions run long; a trimmed sentence beats a hard cut.
     description:
-      toDescription(product.description) ??
+      description ??
       interpolate(dict.meta.fallback.product, { title: product.title }),
     path: routes.product(product.handle),
     image: product.imageUrl
@@ -69,12 +84,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { lang, handle } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
-  const [product, allProducts, minimumQuantity, availability] =
+  const [product, allProducts, minimumQuantity, availability, zones] =
     await Promise.all([
       getProductByHandle(locale, handle),
       getProducts(locale),
       getMinimumPiecesPerProduct(),
       getDeliveryAvailability(),
+      getZoneTable(),
     ]);
 
   if (!product) notFound();
@@ -101,7 +117,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
           product in search rather than a plain blue link. */}
       <JsonLd
         data={graph(
-          productSchema(locale, product),
+          productSchema(locale, product, {
+            fee: Math.min(...zones.zones.map((zone) => zone.fee)),
+            leadTimeDays: availability.leadTimeDays,
+          }),
           breadcrumbSchema(locale, [
             { name: dict.nav.home, path: routes.home },
             { name: dict.nav.shop, path: routes.shop },
@@ -110,7 +129,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         )}
       />
 
-      <GridSection className="pt-[22svh] pb-[12svh]">
+      {/* Less on a phone: 22svh there left ~200px of empty cream above the
+          photo and pushed the price and the button below the fold. */}
+      <GridSection className="pt-[calc(var(--grid-band)+5svh)] pb-[12svh] md:pt-[22svh]">
         {/* Cart-level, not product-level: the same three answers apply to the
             whole order. It sits here because this is where the decision to buy
             actually gets made.
@@ -125,12 +146,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
           aria-labelledby="order-preferences"
           className="order-last col-start-2 col-end-5 mt-[8svh] px-(--grid-gutter) md:order-first md:col-end-9 md:mt-0 md:mb-[6svh]"
         >
-          <h2
+          {/* A label, not a heading: on desktop it sits above the product,
+              and as an h2 it came before the page's h1 in the outline. */}
+          <p
             id="order-preferences"
             className="font-owners-narrow-bold text-[7vw] leading-[0.95] uppercase md:text-[min(2.2vw,3.4svh)]"
           >
             {dict.product.orderPreferencesTitle}
-          </h2>
+          </p>
 
           {/* No promise that the catalogue changes with these answers — it does
               not. What they do buy is not having to work it out at checkout. */}
@@ -183,6 +206,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
               })}
             </p>
           )}
+
+          <OrderRulesNote
+            locale={locale}
+            dict={dict}
+            zones={zones}
+            className="mt-3"
+          />
 
           {product.details && (
             <ProductDetails details={product.details} copy={dict.product} />

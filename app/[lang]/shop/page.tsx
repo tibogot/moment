@@ -10,6 +10,8 @@ import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
+import { getZoneTable } from "@/lib/shopify/zones";
+import { OrderRulesNote } from "@/components/OrderRulesNote";
 
 export const generateMetadata = localizedMetadata("shop", {
   path: routes.shop,
@@ -23,9 +25,10 @@ export default async function ShopPage({
   const { lang } = await params;
   const locale = toLocale(lang);
   const dict = await getDictionary(locale);
-  const [products, collections] = await Promise.all([
+  const [products, collections, zones] = await Promise.all([
     getProducts(locale),
     getCollections(locale),
+    getZoneTable(),
   ]);
 
   // Shopify seeds every store with a "frontpage" collection; it isn't a real
@@ -42,6 +45,13 @@ export default async function ShopPage({
         {/* The cards are h3s; this keeps the outline h1 → h2 → h3 for search
             engines and screen readers without adding a visible label. */}
         <h2 className="sr-only">{dict.shop.productsHeading}</h2>
+        {/* Minimums and fees up front, not first met in the cart. */}
+        <OrderRulesNote
+          locale={locale}
+          dict={dict}
+          zones={zones}
+          className="col-start-2 col-end-5 mb-[4svh] px-(--grid-gutter) md:col-end-9"
+        />
         <Suspense
           fallback={
             <ProductGrid products={products} collections={visibleCollections} />

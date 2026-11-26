@@ -179,7 +179,13 @@ export async function getProducts(language: Locale): Promise<ShopifyProduct[]> {
   if (!isShopifyConfigured()) return [];
 
   try {
-    return await cachedProducts(language)();
+    // Sold-out products last, everything else in Shopify's order (stable
+    // sort). A shop that opened on two "Épuisé" cards — products the owners
+    // were still filling in — looked unfinished (audit, 26 November 2026).
+    const products = await cachedProducts(language)();
+    return [...products].sort(
+      (a, b) => Number(b.availableForSale) - Number(a.availableForSale),
+    );
   } catch (error) {
     console.error("[shopify] getProducts failed", error);
     return [];
