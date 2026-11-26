@@ -16,7 +16,7 @@ type DeliveryMethodToggleProps = {
 };
 
 /**
- * Livraison à domicile | Click & collect, at the top of both checkout
+ * Livraison | Click & collect, at the top of both checkout
  * surfaces (the slide-out panel and the cart page).
  *
  * It used to be chosen only on the product page and merely shown here. But a

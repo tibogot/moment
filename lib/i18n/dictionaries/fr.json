@@ -343,8 +343,8 @@
   },
   "deliveryMethods": {
     "delivery": {
-      "label": "Livraison à domicile",
-      "description": "Nous apportons votre commande à votre porte, à Bruxelles et dans les environs."
+      "label": "Livraison",
+      "description": "Nous livrons votre commande à l'adresse de votre choix : chez vous, au bureau ou sur le lieu de votre événement."
     },
     "pickup": {
       "label": "Click & collect",
@@ -378,7 +378,7 @@
   },
   "cart": {
     "title": "Panier",
-    "chooseMethod": "Choisissez d'abord la livraison à domicile ou le click & collect.",
+    "chooseMethod": "Choisissez d'abord la livraison ou le click & collect.",
     "securePayment": "Paiement sécurisé",
     "empty": "Votre panier est vide.",
     "browseShop": "Voir nos produits",

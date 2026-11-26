@@ -343,8 +343,8 @@
   },
   "deliveryMethods": {
     "delivery": {
-      "label": "Levering aan huis",
-      "description": "Wij brengen uw bestelling tot aan de deur, in Brussel en omgeving."
+      "label": "Levering",
+      "description": "We leveren uw bestelling op het adres van uw keuze: bij u thuis, op kantoor of op de locatie van uw evenement."
     },
     "pickup": {
       "label": "Click & collect",
@@ -378,7 +378,7 @@
   },
   "cart": {
     "title": "Winkelmand",
-    "chooseMethod": "Kies eerst levering aan huis of click & collect.",
+    "chooseMethod": "Kies eerst levering of click & collect.",
     "securePayment": "Veilig betalen",
     "empty": "Uw winkelmand is leeg.",
     "browseShop": "Bekijk onze producten",

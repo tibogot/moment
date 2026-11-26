@@ -343,8 +343,8 @@
   },
   "deliveryMethods": {
     "delivery": {
-      "label": "Home delivery",
-      "description": "We bring your order to your door, in Brussels and the surrounding area."
+      "label": "Delivery",
+      "description": "We deliver your order to the address of your choice: your home, your office or the venue of your event."
     },
     "pickup": {
       "label": "Click & collect",
@@ -378,7 +378,7 @@
   },
   "cart": {
     "title": "Cart",
-    "chooseMethod": "First choose home delivery or click & collect.",
+    "chooseMethod": "First choose delivery or click & collect.",
     "securePayment": "Secure payment",
     "empty": "Your cart is empty.",
     "browseShop": "See our products",
