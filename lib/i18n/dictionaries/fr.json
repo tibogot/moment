@@ -615,6 +615,7 @@
       "event_type_required": "Choisissez privé ou professionnel.",
       "date_required": "Indiquez la date, même approximative.",
       "guests_required": "Indiquez le nombre de personnes, même approximatif.",
+      "place_required": "Indiquez le lieu de l'événement, au moins la commune.",
       "vat_required": "Il nous faut votre numéro de TVA pour facturer.",
       "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres.",
       "address_required": "Indiquez l'adresse de votre établissement."
@@ -762,11 +763,11 @@
     },
     "coffee": {
       "title": "Comptoir café",
-      "description": "Le comptoir café de Moment à Bruxelles — filtre et espresso, pâtisseries de notre cuisine et jus pressés à froid à emporter.",
+      "description": "Le comptoir café de Moment pour vos événements à Bruxelles et alentours : un barista, un équipement professionnel, cafés et matcha de cérémonie préparés sur place.",
       "keywords": [
-        "café Bruxelles",
-        "comptoir café Bruxelles",
-        "pâtisseries Bruxelles"
+        "comptoir café événement",
+        "barista événement Bruxelles",
+        "café pour événement Bruxelles"
       ]
     },
     "news": {
@@ -936,7 +937,7 @@
     "values": {
       "label": "À propos",
       "lead": "Nous cuisinons pour les particuliers et les entreprises de toute la ville. Plats de saison, salades et jus pressés à froid, préparés chaque matin et livrés prêts à servir.",
-      "aside": "Nous orchestrons vos événements de bout en bout, et gardons un comptoir café ouvert à qui passe.",
+      "aside": "Nous orchestrons vos événements de bout en bout, et installons notre comptoir café le temps de votre événement.",
       "cards": [
         {
           "title": "Une table qui parle de vous",
@@ -951,14 +952,14 @@
           "body": "De la proposition au dernier café servi — on gère le rythme pour que vous gardiez vos hôtes."
         },
         {
-          "title": "Un café ouvert à la ville",
-          "body": "Le comptoir reste là entre deux livraisons : même cuisine, même exigence, pour qui passe."
+          "title": "Un comptoir café qui se déplace",
+          "body": "Un barista, une machine professionnelle, des cafés et du matcha de cérémonie : le comptoir s'installe au cœur de votre événement."
         }
       ]
     },
     "accordion": {
       "headline": "Pour ceux qui soignent le goût — et l'allure, à Bruxelles.",
-      "body": "Préparé chaque matin et livré prêt à servir. Nous orchestrons vos événements de bout en bout, et gardons un comptoir café.",
+      "body": "Préparé chaque matin et livré prêt à servir. Nous orchestrons vos événements de bout en bout, et installons notre comptoir café chez vous.",
       "cta": "Voir nos produits",
       "items": [
         {
@@ -1198,6 +1199,38 @@
     "messagePlaceholder": "Le lieu, l'heure, des régimes particuliers, vos envies…",
     "submit": "Demander un devis"
   },
+  "coffeeForm": {
+    "intro": "Réserver le comptoir",
+    "body": "Parlez-nous de votre événement : nous revenons vers vous avec une proposition.",
+    "steps": [
+      {
+        "title": "Votre événement",
+        "body": "La date, le lieu, le nombre d'invités et les horaires du service."
+      },
+      {
+        "title": "Une proposition",
+        "body": "Nous vous envoyons une offre pour le comptoir, le barista et les boissons."
+      },
+      {
+        "title": "Le jour J",
+        "body": "Nous installons le comptoir et préparons cafés et matcha sur place."
+      }
+    ],
+    "type": "Type d'événement",
+    "types": {
+      "Private": "Privé",
+      "Professional": "Professionnel"
+    },
+    "date": "Date de l'événement",
+    "guests": "Nombre d'invités",
+    "place": "Lieu de l'événement",
+    "placePlaceholder": "Adresse ou commune",
+    "hours": "Horaires du service",
+    "hoursPlaceholder": "Par exemple : 9 h – 12 h",
+    "message": "Autre chose à nous dire ?",
+    "messagePlaceholder": "Le type d'événement, l'accès au lieu, vos envies…",
+    "submit": "Réserver le comptoir"
+  },
   "pageIntro": {
     "collections": {
       "title": "Collections",
@@ -1208,8 +1241,8 @@
       "lead": "Pour vos événements privés ou professionnels, nous composons des buffets salés et sucrés. De la livraison à la mise en place, en passant par la décoration, les fleurs, nous soignons chaque détail pour créer une table à votre image. Nous adaptons notre proposition à vos envies, au lieu et au nombre d'invités, pour vous permettre de profiter pleinement de votre moment."
     },
     "coffee": {
-      "title": "Café",
-      "lead": "Un comptoir café ouvert à tous, avec les mêmes pâtisseries et les mêmes jus que nous livrons à nos clients."
+      "title": "Comptoir café",
+      "lead": "Nous apportons une véritable expérience café au cœur de votre événement, pensée jusque dans les moindres détails. Avec un équipement professionnel complet et la présence d'un barista, notre comptoir propose un large choix de boissons à base de café ainsi que du matcha de cérémonie, préparés sur place pour vos invités."
     },
     "menus": {
       "title": "Menus"

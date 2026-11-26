@@ -20,6 +20,7 @@ import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
+  COFFEE_OCCASION,
   EVENT_OCCASION,
   EVENT_TYPES,
   PARTNER_FREQUENCIES,
@@ -259,6 +260,9 @@ type ContactFormProps = {
    * Moment products: the occasion radios become the three kinds of request,
    * the venue's name and address are required, VAT is optional.
    *
+   * `coffee` books the coffee counter on /coffee: the same questions
+   * without the budget, plus the place and the service hours.
+   *
    * `event` is the quote form on /events (27 November 2026): private or
    * professional, the date, the headcount and a budget per person — the
    * owners' questions — with the message optional.
@@ -267,7 +271,7 @@ type ContactFormProps = {
    * the error map, the sent panel, the honeypot — is the whole of the work and
    * none of it differs.
    */
-  variant?: "enquiry" | "pro" | "partner" | "event";
+  variant?: "enquiry" | "pro" | "partner" | "event" | "coffee";
 };
 
 /**
@@ -286,14 +290,18 @@ export function ContactForm({
   const partner = variant === "partner";
   const p = dict.partner;
   const event = variant === "event";
-  const e = dict.eventForm;
+  const coffee = variant === "coffee";
+  /** The events quote and the coffee booking share their questions. */
+  const booking = event || coffee;
+  const e = coffee ? dict.coffeeForm : dict.eventForm;
+  const bookingOccasion = coffee ? COFFEE_OCCASION : EVENT_OCCASION;
   // Each form explains its own three steps: a quote, a pro account, a
   // stockist request and an event are different processes.
   const steps = pro
     ? dict.proAccount.steps
     : partner
       ? p.steps
-      : event
+      : booking
         ? e.steps
         : t.steps;
   const [state, formAction, pending] = useActionState(
@@ -303,8 +311,8 @@ export function ContactForm({
   const [values, setValues] = useState<ContactValues>(
     pro
       ? { ...initialValues, occasion: PRO_OCCASION }
-      : event
-        ? { ...initialValues, occasion: EVENT_OCCASION }
+      : booking
+        ? { ...initialValues, occasion: bookingOccasion }
         : initialValues,
   );
 
@@ -327,7 +335,9 @@ export function ContactForm({
   const reopen = () => {
     setDismissed(state);
     setValues(
-      event ? { ...initialValues, occasion: EVENT_OCCASION } : initialValues,
+      booking
+        ? { ...initialValues, occasion: bookingOccasion }
+        : initialValues,
     );
   };
 
@@ -355,7 +365,7 @@ export function ContactForm({
             ? dict.proAccount.intro
             : partner
               ? p.intro
-              : event
+              : booking
                 ? e.intro
                 : t.title}
         </h2>
@@ -384,7 +394,7 @@ export function ContactForm({
                       ? dict.proAccount.body
                       : partner
                         ? p.body
-                        : event
+                        : booking
                           ? e.body
                           : t.intro}
                   </p>
@@ -417,7 +427,7 @@ export function ContactForm({
               {/* The delivery notice is about catering orders; a venue asking
                   to stock the products is not booking one, and an event has
                   no fixed notice any more (the owners, 27 November 2026). */}
-              {!partner && !event && (
+              {!partner && !booking && (
                 <p className="font-archivo-light mt-[4svh] max-w-[36ch] text-[18px] leading-normal">
                   {interpolate(t.notice, { days: leadTimeDays })}
                 </p>
@@ -648,9 +658,9 @@ export function ContactForm({
                       className="md:col-span-2"
                     />
                   </>
-                ) : event ? (
+                ) : booking ? (
                   <>
-                    <input type="hidden" name="occasion" value={EVENT_OCCASION} />
+                    <input type="hidden" name="occasion" value={bookingOccasion} />
 
                     <OccasionChips
                       name="eventType"
@@ -686,16 +696,44 @@ export function ContactForm({
 
                     {/* Free text rather than ranges: a budget often comes with
                         a condition ("drinks included"). */}
-                    <TextField
-                      name="budget"
-                      label={e.budget}
-                      hint={t.optional}
-                      value={values.budget}
-                      onChange={update("budget")}
-                      error={errorText(state.errors.budget)}
-                      placeholder={e.budgetPlaceholder}
-                      className="md:col-span-2"
-                    />
+                    {event && (
+                      <TextField
+                        name="budget"
+                        label={dict.eventForm.budget}
+                        hint={t.optional}
+                        value={values.budget}
+                        onChange={update("budget")}
+                        error={errorText(state.errors.budget)}
+                        placeholder={dict.eventForm.budgetPlaceholder}
+                        className="md:col-span-2"
+                      />
+                    )}
+
+                    {/* The counter travels: where, and for how long. */}
+                    {coffee && (
+                      <>
+                        <TextField
+                          name="address"
+                          label={dict.coffeeForm.place}
+                          value={values.address}
+                          onChange={update("address")}
+                          error={errorText(state.errors.address)}
+                          placeholder={dict.coffeeForm.placePlaceholder}
+                          autoComplete="street-address"
+                          required
+                        />
+
+                        <TextField
+                          name="serviceHours"
+                          label={dict.coffeeForm.hours}
+                          hint={t.optional}
+                          value={values.serviceHours}
+                          onChange={update("serviceHours")}
+                          error={errorText(state.errors.serviceHours)}
+                          placeholder={dict.coffeeForm.hoursPlaceholder}
+                        />
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
@@ -764,24 +802,24 @@ export function ContactForm({
                       ? dict.proAccount.message
                       : partner
                         ? p.message
-                        : event
+                        : booking
                           ? e.message
                           : t.message
                   }
-                  hint={partner || event ? t.optional : undefined}
+                  hint={partner || booking ? t.optional : undefined}
                   value={values.message}
                   onChange={update("message")}
                   error={errorText(state.errors.message)}
                   placeholder={
                     partner
                       ? p.messagePlaceholder
-                      : event
+                      : booking
                         ? e.messagePlaceholder
                         : t.messagePlaceholder
                   }
-                  rows={partner || event ? 4 : 6}
+                  rows={partner || booking ? 4 : 6}
                   maxLength={MESSAGE_MAX}
-                  required={!partner && !event}
+                  required={!partner && !booking}
                   className="md:col-span-2"
                 />
 
@@ -814,7 +852,7 @@ export function ContactForm({
                           ? dict.proAccount.submit
                           : partner
                             ? p.submit
-                            : event
+                            : booking
                               ? e.submit
                               : t.submit}
                     </span>

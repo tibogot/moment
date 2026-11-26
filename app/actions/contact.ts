@@ -34,6 +34,7 @@ function composeBody(values: ContactValues) {
     values.quantities ? `Quantity: ${values.quantities}` : "",
     values.eventType ? `Type:     ${values.eventType}` : "",
     values.budget ? `Budget:   ${values.budget}` : "",
+    values.serviceHours ? `Hours:    ${values.serviceHours}` : "",
   ].filter(Boolean);
 
   return [

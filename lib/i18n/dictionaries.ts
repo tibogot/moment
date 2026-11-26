@@ -90,6 +90,7 @@ const CLIENT_SECTIONS = [
   "cookies",
   "delivery",
   "deliveryMethods",
+  "coffeeForm",
   "errors",
   "eventForm",
   "footer",

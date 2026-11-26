@@ -370,26 +370,45 @@ export async function getHomePageImages(): Promise<HomePageImages> {
   }
 }
 
-/* --------------------------------- Events --------------------------------- */
+/* --------------------------- Events and coffee ---------------------------- */
 
-/** The two photographs on /events (27 November 2026). */
+/**
+ * The two photographs on /events and on /coffee (27 November 2026): two
+ * singletons of the same shape, one query each so each is its own cache tag.
+ */
 export const eventsPageQuery = defineQuery(`*[_id == "eventsPage"][0] {
   firstImage,
   secondImage
 }`);
 
-export type EventsPageImages = {
+export const coffeePageQuery = defineQuery(`*[_id == "coffeePage"][0] {
+  firstImage,
+  secondImage
+}`);
+
+export type PagePhotos = {
   first: SanityImage | null;
   second: SanityImage | null;
 };
 
+export function getEventsPageImages() {
+  return getPagePhotos(eventsPageQuery, "eventsPage");
+}
+
+export function getCoffeePageImages() {
+  return getPagePhotos(coffeePageQuery, "coffeePage");
+}
+
 /** Never throws: an empty slot, or no document, keeps the built-in photo. */
-export async function getEventsPageImages(): Promise<EventsPageImages> {
+async function getPagePhotos(
+  query: string,
+  tag: "eventsPage" | "coffeePage",
+): Promise<PagePhotos> {
   try {
     const response = await sanityClient.fetch<{
       firstImage?: SanityImage | null;
       secondImage?: SanityImage | null;
-    } | null>(eventsPageQuery, {}, sanityCache("eventsPage"));
+    } | null>(query, {}, sanityCache(tag));
 
     return {
       first: uploaded(response?.firstImage),

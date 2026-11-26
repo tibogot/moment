@@ -2,6 +2,7 @@ import { announcement } from "./documents/announcement";
 import { article } from "./documents/article";
 import { author } from "./documents/author";
 import { category } from "./documents/category";
+import { coffeePage } from "./documents/coffeePage";
 import { eventsPage } from "./documents/eventsPage";
 import { faqPage } from "./documents/faqPage";
 import { homePage } from "./documents/homePage";
@@ -25,6 +26,7 @@ export const schemaTypes = [
   article,
   author,
   category,
+  coffeePage,
   eventsPage,
   faqPage,
   homePage,

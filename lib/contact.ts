@@ -33,7 +33,14 @@ export const PRO_OCCASION = "Professional account";
  */
 export const EVENT_OCCASION = "Event quote";
 
-/** Private or professional — the events form's first question. */
+/**
+ * The booking form on /coffee (27 November 2026): the owners' coffee counter
+ * comes to an event, so it asks what the event form asks plus where, and for
+ * which hours.
+ */
+export const COFFEE_OCCASION = "Coffee counter booking";
+
+/** Private or professional — the events and coffee forms' first question. */
 export const EVENT_TYPES = ["Private", "Professional"] as const;
 
 /**
@@ -104,6 +111,8 @@ export const CONTACT_FIELDS = [
   /** Event quotes only (/events). */
   "eventType",
   "budget",
+  /** Coffee counter bookings only (/coffee). */
+  "serviceHours",
 ] as const;
 
 export type ContactField = (typeof CONTACT_FIELDS)[number];
@@ -130,6 +139,7 @@ export type ContactErrorCode =
   | "event_type_required"
   | "date_required"
   | "guests_required"
+  | "place_required"
   | "frequency_required"
   | "address_required"
   | "vat_required"
@@ -168,6 +178,7 @@ export const EMPTY_CONTACT_VALUES: ContactValues = {
   quantities: "",
   eventType: "",
   budget: "",
+  serviceHours: "",
 };
 
 /**
@@ -206,6 +217,7 @@ export function validateContact(values: ContactValues): ContactErrors {
   const isProApplication = values.occasion === PRO_OCCASION;
   const isPartner = isPartnerRequest(values.occasion);
   const isEventQuote = values.occasion === EVENT_OCCASION;
+  const isCoffeeBooking = values.occasion === COFFEE_OCCASION;
 
   if (!values.name) {
     errors.name = "name_required";
@@ -252,7 +264,7 @@ export function validateContact(values: ContactValues): ContactErrors {
     ) {
       errors.frequency = "frequency_required";
     }
-  } else if (isEventQuote) {
+  } else if (isEventQuote || isCoffeeBooking) {
     // The three things a quote cannot be priced without (the owners' list);
     // the date may be approximate, the budget may be unknown.
     if (!(EVENT_TYPES as readonly string[]).includes(values.eventType)) {
@@ -260,6 +272,8 @@ export function validateContact(values: ContactValues): ContactErrors {
     }
     if (!values.date) errors.date = "date_required";
     if (!values.guests) errors.guests = "guests_required";
+    // The counter travels: without the place there is nothing to quote.
+    if (isCoffeeBooking && !values.address) errors.address = "place_required";
   } else if (!OCCASIONS.includes(values.occasion as Occasion)) {
     errors.occasion = "occasion_required";
   }
@@ -267,7 +281,9 @@ export function validateContact(values: ContactValues): ContactErrors {
   // A collaboration request has said what it needs in its own fields; the
   // message is there for the rest.
   if (!values.message) {
-    if (!isPartner && !isEventQuote) errors.message = "message_required";
+    if (!isPartner && !isEventQuote && !isCoffeeBooking) {
+      errors.message = "message_required";
+    }
   } else if (values.message.length > MESSAGE_MAX) {
     errors.message = "message_too_long";
   }
@@ -282,6 +298,7 @@ export function validateContact(values: ContactValues): ContactErrors {
     "productsOther",
     "quantities",
     "budget",
+    "serviceHours",
   ] as const) {
     if (!errors[field] && values[field].length > SHORT_MAX) {
       errors[field] = "too_long";

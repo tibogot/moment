@@ -615,6 +615,7 @@
       "event_type_required": "Choose private or corporate.",
       "date_required": "Give the date, even approximately.",
       "guests_required": "Give the number of people, even approximately.",
+      "place_required": "Give the venue, at least the town.",
       "vat_required": "We need your VAT number to invoice you.",
       "vat_invalid": "A Belgian VAT number is BE followed by ten digits.",
       "address_required": "Please enter your venue's address."
@@ -760,12 +761,12 @@
       ]
     },
     "coffee": {
-      "title": "Coffee Desk",
-      "description": "The Moment coffee desk in Brussels — filter and espresso, pastries out of our own kitchen, and cold-pressed juices to take away.",
+      "title": "Coffee cart",
+      "description": "Moment's coffee cart for your events in and around Brussels: a barista, professional equipment, coffee and ceremonial matcha made on the spot.",
       "keywords": [
-        "coffee Brussels",
-        "coffee desk Brussels",
-        "pastries Brussels"
+        "coffee cart event",
+        "event barista Brussels",
+        "coffee cart Brussels"
       ]
     },
     "news": {
@@ -935,7 +936,7 @@
     "values": {
       "label": "About",
       "lead": "We cook for private hosts and companies across the city. Seasonal plates, salads and cold-pressed juices, prepared each morning and delivered ready to serve.",
-      "aside": "We run events end to end, and keep a coffee desk open for anyone passing by.",
+      "aside": "We run events end to end, and bring our coffee cart to yours.",
       "cards": [
         {
           "title": "A table that speaks for you",
@@ -950,14 +951,14 @@
           "body": "From the first proposal to the last coffee poured — we hold the timing so you can hold the room."
         },
         {
-          "title": "A café open to the city",
-          "body": "The desk stays open between deliveries: same kitchen, same care, for whoever stops by."
+          "title": "A coffee cart that comes to you",
+          "body": "A barista, a professional machine, coffee and ceremonial matcha: the cart sets up at the heart of your event."
         }
       ]
     },
     "accordion": {
       "headline": "For people who care how it tastes — and how it looks, in Brussels.",
-      "body": "Prepared each morning and delivered ready to serve. We run events end to end, and keep a coffee desk.",
+      "body": "Prepared each morning and delivered ready to serve. We run events end to end, and bring our coffee cart to you.",
       "cta": "See our products",
       "items": [
         {
@@ -1197,6 +1198,38 @@
     "messagePlaceholder": "The venue, the time, special diets, what you have in mind…",
     "submit": "Request a quote"
   },
+  "coffeeForm": {
+    "intro": "Book the coffee cart",
+    "body": "Tell us about your event: we will come back to you with a proposal.",
+    "steps": [
+      {
+        "title": "Your event",
+        "body": "The date, the venue, the number of guests and the service hours."
+      },
+      {
+        "title": "A proposal",
+        "body": "We send you a quote for the cart, the barista and the drinks."
+      },
+      {
+        "title": "On the day",
+        "body": "We set up the cart and make coffee and matcha on the spot."
+      }
+    ],
+    "type": "Type of event",
+    "types": {
+      "Private": "Private",
+      "Professional": "Corporate"
+    },
+    "date": "Date of the event",
+    "guests": "Number of guests",
+    "place": "Venue",
+    "placePlaceholder": "Address or town",
+    "hours": "Service hours",
+    "hoursPlaceholder": "For example: 9am – 12pm",
+    "message": "Anything else to tell us?",
+    "messagePlaceholder": "The kind of event, access to the venue, what you have in mind…",
+    "submit": "Book the coffee cart"
+  },
   "pageIntro": {
     "collections": {
       "title": "Collections",
@@ -1207,8 +1240,8 @@
       "lead": "For your private or corporate events, we put together savoury and sweet buffets. From delivery to set-up, decoration and flowers included, we take care of every detail to create a table that reflects you. We tailor our proposal to your wishes, the venue and the number of guests, so you can fully enjoy your moment."
     },
     "coffee": {
-      "title": "Coffee",
-      "lead": "A coffee desk for anyone passing by, serving the same pastries and juices we send out to our clients."
+      "title": "Coffee cart",
+      "lead": "We bring a true coffee experience to the heart of your event, thought through down to the smallest detail. With full professional equipment and a barista on hand, our coffee cart offers a wide choice of coffee drinks and ceremonial matcha, made on the spot for your guests."
     },
     "menus": {
       "title": "Menus"

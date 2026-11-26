@@ -615,6 +615,7 @@
       "event_type_required": "Kies privé of professioneel.",
       "date_required": "Vul de datum in, ook bij benadering.",
       "guests_required": "Vul het aantal personen in, ook bij benadering.",
+      "place_required": "Vul de locatie van het evenement in, minstens de gemeente.",
       "vat_required": "Wij hebben uw btw-nummer nodig om te factureren.",
       "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers.",
       "address_required": "Vul het adres van uw zaak in."
@@ -762,11 +763,11 @@
     },
     "coffee": {
       "title": "Koffiebar",
-      "description": "De koffiebar van Moment in Brussel — filter en espresso, gebak uit onze eigen keuken en koudgeperste sappen om mee te nemen.",
+      "description": "De koffiebar van Moment voor uw evenementen in Brussel en omgeving: een barista, professioneel materiaal, koffie en ceremoniële matcha ter plaatse bereid.",
       "keywords": [
-        "koffie Brussel",
-        "koffiebar Brussel",
-        "gebak Brussel"
+        "koffiebar evenement",
+        "barista evenement Brussel",
+        "koffie voor evenement Brussel"
       ]
     },
     "news": {
@@ -936,7 +937,7 @@
     "values": {
       "label": "Over ons",
       "lead": "Wij koken voor particulieren en bedrijven in heel de stad. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd.",
-      "aside": "Wij verzorgen evenementen van begin tot eind, en houden een koffiebar open voor wie langskomt.",
+      "aside": "Wij verzorgen evenementen van begin tot eind, en zetten onze koffiebar op tijdens uw evenement.",
       "cards": [
         {
           "title": "Een tafel die over u spreekt",
@@ -951,14 +952,14 @@
           "body": "Van het eerste voorstel tot de laatste koffie — wij houden het ritme, u houdt uw gasten."
         },
         {
-          "title": "Een café open voor de stad",
-          "body": "De balie blijft open tussen twee leveringen: dezelfde keuken, dezelfde zorg, voor wie langskomt."
+          "title": "Een koffiebar die naar u komt",
+          "body": "Een barista, een professionele machine, koffie en ceremoniële matcha: de koffiebar komt naar het hart van uw evenement."
         }
       ]
     },
     "accordion": {
       "headline": "Voor wie geeft om smaak — en om presentatie, in Brussel.",
-      "body": "Elke ochtend bereid en klaar om te serveren geleverd. Wij verzorgen evenementen van begin tot eind, en houden een koffiebar.",
+      "body": "Elke ochtend bereid en klaar om te serveren geleverd. Wij verzorgen evenementen van begin tot eind, en zetten onze koffiebar bij u op.",
       "cta": "Bekijk onze producten",
       "items": [
         {
@@ -1198,6 +1199,38 @@
     "messagePlaceholder": "De locatie, het uur, bijzondere diëten, uw wensen…",
     "submit": "Offerte aanvragen"
   },
+  "coffeeForm": {
+    "intro": "De koffiebar reserveren",
+    "body": "Vertel ons over uw evenement: we komen bij u terug met een voorstel.",
+    "steps": [
+      {
+        "title": "Uw evenement",
+        "body": "De datum, de locatie, het aantal gasten en de uren van de service."
+      },
+      {
+        "title": "Een voorstel",
+        "body": "We sturen u een offerte voor de koffiebar, de barista en de dranken."
+      },
+      {
+        "title": "De grote dag",
+        "body": "We zetten de koffiebar op en bereiden koffie en matcha ter plaatse."
+      }
+    ],
+    "type": "Soort evenement",
+    "types": {
+      "Private": "Privé",
+      "Professional": "Professioneel"
+    },
+    "date": "Datum van het evenement",
+    "guests": "Aantal gasten",
+    "place": "Locatie van het evenement",
+    "placePlaceholder": "Adres of gemeente",
+    "hours": "Uren van de service",
+    "hoursPlaceholder": "Bijvoorbeeld: 9 – 12 uur",
+    "message": "Wilt u ons nog iets vertellen?",
+    "messagePlaceholder": "Het soort evenement, de toegang tot de locatie, uw wensen…",
+    "submit": "Koffiebar reserveren"
+  },
   "pageIntro": {
     "collections": {
       "title": "Collecties",
@@ -1208,8 +1241,8 @@
       "lead": "Voor uw private of professionele evenementen stellen we hartige en zoete buffetten samen. Van de levering tot de opstelling, met de decoratie en de bloemen erbij, verzorgen we elk detail voor een tafel die bij u past. We stemmen ons voorstel af op uw wensen, de locatie en het aantal gasten, zodat u volop van uw moment kunt genieten."
     },
     "coffee": {
-      "title": "Koffie",
-      "lead": "Een koffiebar voor iedereen die langskomt, met hetzelfde gebak en dezelfde sappen die we aan onze klanten leveren."
+      "title": "Koffiebar",
+      "lead": "We brengen een echte koffiebeleving naar het hart van uw evenement, tot in de kleinste details uitgewerkt. Met professioneel materiaal en een barista ter plaatse biedt onze koffiebar een ruime keuze aan koffiedranken en ceremoniële matcha, ter plekke bereid voor uw gasten."
     },
     "menus": {
       "title": "Menu's"
