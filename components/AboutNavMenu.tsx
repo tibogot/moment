@@ -6,7 +6,7 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useDictionary } from "@/components/LocaleProvider";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { finishIfReducedMotion, gsap } from "@/lib/gsap";
-import { aboutNav } from "@/lib/routes";
+import { useAboutNav } from "@/components/AboutNavProvider";
 // Placeholders (25 November 2026) until the owners pick the house's own.
 import firstImage from "@/public/images/svitlana.jpg";
 import secondImage from "@/public/images/nicole-herrero.jpg";
@@ -58,6 +58,7 @@ const ZOOM_DURATION = 1.4;
  */
 export function AboutNavMenu({ onNavigate, open = false }: AboutNavMenuProps) {
   const dict = useDictionary();
+  const aboutNav = useAboutNav();
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
 

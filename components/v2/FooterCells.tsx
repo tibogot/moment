@@ -7,7 +7,8 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useDictionary } from "@/components/LocaleProvider";
 import { CellGrid } from "@/components/v2/CellGrid";
 import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
-import { aboutNav, legalNav, routes } from "@/lib/routes";
+import { legalNav, routes } from "@/lib/routes";
+import { useAboutNav } from "@/components/AboutNavProvider";
 import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { PaymentMethodsRow } from "@/components/PaymentMethods";
 import { cn } from "@/lib/utils";
@@ -54,6 +55,7 @@ const LEGAL =
 
 export function FooterCells() {
   const dict = useDictionary();
+  const aboutNav = useAboutNav();
   // From the Studio's "Infos pratiques" once published, else lib/site.ts.
   const { contact, social } = useSiteDetails();
   const socialLinks = [

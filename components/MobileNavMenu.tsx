@@ -20,7 +20,8 @@ import {
   getServerCartSnapshot,
   subscribeCartCount,
 } from "@/lib/cart-store";
-import { aboutNav, mainNav, routes, type NavMenuKey } from "@/lib/routes";
+import { mainNav, routes, type NavMenuKey } from "@/lib/routes";
+import { useAboutNav } from "@/components/AboutNavProvider";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
@@ -202,6 +203,7 @@ export function MobileNavMenu({
   }, [open]);
 
   const dict = useDictionary();
+  const aboutNav = useAboutNav();
 
   // The same two panels the desktop nav opens, flattened to label + href.
   // Shop's children come from Shopify and About's are fixed, which is the only

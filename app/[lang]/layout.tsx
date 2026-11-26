@@ -12,7 +12,8 @@ import { GridOverlayToggle } from "@/components/v2/GridOverlayToggle";
 import { Navbar } from "@/components/Navbar";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { cn } from "@/lib/utils";
-import { getAnnouncement } from "@/lib/sanity/queries";
+import { getAnnouncement, getNewsArticles } from "@/lib/sanity/queries";
+import { AboutNavProvider } from "@/components/AboutNavProvider";
 import { getSiteDetails } from "@/lib/site-details";
 import { SiteDetailsProvider } from "@/components/SiteDetailsProvider";
 import { PaymentMethodsProvider } from "@/components/PaymentMethods";
@@ -131,14 +132,26 @@ export default async function RootLayout({
   // site with a language nothing can translate.
   if (!isLocale(lang)) notFound();
 
-  const [collections, dictionary, announcement, siteDetails, paymentMethods] =
-    await Promise.all([
-      getCollectionLinks(lang),
-      getDictionary(lang),
-      getAnnouncement(),
-      getSiteDetails(),
-      getPaymentMethods(),
-    ]);
+  const [
+    collections,
+    dictionary,
+    announcement,
+    siteDetails,
+    paymentMethods,
+    hasNews,
+  ] = await Promise.all([
+    getCollectionLinks(lang),
+    getDictionary(lang),
+    getAnnouncement(),
+    getSiteDetails(),
+    getPaymentMethods(),
+    // "Actualités" only where this language has an article; on a Sanity
+    // error, keep the link rather than hide a section that may be full.
+    getNewsArticles(lang).then(
+      (articles) => articles.length > 0,
+      () => true,
+    ),
+  ]);
 
   /*
    * Titles and handles only. The nav needs the links in the HTML — they are
@@ -191,26 +204,31 @@ export default async function RootLayout({
         </a>
         <LocaleProvider locale={lang} dictionary={clientDictionary(dictionary)}>
           <SiteDetailsProvider details={siteDetails}>
-            <PaymentMethodsProvider methods={paymentMethods}>
-              <SmoothScroll>
-                <ScrollToTop />
-                {announcement && (
-                  <AnnouncementBar announcement={announcement} locale={lang} />
-                )}
-                <NavCatalogProvider collections={navCollections}>
-                  <Navbar />
-                </NavCatalogProvider>
-                <main id="main" className="relative flex flex-1 flex-col">
-                  {children}
-                </main>
-                <CookieConsent />
-                <ConsentScripts />
-                {/* Review shortcuts (Shift + P, Shift + G) — on every page of the
+            <AboutNavProvider hasNews={hasNews}>
+              <PaymentMethodsProvider methods={paymentMethods}>
+                <SmoothScroll>
+                  <ScrollToTop />
+                  {announcement && (
+                    <AnnouncementBar
+                      announcement={announcement}
+                      locale={lang}
+                    />
+                  )}
+                  <NavCatalogProvider collections={navCollections}>
+                    <Navbar />
+                  </NavCatalogProvider>
+                  <main id="main" className="relative flex flex-1 flex-col">
+                    {children}
+                  </main>
+                  <CookieConsent />
+                  <ConsentScripts />
+                  {/* Review shortcuts (Shift + P, Shift + G) — on every page of the
                   temporary address, never on the real domain. */}
-                {!siteIsIndexable && <PaletteToggle />}
-                {!siteIsIndexable && <GridOverlayToggle />}
-              </SmoothScroll>
-            </PaymentMethodsProvider>
+                  {!siteIsIndexable && <PaletteToggle />}
+                  {!siteIsIndexable && <GridOverlayToggle />}
+                </SmoothScroll>
+              </PaymentMethodsProvider>
+            </AboutNavProvider>
           </SiteDetailsProvider>
         </LocaleProvider>
       </body>

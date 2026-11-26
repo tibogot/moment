@@ -77,7 +77,6 @@ const staticRoutes: {
   { path: routes.coffee, changeFrequency: "monthly", priority: 0.7 },
   { path: routes.about, changeFrequency: "monthly", priority: 0.7 },
   { path: routes.contact, changeFrequency: "monthly", priority: 0.7 },
-  { path: routes.news, changeFrequency: "weekly", priority: 0.6 },
   { path: routes.faq, changeFrequency: "monthly", priority: 0.6 },
   { path: routes.proAccount, changeFrequency: "yearly", priority: 0.7 },
   { path: routes.findUs, changeFrequency: "monthly", priority: 0.6 },
@@ -182,6 +181,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       }),
     ),
+    // The news index only in a language that has an article (27 November
+    // 2026): an empty list is not a page worth handing a search engine, and
+    // the menus hide it there too (components/AboutNavProvider.tsx).
+    ...articlesByLocale
+      .filter(({ articles }) => articles.length > 0)
+      .map(({ locale }) =>
+        single(routes.news, locale, {
+          changeFrequency: "weekly",
+          priority: 0.6,
+        }),
+      ),
     ...articlesByLocale.flatMap(({ locale, articles }) =>
       articles.map((article) =>
         single(routes.newsArticle(article.slug.current), locale, {
