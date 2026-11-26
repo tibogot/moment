@@ -63,7 +63,8 @@ export async function generateMetadata({
 
   return pageMetadata({
     locale,
-    title: `${menu.title} — ${dict.menuFormats[menu.format] ?? dict.meta.fallback.menu}`,
+    // "Apéro dinatoire — Apéro" repeated itself; the place says more.
+    title: interpolate(dict.meta.fallback.menuTitle, { title: menu.title }),
     description: toDescription(
       menu.summary ? `${menu.summary} ${price}` : price,
     ),

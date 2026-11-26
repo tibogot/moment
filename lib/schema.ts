@@ -333,6 +333,37 @@ export function collectionSchema(
   });
 }
 
+/**
+ * The shop page as a CollectionPage of every product, like a collection's —
+ * the audit found /shop with no structured data at all (26 November 2026).
+ */
+export function shopSchema(
+  locale: Locale,
+  name: string,
+  description: string,
+  products: ShopifyProduct[],
+) {
+  const url = pageUrl(locale, routes.shop);
+  return compact({
+    "@type": "CollectionPage",
+    "@id": `${url}#collection`,
+    name,
+    description,
+    url,
+    isPartOf: { "@id": WEBSITE_ID },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: products.length,
+      itemListElement: products.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.title,
+        url: pageUrl(locale, routes.product(product.handle)),
+      })),
+    },
+  });
+}
+
 export function articleSchema(
   locale: Locale,
   article: NewsArticle,

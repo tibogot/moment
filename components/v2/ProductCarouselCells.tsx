@@ -68,7 +68,8 @@ export function ProductCarouselCells({
   joined = false,
 }: ProductCarouselCellsProps) {
   const reactId = useId();
-  const dietLabels = useDictionary().shop.filters.tags;
+  const dictionary = useDictionary();
+  const dietLabels = dictionary.shop.filters.tags;
   const panelId = `${reactId}-carousel`;
   const [activeId, setActiveId] = useState(
     () => defaultTabId ?? tabs[0]?.id ?? "",
@@ -216,6 +217,11 @@ export function ProductCarouselCells({
           data-grid-hole
           className="col-[2/span_4] row-[1] flex min-w-0 flex-col justify-end gap-3 p-(--v2-pad) md:col-[2/span_12] md:flex-row md:items-end md:justify-between lg:col-[2/span_16]"
         >
+          {/* With tabs there is no visible heading, and the cards are h3s:
+              a hidden h2 keeps the page outline h1 → h2 → h3. */}
+          {showTabs && (
+            <h2 className="sr-only">{dictionary.home.moments.heading}</h2>
+          )}
           {showTabs ? (
             <ul
               className="flex flex-wrap gap-x-5 gap-y-2"

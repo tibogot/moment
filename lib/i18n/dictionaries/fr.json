@@ -107,7 +107,8 @@
       "brunch": "Brunch",
       "lunch": "Lunch",
       "pause": "Pause",
-      "shop": "Toute la boutique"
+      "shop": "Toute la boutique",
+      "heading": "Nos produits"
     },
     "offer": {
       "title": "Pour chaque moment",
@@ -475,7 +476,35 @@
       }
     },
     "productsHeading": "Tous les produits",
-    "collectionsHeading": "Toutes les collections"
+    "collectionsHeading": "Toutes les collections",
+    "seo": {
+      "heading": "Livraison de repas frais à Bruxelles",
+      "body": "Salades, petits-déjeuners, jus pressés à froid et douceurs, préparés chaque matin dans notre atelier de Forest. Pour un lunch au bureau, une réunion d'équipe ou un repas à la maison, vous choisissez le jour et le créneau : nous livrons prêt à servir, ou vous passez les chercher à l'atelier en click & collect.",
+      "communesHeading": "Nous livrons dans les 19 communes de Bruxelles",
+      "communes": [
+        "Anderlecht",
+        "Auderghem",
+        "Berchem-Sainte-Agathe",
+        "Bruxelles-Ville",
+        "Etterbeek",
+        "Evere",
+        "Forest",
+        "Ganshoren",
+        "Ixelles",
+        "Jette",
+        "Koekelberg",
+        "Molenbeek-Saint-Jean",
+        "Saint-Gilles",
+        "Saint-Josse-ten-Noode",
+        "Schaerbeek",
+        "Uccle",
+        "Watermael-Boitsfort",
+        "Woluwe-Saint-Lambert",
+        "Woluwe-Saint-Pierre"
+      ],
+      "beyond": "Et plus loin, jusqu'à {km} km de l'atelier : {towns}… Au-delà, demandez-nous un devis.",
+      "towns": "Waterloo, Vilvorde, Zaventem, Wavre, Louvain, Malines, Nivelles, Alost"
+    }
   },
   "product": {
     "orderPreferences": "Choisissez quand et comment vous voulez votre commande — modifiable jusqu'au paiement.",
@@ -738,7 +767,7 @@
     },
     "faq": {
       "title": "Comment ça marche : commande et livraison",
-      "description": "Commander chez Moment, traiteur à Bruxelles, en six étapes : produits, livraison ou retrait, date et créneau, paiement. Et les réponses aux questions fréquentes.",
+      "description": "Commander chez Moment, traiteur à Bruxelles : produits, livraison ou retrait, date et créneau, paiement. Et les réponses aux questions fréquentes.",
       "keywords": [
         "traiteur Bruxelles FAQ",
         "livraison traiteur Bruxelles",
@@ -800,7 +829,8 @@
       "article": "{title} — depuis la cuisine de Moment à Bruxelles.",
       "menu": "Menu traiteur",
       "productTitle": "{title} — livraison à Bruxelles",
-      "productSuffix": "Livraison à Bruxelles ou retrait à l'atelier de Forest."
+      "productSuffix": "Livraison à Bruxelles ou retrait à l'atelier de Forest.",
+      "menuTitle": "{title} — traiteur à Bruxelles"
     },
     "findUs": {
       "title": "Où nous trouver",

@@ -1,5 +1,4 @@
 import { Footer } from "@/components/Footer";
-import { IntroSection } from "@/components/IntroSection";
 import { PageIntro } from "@/components/PageIntro";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -23,15 +22,6 @@ export default async function CoffeePage({
       <PageIntro
         title={dict.pageIntro.coffee.title}
         lead={dict.pageIntro.coffee.lead}
-      />
-
-      {/* Temporary: the home page's intro headline with the first-line indent
-          off, to compare against the indented one on /. Remove both this and
-          the prop once the call is made. */}
-      <IntroSection
-        copy={dict.home.intro}
-        aboutLabel={dict.common.aboutUs}
-        indentFirstLine={false}
       />
 
       <Footer />

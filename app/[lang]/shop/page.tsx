@@ -12,6 +12,10 @@ import { getCollections } from "@/lib/shopify/collections";
 import { getProducts } from "@/lib/shopify/products";
 import { getZoneTable } from "@/lib/shopify/zones";
 import { OrderRulesNote } from "@/components/OrderRulesNote";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbSchema, graph, shopSchema } from "@/lib/schema";
+import { interpolate } from "@/lib/i18n/dictionaries";
+import { maxDeliveryDistanceKm } from "@/lib/delivery/zones";
 
 export const generateMetadata = localizedMetadata("shop", {
   path: routes.shop,
@@ -37,8 +41,24 @@ export default async function ShopPage({
     (collection) => collection.handle !== "frontpage",
   );
 
+  const seo = dict.shop.seo;
+
   return (
     <>
+      <JsonLd
+        data={graph(
+          shopSchema(
+            locale,
+            dict.shop.title,
+            dict.meta.shop.description,
+            products,
+          ),
+          breadcrumbSchema(locale, [
+            { name: dict.nav.home, path: routes.home },
+            { name: dict.nav.shop, path: routes.shop },
+          ]),
+        )}
+      />
       <PageIntro title={dict.shop.title} lead={dict.shop.lead} />
 
       <GridSection className="pb-[14svh]">
@@ -62,6 +82,36 @@ export default async function ShopPage({
             collections={visibleCollections}
           />
         </Suspense>
+      </GridSection>
+
+      {/* What the shop is and where it delivers, in words: the page was all
+          product names, and nothing on the site named a commune but Forest
+          (audit, 26 November 2026). The radius is the live zone table's. */}
+      <GridSection className="border-t border-sky pt-[10svh] pb-[14svh]">
+        <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-6">
+          <h2 className="font-owners-narrow-bold text-[8vw] leading-[0.95] uppercase md:text-[min(3vw,5svh)]">
+            {seo.heading}
+          </h2>
+          <p className="font-archivo-light mt-6 max-w-[62ch] text-(length:--body-text) leading-normal">
+            {seo.body}
+          </p>
+        </div>
+        <div className="col-start-2 col-end-5 mt-[6svh] px-(--grid-gutter) md:col-start-6 md:col-end-9 md:mt-0">
+          <h3 className="font-owners-medium text-[12px] tracking-wide uppercase">
+            {seo.communesHeading}
+          </h3>
+          <ul className="font-archivo-light mt-4 columns-2 gap-x-6 text-[15px] leading-relaxed">
+            {seo.communes.map((commune) => (
+              <li key={commune}>{commune}</li>
+            ))}
+          </ul>
+          <p className="font-archivo-light mt-6 text-[15px] leading-normal">
+            {interpolate(seo.beyond, {
+              km: maxDeliveryDistanceKm(zones),
+              towns: seo.towns,
+            })}
+          </p>
+        </div>
       </GridSection>
 
       <Footer />

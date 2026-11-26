@@ -107,7 +107,8 @@
       "brunch": "Brunch",
       "lunch": "Lunch",
       "pause": "Break",
-      "shop": "The whole shop"
+      "shop": "The whole shop",
+      "heading": "Our products"
     },
     "offer": {
       "title": "For every moment",
@@ -475,7 +476,35 @@
       }
     },
     "productsHeading": "All products",
-    "collectionsHeading": "All collections"
+    "collectionsHeading": "All collections",
+    "seo": {
+      "heading": "Fresh food delivered in Brussels",
+      "body": "Salads, breakfasts, cold-pressed juices and sweet things, made every morning in our atelier in Forest. For an office lunch, a team meeting or a meal at home, choose the day and the time slot: we deliver ready to serve, or you collect from the atelier with click & collect.",
+      "communesHeading": "We deliver to all 19 Brussels municipalities",
+      "communes": [
+        "Anderlecht",
+        "Auderghem",
+        "Berchem-Sainte-Agathe",
+        "Brussels City",
+        "Etterbeek",
+        "Evere",
+        "Forest",
+        "Ganshoren",
+        "Ixelles",
+        "Jette",
+        "Koekelberg",
+        "Molenbeek-Saint-Jean",
+        "Saint-Gilles",
+        "Saint-Josse-ten-Noode",
+        "Schaerbeek",
+        "Uccle",
+        "Watermael-Boitsfort",
+        "Woluwe-Saint-Lambert",
+        "Woluwe-Saint-Pierre"
+      ],
+      "beyond": "And further, up to {km} km from the atelier: {towns}… Beyond that, ask us for a quote.",
+      "towns": "Waterloo, Vilvoorde, Zaventem, Wavre, Leuven, Mechelen, Nivelles, Aalst"
+    }
   },
   "product": {
     "orderPreferences": "Choose when and how you would like your order — you can change it before checkout.",
@@ -737,7 +766,7 @@
     },
     "faq": {
       "title": "How it works: ordering and delivery",
-      "description": "Ordering from Moment, traiteur in Brussels, in six steps: products, delivery or collection, date and time slot, payment. Plus answers to the questions we hear most.",
+      "description": "Ordering from Moment, caterer in Brussels: products, delivery or collection, date and time slot, payment. Plus answers to the questions we hear most.",
       "keywords": [
         "traiteur Brussels FAQ",
         "catering delivery Brussels",
@@ -799,7 +828,8 @@
       "article": "{title} — from the Moment kitchen in Brussels.",
       "menu": "Catering menu",
       "productTitle": "{title} — delivery in Brussels",
-      "productSuffix": "Delivered in Brussels or collected from our atelier in Forest."
+      "productSuffix": "Delivered in Brussels or collected from our atelier in Forest.",
+      "menuTitle": "{title} — catering in Brussels"
     },
     "findUs": {
       "title": "Find us",

@@ -107,7 +107,8 @@
       "brunch": "Brunch",
       "lunch": "Lunch",
       "pause": "Pauze",
-      "shop": "De hele winkel"
+      "shop": "De hele winkel",
+      "heading": "Onze producten"
     },
     "offer": {
       "title": "Voor elk moment",
@@ -475,7 +476,35 @@
       }
     },
     "productsHeading": "Alle producten",
-    "collectionsHeading": "Alle collecties"
+    "collectionsHeading": "Alle collecties",
+    "seo": {
+      "heading": "Verse maaltijden geleverd in Brussel",
+      "body": "Salades, ontbijt, koudgeperste sappen en zoetigheden, elke ochtend bereid in ons atelier in Vorst. Voor een lunch op kantoor, een teamvergadering of een maaltijd thuis kiest u de dag en het tijdvak: wij leveren klaar om te serveren, of u haalt af in het atelier met click & collect.",
+      "communesHeading": "We leveren in de 19 Brusselse gemeenten",
+      "communes": [
+        "Anderlecht",
+        "Oudergem",
+        "Sint-Agatha-Berchem",
+        "Brussel-Stad",
+        "Etterbeek",
+        "Evere",
+        "Vorst",
+        "Ganshoren",
+        "Elsene",
+        "Jette",
+        "Koekelberg",
+        "Sint-Jans-Molenbeek",
+        "Sint-Gillis",
+        "Sint-Joost-ten-Node",
+        "Schaarbeek",
+        "Ukkel",
+        "Watermaal-Bosvoorde",
+        "Sint-Lambrechts-Woluwe",
+        "Sint-Pieters-Woluwe"
+      ],
+      "beyond": "En verder, tot {km} km van het atelier: {towns}… Daarbuiten vraagt u ons een offerte.",
+      "towns": "Waterloo, Vilvoorde, Zaventem, Waver, Leuven, Mechelen, Nijvel, Aalst"
+    }
   },
   "product": {
     "orderPreferences": "Kies wanneer en hoe u uw bestelling wilt — aanpasbaar tot het afrekenen.",
@@ -738,7 +767,7 @@
     },
     "faq": {
       "title": "Hoe werkt het: bestellen en levering",
-      "description": "Bestellen bij Moment, traiteur in Brussel, in zes stappen: producten, levering of afhalen, datum en tijdvak, betaling. En de antwoorden op veelgestelde vragen.",
+      "description": "Bestellen bij Moment, traiteur in Brussel: producten, levering of afhalen, datum en tijdvak, betaling. En antwoorden op veelgestelde vragen.",
       "keywords": [
         "traiteur Brussel FAQ",
         "cateringlevering Brussel",
@@ -800,7 +829,8 @@
       "article": "{title} — uit de keuken van Moment in Brussel.",
       "menu": "Cateringmenu",
       "productTitle": "{title} — levering in Brussel",
-      "productSuffix": "Levering in Brussel of afhalen in het atelier in Vorst."
+      "productSuffix": "Levering in Brussel of afhalen in het atelier in Vorst.",
+      "menuTitle": "{title} — catering in Brussel"
     },
     "findUs": {
       "title": "Waar vindt u ons",
