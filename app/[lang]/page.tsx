@@ -23,6 +23,8 @@ import { urlFor } from "@/lib/sanity/image";
 import { pick, type LocaleString } from "@/lib/sanity/locale";
 import { getHomePageImages, getTestimonials } from "@/lib/sanity/queries";
 import { TestimonialCells } from "@/components/v2/TestimonialCells";
+import { SAMPLE_TESTIMONIALS } from "@/lib/testimonial-samples";
+import { siteIsIndexable } from "@/lib/site";
 import type { SanityImage } from "@/lib/sanity/types";
 import { getCollectionByHandle } from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
@@ -224,7 +226,14 @@ export default async function Home({
         {/* Reviews from the Studio — nothing until one is published. A first
             version, to be redesigned. */}
         <TestimonialCells
-          testimonials={testimonials}
+          // Sample reviews only on the test address and only while no real
+          // one is published — never on the real domain (see
+          // lib/testimonial-samples.ts).
+          testimonials={
+            testimonials.length > 0 || siteIsIndexable
+              ? testimonials
+              : SAMPLE_TESTIMONIALS
+          }
           locale={locale}
           label={home.testimonials.label}
         />
