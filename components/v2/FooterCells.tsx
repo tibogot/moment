@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { Brand } from "@/components/Brand";
+import { CookiePreferencesButton } from "@/components/CookieConsent";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useDictionary } from "@/components/LocaleProvider";
 import { CellGrid } from "@/components/v2/CellGrid";
-import { aboutNav, routes } from "@/lib/routes";
+import { ENABLED_CONSENT_CATEGORIES } from "@/lib/consent/categories";
+import { aboutNav, legalNav, routes } from "@/lib/routes";
 import { SITE_DETAILS } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -34,9 +37,12 @@ const socialLinks = [
  * Type: 18px on a phone (the body size), 14px in the panels, 16px from
  * 1536px wide. Below 1280 the cells are too short for five links, so the
  * panels take 3 rows there, 2 from 1280. — Archivo
- * Condensed Light at 12px, as before, was hard to read. No legal links yet — they must be back before
- * launch (a Belgian shop links its legal notice, privacy policy, terms and
- * cookie settings from every page).
+ * Condensed Light at 12px, as before, was hard to read.
+ *
+ * Legal links (26 November 2026): in the bottom band, on the left, opposite
+ * the logotype — every size, phones included. A Belgian shop has to link its
+ * legal notice, terms of sale and privacy policy from every page; they were
+ * missing from this footer since it replaced the previous one.
  */
 const PANEL = "flex min-w-0 flex-col gap-2 p-(--v2-pad)";
 const LABEL = "font-owners-medium mb-1 text-[11px] uppercase tracking-wide";
@@ -48,6 +54,8 @@ const BIG = "font-archivo-light text-(length:--body-text) leading-snug";
 const CELL_LINK =
   "flex min-w-0 flex-col justify-end p-(--v2-pad) transition-colors duration-300 hover:bg-sky/25 md:hidden";
 const LINK = `transition-opacity hover:opacity-60 ${ITEM}`;
+const LEGAL =
+  "font-archivo-light text-[11px] leading-snug transition-opacity hover:opacity-60 md:text-[12px]";
 
 export function FooterCells() {
   const dict = useDictionary();
@@ -76,11 +84,13 @@ export function FooterCells() {
           )}
         >
           <p className={LABEL}>{dict.footer.explore}</p>
-          {(["shop", "menus", "events", "coffee"] as const).map((key) => (
-            <Link key={key} href={routes[key]} className={LINK}>
-              {dict.nav[key]}
-            </Link>
-          ))}
+          {(["shop", "menus", "events", "coffee", "contact"] as const).map(
+            (key) => (
+              <Link key={key} href={routes[key]} className={LINK}>
+                {dict.nav[key]}
+              </Link>
+            ),
+          )}
         </div>
 
         <div
@@ -227,6 +237,32 @@ export function FooterCells() {
             height={220}
             className="h-auto w-[78%] brightness-0"
           />
+        </div>
+      </div>
+
+      {/* The legal strip in the bottom band, on the left: © and the five
+          legal pages (and cookie settings, once there are categories to
+          set). Wraps onto a second line on a phone. */}
+      <div
+        className="absolute bottom-0 flex items-center"
+        style={{
+          height: "var(--grid-band)",
+          left: "calc(var(--grid-margin) + var(--v2-pad))",
+          right: "calc(var(--grid-margin) + var(--v2-pad))",
+        }}
+      >
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:max-w-[calc(100%-var(--s-cell-w)*2.2)] md:gap-x-4">
+          <p className="font-archivo-light text-[11px] leading-snug md:text-[12px]">
+            © {new Date().getFullYear()} <Brand />
+          </p>
+          {legalNav.map(({ key, href }) => (
+            <Link key={href} href={href} className={LEGAL}>
+              {dict.legalNav[key]}
+            </Link>
+          ))}
+          {ENABLED_CONSENT_CATEGORIES.length > 0 && (
+            <CookiePreferencesButton className={LEGAL} />
+          )}
         </div>
       </div>
 
