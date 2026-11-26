@@ -25,13 +25,15 @@ function readField(formData: FormData, name: string) {
 
 /** Plain text rather than HTML: this mail is read by the kitchen, not designed. */
 function composeBody(values: ContactValues) {
-  // Only a collaboration request has these; the other forms keep their mail.
+  // Only a collaboration request or an event quote has these lines.
   const partnerLines = [
     values.products || values.productsOther
       ? `Products: ${[values.products, values.productsOther].filter(Boolean).join(PRODUCTS_SEPARATOR)}`
       : "",
     values.frequency ? `Delivery: ${values.frequency}` : "",
     values.quantities ? `Quantity: ${values.quantities}` : "",
+    values.eventType ? `Type:     ${values.eventType}` : "",
+    values.budget ? `Budget:   ${values.budget}` : "",
   ].filter(Boolean);
 
   return [

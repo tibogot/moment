@@ -117,7 +117,7 @@ export function trackBeginCheckout(value: number, items: AnalyticsItem[]) {
 }
 
 /** A quote or contact request went through — the catering conversion. */
-export function trackGenerateLead(kind: "enquiry" | "pro" | "partner") {
+export function trackGenerateLead(kind: "enquiry" | "pro" | "partner" | "event") {
   send("event", "generate_lead", { lead_type: kind });
 }
 

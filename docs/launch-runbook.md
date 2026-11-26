@@ -96,8 +96,9 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
 ## Jour J — 4. Sanity
 
 - [ ] **sanity.io/manage → API → Webhooks** : changer l'adresse en
-      `https://www.moment-lab.be/api/revalidate/sanity` (garder le filtre et le
-      secret).
+      `https://www.moment-lab.be/api/revalidate/sanity` (garder le secret ;
+      le filtre doit contenir `"eventsPage"`, ajouté le 27 novembre — sinon
+      les photos de la page Événements mettent jusqu'à 24 h à changer).
 - [ ] **API → CORS origins** : ajouter `https://www.moment-lab.be` avec
       « Allow credentials » (le Studio est à `/studio` et `/admin`).
 - [ ] Dans le Studio, **éteindre le bandeau d'annonce de test** (« Fermé du 24

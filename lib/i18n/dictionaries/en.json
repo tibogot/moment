@@ -558,7 +558,7 @@
     "title": "Request a quote",
     "lead": "Tell us the date, the number of people and roughly what you have in mind. We will come back with a menu and a price.",
     "intro": "Tell us the shape of it.",
-    "notice": "We need {days} days' notice for delivery and about two weeks for an event. Anything sooner, say so — we will tell you straight away whether we can.",
+    "notice": "We need {days} days' notice for delivery. For an event, tell us the date: we will let you know straight away whether we can.",
     "steps": [
       {
         "title": "The basics",
@@ -612,6 +612,9 @@
       "company_required": "We need the company name.",
       "products_required": "Tick at least one product, or name it under “Other”.",
       "frequency_required": "Choose a delivery frequency.",
+      "event_type_required": "Choose private or corporate.",
+      "date_required": "Give the date, even approximately.",
+      "guests_required": "Give the number of people, even approximately.",
       "vat_required": "We need your VAT number to invoice you.",
       "vat_invalid": "A Belgian VAT number is BE followed by ten digits.",
       "address_required": "Please enter your venue's address."
@@ -1030,7 +1033,7 @@
         "cookFor": "Private hosts, offices, agencies, embassies",
         "services": "Daily delivery, event catering, coffee desk",
         "deliveryArea": "Brussels and up to 70 km from the atelier, further on quotation",
-        "leadTime": "48 hours for delivery, two weeks for events",
+        "leadTime": "48 hours for delivery, on request for an event",
         "diets": "Vegetarian, vegan and gluten-free on every menu",
         "languages": "Français, Nederlands, English"
       }
@@ -1164,6 +1167,36 @@
     "messagePlaceholder": "Your venue, your customers, your opening hours…",
     "submit": "Send request"
   },
+  "eventForm": {
+    "intro": "Request a quote",
+    "body": "Tell us about your event: we will come back to you with a proposal.",
+    "steps": [
+      {
+        "title": "Your event",
+        "body": "The date, the number of guests and your budget per person."
+      },
+      {
+        "title": "A proposal",
+        "body": "We put together a buffet that suits you and send you a quote."
+      },
+      {
+        "title": "On the day",
+        "body": "Delivery, set-up, decoration: we take care of everything."
+      }
+    ],
+    "type": "Type of event",
+    "types": {
+      "Private": "Private",
+      "Professional": "Corporate"
+    },
+    "date": "Date of the event",
+    "guests": "Number of people",
+    "budget": "Budget per person",
+    "budgetPlaceholder": "For example: about €30 per person",
+    "message": "Anything else to tell us?",
+    "messagePlaceholder": "The venue, the time, special diets, what you have in mind…",
+    "submit": "Request a quote"
+  },
   "pageIntro": {
     "collections": {
       "title": "Collections",
@@ -1171,7 +1204,7 @@
     },
     "events": {
       "title": "Events",
-      "lead": "From a twenty-person launch to a seated dinner. We handle the menu, the service and everything that has to happen before the doors open."
+      "lead": "For your private or corporate events, we put together savoury and sweet buffets. From delivery to set-up, decoration and flowers included, we take care of every detail to create a table that reflects you. We tailor our proposal to your wishes, the venue and the number of guests, so you can fully enjoy your moment."
     },
     "coffee": {
       "title": "Coffee",

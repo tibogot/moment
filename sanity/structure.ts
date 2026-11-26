@@ -1,6 +1,7 @@
 import type { StructureResolver } from "sanity/structure";
 import { BasketIcon } from "@sanity/icons/Basket";
 import { BellIcon } from "@sanity/icons/Bell";
+import { CalendarIcon } from "@sanity/icons/Calendar";
 import { BookIcon } from "@sanity/icons/Book";
 import { ClockIcon } from "@sanity/icons/Clock";
 import { CommentIcon } from "@sanity/icons/Comment";
@@ -88,6 +89,16 @@ export const structure: StructureResolver = (S) =>
             .schemaType("homePage")
             .documentId("homePage")
             .title("Page d'accueil"),
+        ),
+
+      S.listItem()
+        .title("Page Événements")
+        .icon(CalendarIcon)
+        .child(
+          S.document()
+            .schemaType("eventsPage")
+            .documentId("eventsPage")
+            .title("Page Événements"),
         ),
 
       S.listItem()

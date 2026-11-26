@@ -558,7 +558,7 @@
     "title": "Demander un devis",
     "lead": "Dites-nous la date, le nombre de personnes et à peu près ce que vous imaginez. Nous revenons vers vous avec un menu et un prix.",
     "intro": "Dites-nous ce que vous imaginez.",
-    "notice": "Il nous faut {days} jours de préavis pour une livraison, et environ deux semaines pour un événement. Si c'est plus court, dites-le — nous vous dirons tout de suite si c'est jouable.",
+    "notice": "Il nous faut {days} jours de préavis pour une livraison. Pour un événement, dites-nous la date : nous vous dirons tout de suite si c'est jouable.",
     "steps": [
       {
         "title": "L'essentiel",
@@ -612,6 +612,9 @@
       "company_required": "Il nous faut le nom de la société.",
       "products_required": "Cochez au moins un produit, ou précisez-le dans « Autre ».",
       "frequency_required": "Choisissez une fréquence de livraison.",
+      "event_type_required": "Choisissez privé ou professionnel.",
+      "date_required": "Indiquez la date, même approximative.",
+      "guests_required": "Indiquez le nombre de personnes, même approximatif.",
       "vat_required": "Il nous faut votre numéro de TVA pour facturer.",
       "vat_invalid": "Un numéro de TVA belge s'écrit BE suivi de dix chiffres.",
       "address_required": "Indiquez l'adresse de votre établissement."
@@ -1031,7 +1034,7 @@
         "cookFor": "Particuliers, bureaux, agences, ambassades",
         "services": "Livraison quotidienne, traiteur événementiel, comptoir café",
         "deliveryArea": "Bruxelles et jusqu'à 70 km autour de l'atelier, au-delà sur devis",
-        "leadTime": "48 heures pour une livraison, deux semaines pour un événement",
+        "leadTime": "48 heures pour une livraison, sur demande pour un événement",
         "diets": "Végétarien, végane et sans gluten sur chaque menu",
         "languages": "Français, Nederlands, English"
       }
@@ -1165,6 +1168,36 @@
     "messagePlaceholder": "Votre lieu, votre clientèle, vos horaires…",
     "submit": "Envoyer la demande"
   },
+  "eventForm": {
+    "intro": "Demander un devis",
+    "body": "Parlez-nous de votre événement : nous revenons vers vous avec une proposition.",
+    "steps": [
+      {
+        "title": "Votre événement",
+        "body": "La date, le nombre d'invités et votre budget par personne."
+      },
+      {
+        "title": "Une proposition",
+        "body": "Nous composons un buffet à votre image et vous envoyons un devis."
+      },
+      {
+        "title": "Le jour J",
+        "body": "Livraison, mise en place, décoration : nous nous occupons de tout."
+      }
+    ],
+    "type": "Type d'événement",
+    "types": {
+      "Private": "Privé",
+      "Professional": "Professionnel"
+    },
+    "date": "Date de l'événement",
+    "guests": "Nombre de personnes",
+    "budget": "Budget par personne",
+    "budgetPlaceholder": "Par exemple : environ 30 € par personne",
+    "message": "Autre chose à nous dire ?",
+    "messagePlaceholder": "Le lieu, l'heure, des régimes particuliers, vos envies…",
+    "submit": "Demander un devis"
+  },
   "pageIntro": {
     "collections": {
       "title": "Collections",
@@ -1172,7 +1205,7 @@
     },
     "events": {
       "title": "Événements",
-      "lead": "D'un lancement de vingt personnes à un dîner assis. Nous nous occupons du menu, du service et de tout ce qui doit être prêt avant l'ouverture des portes."
+      "lead": "Pour vos événements privés ou professionnels, nous composons des buffets salés et sucrés. De la livraison à la mise en place, en passant par la décoration, les fleurs, nous soignons chaque détail pour créer une table à votre image. Nous adaptons notre proposition à vos envies, au lieu et au nombre d'invités, pour vous permettre de profiter pleinement de votre moment."
     },
     "coffee": {
       "title": "Café",

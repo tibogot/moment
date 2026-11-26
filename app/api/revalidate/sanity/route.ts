@@ -12,7 +12,7 @@
  *   URL:        https://<your-domain>/api/revalidate/sanity
  *   Dataset:    production
  *   Trigger on: Create, Update, Delete
- *   Filter:     _type in ["homePage", "menu", "pastEvent", "partner", "article", "author", "category", "faqPage", "announcement", "practicalInfo", "testimonial"]
+ *   Filter:     _type in ["homePage", "eventsPage", "menu", "pastEvent", "partner", "article", "author", "category", "faqPage", "announcement", "practicalInfo", "testimonial"]
  *   Projection: {"tags": [_type]}
  *   Secret:     the value of SANITY_REVALIDATE_SECRET
  *

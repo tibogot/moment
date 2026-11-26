@@ -91,6 +91,7 @@ const CLIENT_SECTIONS = [
   "delivery",
   "deliveryMethods",
   "errors",
+  "eventForm",
   "footer",
   "home",
   "language",

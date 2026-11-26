@@ -326,6 +326,28 @@ export type FaqPage = {
   }>;
 };
 
+export type EventsPage = {
+  _id: string;
+  _type: "eventsPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  firstImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  secondImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
 export type Category = {
   _id: string;
   _type: "category";
@@ -522,6 +544,7 @@ export type AllSanitySchemaTypes =
   | Slug
   | HomePage
   | FaqPage
+  | EventsPage
   | Category
   | CategoryReference
   | AuthorReference
@@ -787,6 +810,32 @@ export type HomePageQueryResult =
   | null;
 
 // Source: lib/sanity/queries.ts
+// Variable: eventsPageQuery
+// Query: *[_id == "eventsPage"][0] {  firstImage,  secondImage}
+export type EventsPageQueryResult =
+  | {
+      firstImage: null;
+      secondImage: null;
+    }
+  | {
+      firstImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      secondImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+    }
+  | null;
+
+// Source: lib/sanity/queries.ts
 // Variable: faqPageQuery
 // Query: *[_id == "faqPage"][0] {  steps[]{ _key, title, body },  "questions": questions[hidden != true]{ _key, question, answer }}
 export type FaqPageQueryResult =
@@ -876,6 +925,7 @@ declare global {
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
     '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
     '*[_id == "homePage"][0] {\n  heroHeadline,\n  heroLead,\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  heroTone,\n  kitchenImage,\n  deliveryImage,\n  hostingImage,\n  eventsImage,\n  companiesImage,\n  coffeeImage\n}': HomePageQueryResult;
+    '*[_id == "eventsPage"][0] {\n  firstImage,\n  secondImage\n}': EventsPageQueryResult;
     '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
     '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
     '*[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...12] {\n  _id,\n  quote,\n  name,\n  company\n}': TestimonialsQueryResult;

@@ -558,7 +558,7 @@
     "title": "Offerte aanvragen",
     "lead": "Vertel ons de datum, het aantal personen en ongeveer wat u voor ogen heeft. Wij komen terug met een menu en een prijs.",
     "intro": "Vertel ons wat u voor ogen heeft.",
-    "notice": "We hebben {days} dagen op voorhand nodig voor een levering, en ongeveer twee weken voor een evenement. Is het korter, zeg het gerust — we laten meteen weten of het lukt.",
+    "notice": "We hebben {days} dagen op voorhand nodig voor een levering. Voor een evenement: geef ons de datum, en we laten meteen weten of het lukt.",
     "steps": [
       {
         "title": "Het basiswerk",
@@ -612,6 +612,9 @@
       "company_required": "Wij hebben de bedrijfsnaam nodig.",
       "products_required": "Vink minstens één product aan, of vul het in bij ‘Andere’.",
       "frequency_required": "Kies een leveringsfrequentie.",
+      "event_type_required": "Kies privé of professioneel.",
+      "date_required": "Vul de datum in, ook bij benadering.",
+      "guests_required": "Vul het aantal personen in, ook bij benadering.",
       "vat_required": "Wij hebben uw btw-nummer nodig om te factureren.",
       "vat_invalid": "Een Belgisch btw-nummer is BE gevolgd door tien cijfers.",
       "address_required": "Vul het adres van uw zaak in."
@@ -1031,7 +1034,7 @@
         "cookFor": "Particulieren, kantoren, bureaus, ambassades",
         "services": "Dagelijkse levering, evenementencatering, koffiebar",
         "deliveryArea": "Brussel en tot 70 km rond het atelier, verder op offerte",
-        "leadTime": "48 uur voor een levering, twee weken voor een evenement",
+        "leadTime": "48 uur voor een levering, op aanvraag voor een evenement",
         "diets": "Vegetarisch, veganistisch en glutenvrij op elk menu",
         "languages": "Français, Nederlands, English"
       }
@@ -1165,6 +1168,36 @@
     "messagePlaceholder": "Uw zaak, uw klanten, uw openingsuren…",
     "submit": "Aanvraag versturen"
   },
+  "eventForm": {
+    "intro": "Een offerte aanvragen",
+    "body": "Vertel ons over uw evenement: we komen bij u terug met een voorstel.",
+    "steps": [
+      {
+        "title": "Uw evenement",
+        "body": "De datum, het aantal gasten en uw budget per persoon."
+      },
+      {
+        "title": "Een voorstel",
+        "body": "We stellen een buffet samen dat bij u past en sturen u een offerte."
+      },
+      {
+        "title": "De grote dag",
+        "body": "Levering, opstelling, decoratie: wij zorgen voor alles."
+      }
+    ],
+    "type": "Soort evenement",
+    "types": {
+      "Private": "Privé",
+      "Professional": "Professioneel"
+    },
+    "date": "Datum van het evenement",
+    "guests": "Aantal personen",
+    "budget": "Budget per persoon",
+    "budgetPlaceholder": "Bijvoorbeeld: ongeveer 30 € per persoon",
+    "message": "Wilt u ons nog iets vertellen?",
+    "messagePlaceholder": "De locatie, het uur, bijzondere diëten, uw wensen…",
+    "submit": "Offerte aanvragen"
+  },
   "pageIntro": {
     "collections": {
       "title": "Collecties",
@@ -1172,7 +1205,7 @@
     },
     "events": {
       "title": "Evenementen",
-      "lead": "Van een lancering voor twintig mensen tot een diner aan tafel. Wij zorgen voor het menu, de bediening en alles wat klaar moet zijn voor de deuren opengaan."
+      "lead": "Voor uw private of professionele evenementen stellen we hartige en zoete buffetten samen. Van de levering tot de opstelling, met de decoratie en de bloemen erbij, verzorgen we elk detail voor een tafel die bij u past. We stemmen ons voorstel af op uw wensen, de locatie en het aantal gasten, zodat u volop van uw moment kunt genieten."
     },
     "coffee": {
       "title": "Koffie",

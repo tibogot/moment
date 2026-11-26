@@ -370,6 +370,36 @@ export async function getHomePageImages(): Promise<HomePageImages> {
   }
 }
 
+/* --------------------------------- Events --------------------------------- */
+
+/** The two photographs on /events (27 November 2026). */
+export const eventsPageQuery = defineQuery(`*[_id == "eventsPage"][0] {
+  firstImage,
+  secondImage
+}`);
+
+export type EventsPageImages = {
+  first: SanityImage | null;
+  second: SanityImage | null;
+};
+
+/** Never throws: an empty slot, or no document, keeps the built-in photo. */
+export async function getEventsPageImages(): Promise<EventsPageImages> {
+  try {
+    const response = await sanityClient.fetch<{
+      firstImage?: SanityImage | null;
+      secondImage?: SanityImage | null;
+    } | null>(eventsPageQuery, {}, sanityCache("eventsPage"));
+
+    return {
+      first: uploaded(response?.firstImage),
+      second: uploaded(response?.secondImage),
+    };
+  } catch {
+    return { first: null, second: null };
+  }
+}
+
 /* --------------------------- Comment ça marche ---------------------------- */
 
 /**

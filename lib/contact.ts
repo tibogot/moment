@@ -26,6 +26,17 @@ export const OCCASIONS = [
 export const PRO_OCCASION = "Professional account";
 
 /**
+ * The occasion of the quote form on /events (27 November 2026). Its own value,
+ * not "Event" from OCCASIONS: the events form asks the owners' questions
+ * (private or professional, headcount, budget per person) and the contact
+ * form's "Événement" choice does not, so each is validated on what it asks.
+ */
+export const EVENT_OCCASION = "Event quote";
+
+/** Private or professional — the events form's first question. */
+export const EVENT_TYPES = ["Private", "Professional"] as const;
+
+/**
  * What a venue writes in about, on /collaborations — the three kinds of request
  * the owners named. Like OCCASIONS these are the subject
  * line of the mail and stay English; the labels come from `partner.requests`.
@@ -90,6 +101,9 @@ export const CONTACT_FIELDS = [
   "productsOther",
   "frequency",
   "quantities",
+  /** Event quotes only (/events). */
+  "eventType",
+  "budget",
 ] as const;
 
 export type ContactField = (typeof CONTACT_FIELDS)[number];
@@ -113,6 +127,9 @@ export type ContactErrorCode =
   | "too_long"
   | "company_required"
   | "products_required"
+  | "event_type_required"
+  | "date_required"
+  | "guests_required"
   | "frequency_required"
   | "address_required"
   | "vat_required"
@@ -149,6 +166,8 @@ export const EMPTY_CONTACT_VALUES: ContactValues = {
   productsOther: "",
   frequency: "",
   quantities: "",
+  eventType: "",
+  budget: "",
 };
 
 /**
@@ -186,6 +205,7 @@ export function validateContact(values: ContactValues): ContactErrors {
   const errors: ContactErrors = {};
   const isProApplication = values.occasion === PRO_OCCASION;
   const isPartner = isPartnerRequest(values.occasion);
+  const isEventQuote = values.occasion === EVENT_OCCASION;
 
   if (!values.name) {
     errors.name = "name_required";
@@ -232,6 +252,14 @@ export function validateContact(values: ContactValues): ContactErrors {
     ) {
       errors.frequency = "frequency_required";
     }
+  } else if (isEventQuote) {
+    // The three things a quote cannot be priced without (the owners' list);
+    // the date may be approximate, the budget may be unknown.
+    if (!(EVENT_TYPES as readonly string[]).includes(values.eventType)) {
+      errors.eventType = "event_type_required";
+    }
+    if (!values.date) errors.date = "date_required";
+    if (!values.guests) errors.guests = "guests_required";
   } else if (!OCCASIONS.includes(values.occasion as Occasion)) {
     errors.occasion = "occasion_required";
   }
@@ -239,7 +267,7 @@ export function validateContact(values: ContactValues): ContactErrors {
   // A collaboration request has said what it needs in its own fields; the
   // message is there for the rest.
   if (!values.message) {
-    if (!isPartner) errors.message = "message_required";
+    if (!isPartner && !isEventQuote) errors.message = "message_required";
   } else if (values.message.length > MESSAGE_MAX) {
     errors.message = "message_too_long";
   }
@@ -253,6 +281,7 @@ export function validateContact(values: ContactValues): ContactErrors {
     "address",
     "productsOther",
     "quantities",
+    "budget",
   ] as const) {
     if (!errors[field] && values[field].length > SHORT_MAX) {
       errors[field] = "too_long";

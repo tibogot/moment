@@ -21,6 +21,7 @@ import { structure } from "@/sanity/structure";
  */
 const SINGLETONS = [
   "homePage",
+  "eventsPage",
   "faqPage",
   "announcement",
   "practicalInfo",

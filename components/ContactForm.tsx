@@ -20,6 +20,8 @@ import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import {
+  EVENT_OCCASION,
+  EVENT_TYPES,
   PARTNER_FREQUENCIES,
   PARTNER_PRODUCTS,
   PARTNER_REQUESTS,
@@ -140,7 +142,7 @@ function TextField({
 
 type OccasionChipsProps = {
   /** The form field. `occasion` unless said otherwise. */
-  name?: "occasion" | "products" | "frequency";
+  name?: "occasion" | "products" | "frequency" | "eventType";
   /**
    * Checkboxes instead of radios: several answers, carried in `value` as one
    * string joined with PRODUCTS_SEPARATOR.
@@ -257,11 +259,15 @@ type ContactFormProps = {
    * Moment products: the occasion radios become the three kinds of request,
    * the venue's name and address are required, VAT is optional.
    *
-   * One component rather than three because the plumbing — controlled values,
+   * `event` is the quote form on /events (27 November 2026): private or
+   * professional, the date, the headcount and a budget per person — the
+   * owners' questions — with the message optional.
+   *
+   * One component rather than four because the plumbing — controlled values,
    * the error map, the sent panel, the honeypot — is the whole of the work and
    * none of it differs.
    */
-  variant?: "enquiry" | "pro" | "partner";
+  variant?: "enquiry" | "pro" | "partner" | "event";
 };
 
 /**
@@ -279,15 +285,27 @@ export function ContactForm({
   const pro = variant === "pro";
   const partner = variant === "partner";
   const p = dict.partner;
-  // Each form explains its own three steps: a quote, a pro account and a
-  // stockist request are three different processes.
-  const steps = pro ? dict.proAccount.steps : partner ? p.steps : t.steps;
+  const event = variant === "event";
+  const e = dict.eventForm;
+  // Each form explains its own three steps: a quote, a pro account, a
+  // stockist request and an event are different processes.
+  const steps = pro
+    ? dict.proAccount.steps
+    : partner
+      ? p.steps
+      : event
+        ? e.steps
+        : t.steps;
   const [state, formAction, pending] = useActionState(
     sendContactRequest,
     INITIAL_CONTACT_STATE,
   );
   const [values, setValues] = useState<ContactValues>(
-    pro ? { ...initialValues, occasion: PRO_OCCASION } : initialValues,
+    pro
+      ? { ...initialValues, occasion: PRO_OCCASION }
+      : event
+        ? { ...initialValues, occasion: EVENT_OCCASION }
+        : initialValues,
   );
 
   /**
@@ -308,7 +326,9 @@ export function ContactForm({
   // menu page is still asking about that menu.
   const reopen = () => {
     setDismissed(state);
-    setValues(initialValues);
+    setValues(
+      event ? { ...initialValues, occasion: EVENT_OCCASION } : initialValues,
+    );
   };
 
   /**
@@ -331,7 +351,13 @@ export function ContactForm({
           ruled field below it. */}
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
         <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-          {pro ? dict.proAccount.intro : partner ? p.intro : t.title}
+          {pro
+            ? dict.proAccount.intro
+            : partner
+              ? p.intro
+              : event
+                ? e.intro
+                : t.title}
         </h2>
         <div
           className="mt-4 h-(--grid-line) bg-sky"
@@ -354,7 +380,13 @@ export function ContactForm({
               <div className="min-w-0 text-left">
                 <TextReveal blockColor={REVEAL_BLOCK} stagger={0.12}>
                   <p className="font-owners-narrow-bold max-w-full text-[10vw] leading-[0.92] tracking-[-0.005em] wrap-break-word uppercase md:text-[min(3.1vw,5svh)]">
-                    {pro ? dict.proAccount.body : partner ? p.body : t.intro}
+                    {pro
+                      ? dict.proAccount.body
+                      : partner
+                        ? p.body
+                        : event
+                          ? e.body
+                          : t.intro}
                   </p>
                 </TextReveal>
               </div>
@@ -383,8 +415,9 @@ export function ContactForm({
               </ol>
 
               {/* The delivery notice is about catering orders; a venue asking
-                  to stock the products is not booking one. */}
-              {!partner && (
+                  to stock the products is not booking one, and an event has
+                  no fixed notice any more (the owners, 27 November 2026). */}
+              {!partner && !event && (
                 <p className="font-archivo-light mt-[4svh] max-w-[36ch] text-[18px] leading-normal">
                   {interpolate(t.notice, { days: leadTimeDays })}
                 </p>
@@ -615,6 +648,55 @@ export function ContactForm({
                       className="md:col-span-2"
                     />
                   </>
+                ) : event ? (
+                  <>
+                    <input type="hidden" name="occasion" value={EVENT_OCCASION} />
+
+                    <OccasionChips
+                      name="eventType"
+                      label={e.type}
+                      options={EVENT_TYPES}
+                      labels={e.types}
+                      value={values.eventType}
+                      onChange={update("eventType")}
+                      error={errorText(state.errors.eventType)}
+                    />
+
+                    {/* Free text: at quote stage the day is often still
+                        approximate, as on the contact form. */}
+                    <TextField
+                      name="date"
+                      label={e.date}
+                      value={values.date}
+                      onChange={update("date")}
+                      error={errorText(state.errors.date)}
+                      placeholder={t.datePlaceholder}
+                      required
+                    />
+
+                    <TextField
+                      name="guests"
+                      label={e.guests}
+                      value={values.guests}
+                      onChange={update("guests")}
+                      error={errorText(state.errors.guests)}
+                      placeholder={t.guestsPlaceholder}
+                      required
+                    />
+
+                    {/* Free text rather than ranges: a budget often comes with
+                        a condition ("drinks included"). */}
+                    <TextField
+                      name="budget"
+                      label={e.budget}
+                      hint={t.optional}
+                      value={values.budget}
+                      onChange={update("budget")}
+                      error={errorText(state.errors.budget)}
+                      placeholder={e.budgetPlaceholder}
+                      className="md:col-span-2"
+                    />
+                  </>
                 ) : (
                   <>
                     <OccasionChips
@@ -682,18 +764,24 @@ export function ContactForm({
                       ? dict.proAccount.message
                       : partner
                         ? p.message
-                        : t.message
+                        : event
+                          ? e.message
+                          : t.message
                   }
-                  hint={partner ? t.optional : undefined}
+                  hint={partner || event ? t.optional : undefined}
                   value={values.message}
                   onChange={update("message")}
                   error={errorText(state.errors.message)}
                   placeholder={
-                    partner ? p.messagePlaceholder : t.messagePlaceholder
+                    partner
+                      ? p.messagePlaceholder
+                      : event
+                        ? e.messagePlaceholder
+                        : t.messagePlaceholder
                   }
-                  rows={partner ? 4 : 6}
+                  rows={partner || event ? 4 : 6}
                   maxLength={MESSAGE_MAX}
-                  required={!partner}
+                  required={!partner && !event}
                   className="md:col-span-2"
                 />
 
@@ -726,7 +814,9 @@ export function ContactForm({
                           ? dict.proAccount.submit
                           : partner
                             ? p.submit
-                            : t.submit}
+                            : event
+                              ? e.submit
+                              : t.submit}
                     </span>
                   </button>
                 </div>

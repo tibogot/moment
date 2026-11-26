@@ -28,6 +28,7 @@ export const sanityClient = createClient({
  */
 export const SANITY_TAGS = [
   "homePage",
+  "eventsPage",
   "menu",
   "pastEvent",
   "partner",
