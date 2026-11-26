@@ -159,9 +159,18 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
         bounds.extend([point.longitude, point.latitude]);
       }
 
-      // Frame every point; one point alone gets a street-level zoom.
+      // Frame every point; one point alone gets a street-level zoom. Room
+      // all round, and more on the right for the atelier's label, so no
+      // marker sits on an edge (26 November 2026). Smaller on a phone.
       if (points.length > 1) {
-        map.fitBounds(bounds, { padding: 48, maxZoom: 15, duration: 0 });
+        const narrow = container.clientWidth < 640;
+        map.fitBounds(bounds, {
+          padding: narrow
+            ? { top: 60, bottom: 60, left: 40, right: 160 }
+            : { top: 90, bottom: 90, left: 90, right: 240 },
+          maxZoom: 15,
+          duration: 0,
+        });
       } else if (points.length === 1) {
         map.jumpTo({ center: bounds.getCenter(), zoom: 14 });
       }

@@ -33,7 +33,10 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
 - [ ] **New Project** → importer le dépôt GitHub du site.
 - [ ] **Settings → General → Node.js Version : 26.x.**
 - [ ] **Settings → Environment Variables**, environnement *Production*.
-      Copier depuis le projet de test, sauf les lignes marquées ⚠ :
+      Créer les clés, secrets et tokens en type **Secret** (pas « Config ») :
+      dans le projet de test, Vercel les signale « Needs Attention » parce
+      qu'ils ont été créés en clair. Copier depuis le projet de test, sauf les
+      lignes marquées ⚠ :
 
 | Variable | Valeur |
 |---|---|
