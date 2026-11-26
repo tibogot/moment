@@ -1,5 +1,7 @@
 # Guide du site Moment
 
+> **La version pour Moment est dans le Studio** : « Mode d'emploi », première entrée du menu (`sanity/components/GuidePane.tsx`, depuis le 26 novembre 2026). Ce fichier reste comme référence technique ; si une règle change, mettez d'abord le Mode d'emploi à jour.
+
 Pour l'équipe de Moment : ce que vous modifiez vous-mêmes, où, et les quelques
 pièges à connaître. Mise à jour : 5 novembre 2026.
 

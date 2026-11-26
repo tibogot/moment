@@ -1,6 +1,7 @@
 import type { StructureResolver } from "sanity/structure";
 import { BasketIcon } from "@sanity/icons/Basket";
 import { BellIcon } from "@sanity/icons/Bell";
+import { BookIcon } from "@sanity/icons/Book";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { OlistIcon } from "@sanity/icons/Olist";
 import { HomeIcon } from "@sanity/icons/Home";
@@ -9,6 +10,7 @@ import { PinIcon } from "@sanity/icons/Pin";
 import { TagIcon } from "@sanity/icons/Tag";
 import { UlistIcon } from "@sanity/icons/Ulist";
 import { UsersIcon } from "@sanity/icons/Users";
+import { GuidePane } from "@/sanity/components/GuidePane";
 import { ShopifyPane } from "@/sanity/components/ShopifyPane";
 
 /**
@@ -26,8 +28,10 @@ import { ShopifyPane } from "@/sanity/components/ShopifyPane";
  * of the Studio is decorative too.
  *
  * The order:
- * - the announcement bar alone at the top — the most frequent edit, and the
- *   one made in a hurry ("fermé demain");
+ * - "Mode d'emploi" first: the owners' manual, for a site handed over without
+ *   maintenance (sanity/components/GuidePane.tsx);
+ * - the announcement bar next — the most frequent edit, and the one made in a
+ *   hurry ("fermé demain");
  * - "Pages du site": one entry per page, named as in the site's menu;
  * - "Contenus": the lists that grow (a menu, a réalisation, an article);
  * - "Produits et livraison": a signpost to Shopify, where the first thing an
@@ -37,6 +41,14 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title("Moment")
     .items([
+      S.listItem()
+        .id("guide")
+        .title("Mode d'emploi")
+        .icon(BookIcon)
+        .child(S.component(GuidePane).id("guide").title("Mode d'emploi")),
+
+      S.divider(),
+
       /**
        * Pinned to a fixed document id, which is what makes it a singleton: no
        * "create new" button, no second copy competing to be read. The query in
