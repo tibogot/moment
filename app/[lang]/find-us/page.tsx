@@ -3,6 +3,7 @@ import { GridSection } from "@/components/GridSection";
 import { LocaleLink } from "@/components/LocaleLink";
 import { PageIntro } from "@/components/PageIntro";
 import { PartnerMap, type MapPoint } from "@/components/PartnerMap";
+import { BrandMap } from "@/components/BrandMap";
 import { DEFAULT_ATELIER } from "@/lib/delivery/zones";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -45,6 +46,28 @@ function mapTiles() {
   return null;
 }
 
+/**
+ * The map in the site's colours (BrandMap: MapLibre over Geoapify's vector
+ * "positron" style, restyled in lib/map/brandStyle.ts) — since 26 November
+ * 2026 the page's map, tried first on /v2/find-us.
+ *
+ * Needs the browser key, `GEOAPIFY_MAP_KEY`, restricted in the Geoapify
+ * dashboard to the site's addresses: it is visible in every tile request. On
+ * `next dev` the server-side address key stands in so the map can be seen
+ * locally — never on a deployment. Without a key the page falls back to the
+ * raster map below (OpenStreetMap, test deployments only) or to the list.
+ */
+function brandStyleUrl() {
+  const key =
+    process.env.GEOAPIFY_MAP_KEY ??
+    (process.env.NODE_ENV === "development"
+      ? process.env.GEOAPIFY_API_KEY
+      : undefined);
+  return key
+    ? `https://maps.geoapify.com/v1/styles/positron/style.json?apiKey=${encodeURIComponent(key)}`
+    : null;
+}
+
 /** Grouped by commune, communes alphabetical — how people look for "one near me". */
 function byCity(partners: Partner[]) {
   const groups = new Map<string, Partner[]>();
@@ -65,7 +88,8 @@ export default async function FindUsPage({
     getPartners(),
   ]);
   const t = dict.findUs;
-  const tiles = mapTiles();
+  const styleUrl = brandStyleUrl();
+  const tiles = styleUrl ? null : mapTiles();
 
   // The atelier first and drawn differently: it is where click & collect
   // orders are picked up, which is a real answer to "where do I find you".
@@ -103,6 +127,21 @@ export default async function FindUsPage({
 
       <GridSection className="pb-[14svh]">
         <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-9">
+          {styleUrl && (
+            <BrandMap
+              points={points}
+              styleUrl={styleUrl}
+              labels={{
+                directions: t.directions,
+                website: t.website,
+                mapLabel: t.mapLabel,
+                zoomIn: t.zoomIn,
+                zoomOut: t.zoomOut,
+                closePopup: t.closePopup,
+                attribution: t.attribution,
+              }}
+            />
+          )}
           {tiles && (
             <PartnerMap
               points={points}

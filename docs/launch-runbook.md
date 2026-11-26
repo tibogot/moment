@@ -49,8 +49,8 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | copier |
 | `NEXT_PUBLIC_SANITY_DATASET` | `production` |
 | `SANITY_REVALIDATE_SECRET` | copier (le même que dans le webhook Sanity) |
-| `GEOAPIFY_API_KEY` | copier (recherche d'adresse, côté serveur) |
-| `GEOAPIFY_MAP_KEY` | ⚠ seulement si la carte aux couleurs du site est en ligne : clé « navigateur », limitée à `www.moment-lab.be` |
+| `GEOAPIFY_API_KEY` | ⚠ **pas dans le projet de test** : la prendre dans `.env.local` ou dans le tableau de bord Geoapify (projet « moment »). Sans elle, la recherche d'adresse ne connaît que Bruxelles (Urbis) : un client de Waterloo ou de Louvain ne peut pas commander |
+| `GEOAPIFY_MAP_KEY` | ⚠ la clé « navigateur » de la carte « Où nous trouver », limitée aux adresses du site. Sans elle, la page n'affiche que la liste |
 | `RESEND_API_KEY` | ⚠ à créer dans le compte Resend de Moment (équipe moment-lab, domaine moment-lab.be déjà vérifié) |
 | `CONTACT_EMAIL_FROM` | ⚠ une adresse du domaine vérifié, par ex. `Moment <site@moment-lab.be>` |
 | `CONTACT_EMAIL_TO` | ⚠ `info@moment-lab.be` (où arrivent les formulaires et la newsletter) |
