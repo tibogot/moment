@@ -30,6 +30,19 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
 
+  /**
+   * moment-lab.be/admin → the Studio: the address the owners will guess
+   * (26 November 2026), rather than a link on the public site. Runs before
+   * the proxy, so it is not turned into /fr/admin. Temporary (307), so it can
+   * be changed without browsers remembering the old target.
+   */
+  async redirects() {
+    return [
+      { source: "/admin", destination: "/studio", permanent: false },
+      { source: "/admin/:path*", destination: "/studio", permanent: false },
+    ];
+  },
+
   experimental: {
     /**
      * Turns on `app/global-not-found.tsx`.
