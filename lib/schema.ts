@@ -1,3 +1,8 @@
+import {
+  DEFAULT_ATELIER,
+  DEFAULT_ZONE_TABLE,
+  maxDeliveryDistanceKm,
+} from "./delivery/zones";
 import { withLocale, type Locale } from "./i18n/config";
 import { routes } from "./routes";
 import { absoluteUrl } from "./seo";
@@ -149,10 +154,16 @@ export function websiteSchema(description: string = siteConfig.description) {
 export function cateringBusinessSchema(
   details: SiteDetails,
   description: string = siteConfig.description,
+  /** The furthest delivery band, km — the live table's when the caller has it. */
+  deliveryRadiusKm: number = maxDeliveryDistanceKm(DEFAULT_ZONE_TABLE),
 ) {
+  const deliveryRadiusMetres = deliveryRadiusKm * 1000;
+  // No additionalType (CateringBusiness is not a schema.org type) and no
+  // servesCuisine: "Seasonal, Belgian, European" was a guess, and a wrong
+  // fact in Google's knowledge panel is worse than none. The area is the
+  // delivery radius the shop actually prices, not one region's name.
   return compact({
     "@type": "FoodEstablishment",
-    additionalType: "https://schema.org/CateringBusiness",
     "@id": `${siteConfig.url}/#business`,
     name: siteConfig.name,
     description,
@@ -160,12 +171,21 @@ export function cateringBusinessSchema(
     image: absoluteUrl("/opengraph-image"),
     email: details.contact.email,
     telephone: details.contact.phone,
-    servesCuisine: ["Seasonal", "Belgian", "European"],
     address: postalAddress(details),
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: DEFAULT_ATELIER.latitude,
+      longitude: DEFAULT_ATELIER.longitude,
+    },
     openingHoursSpecification: openingHours(details),
     areaServed: {
-      "@type": "AdministrativeArea",
-      name: "Brussels-Capital Region",
+      "@type": "GeoCircle",
+      geoMidpoint: {
+        "@type": "GeoCoordinates",
+        latitude: DEFAULT_ATELIER.latitude,
+        longitude: DEFAULT_ATELIER.longitude,
+      },
+      geoRadius: deliveryRadiusMetres,
     },
     availableLanguage: [...siteConfig.locales],
     sameAs: socialProfiles(details),
@@ -205,7 +225,24 @@ export function breadcrumbSchema(locale: Locale, items: BreadcrumbItem[]) {
   };
 }
 
-export function productSchema(locale: Locale, product: ShopifyProduct) {
+/**
+ * What it costs to have it delivered, for Google's merchant listings: the
+ * cheapest zone's fee and the order notice, both from the Shopify settings
+ * the cart enforces. Optional — without it the offer simply has no
+ * shippingDetails.
+ */
+export type ProductShipping = {
+  /** Lowest delivery fee, euros. */
+  fee: number;
+  /** Days of notice before a delivery can be booked. */
+  leadTimeDays: number;
+};
+
+export function productSchema(
+  locale: Locale,
+  product: ShopifyProduct,
+  shipping?: ProductShipping,
+) {
   const url = pageUrl(locale, routes.product(product.handle));
   const images = product.images?.length
     ? product.images.map((image) => image.url)
@@ -234,11 +271,50 @@ export function productSchema(locale: Locale, product: ShopifyProduct) {
       // Distance selling in Belgium: the offer is made by the trading entity,
       // not the kitchen brand.
       seller: { "@id": ORGANIZATION_ID },
+      shippingDetails: shipping
+        ? {
+            "@type": "OfferShippingDetails",
+            shippingRate: {
+              "@type": "MonetaryAmount",
+              value: shipping.fee,
+              currency: product.currencyCode,
+            },
+            shippingDestination: {
+              "@type": "DefinedRegion",
+              addressCountry: "BE",
+            },
+            deliveryTime: {
+              "@type": "ShippingDeliveryTime",
+              handlingTime: {
+                "@type": "QuantitativeValue",
+                minValue: shipping.leadTimeDays,
+                maxValue: shipping.leadTimeDays,
+                unitCode: "DAY",
+              },
+              transitTime: {
+                "@type": "QuantitativeValue",
+                minValue: 0,
+                maxValue: 0,
+                unitCode: "DAY",
+              },
+            },
+          }
+        : undefined,
+      // Fresh, perishable food: the 14-day withdrawal right does not apply
+      // (art. VI.53 CDE, see the terms page), so no returns.
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "BE",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+      },
     }),
   });
 }
 
-export function collectionSchema(locale: Locale, collection: ShopifyCollection) {
+export function collectionSchema(
+  locale: Locale,
+  collection: ShopifyCollection,
+) {
   const url = pageUrl(locale, routes.collection(collection.handle));
 
   return compact({

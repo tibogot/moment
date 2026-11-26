@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DEFAULT_LOCALE, isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { notFoundMetadata } from "@/lib/seo";
 
 /**
  * Any path under a language that matches no page.
@@ -20,10 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const { common } = await getDictionary(isLocale(lang) ? lang : DEFAULT_LOCALE);
-  return {
-    title: common.notFound.title,
-    robots: { index: false, follow: true },
-  };
+  return notFoundMetadata(common.notFound.title);
 }
 
 export default function CatchAll() {

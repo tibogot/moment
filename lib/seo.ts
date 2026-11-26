@@ -261,10 +261,18 @@ export function localizedMetadata(
  * Metadata for a page whose record went missing — never indexable. `title` is
  * the page language's "page not found" (`common.notFound.title`).
  */
+/**
+ * A 404's metadata. Everything the locale layout would otherwise pass down is
+ * cleared: inherited, the 404 claimed the home page's description, a
+ * canonical to /fr and the home's hreflang set (audit, 26 November 2026).
+ */
 export function notFoundMetadata(title: string): Metadata {
   return {
     title,
+    description: null,
     robots: { index: false, follow: true },
+    alternates: { canonical: null, languages: {} },
+    openGraph: null,
   };
 }
 
