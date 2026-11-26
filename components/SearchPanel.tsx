@@ -48,6 +48,12 @@ export function SearchPanel({
   const inputRef = useRef<HTMLInputElement>(null);
   const hasOpenedRef = useRef(false);
   const [query, setQuery] = useState("");
+  // The product photos wait for the first opening. The panel is mounted,
+  // closed, on every page, and its "popular products" were fetched with every
+  // page view — 178 KB for one stock photo alone (audit, 26 November 2026).
+  // Once opened, they stay, so closing and reopening does not flash.
+  const [hasOpened, setHasOpened] = useState(open);
+  if (open && !hasOpened) setHasOpened(true);
   const deferredQuery = useDeferredValue(query.trim());
 
   useOverlayScrollLock(open);
@@ -278,7 +284,7 @@ export function SearchPanel({
               <>
                 <div className="h-(--grid-line) bg-sky" aria-hidden />
                 <ul className="grid grid-cols-2 gap-px border-x border-sky bg-sky md:grid-cols-4 md:border-x-0">
-                  {visibleProducts.map((product) => (
+                  {(hasOpened ? visibleProducts : []).map((product) => (
                     <li key={product.id} className="bg-cream">
                       {/* Not a heading: this panel is mounted on every page,
                           so an h3 here lands in every page's outline — under
