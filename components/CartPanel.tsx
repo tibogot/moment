@@ -658,11 +658,10 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     >
                       {line.title}
                     </Link>
-                    {line.variantTitle && (
-                      <span className="font-archivo-light mt-1 text-[15px] opacity-70">
-                        {line.variantTitle}
-                      </span>
-                    )}
+                    {/* No variant name: the product page sells one variant per
+                        product and shows no size picker, so a name here
+                        ("400", "option végétale") was an admin label the
+                        customer never chose. Back with a size picker. */}
 
                     <div className="mt-auto flex items-center justify-between gap-3 pt-3">
                       <div className="flex items-center border border-sky">
@@ -729,7 +728,40 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
 
               {/* Hidden until a method is picked: the calendar and the times
                   are not the same for collection and delivery. */}
-              {deliveryMethod && (
+              {/* Delivery: the address first, right under the choice — it
+                  sets the zone, the fee and the minimum, so the day comes
+                  after it (audit, 26 November 2026). */}
+              {deliveryMethod && !pickup && (
+                <div className="mt-4 flex items-baseline justify-between gap-3">
+                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                    {t.address}
+                  </span>
+                  {cart?.deliveryAddress ? (
+                    <span className="flex min-w-0 items-baseline gap-3">
+                      <span className="font-archivo-light truncate text-[15px]">
+                        {cart.deliveryAddress}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setView("address")}
+                        className="font-archivo-light shrink-0 text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                      >
+                        {t.change}
+                      </button>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setView("address")}
+                      className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                    >
+                      {dict.orderBar.addAddress}
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {deliveryMethod && (pickup || zone) && (
                 <>
                   <div className="mt-4 flex items-baseline justify-between gap-3">
                     <span className="font-owners-medium text-[12px] uppercase tracking-wide">

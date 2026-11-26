@@ -1,6 +1,7 @@
 import { CdnImage as Image } from "@/components/CdnImage";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { CartDeliverySection } from "@/components/CartDeliverySection";
+import { CartLineControls } from "@/components/CartLineControls";
 import { Footer } from "@/components/Footer";
 import { GridSection } from "@/components/GridSection";
 import { PageIntro } from "@/components/PageIntro";
@@ -87,9 +88,11 @@ export default async function CartPage({
                         >
                           {line.title}
                         </Link>
-                        <p className="font-archivo-light mt-1 text-[13px]">
-                          {dict.cart.quantity} {line.quantity}
-                        </p>
+                        <CartLineControls
+                          lineId={line.id}
+                          quantity={line.quantity}
+                          minimum={zones.minimumPiecesPerProduct}
+                        />
                       </div>
                       <span className="font-archivo-light text-[13px]">
                         {line.lineTotal}

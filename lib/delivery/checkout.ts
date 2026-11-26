@@ -134,6 +134,24 @@ export function checkoutBlocker(
   // chosen against the wrong rules.
   if (!cart.deliveryMethod) return { kind: "no-method" };
 
+  // Delivery: the address right after the method, before the day (audit,
+  // 26 November 2026). The address decides the zone, and the zone the fee and
+  // the minimum; asked last, a customer chose a day and a slot and only then
+  // learned they were €50 short, or out of range.
+  if (needsAddress(cart.deliveryMethod)) {
+    if (!cart.deliveryAddress) return { kind: "no-address" };
+
+    // An address with no zone is one whose attribute an owner edited by
+    // hand, or one priced against a band that has since been removed from the
+    // table. Treat it as unpriced and send them back through the address
+    // panel rather than guessing a minimum.
+    const zone = cart.deliveryZone ? zoneById(zones, cart.deliveryZone) : null;
+    if (!zone) return { kind: "no-address" };
+
+    const shortfall = minimumOrderShortfall(cart.subtotal, zone);
+    if (shortfall > 0) return { kind: "below-minimum", zone, shortfall };
+  }
+
   if (!cart.deliveryDate) return { kind: "no-date" };
 
   // Next-day collection moves the earliest day and the cut-off, so the day is
@@ -145,9 +163,7 @@ export function checkoutBlocker(
     return { kind: "stale-date", date: cart.deliveryDate };
   }
 
-  // Delivery windows or collection times, asked for before the address: what
-  // time on the day is a question about the order, where to is a question
-  // about the trip.
+  // Delivery windows or collection times, after the day they belong to.
   if (!cart.deliverySlot) return { kind: "no-slot" };
 
   // A stored slot the current table no longer holds, or one that has filled
@@ -174,17 +190,6 @@ export function checkoutBlocker(
       : null;
   }
 
-  if (!cart.deliveryAddress) return { kind: "no-address" };
-
-  // An address with no zone is one whose attribute an owner edited by hand,
-  // or one priced against a band that
-  // has since been removed from the table. Treat it as unpriced and send them
-  // back through the address panel rather than guessing a minimum.
-  const zone = cart.deliveryZone ? zoneById(zones, cart.deliveryZone) : null;
-  if (!zone) return { kind: "no-address" };
-
-  const shortfall = minimumOrderShortfall(cart.subtotal, zone);
-  if (shortfall > 0) return { kind: "below-minimum", zone, shortfall };
-
+  // Delivery: address, zone and minimum were settled above.
   return null;
 }

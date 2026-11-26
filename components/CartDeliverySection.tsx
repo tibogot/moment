@@ -266,9 +266,38 @@ export function CartDeliverySection({
 
         {/* Hidden until a method is picked: the calendar and the times are
             not the same for collection and delivery. */}
-        {deliveryMethod && (
+        {/* Delivery: the address first, right under the choice — it sets
+            the zone, the fee and the minimum, so the day comes after it
+            (audit, 26 November 2026). */}
+        {deliveryMethod && !pickup && (
+          <div className="mt-5 flex flex-wrap items-baseline justify-between gap-3">
+            <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+              {t.address}
+            </span>
+            <span className="flex min-w-0 items-baseline gap-4">
+              {deliveryAddress && (
+                <span className="font-archivo-light text-[13px]">
+                  {deliveryAddress}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setAddressOpen((open) => !open)}
+                className="font-archivo-light shrink-0 text-[13px] underline underline-offset-4 transition-opacity hover:opacity-60"
+              >
+                {addressOpen
+                  ? t.done
+                  : deliveryAddress
+                    ? t.change
+                    : dict.orderBar.addAddress}
+              </button>
+            </span>
+          </div>
+        )}
+
+        {deliveryMethod && (pickup || zone) && (
           <>
-            <div className="mt-5 flex flex-wrap items-baseline justify-between gap-3">
+            <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
               <span className="font-owners-medium text-[12px] uppercase tracking-wide">
                 {pickup ? t.pickup : t.delivery}
               </span>
@@ -328,17 +357,6 @@ export function CartDeliverySection({
                 </span>
               </div>
             }
-
-            {deliveryAddress && needsAddress(deliveryMethod) && (
-              <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
-                <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                  {t.address}
-                </span>
-                <span className="font-archivo-light text-[13px]">
-                  {deliveryAddress}
-                </span>
-              </div>
-            )}
 
             {/* Only for delivery: "ring at reception" means nothing to someone
             collecting from the atelier themselves. Saved on blur rather than
