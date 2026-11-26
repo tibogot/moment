@@ -56,6 +56,29 @@ export const homePage = defineType({
       options: { hotspot: true },
     }),
 
+    /**
+     * Which way the type goes over the photograph. Chosen by a person, not
+     * computed: a photo is rarely light or dark all over, and it is cropped
+     * differently on a phone, so what matters is the part under the text on
+     * both — which an eye sees and an average colour does not. Drives the
+     * hero's text and lines and the navbar while it is transparent over it.
+     */
+    defineField({
+      name: "heroTone",
+      title: "La photo d'ouverture est…",
+      type: "string",
+      description:
+        "Choisissez selon la zone sous le texte. Après avoir changé la photo ou ce réglage, vérifiez sur le site, sur ordinateur et sur téléphone, que le titre et le menu se lisent bien.",
+      options: {
+        list: [
+          { title: "Sombre : texte et menu en blanc", value: "dark" },
+          { title: "Claire : texte et menu en noir", value: "light" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "dark",
+    }),
+
     defineField({
       name: "kitchenImage",
       title: "Photo « La cuisine »",

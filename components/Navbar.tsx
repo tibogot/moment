@@ -122,6 +122,20 @@ const NAV_SCROLL_REVEAL_DISTANCE = 120;
 const CREAM = "#f8f7f2";
 const BLACK = "#000000";
 
+/**
+ * Over a light hero photo (`data-hero-tone="light"`, set in the Studio) the
+ * transparent bar is the hover state without its cream sheet: black links,
+ * black logo. Read from the page at animation time; the first paint gets the
+ * same answer from CSS (`--nav-on-hero`, globals.css), so there is no flash
+ * of cream type over a light photo.
+ */
+function heroIsLight() {
+  return (
+    typeof document !== "undefined" &&
+    document.querySelector('[data-hero-tone="light"]') !== null
+  );
+}
+
 type NavAppearance = {
   solid: boolean;
   expanded: boolean;
@@ -334,10 +348,11 @@ export function Navbar() {
       height: navHeight,
       autoRound: false,
     });
+    const light = heroIsLight();
     gsap.set(links, {
-      color: gsap.utils.interpolate(CREAM, BLACK, clamped),
+      color: light ? BLACK : gsap.utils.interpolate(CREAM, BLACK, clamped),
     });
-    gsap.set(logo, { filter: `brightness(${1 - clamped})` });
+    gsap.set(logo, { filter: `brightness(${light ? 0 : 1 - clamped})` });
 
     const solid = clamped >= 0.5;
     setNavSolid((current) => (current === solid ? current : solid));
@@ -474,10 +489,18 @@ export function Navbar() {
           tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
         tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
       }
-      tl.to(links, { color: CREAM, duration: duration * 0.35 }, colorAt);
+      const light = heroIsLight();
+      tl.to(
+        links,
+        { color: light ? BLACK : CREAM, duration: duration * 0.35 },
+        colorAt,
+      );
       tl.to(
         logo,
-        { filter: "brightness(1)", duration: duration * 0.35 },
+        {
+          filter: light ? "brightness(0)" : "brightness(1)",
+          duration: duration * 0.35,
+        },
         colorAt,
       );
     }
@@ -831,7 +854,10 @@ export function Navbar() {
           ref={navRef}
           className="relative grid min-h-(--grid-band) grid-cols-3 items-center px-[calc(var(--grid-margin)_+_var(--v2-pad))] select-none nav:grid-cols-(--grid-columns) nav:px-0"
           style={{
-            color: allowsTransparentNav ? CREAM : BLACK,
+            // Cream over the hero, unless it is a light photo (CSS var).
+            color: allowsTransparentNav
+              ? `var(--nav-on-hero, ${CREAM})`
+              : BLACK,
           }}
         >
           {/* Mobile: menu + search sit together on the left. */}

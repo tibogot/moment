@@ -18,6 +18,12 @@ type PhotoHeroProps = {
    */
   image: string | StaticImageData;
   blurDataURL?: string;
+  /**
+   * "light" for a light photograph: black type and sky lines, and the navbar
+   * turns black over it too (`data-hero-tone`, read by Navbar). Set in the
+   * Studio, "Page d'accueil".
+   */
+  tone?: "dark" | "light";
 };
 
 /**
@@ -41,21 +47,28 @@ export function PhotoHero({
   lead,
   image,
   blurDataURL,
+  tone = "dark",
 }: PhotoHeroProps) {
+  const light = tone === "light";
   return (
     <section
-      className="relative w-full overflow-hidden text-cream"
+      className={`relative w-full overflow-hidden ${light ? "text-black" : "text-cream"}`}
       style={
         {
           height: "calc(100svh - var(--announcement-h, 0px))",
         } as CSSProperties
       }
       data-transparent-nav
+      data-hero-tone={tone}
     >
       <HeroParallaxImage src={image} blurDataURL={blurDataURL} />
 
-      {/* The frame only, in cream. */}
-      <CellGrid lineClassName="bg-cream" cells={false} readout={false} />
+      {/* The frame only: cream over a dark photo, sky over a light one. */}
+      <CellGrid
+        lineClassName={light ? "bg-sky" : "bg-cream"}
+        cells={false}
+        readout={false}
+      />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-(--grid-inset) text-center">
         <TextReveal

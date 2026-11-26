@@ -433,8 +433,8 @@ const GROUPS: Group[] = [
           </>,
           <>
             Ses mots tels quels (une à trois phrases), son nom comme il accepte
-            d&apos;être cité (« Sophie D. »), et si vous voulez son entreprise ou
-            l&apos;occasion. <strong>Publier</strong>.
+            d&apos;être cité (« Sophie D. »), et si vous voulez son entreprise
+            ou l&apos;occasion. <strong>Publier</strong>.
           </>,
         ],
         tip: (
@@ -516,7 +516,20 @@ const GROUPS: Group[] = [
             Rogner l&apos;image ») et placez le point important : c&apos;est lui
             qui reste visible sur téléphone. <strong>Publier</strong>.
           </>,
+          <>
+            Sous la photo d&apos;ouverture, réglez{" "}
+            <strong>« La photo d&apos;ouverture est… »</strong> : sombre (texte
+            et menu en blanc) ou claire (texte et menu en noir), selon la zone
+            sous le titre.
+          </>,
         ],
+        tip: (
+          <>
+            Après avoir changé la photo d&apos;ouverture, ouvrez le site sur
+            ordinateur et sur téléphone : le titre et le menu doivent bien se
+            lire. Sinon, changez le réglage clair / sombre.
+          </>
+        ),
       },
       {
         title: "Vérifier sur le site",

@@ -835,3 +835,15 @@ html[data-v2-grid] .v2-debug {
     );
   }
 }
+
+/* A light hero photo (Studio: "La photo d'ouverture est… Claire"): the
+   transparent navbar over it is the hover state without the cream sheet —
+   black type and logo — from the first paint, before GSAP takes over (it
+   reads the same attribute, components/Navbar.tsx). */
+html:has([data-hero-tone="light"]) {
+  --nav-on-hero: #000000;
+}
+
+html:has([data-hero-tone="light"]) [data-nav-logo] {
+  filter: brightness(0);
+}

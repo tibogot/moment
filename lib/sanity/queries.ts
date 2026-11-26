@@ -278,6 +278,7 @@ export const homePageQuery = defineQuery(`*[_id == "homePage"][0] {
   heroHeadline,
   heroLead,
   heroImage { ..., "lqip": asset->metadata.lqip },
+  heroTone,
   kitchenImage,
   deliveryImage,
   hostingImage,
@@ -291,6 +292,8 @@ export type HomePageImages = {
   heroHeadline: LocaleString | null;
   heroLead: LocaleString | null;
   hero: (SanityImage & { lqip?: string }) | null;
+  /** "light": dark type over a light photo. Defaults to "dark". */
+  heroTone: "dark" | "light";
   kitchen: SanityImage | null;
   delivery: SanityImage | null;
   hosting: SanityImage | null;
@@ -303,6 +306,7 @@ const NO_HOME_IMAGES: HomePageImages = {
   heroHeadline: null,
   heroLead: null,
   hero: null,
+  heroTone: "dark",
   kitchen: null,
   delivery: null,
   hosting: null,
@@ -315,6 +319,7 @@ type HomePageResponse = {
   heroHeadline?: LocaleString | null;
   heroLead?: LocaleString | null;
   heroImage?: (SanityImage & { lqip?: string }) | null;
+  heroTone?: string | null;
   kitchenImage?: SanityImage | null;
   deliveryImage?: SanityImage | null;
   hostingImage?: SanityImage | null;
@@ -347,6 +352,7 @@ export async function getHomePageImages(): Promise<HomePageImages> {
       heroHeadline: response.heroHeadline ?? null,
       heroLead: response.heroLead ?? null,
       hero: uploaded(response.heroImage),
+      heroTone: response.heroTone === "light" ? "light" : "dark",
       kitchen: uploaded(response.kitchenImage),
       delivery: uploaded(response.deliveryImage),
       hosting: uploaded(response.hostingImage),

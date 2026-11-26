@@ -175,6 +175,8 @@ export default async function Home({
           // Full-bleed, and oversized again for the parallax drift.
           image={photo(images.hero, heroImage, 2400)}
           blurDataURL={images.hero?.lqip}
+          // Only with the owners' own photo: the built-in one is dark.
+          tone={images.hero ? images.heroTone : "dark"}
         />
         {/* The live home's intro, on the grid. Its headline is the page's h1:
             it names the trade and the city, the hero's slogan does not. */}
