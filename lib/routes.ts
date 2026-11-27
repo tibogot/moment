@@ -92,7 +92,10 @@ export const mainNav = [
   { key: "events", href: routes.events },
   { key: "coffee", href: routes.coffee },
   { key: "about", menu: "about" as const },
-  { key: "contact", href: routes.contact },
+  // In place of Contact since 27 November 2026, as the owners asked: Contact
+  // moved under About ("Nous contacter"), and the map of where to buy their
+  // products takes its place here.
+  { key: "findUs", href: routes.findUs },
 ] as const;
 
 /** The two nav entries that open a panel instead of going somewhere. */
@@ -101,19 +104,17 @@ export type NavMenuKey = "shop" | "about";
 /**
  * What sits behind "About".
  *
- * News sits in here and Contact deliberately does not. Seven top-level links
- * do not fit once the labels are French — "Événements" and "Actualités" are
- * half again as long as their English counterparts — and something had to give.
- * News is low-traffic editorial and groups naturally with the story; Contact is
- * where every quote, event and sur-devis delivery starts, and burying the
- * enquiry link to save fifty pixels would be a poor trade for a business that
- * sells by conversation.
+ * Contact lives here since 27 November 2026, as "Nous contacter": the owners'
+ * choice. It stays one click from every page anyway — the footer's "Contactez-
+ * nous" band, the footer links, and the quote links in the cart.
  */
 export const aboutNav = [
+  // The owners' three tabs (27 November 2026), in their order, then News,
+  // which only shows in a language that has an article (AboutNavProvider).
   { key: "story", href: routes.about },
-  { key: "news", href: routes.news },
   { key: "faq", href: routes.faq },
-  { key: "findUs", href: routes.findUs },
+  { key: "contact", href: routes.contact },
+  { key: "news", href: routes.news },
 ] as const;
 
 /** Footer legal strip — required for a Belgian ecommerce site. */

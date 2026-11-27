@@ -17,10 +17,11 @@
      Kept in sync by hand with NAV_MOBILE_MQ in components/Navbar.tsx — the
      media query there cannot read a Tailwind theme variable, and if the two
      disagree the nav renders inline links in a space built for a burger. */
-  /* 1440px since 27 November 2026, a stopgap: with "Collaborations" and the
-     bigger logo the French and Dutch links ran into the logo below ~1400px.
-     Back to 79.375rem (1270px) once the top bar is redesigned (Rond Carré). */
-  --breakpoint-nav: 90rem;
+  /* 1760px since 27 November 2026, a stopgap: with the owners' menu
+     (Collaborations, Comptoir café, Où nous trouver) and the bigger logo, the
+     French links only clear the logo from ~1750px (was 1270px, then 1440px).
+     Back down once the top bar is redesigned. */
+  --breakpoint-nav: 110rem;
 }
 
 :root {

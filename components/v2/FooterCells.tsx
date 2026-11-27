@@ -87,7 +87,7 @@ export function FooterCells() {
           )}
         >
           <p className={LABEL}>{dict.footer.explore}</p>
-          {(["shop", "collaborations", "events", "coffee", "contact"] as const).map(
+          {(["shop", "collaborations", "events", "coffee", "findUs"] as const).map(
             (key) => (
               <Link key={key} href={routes[key]} className={LINK}>
                 {dict.nav[key]}

@@ -85,7 +85,7 @@ const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
   "/v1",
 ]);
 /** Must match --breakpoint-nav in app/globals.css. */
-const NAV_MOBILE_MQ = "(width < 90rem)";
+const NAV_MOBILE_MQ = "(width < 110rem)";
 
 function subscribeMobileNav(onStoreChange: () => void) {
   const mq = window.matchMedia(NAV_MOBILE_MQ);
