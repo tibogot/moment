@@ -3,9 +3,9 @@
 import { CdnImage as Image } from "@/components/CdnImage";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useMemo, useState } from "react";
+import { CellGrid } from "@/components/v2/CellGrid";
 import { routes } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
-import { NAV_PREVIEW_COUNT } from "@/lib/shopify/queries";
 import { resolveFamilies, SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -15,284 +15,246 @@ type ShopNavMenuProps = {
   onNavigate?: () => void;
 };
 
-type HoverKey = "all" | "collections" | string;
+/** Families per row of the menu, each 4 cells of the 16 wide. */
+const FAMILIES_PER_ROW = 3;
+/** Grid rows a row of families takes. */
+const FAMILY_ROWS = 2;
+/** The photo: 4 cells wide, 4 rows tall — 3/4, like every cell. */
+const PHOTO_ROWS = 4;
 
-/* Shared with the collections query: it only bundles a few products per
-   collection, so a count set here alone would silently cap at whatever the
-   query fetched. */
-const PREVIEW_COUNT = NAV_PREVIEW_COUNT;
-
-const linkClassName =
-  "group block w-full py-1 font-owners-medium text-[12px] uppercase tracking-wide";
-
-const linkLabelClassName = "animated-underline";
-
-/* The previews are cards, not nav links: they take the shop grid's sky reveal
-   rather than the underline the column on the left uses. */
-const previewTitleClassName =
-  "font-owners-medium text-[12px] uppercase tracking-wide";
+/* Two type styles carry the hierarchy, not an indent: the families in the
+   bar's capitals, their sub-categories in the light text face. */
+const familyClassName =
+  "group block font-owners-medium text-(length:--nav-text) uppercase tracking-wide";
+const childClassName =
+  "group block font-archivo-light text-[14px] leading-snug";
+const smallLinkClassName =
+  "group block font-owners-medium text-[12px] uppercase tracking-wide";
+const labelClassName = "animated-underline";
 
 /*
- * The previews are cells of the column they sit in rather than cards of a fixed
- * rem width: the column is fluid (5 of 7 tracks) and fixed cards would leave it
- * 40% empty at 1920 while overflowing it at the 1270px nav breakpoint.
+ * The shop menu as a grid (27 November 2026, to try — the single column of
+ * thirteen-odd lines had no hierarchy to speak of): the owners' six families
+ * (lib/shopify/nav-groups.ts) as headings, three to a row, each in a block of
+ * 4 cells by 2 rows of the page's 16 / 3/4 grid, its sub-categories listed
+ * under it. Room for five or six sub-categories a family, and a seventh
+ * family just starts a new row.
  *
- * Every rule in here — the two spines and the dividers between cells — gets one
- * --v2-pad of clearance on each side, the cell padding of the v2 grid. That
- * makes the gap between cells two pads wide, so a cell is
- * (100% - 2 * PREVIEW_COUNT pads) / PREVIEW_COUNT, and a divider sits a whole
- * number of cell-plus-gap steps in. The row's own padding, the gap and the
- * cards' bleed must all use the same length: when the row moved to --v2-pad
- * and the rest stayed on --grid-gutter, the hover fill stopped short of the
- * dividers and the photos sat off-centre in their cells. At step PREVIEW_COUNT the formula
- * lands on 100% — the right spine — which is the check that the rules and the
- * cells cannot drift apart.
+ * On the right one photo, 4 cells by 4 rows, that follows the hovered family:
+ * the collection's own image from Shopify, else its first product's. Under
+ * it, the collection's name. At the bottom, one line: the moments of the day
+ * and "Tout" — a second way into the shop, not a third list.
+ *
+ * Every block is a `data-grid-hole`, so the grid draws only the rules
+ * between them; a family slot left empty is one plain block too.
  */
-const previewMetrics = {
-  "--preview-gap": "calc(2 * var(--v2-pad))",
-  "--preview-card": `calc((100% - ${2 * PREVIEW_COUNT} * var(--v2-pad)) / ${PREVIEW_COUNT})`,
-} as React.CSSProperties;
-
-/* Always PREVIEW_COUNT tracks, even when a collection has fewer products to
-   show: a short row has to keep the cell width the dividers are drawn against,
-   so two previews sit in the first two cells rather than stretching over all
-   three. */
-const previewRowStyle = {
-  gridTemplateColumns: `repeat(${PREVIEW_COUNT}, minmax(0, 1fr))`,
-} as React.CSSProperties;
-
-function productsWithImages(products: ShopifyProduct[]) {
-  return products.filter((product) => product.imageUrl);
-}
-
-function getPreviewProducts(
-  hovered: HoverKey | null,
-  collections: ShopifyCollection[],
-  allProducts: ShopifyProduct[],
-): ShopifyProduct[] {
-  if (hovered === null || hovered === "all") {
-    return productsWithImages(allProducts).slice(0, PREVIEW_COUNT);
-  }
-
-  if (hovered === "collections") {
-    const picks: ShopifyProduct[] = [];
-
-    for (const collection of collections) {
-      const product = productsWithImages(collection.products)[0];
-      if (product) {
-        picks.push(product);
-        if (picks.length >= PREVIEW_COUNT) break;
-      }
-    }
-
-    return picks;
-  }
-
-  const collection = collections.find((item) => item.handle === hovered);
-  if (collection) {
-    return productsWithImages(collection.products).slice(0, PREVIEW_COUNT);
-  }
-
-  return productsWithImages(allProducts).slice(0, PREVIEW_COUNT);
-}
-
-type PreviewProductCardProps = {
-  product: ShopifyProduct;
-  onNavigate?: () => void;
-};
-
-function PreviewProductCard({ product, onNavigate }: PreviewProductCardProps) {
-  if (!product.imageUrl) return null;
-
-  /* The reveal has to fill the ruled cell, like it does in the shop grid, so
-     the card owns the whole cell rather than sitting inside it: horizontally it
-     bleeds one --v2-pad each side and pads one back in — half the gap either way,
-     which lands exactly on the dividers while leaving the image at the cell
-     width — and vertically it takes the row's padding as its own, so it runs
-     the full height the dividers do without the image moving. */
-  return (
-    <Link
-      href={routes.product(product.handle)}
-      className="product-card group -mx-(--v2-pad) flex h-full min-w-0 flex-col gap-3 px-(--v2-pad) pt-[4svh] pb-4 transition-colors duration-500"
-      onClick={onNavigate}
-    >
-      <div className="product-card__image relative aspect-4/5 overflow-hidden">
-        <Image
-          src={product.imageUrl}
-          alt={product.imageAlt}
-          fill
-          sizes="15vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-      </div>
-      <div className="flex flex-col gap-0.5">
-        <span className={previewTitleClassName}>{product.title}</span>
-        {/* Same length as the shop grid's price rather than a local size, so
-            the two stay in step — Archivo Light needs the couple of extra px
-            over the Owners Medium title above it. */}
-        <span className="font-archivo-light text-(length:--card-price)">
-          {product.displayPrice}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
 export function ShopNavMenu({
   products,
   collections,
   onNavigate,
 }: ShopNavMenuProps) {
   const dict = useDictionary();
-  const [hovered, setHovered] = useState<HoverKey | null>(null);
-
-  const previewProducts = useMemo(
-    () => getPreviewProducts(hovered, collections, products),
-    [hovered, collections, products],
-  );
+  const [hovered, setHovered] = useState<string | null>(null);
 
   const families = useMemo(() => resolveFamilies(collections), [collections]);
 
-  const setHover = (key: HoverKey) => () => setHovered(key);
-  const resetHover = () => setHovered(null);
+  const moments = useMemo(
+    () =>
+      SHOP_NAV_GROUPS.flatMap((group) =>
+        group.items.flatMap((item) => {
+          const collection = collections.find((c) => c.handle === item.handle);
+          return collection
+            ? [{ collection, label: dict.home.moments[item.label] }]
+            : [];
+        }),
+      ),
+    [collections, dict],
+  );
+
+  /* The collection the photo shows: the hovered one, else the first family.
+     Falls back to a product photo when no collection has an image. */
+  const shown =
+    collections.find((c) => c.handle === hovered && c.imageUrl) ??
+    families.find(({ collection }) => collection.imageUrl)?.collection ??
+    null;
+  const fallbackProduct = products.find((product) => product.imageUrl);
+  const photo = shown
+    ? { src: shown.imageUrl!, alt: shown.imageAlt, title: shown.title }
+    : fallbackProduct
+      ? {
+          src: fallbackProduct.imageUrl!,
+          alt: fallbackProduct.imageAlt,
+          title: dict.nav.all,
+        }
+      : null;
+  const photoHref = shown ? routes.collection(shown.handle) : routes.shop;
+
+  const familyRows = Math.max(
+    PHOTO_ROWS,
+    Math.ceil(families.length / FAMILIES_PER_ROW) * FAMILY_ROWS,
+  );
+  const bottomRow = familyRows + 1;
+
+  const hover = (handle: string | null) => ({
+    onMouseEnter: () => setHovered(handle),
+    onFocus: () => setHovered(handle),
+  });
 
   return (
-    <div
-      className="grid border-t border-sky"
-      style={{ gridTemplateColumns: "var(--grid-columns)" }}
-      onMouseLeave={resetHover}
-    >
-      <nav
-        aria-label={dict.nav.shop}
-        className="relative col-start-2 col-end-4 flex flex-col gap-1 self-start px-(--v2-pad) pt-[4svh] pb-[4svh]"
-      >
-        <Link
-          href={routes.shop}
-          className={linkClassName}
-          onMouseEnter={setHover("all")}
-          onFocus={setHover("all")}
-          onClick={onNavigate}
+    <div className="v2" onMouseLeave={() => setHovered(null)}>
+      <section className="relative border-b border-sky bg-cream">
+        <CellGrid
+          lineClassName="bg-sky"
+          bands={false}
+          readout={false}
+          subdivide={2}
+          linesOnTop
+        />
+        <nav
+          aria-label={dict.nav.shop}
+          className="relative grid"
+          style={{
+            gridTemplateColumns: "var(--s-grid-columns)",
+            gridTemplateRows: `repeat(${bottomRow}, var(--s-cell-h))`,
+          }}
         >
-          <span className={linkLabelClassName}>{dict.nav.all}</span>
-        </Link>
-        {/* The owners' six families, then their sub-categories indented
-            (lib/shopify/nav-groups.ts). Empty ones are left out. */}
-        {families.length > 0 && (
-          <div className="mt-4 flex flex-col gap-1">
-            {families.map(({ collection, children }) => (
-              <div key={collection.handle} className="flex flex-col gap-1">
-                <Link
-                  href={routes.collection(collection.handle)}
-                  className={linkClassName}
-                  onMouseEnter={setHover(collection.handle)}
-                  onFocus={setHover(collection.handle)}
-                  onClick={onNavigate}
-                >
-                  <span className={linkLabelClassName}>{collection.title}</span>
-                </Link>
-                {children.map((child) => (
+          {families.map(({ collection, children }, index) => (
+            <div
+              key={collection.handle}
+              data-grid-hole
+              className="flex min-w-0 flex-col gap-3 p-(--v2-pad)"
+              style={{
+                gridColumn: `${2 + (index % FAMILIES_PER_ROW) * 4} / span 4`,
+                gridRow: `${1 + Math.floor(index / FAMILIES_PER_ROW) * FAMILY_ROWS} / span ${FAMILY_ROWS}`,
+              }}
+            >
+              <Link
+                href={routes.collection(collection.handle)}
+                className={familyClassName}
+                onClick={onNavigate}
+                {...hover(collection.handle)}
+              >
+                <span className={labelClassName}>{collection.title}</span>
+              </Link>
+              {children.length > 0 && (
+                <ul className="flex flex-col gap-1.5">
+                  {children.map((child) => (
+                    <li key={child.handle}>
+                      <Link
+                        href={routes.collection(child.handle)}
+                        className={childClassName}
+                        onClick={onNavigate}
+                        {...hover(child.handle)}
+                      >
+                        <span className={labelClassName}>{child.title}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+
+          {/* The slots a family has not filled yet (Breads & Toast before
+              its first product): one plain block each, not loose cells. */}
+          {Array.from(
+            {
+              length:
+                (familyRows / FAMILY_ROWS) * FAMILIES_PER_ROW - families.length,
+            },
+            (_, offset) => {
+              const index = families.length + offset;
+              return (
+                <div
+                  key={`empty-${index}`}
+                  data-grid-hole
+                  aria-hidden
+                  style={{
+                    gridColumn: `${2 + (index % FAMILIES_PER_ROW) * 4} / span 4`,
+                    gridRow: `${1 + Math.floor(index / FAMILIES_PER_ROW) * FAMILY_ROWS} / span ${FAMILY_ROWS}`,
+                  }}
+                />
+              );
+            },
+          )}
+
+          {/* The bottom line: the moments of the day, then everything. */}
+          <div
+            data-grid-hole
+            className="flex min-w-0 items-end justify-between gap-6 p-(--v2-pad)"
+            style={{ gridColumn: "2 / span 12", gridRow: `${bottomRow}` }}
+          >
+            {moments.length > 0 ? (
+              <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+                <p className="font-archivo-light text-[14px] opacity-60">
+                  {dict.nav.byMoment}
+                </p>
+                {moments.map(({ collection, label }) => (
                   <Link
-                    key={child.handle}
-                    href={routes.collection(child.handle)}
-                    className={`${linkClassName} pl-4 opacity-70`}
-                    onMouseEnter={setHover(child.handle)}
-                    onFocus={setHover(child.handle)}
+                    key={collection.handle}
+                    href={routes.collection(collection.handle)}
+                    className={smallLinkClassName}
                     onClick={onNavigate}
+                    {...hover(collection.handle)}
                   >
-                    <span className={linkLabelClassName}>{child.title}</span>
+                    <span className={labelClassName}>{label}</span>
                   </Link>
                 ))}
               </div>
-            ))}
+            ) : (
+              <span />
+            )}
+            <Link
+              href={routes.shop}
+              className={familyClassName}
+              onClick={onNavigate}
+              {...hover(null)}
+            >
+              <span className={labelClassName}>{dict.nav.all} →</span>
+            </Link>
           </div>
-        )}
-        {/* Then the moments of the day (lib/shopify/nav-groups.ts). */}
-        {SHOP_NAV_GROUPS.map((group) => {
-          const items = group.items.filter((item) =>
-            collections.some((collection) => collection.handle === item.handle),
-          );
-          if (items.length === 0) return null;
-          const labels =
-            group.source === "moments"
-              ? dict.home.moments
-              : dict.home.selections;
-          return (
-            <div key={group.key} className="mt-4 flex flex-col gap-1">
-              <p className="font-archivo-light text-[12px] opacity-60">
-                {dict.nav[group.key]}
-              </p>
-              {items.map((item) => (
-                <Link
-                  key={item.handle}
-                  href={routes.collection(item.handle)}
-                  className={linkClassName}
-                  onMouseEnter={setHover(item.handle)}
-                  onFocus={setHover(item.handle)}
-                  onClick={onNavigate}
-                >
-                  <span className={linkLabelClassName}>
-                    {labels[item.label as keyof typeof labels]}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          );
-        })}
-        <Link
-          href={routes.collections}
-          className={`${linkClassName} mt-4`}
-          onMouseEnter={setHover("collections")}
-          onFocus={setHover("collections")}
-          onClick={onNavigate}
-        >
-          <span className={linkLabelClassName}>{dict.nav.collections}</span>
-        </Link>
-      </nav>
 
-      {previewProducts.length > 0 && (
-        <div className="relative col-start-4 col-end-9" style={previewMetrics}>
-          <span
-            className="pointer-events-none absolute inset-y-0 left-0 w-(--grid-line) bg-sky"
+          {/* The photo, 3/4, and the name of what it shows under it. Both
+              blocks are always there, even before the catalogue has an image:
+              the grid takes its holes when it mounts, and a block added later
+              would get the cell rules drawn across it. */}
+          <Link
+            href={photoHref}
+            onClick={onNavigate}
+            tabIndex={-1}
             aria-hidden
-          />
-          <span
-            className="pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) bg-sky"
-            aria-hidden
-          />
-
-          {/* A rule per gap, so every preview sits in its own ruled cell. They
-              run the full column height like the two spines either side — cut
-              to the height of the cards they would read as a different line. */}
-          {previewProducts.slice(1).map((product, index) => (
-            <span
-              key={`divider-${product.id}`}
-              className="pointer-events-none absolute inset-y-0 w-(--grid-line) bg-sky"
-              style={{
-                left: `calc(${index + 1} * (var(--preview-card) + var(--preview-gap)))`,
-              }}
-              aria-hidden
-            />
-          ))}
-
-          {/* The vertical padding lives on the cards, not here, so their hover
-              fill reaches the same top and bottom as the rules beside them. */}
-          <div
-            className="grid h-full gap-(--preview-gap) px-(--v2-pad)"
-            style={previewRowStyle}
+            data-grid-hole
+            className="relative min-w-0 overflow-hidden"
+            style={{
+              gridColumn: "14 / span 4",
+              gridRow: `1 / span ${PHOTO_ROWS}`,
+            }}
           >
-            {previewProducts.map((product) => (
-              <PreviewProductCard
-                key={product.id}
-                product={product}
-                onNavigate={onNavigate}
+            {photo && (
+              <Image
+                key={photo.src}
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="25vw"
+                className="animate-[v2-fade_400ms_ease-out] object-cover"
               />
-            ))}
+            )}
+          </Link>
+          <div
+            data-grid-hole
+            className="flex min-w-0 items-end p-(--v2-pad)"
+            style={{
+              gridColumn: "14 / span 4",
+              gridRow: `${PHOTO_ROWS + 1} / span ${bottomRow - PHOTO_ROWS}`,
+            }}
+          >
+            <span className="font-owners-medium text-[12px] tracking-wide uppercase">
+              {photo?.title}
+            </span>
           </div>
-        </div>
-      )}
-
-      <div className="col-span-full h-(--grid-line) bg-sky" aria-hidden />
-      <div className="col-span-full min-h-(--grid-band)" />
+        </nav>
+      </section>
     </div>
   );
 }

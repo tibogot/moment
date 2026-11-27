@@ -215,7 +215,8 @@ export function MobileNavMenu({
     shop: [
       { href: routes.shop, label: dict.nav.all },
       // As on desktop: the owners' families with their sub-categories, then
-      // the moments, then every collection (lib/shopify/nav-groups.ts).
+      // the moments (lib/shopify/nav-groups.ts). "Collections" left both
+      // menus on 27 November 2026: the families and moments cover it.
       ...resolveFamilies(collections).flatMap(({ collection, children }) => [
         { href: routes.collection(collection.handle), label: collection.title },
         ...children.map((child) => ({
@@ -236,7 +237,6 @@ export function MobileNavMenu({
             label: labels[item.label as keyof typeof labels],
           }));
       }),
-      { href: routes.collections, label: dict.nav.collections },
     ],
     about: aboutNav.map(({ key, href }) => ({
       href,
@@ -415,16 +415,18 @@ export function MobileNavMenu({
                     >
                       <ul className="flex flex-col gap-2 border-t border-sky px-(--grid-inset) py-4">
                         {children.map((child) => (
-                          <li
-                            key={child.href}
-                            className={
-                              child.indent ? "pl-4 opacity-70" : undefined
-                            }
-                          >
+                          <li key={child.href}>
+                            {/* A sub-category in the light face, as in the
+                                desktop menu — the type marks the level, not
+                                an indent. */}
                             <Link
                               href={child.href}
                               onClick={handleClose}
-                              className="font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                              className={
+                                child.indent
+                                  ? "font-archivo-light text-[14px] transition-opacity hover:opacity-60"
+                                  : "font-owners-medium text-[12px] uppercase tracking-wide transition-opacity hover:opacity-60"
+                              }
                             >
                               {child.label}
                             </Link>
