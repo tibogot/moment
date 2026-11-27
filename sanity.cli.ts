@@ -18,6 +18,8 @@ import { sanityDataset, sanityProjectId } from "@/lib/sanity/env";
  */
 export default defineCliConfig({
   studioHost: "moment-lab",
+  // The hosted Studio's id, so `sanity deploy` updates it without asking.
+  deployment: { appId: "bxeelgyog7vbhralw7z9hlfd" },
   api: {
     projectId: sanityProjectId,
     dataset: sanityDataset,
