@@ -106,7 +106,8 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
 
 - [ ] **Studio hébergé** : dans `sanity/actions/viewOnSite.ts`, passer
       `SITE_IS_LIVE` à `true`, pousser, puis `npm run studio:deploy` — le
-      bouton « Voir sur le site » réapparaît sur moment-lab.sanity.studio.
+      bouton « Voir sur le site » du Studio hébergé ouvre alors www au lieu
+      du site de test.
 
 ## Jour J — 5. Les vérifications
 

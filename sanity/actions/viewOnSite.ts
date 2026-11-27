@@ -41,24 +41,21 @@ const PATHS: Record<string, (doc: SanityDocument) => string | null> = {
  * the real domain when it runs on Sanity's hosting (moment-lab.sanity.studio).
  */
 function siteOrigin() {
-  return window.location.hostname.endsWith(".sanity.studio")
-    ? "https://www.moment-lab.be"
-    : window.location.origin;
+  if (!window.location.hostname.endsWith(".sanity.studio")) {
+    return window.location.origin;
+  }
+  return SITE_IS_LIVE ? "https://www.moment-lab.be" : TEST_SITE;
 }
 
 /**
- * Flip to `true` on launch day (docs/launch-runbook.md): until then
- * www.moment-lab.be is not the site, so the hosted Studio
- * (moment-lab.sanity.studio) shows no "Voir sur le site" rather than a button
- * that opens the wrong page. The Studio at /studio inside the site keeps it.
+ * Flip to `true` on launch day (docs/launch-runbook.md). Until then
+ * www.moment-lab.be still redirects to the owners' Instagram, so the hosted
+ * Studio's "Voir sur le site" opens the (private) test site instead.
  */
 const SITE_IS_LIVE = false;
+const TEST_SITE = "https://moment-drab-ten.vercel.app";
 
 export function hasSitePage(type: string) {
-  const hosted =
-    typeof window !== "undefined" &&
-    window.location.hostname.endsWith(".sanity.studio");
-  if (hosted && !SITE_IS_LIVE) return false;
   return type in PATHS;
 }
 
