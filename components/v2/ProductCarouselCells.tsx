@@ -34,6 +34,12 @@ type ProductCarouselCellsProps = {
    * rule is the one over the cards.
    */
   joined?: boolean;
+  /**
+   * A large title on a row of its own above the tabs, in the type of the
+   * offer cards' "Pour chaque moment" (the home's second carousel, "Nos
+   * collections", 27 November 2026). It is then the section's h2.
+   */
+  title?: string;
 };
 
 /**
@@ -66,6 +72,7 @@ export function ProductCarouselCells({
   nextLabel,
   defaultTabId,
   joined = false,
+  title,
 }: ProductCarouselCellsProps) {
   const reactId = useId();
   const dictionary = useDictionary();
@@ -206,20 +213,36 @@ export function ProductCarouselCells({
         topRule={!joined}
       />
       <div
-        className="relative grid [--rows:4] md:[--rows:5]"
+        className={cn(
+          "relative grid",
+          title ? "[--rows:5] md:[--rows:6]" : "[--rows:4] md:[--rows:5]",
+        )}
         style={{
           gridTemplateColumns: "var(--s-grid-columns)",
           gridTemplateRows: "repeat(var(--rows), var(--s-cell-h))",
         }}
       >
-        {/* Row 1: the tabs, the arrows and "see all". */}
+        {title && (
+          <div
+            data-grid-hole
+            className="col-[2/span_4] row-[1] flex min-w-0 items-end p-(--v2-pad) md:col-[2/span_12] lg:col-[2/span_16]"
+          >
+            <h2 className="font-owners-narrow-bold text-[9vw] leading-[0.9] tracking-[-0.005em] uppercase md:text-[length:calc(var(--s-cell-w)*0.55)]">
+              {title}
+            </h2>
+          </div>
+        )}
+        {/* The tabs, the arrows and "see all": row 1, or 2 under a title. */}
         <div
           data-grid-hole
-          className="col-[2/span_4] row-[1] flex min-w-0 flex-col justify-end gap-3 p-(--v2-pad) md:col-[2/span_12] md:flex-row md:items-end md:justify-between lg:col-[2/span_16]"
+          className={cn(
+            title ? "row-[2]" : "row-[1]",
+            "col-[2/span_4] flex min-w-0 flex-col justify-end gap-3 p-(--v2-pad) md:col-[2/span_12] md:flex-row md:items-end md:justify-between lg:col-[2/span_16]",
+          )}
         >
           {/* With tabs there is no visible heading, and the cards are h3s:
               a hidden h2 keeps the page outline h1 → h2 → h3. */}
-          {showTabs && (
+          {showTabs && !title && (
             <h2 className="sr-only">{dictionary.home.moments.heading}</h2>
           )}
           {showTabs ? (
@@ -313,7 +336,10 @@ export function ProductCarouselCells({
           role={showTabs ? "tabpanel" : undefined}
           aria-labelledby={showTabs ? `${reactId}-tab-${active.id}` : undefined}
           data-grid-hole
-          className="relative col-[2/span_4] row-[2/-1] min-w-0 overflow-hidden md:col-[2/span_12] lg:col-[2/span_16] drag-carousel"
+          className={cn(
+            title ? "row-[3/-1]" : "row-[2/-1]",
+            "relative col-[2/span_4] min-w-0 overflow-hidden md:col-[2/span_12] lg:col-[2/span_16] drag-carousel",
+          )}
           style={{ touchAction: "pan-y" }}
         >
           <ul

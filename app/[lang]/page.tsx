@@ -262,17 +262,15 @@ export default async function Home({
         {/* The owners' four collections, a second way into the shop halfway
             down the page. */}
         {familyTabs.length > 0 && (
-          <>
-            <GridSpacer />
-            <ProductCarouselCells
-              tabs={familyTabs}
-              defaultTabId={familyTabs[0].id}
-              shopLink={{ href: routes.shop, label: home.moments.shop }}
-              soldOutLabel={dict.product.soldOut}
-              prevLabel={home.calendar.prev}
-              nextLabel={home.calendar.next}
-            />
-          </>
+          <ProductCarouselCells
+            title={home.collections.label}
+            tabs={familyTabs}
+            defaultTabId={familyTabs[0].id}
+            shopLink={{ href: routes.shop, label: home.moments.shop }}
+            soldOutLabel={dict.product.soldOut}
+            prevLabel={home.calendar.prev}
+            nextLabel={home.calendar.next}
+          />
         )}
         {/* "La table" left on 27 November 2026 (the owners' text document:
             "à supprimer"). Its Studio photo slot is hidden, not deleted. */}
