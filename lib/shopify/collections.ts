@@ -55,6 +55,8 @@ function mapCollectionNode(
     imageUrl: node.image?.url ?? productImage?.url ?? null,
     imageAlt: node.image?.altText ?? productImage?.altText ?? node.title,
     products,
+    hasProducts:
+      products.length > 0 || (node.firstProduct?.edges.length ?? 0) > 0,
   };
 }
 
@@ -178,6 +180,7 @@ async function fetchCollectionByHandle(
     imageUrl: collection.image?.url ?? products[0]?.imageUrl ?? null,
     imageAlt: collection.image?.altText ?? collection.title,
     products,
+    hasProducts: products.length > 0,
   } satisfies CollectionWithProducts;
 }
 

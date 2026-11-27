@@ -112,6 +112,12 @@
       "shop": "Alle producten",
       "heading": "Onze producten"
     },
+    "collectionTabs": {
+      "juices": "Cold Pressed Juices",
+      "dailyPots": "Daily Pots",
+      "desserts": "Desserts",
+      "snacks": "Healthy Snacks"
+    },
     "offer": {
       "title": "Voor elk moment",
       "events": {

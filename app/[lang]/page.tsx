@@ -93,6 +93,19 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * After the moments, the four collections the owners asked for on the home
+ * (their text document, 26 November 2026: "COLLECTIONS — Cold Pressed Juices
+ * (tous nos jus), Daily Pots (salades et sweet pots), Desserts, Healthy
+ * Snacks"). An empty or missing one is left out.
+ */
+const COLLECTION_TABS = [
+  { key: "juices", handle: "cold-pressed-juice" },
+  { key: "dailyPots", handle: "daily-pots" },
+  { key: "desserts", handle: "desserts-sweets" },
+  { key: "snacks", handle: "healthy-snacks" },
+] as const;
+
 /** The moments, in the day's order, and the Shopify collection of each. */
 const MOMENTS = [
   { key: "brunch", handle: "petit-dejeuner" },
@@ -128,22 +141,33 @@ export default async function Home({
   // Phone, e-mail, hours and social from the Studio ("Infos pratiques").
   const siteDetails = await getSiteDetails();
   const locale = toLocale((await params).lang);
-  const [dict, collections, availability, images, testimonials] =
-    await Promise.all([
-      getDictionary(locale),
-      Promise.all(
-        MOMENTS.map(({ handle }) =>
-          // A collection that fails to load is left out, as on the live home.
-          getCollectionByHandle(locale, handle).catch(() => null),
-        ),
+  const [
+    dict,
+    collections,
+    collectionTabs,
+    availability,
+    images,
+    testimonials,
+  ] = await Promise.all([
+    getDictionary(locale),
+    Promise.all(
+      MOMENTS.map(({ handle }) =>
+        // A collection that fails to load is left out, as on the live home.
+        getCollectionByHandle(locale, handle).catch(() => null),
       ),
-      getDeliveryAvailability(),
-      getHomePageImages(),
-      getTestimonials(),
-    ]);
+    ),
+    Promise.all(
+      COLLECTION_TABS.map(({ handle }) =>
+        getCollectionByHandle(locale, handle).catch(() => null),
+      ),
+    ),
+    getDeliveryAvailability(),
+    getHomePageImages(),
+    getTestimonials(),
+  ]);
   const home = dict.home;
 
-  const tabs = MOMENTS.flatMap(({ key, handle }, index) => {
+  const momentTabs = MOMENTS.flatMap(({ key, handle }, index) => {
     const collection = collections[index];
     if (!collection) return [];
     return [
@@ -154,6 +178,21 @@ export default async function Home({
       },
     ];
   });
+  const familyTabs = COLLECTION_TABS.flatMap(({ key, handle }, index) => {
+    const collection = collectionTabs[index];
+    if (!collection || collection.products.length === 0) return [];
+    return [
+      {
+        id: handle,
+        label: home.collectionTabs[key],
+        products: collection.products,
+      },
+    ];
+  });
+  const tabs = [
+    ...momentTabs,
+    ...familyTabs.map((tab, index) => ({ ...tab, startsGroup: index === 0 })),
+  ];
 
   return (
     <>

@@ -1,15 +1,59 @@
+import type { ShopifyCollection } from "@/lib/shopify/queries";
+
 /**
- * What the shop menu offers (26 November 2026), instead of every collection
- * in the shop: a flat list of fourteen mixed product types ("Cakes"), a
- * moment ("Pause") and occasions ("Pour le bureau") for thirty products, with
- * nothing saying which was which. Two groups the brand is built on — the
- * moments of the day, as in the home's carousel tabs, and the occasions — and
- * the product types stay one click away under "Collections" and in the shop's
- * filters. A collection the owners add later does not crowd the menu.
+ * The owners' six families (their text document, 26 November 2026, page 6:
+ * "Nos produits — Tous les produits, puis les six familles de la carte"), each
+ * a Shopify collection filled from the product type, some with the
+ * sub-categories they listed. Names are the collections' titles in Shopify,
+ * in English in every language, as the owners wrote them.
  *
- * `label` is a key into the dictionary: `home.moments` for the moments,
- * `home.selections` for the occasions. An entry whose collection is missing
- * from the shop is simply not shown.
+ * A family or a sub-category with no product yet (Breads & Toast, Dips… until
+ * the owners give their products those types) is left out of the menu, and
+ * comes back by itself with its first product.
+ */
+export const SHOP_FAMILIES = [
+  {
+    handle: "cold-pressed-juice-drinks",
+    children: ["cold-pressed-juice", "other-drinks"],
+  },
+  { handle: "daily-pots", children: ["sweet-pots", "salads", "dips"] },
+  { handle: "breads-toast", children: ["bagels-sandwiches", "toasts"] },
+  { handle: "desserts-sweets", children: [] },
+  { handle: "healthy-snacks", children: [] },
+  { handle: "grocery-pantry", children: [] },
+] as const;
+
+export type NavFamily = {
+  collection: ShopifyCollection;
+  children: ShopifyCollection[];
+};
+
+/** The families that have products, with their non-empty sub-categories. */
+export function resolveFamilies(
+  collections: readonly ShopifyCollection[],
+): NavFamily[] {
+  const byHandle = new Map(collections.map((c) => [c.handle, c]));
+  const filled = (handle: string) => {
+    const collection = byHandle.get(handle);
+    return collection?.hasProducts ? collection : null;
+  };
+
+  return SHOP_FAMILIES.flatMap((family) => {
+    const collection = filled(family.handle);
+    if (!collection) return [];
+    const children = family.children.flatMap((handle) => {
+      const child = filled(handle);
+      return child ? [child] : [];
+    });
+    return [{ collection, children }];
+  });
+}
+
+/**
+ * Below the families: the moments of the day, as in the home's carousel tabs
+ * (the occasions left the menu on 27 November 2026 — they stay in the shop's
+ * filters). `label` is a key into `home.moments`. An entry whose collection is
+ * missing from the shop is simply not shown.
  */
 export const SHOP_NAV_GROUPS = [
   {
@@ -19,15 +63,6 @@ export const SHOP_NAV_GROUPS = [
       { handle: "petit-dejeuner", label: "brunch" },
       { handle: "salades", label: "lunch" },
       { handle: "pause", label: "pause" },
-    ],
-  },
-  {
-    key: "byOccasion",
-    source: "selections",
-    items: [
-      { handle: "pour-la-maison", label: "home" },
-      { handle: "pour-le-bureau", label: "office" },
-      { handle: "pour-les-evenements", label: "events" },
     ],
   },
 ] as const;

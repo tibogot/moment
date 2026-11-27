@@ -251,6 +251,8 @@ export type ShopifyCollection = {
   imageUrl: string | null;
   imageAlt: string;
   products: ShopifyProduct[];
+  /** False for a collection with no product (yet). */
+  hasProducts: boolean;
 };
 
 export type ShopifyCollectionNode = {
@@ -261,7 +263,9 @@ export type ShopifyCollectionNode = {
   updatedAt?: string;
   description: string;
   image: { url: string; altText: string | null } | null;
-  products: { edges: { node: ShopifyProductNode }[] };
+  products?: { edges: { node: ShopifyProductNode }[] };
+  /** The links query only: one product id, or none. */
+  firstProduct?: { edges: { node: { id: string } }[] };
 };
 
 export type CollectionsQueryResponse = {
@@ -312,6 +316,15 @@ export const COLLECTION_LINKS_QUERY = `
       edges {
         node {
           ${COLLECTION_FIELDS}
+          # One product id, to tell an empty collection from a full one: the
+          # menu hides a family nobody has filed a product into yet.
+          firstProduct: products(first: 1) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
         }
       }
     }

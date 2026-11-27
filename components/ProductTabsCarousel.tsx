@@ -20,6 +20,8 @@ export type ProductCarouselTab = {
   label: string;
   products: ShopifyProduct[];
   viewAllHref?: string;
+  /** First of a new group of tabs: a separator is drawn before it. */
+  startsGroup?: boolean;
 };
 
 type ProductTabsCarouselProps = {

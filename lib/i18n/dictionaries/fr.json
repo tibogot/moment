@@ -112,6 +112,12 @@
       "shop": "Tous les produits",
       "heading": "Nos produits"
     },
+    "collectionTabs": {
+      "juices": "Cold Pressed Juices",
+      "dailyPots": "Daily Pots",
+      "desserts": "Desserts",
+      "snacks": "Healthy Snacks"
+    },
     "offer": {
       "title": "Pour chaque moment",
       "events": {

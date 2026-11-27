@@ -224,12 +224,24 @@ export function ProductCarouselCells({
           )}
           {showTabs ? (
             <ul
-              className="flex flex-wrap gap-x-5 gap-y-2"
+              // One line that scrolls sideways on a phone: with the owners' four
+              // collections after the moments (27 November 2026) the wrapped
+              // tabs ran out of their cell.
+              className="-mx-(--v2-pad) flex gap-x-5 gap-y-2 overflow-x-auto px-(--v2-pad) whitespace-nowrap [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
               role="tablist"
               aria-label={tabs.map((tab) => tab.label).join(", ")}
             >
               {tabs.map((tab) => (
-                <li key={tab.id} role="presentation">
+                <li
+                  key={tab.id}
+                  role="presentation"
+                  className={cn(
+                    // The owners' two groups: the moments, then the
+                    // collections (27 November 2026).
+                    tab.startsGroup &&
+                      "before:mr-5 before:inline-block before:h-[0.9em] before:w-(--grid-line) before:translate-y-[0.1em] before:bg-black/30 before:content-['']",
+                  )}
+                >
                   <button
                     type="button"
                     role="tab"

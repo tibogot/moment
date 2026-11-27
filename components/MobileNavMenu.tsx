@@ -26,7 +26,7 @@ import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { type SiteDetails } from "@/lib/site";
-import { SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
+import { resolveFamilies, SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
 import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
@@ -208,11 +208,22 @@ export function MobileNavMenu({
   // The same two panels the desktop nav opens, flattened to label + href.
   // Shop's children come from Shopify and About's are fixed, which is the only
   // reason they are built here rather than shared with the desktop menus.
-  const menuChildren: Record<NavMenuKey, { href: string; label: string }[]> = {
+  const menuChildren: Record<
+    NavMenuKey,
+    { href: string; label: string; indent?: boolean }[]
+  > = {
     shop: [
       { href: routes.shop, label: dict.nav.all },
-      // The same two groups as the desktop menu, flattened: moments, then
-      // occasions, then every collection (lib/shopify/nav-groups.ts).
+      // As on desktop: the owners' families with their sub-categories, then
+      // the moments, then every collection (lib/shopify/nav-groups.ts).
+      ...resolveFamilies(collections).flatMap(({ collection, children }) => [
+        { href: routes.collection(collection.handle), label: collection.title },
+        ...children.map((child) => ({
+          href: routes.collection(child.handle),
+          label: child.title,
+          indent: true,
+        })),
+      ]),
       ...SHOP_NAV_GROUPS.flatMap((group) => {
         const labels =
           group.source === "moments" ? dict.home.moments : dict.home.selections;
@@ -394,11 +405,22 @@ export function MobileNavMenu({
 
                     <div
                       className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                      style={{ maxHeight: expanded ? "24rem" : "0" }}
+                      // Sized to the list, not a fixed 24rem: the shop menu grew to the
+                      // owners' families (27 November 2026) and was cut off.
+                      style={{
+                        maxHeight: expanded
+                          ? `${children.length * 2 + 2}rem`
+                          : "0",
+                      }}
                     >
                       <ul className="flex flex-col gap-2 border-t border-sky px-(--grid-inset) py-4">
                         {children.map((child) => (
-                          <li key={child.href}>
+                          <li
+                            key={child.href}
+                            className={
+                              child.indent ? "pl-4 opacity-70" : undefined
+                            }
+                          >
                             <Link
                               href={child.href}
                               onClick={handleClose}

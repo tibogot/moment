@@ -48,7 +48,7 @@ export const SHOPIFY_CACHE_TAG = "shopify-products";
  * data cache outlives deployments, so without a new key the old entries keep
  * being served until the backstop expires them.
  */
-export const SHOPIFY_CACHE_VERSION = "v3";
+export const SHOPIFY_CACHE_VERSION = "v4";
 
 /**
  * The price is formatted in the page's language — "5,50 €" in French and

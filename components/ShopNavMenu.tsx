@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { routes } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
 import { NAV_PREVIEW_COUNT } from "@/lib/shopify/queries";
-import { SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
+import { resolveFamilies, SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 
 type ShopNavMenuProps = {
@@ -151,6 +151,8 @@ export function ShopNavMenu({
     [hovered, collections, products],
   );
 
+  const families = useMemo(() => resolveFamilies(collections), [collections]);
+
   const setHover = (key: HoverKey) => () => setHovered(key);
   const resetHover = () => setHovered(null);
 
@@ -173,9 +175,38 @@ export function ShopNavMenu({
         >
           <span className={linkLabelClassName}>{dict.nav.all}</span>
         </Link>
-        {/* Two groups, not every collection: the moments of the day and
-            the occasions (lib/shopify/nav-groups.ts). The product types are
-            under "Collections" and in the shop's filters. */}
+        {/* The owners' six families, then their sub-categories indented
+            (lib/shopify/nav-groups.ts). Empty ones are left out. */}
+        {families.length > 0 && (
+          <div className="mt-4 flex flex-col gap-1">
+            {families.map(({ collection, children }) => (
+              <div key={collection.handle} className="flex flex-col gap-1">
+                <Link
+                  href={routes.collection(collection.handle)}
+                  className={linkClassName}
+                  onMouseEnter={setHover(collection.handle)}
+                  onFocus={setHover(collection.handle)}
+                  onClick={onNavigate}
+                >
+                  <span className={linkLabelClassName}>{collection.title}</span>
+                </Link>
+                {children.map((child) => (
+                  <Link
+                    key={child.handle}
+                    href={routes.collection(child.handle)}
+                    className={`${linkClassName} pl-4 opacity-70`}
+                    onMouseEnter={setHover(child.handle)}
+                    onFocus={setHover(child.handle)}
+                    onClick={onNavigate}
+                  >
+                    <span className={linkLabelClassName}>{child.title}</span>
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+        {/* Then the moments of the day (lib/shopify/nav-groups.ts). */}
         {SHOP_NAV_GROUPS.map((group) => {
           const items = group.items.filter((item) =>
             collections.some((collection) => collection.handle === item.handle),
