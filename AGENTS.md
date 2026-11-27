@@ -11,3 +11,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Three languages, always
 
 The site is in French, Dutch and English. Never type visible text into a component — labels, buttons, `aria-label`s, errors included. Add it under the same key to `lib/i18n/dictionaries/fr.json`, `nl.json` and `en.json` and read it from the dictionary. A missing Dutch or English key does not fail the build: it silently shows French. Run `npm run i18n` (part of `npm run check`) before you finish. More in `docs/dev-notes.md` → Conventions.
+
+## The Studio lives in two places
+
+Next serves the Studio at `/studio`, and Sanity hosts a copy at https://moment-lab.sanity.studio (what Moment and Rond Carré use, since the test site is private). The hosted copy does not follow Vercel deploys. **After any change under `sanity/` or to `sanity.config.ts` — a field, a schema type, the structure, the guide — remind the user to run `npx sanity deploy`** (logged in as tiboguerydev), or the hosted Studio keeps the old fields. `npm run studio:deploy` does the same.
