@@ -23,7 +23,10 @@ const LANGUAGES = [
 ] as const;
 
 /** Collapsed by default, so a form of eight of these stays readable. */
-const OPTIONS = { collapsible: true, collapsed: false } as const;
+// Not collapsible (27 November 2026): the fold arrow sat on top of the
+// field's name in this Sanity version, and folding three short languages
+// helped nobody. The three languages are always shown.
+const OPTIONS = { collapsible: false } as const;
 
 /** One line — a title, a caption. */
 export const localeString = defineType({
