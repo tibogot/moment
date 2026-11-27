@@ -132,8 +132,11 @@ function studioText(
   return pick(value ?? undefined, locale)?.trim() || fallback;
 }
 
-/** Lunch first: the brief's core — "un déjeuner livré au bureau". */
-const DEFAULT_HANDLE = "salades";
+/**
+ * The first tab, Brunch, opens first (27 November 2026): Lunch used to, as the
+ * brief's core, but a visitor expects the first tab to be the open one.
+ */
+const DEFAULT_HANDLE = "petit-dejeuner";
 
 export default async function Home({
   params,
