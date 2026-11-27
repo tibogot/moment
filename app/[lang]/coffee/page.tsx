@@ -8,11 +8,12 @@ import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { getCoffeePageImages } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
-import type { SanityImage } from "@/lib/sanity/types";
+import { photoAlt } from "@/lib/sanity/photo-alt";
+import type { SanityPagePhoto } from "@/lib/sanity/types";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 
 /** The Studio's photo for a slot, or the built-in one while it is empty. */
-function photo(image: SanityImage | null, fallback: string) {
+function photo(image: SanityPagePhoto | null, fallback: string) {
   return image ? urlFor(image).width(1600).auto("format").url() : fallback;
 }
 
@@ -31,8 +32,9 @@ export default async function CoffeePage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  const locale = toLocale((await params).lang);
   const [dict, images, availability] = await Promise.all([
-    getDictionary(toLocale((await params).lang)),
+    getDictionary(locale),
     getCoffeePageImages(),
     getDeliveryAvailability(),
   ]);
@@ -60,13 +62,13 @@ export default async function CoffeePage({
             {
               // The owners' counter, from Studio → Page Comptoir café.
               src: photo(images.first, "/images/moment-coffee-counter.jpg"),
-              alt: "",
+              alt: photoAlt(images.first, locale),
               className:
                 "col-[2/span_4] row-[1/span_4] md:col-[2/span_6] md:row-[1/span_6] lg:col-[2/span_8] lg:row-[1/span_8]",
             },
             {
               src: photo(images.second, "/images/dan-smedley.jpg"),
-              alt: "",
+              alt: photoAlt(images.second, locale),
               className:
                 "col-[3/span_3] row-[5/span_3] md:col-[8/span_6] md:row-[5/span_6] lg:col-[12/span_6] lg:row-[7/span_6]",
             },

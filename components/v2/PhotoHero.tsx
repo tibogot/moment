@@ -15,6 +15,8 @@ type PhotoHeroProps = {
    */
   image: string | StaticImageData;
   blurDataURL?: string;
+  /** The Studio's description of the photo; empty = decorative. */
+  alt?: string;
   /**
    * "light" for a light photograph: black type and sky lines, and the navbar
    * turns black over it too (`data-hero-tone`, read by Navbar and
@@ -48,6 +50,7 @@ export function PhotoHero({
   lead,
   image,
   blurDataURL,
+  alt = "",
   tone = "dark",
   veil = true,
 }: PhotoHeroProps) {
@@ -64,7 +67,7 @@ export function PhotoHero({
       data-transparent-nav
       data-hero-tone={tone}
     >
-      <HeroParallaxImage src={image} blurDataURL={blurDataURL} />
+      <HeroParallaxImage src={image} blurDataURL={blurDataURL} alt={alt} />
 
       <VeilToggle />
       {veil && !light && (

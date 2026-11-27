@@ -12,6 +12,8 @@ type StoryCellsProps = {
   body: string;
   /** A URL from the Studio, or a bundled photograph. */
   src: string | StaticImageData;
+  /** The Studio's description of the photo; empty = decorative. */
+  alt?: string;
   /** Which half the photograph takes from tablet up. */
   imageSide?: "left" | "right";
   /** The middle one of the three is on sky, as on the live home. */
@@ -46,6 +48,7 @@ export function StoryCells({
   title,
   body,
   src,
+  alt = "",
   imageSide = "right",
   theme = "cream",
 }: StoryCellsProps) {
@@ -163,7 +166,7 @@ export function StoryCells({
         >
           <Image
             src={src}
-            alt=""
+            alt={alt}
             fill
             sizes="(min-width: 48rem) 50vw, 100vw"
             className="object-cover"

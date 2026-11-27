@@ -21,12 +21,13 @@ import { pageMetadata } from "@/lib/seo";
 import { getSiteDetails } from "@/lib/site-details";
 import { urlFor } from "@/lib/sanity/image";
 import { pick, type LocaleString } from "@/lib/sanity/locale";
+import { photoAlt } from "@/lib/sanity/photo-alt";
 import { getHomePageImages, getTestimonials } from "@/lib/sanity/queries";
 import { TestimonialCells } from "@/components/v2/TestimonialCells";
 import { NewsletterCells } from "@/components/v2/NewsletterCells";
 import { SAMPLE_TESTIMONIALS } from "@/lib/testimonial-samples";
 import { siteIsIndexable } from "@/lib/site";
-import type { SanityImage } from "@/lib/sanity/types";
+import type { SanityPagePhoto } from "@/lib/sanity/types";
 import { getCollectionByHandle } from "@/lib/shopify/collections";
 import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 // Built-in photographs: each one shows until the owners upload theirs in the
@@ -121,7 +122,7 @@ const MOMENTS = [
  * The Studio's photograph for a slot, as a CDN URL (its crop and hotspot
  * kept), or the built-in one while the slot is empty.
  */
-function photo<T>(image: SanityImage | null, fallback: T, width = 1600) {
+function photo<T>(image: SanityPagePhoto | null, fallback: T, width = 1600) {
   return image ? urlFor(image).width(width).auto("format").url() : fallback;
 }
 
@@ -215,6 +216,7 @@ export default async function Home({
           lead={studioText(images.heroLead, locale, home.heroPhoto.lead)}
           // Full-bleed, and oversized again for the parallax drift.
           image={photo(images.hero, heroImage, 2400)}
+          alt={photoAlt(images.hero, locale)}
           blurDataURL={images.hero?.lqip}
           // White type over the photo, with a light veil (27 November 2026).
           tone={images.hero ? images.heroTone : "dark"}
@@ -252,6 +254,7 @@ export default async function Home({
           title={home.kitchen.title}
           body={home.kitchen.body}
           src={photo(images.kitchen, kitchenImage)}
+          alt={photoAlt(images.kitchen, locale)}
         />
         <StoryCells
           theme="sky"
@@ -260,6 +263,7 @@ export default async function Home({
           title={home.delivery.title}
           body={home.delivery.body}
           src={photo(images.delivery, deliveryImage)}
+          alt={photoAlt(images.delivery, locale)}
         />
         {/* "La table" left on 27 November 2026 (the owners' text document:
             "à supprimer"). Its Studio photo slot is hidden, not deleted. */}
@@ -297,16 +301,19 @@ export default async function Home({
               ...home.offer.events,
               href: routes.events,
               image: photo(images.events, eventsImage),
+              alt: photoAlt(images.events, locale),
             },
             {
               ...home.offer.companies,
               href: routes.proAccount,
               image: photo(images.companies, companiesImage),
+              alt: photoAlt(images.companies, locale),
             },
             {
               ...home.offer.coffee,
               href: routes.coffee,
               image: photo(images.coffee, coffeeImage),
+              alt: photoAlt(images.coffee, locale),
             },
           ]}
         />

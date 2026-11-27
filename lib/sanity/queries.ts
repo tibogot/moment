@@ -2,7 +2,12 @@ import { defineQuery } from "next-sanity";
 import { sanityClient, sanityCache } from "./client";
 import type { Locale } from "../i18n/config";
 import type { LocaleString } from "./locale";
-import type { NewsArticle, NewsArticleListItem, SanityImage } from "./types";
+import type {
+  NewsArticle,
+  NewsArticleListItem,
+  SanityImage,
+  SanityPagePhoto,
+} from "./types";
 import type { PastEvent } from "../events";
 import { PLACEHOLDER_MENUS, sortMenus, type Menu } from "../menus";
 
@@ -293,17 +298,17 @@ export type HomePageImages = {
   /** The slogan, one value for every language. */
   heroHeadline: string | null;
   heroLead: LocaleString | null;
-  hero: (SanityImage & { lqip?: string }) | null;
+  hero: (SanityPagePhoto & { lqip?: string }) | null;
   /** "light": dark type over a light photo. Defaults to "dark". */
   heroTone: "dark" | "light";
   /** A light dark veil over the photo, under white type. Defaults to on. */
   heroVeil: boolean;
-  kitchen: SanityImage | null;
-  delivery: SanityImage | null;
-  hosting: SanityImage | null;
-  events: SanityImage | null;
-  companies: SanityImage | null;
-  coffee: SanityImage | null;
+  kitchen: SanityPagePhoto | null;
+  delivery: SanityPagePhoto | null;
+  hosting: SanityPagePhoto | null;
+  events: SanityPagePhoto | null;
+  companies: SanityPagePhoto | null;
+  coffee: SanityPagePhoto | null;
 };
 
 const NO_HOME_IMAGES: HomePageImages = {
@@ -323,19 +328,19 @@ const NO_HOME_IMAGES: HomePageImages = {
 type HomePageResponse = {
   heroHeadline?: string | null;
   heroLead?: LocaleString | null;
-  heroImage?: (SanityImage & { lqip?: string }) | null;
+  heroImage?: (SanityPagePhoto & { lqip?: string }) | null;
   heroTone?: string | null;
   heroVeil?: boolean | null;
-  kitchenImage?: SanityImage | null;
-  deliveryImage?: SanityImage | null;
-  hostingImage?: SanityImage | null;
-  eventsImage?: SanityImage | null;
-  companiesImage?: SanityImage | null;
-  coffeeImage?: SanityImage | null;
+  kitchenImage?: SanityPagePhoto | null;
+  deliveryImage?: SanityPagePhoto | null;
+  hostingImage?: SanityPagePhoto | null;
+  eventsImage?: SanityPagePhoto | null;
+  companiesImage?: SanityPagePhoto | null;
+  coffeeImage?: SanityPagePhoto | null;
 };
 
 /** An image field with nothing uploaded into it yet is `{}`, not null. */
-function uploaded<T extends SanityImage>(image: T | null | undefined) {
+function uploaded<T extends { asset?: unknown }>(image: T | null | undefined) {
   return image?.asset ? image : null;
 }
 
@@ -395,8 +400,8 @@ export const coffeePageQuery = defineQuery(`*[_id == "coffeePage"][0] {
 }`);
 
 export type PagePhotos = {
-  first: SanityImage | null;
-  second: SanityImage | null;
+  first: SanityPagePhoto | null;
+  second: SanityPagePhoto | null;
 };
 
 export function getEventsPageImages() {
@@ -414,8 +419,8 @@ async function getPagePhotos(
 ): Promise<PagePhotos> {
   try {
     const response = await sanityClient.fetch<{
-      firstImage?: SanityImage | null;
-      secondImage?: SanityImage | null;
+      firstImage?: SanityPagePhoto | null;
+      secondImage?: SanityPagePhoto | null;
     } | null>(query, {}, sanityCache(tag));
 
     return {
