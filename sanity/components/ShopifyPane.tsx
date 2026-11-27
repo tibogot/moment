@@ -12,7 +12,11 @@
 const SHOPIFY_ADMIN = "https://admin.shopify.com/store/hhfesf-40";
 
 const LINKS = [
-  { label: "Produits", hint: "ajouter, modifier, prix, photos", path: "/products" },
+  {
+    label: "Produits",
+    hint: "ajouter, modifier, prix, photos",
+    path: "/products",
+  },
   { label: "Commandes", hint: "les commandes reçues", path: "/orders" },
   {
     label: "Livraison : zones, créneaux, fermetures",
@@ -28,13 +32,13 @@ export function ShopifyPane() {
         Produits et livraison
       </h2>
       <p style={{ margin: "0 0 0.75rem" }}>
-        Les produits, les prix, les commandes et les réglages de livraison ne
-        se modifient pas ici, mais dans <strong>Shopify</strong>. Ce que vous y
+        Les produits, les prix, les commandes et les réglages de livraison ne se
+        modifient pas ici, mais dans <strong>Shopify</strong>. Ce que vous y
         changez apparaît sur le site en quelques secondes.
       </p>
       <p style={{ margin: "0 0 1.25rem", opacity: 0.75 }}>
-        Ce Studio sert aux textes, aux menus traiteur, aux réalisations, aux
-        actualités et aux partenaires.
+        Ce Studio sert aux photos, au bandeau, aux infos pratiques, à la FAQ,
+        aux avis, aux actualités et aux partenaires.
       </p>
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {LINKS.map((link) => (

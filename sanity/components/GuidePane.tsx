@@ -123,8 +123,8 @@ const GROUPS: Group[] = [
         ],
         tip: (
           <>
-            Les filtres de la page Nos produits (vegan, végétarien, sans gluten) suivent
-            les <strong>tags</strong>, pas le texte.
+            Les filtres de la page Nos produits (vegan, végétarien, sans gluten)
+            suivent les <strong>tags</strong>, pas le texte.
           </>
         ),
       },
@@ -384,12 +384,15 @@ const GROUPS: Group[] = [
         title: "Ajouter un partenaire sur la carte « Où nous trouver »",
         steps: [
           <>
-            Menu de gauche → <strong>Partenaires</strong> → le crayon en haut de
-            la colonne.
+            Menu de gauche → <strong>Où nous trouver (partenaires)</strong> → le
+            crayon en haut de la colonne.
           </>,
           <>
             Nom, type d&apos;établissement, adresse, lien éventuel (site ou
-            Instagram). Le point se place tout seul d&apos;après l&apos;adresse.
+            Instagram), et les{" "}
+            <strong>produits Moment proposés sur place</strong> en quelques mots
+            (« Cookies et jus pressés à froid »). Le point se place tout seul
+            d&apos;après l&apos;adresse.
           </>,
           <>
             <strong>Publier</strong>.
@@ -399,28 +402,6 @@ const GROUPS: Group[] = [
           <>
             Ouvrez AME pour voir un exemple rempli. Pour masquer un partenaire
             sans le supprimer, décochez « Afficher sur la carte ».
-          </>
-        ),
-      },
-      {
-        title: "Montrer un événement réalisé",
-        steps: [
-          <>
-            Menu de gauche → <strong>Réalisations</strong> → le crayon.
-          </>,
-          <>
-            Le type d&apos;événement, le nombre de convives, la commune, la date
-            et vos photos (avec une phrase qui décrit chaque photo).
-          </>,
-          <>
-            Ne citez le client que s&apos;il a accepté. <strong>Publier</strong>
-            .
-          </>,
-        ],
-        tip: (
-          <>
-            Ils apparaissent sur la page Événements : c&apos;est la preuve qui
-            rassure un futur client.
           </>
         ),
       },
@@ -439,9 +420,11 @@ const GROUPS: Group[] = [
         ],
         tip: (
           <>
-            Les trois premiers s&apos;affichent sur la page d&apos;accueil (le
-            champ « Ordre d&apos;affichage » choisit lesquels). Uniquement de
-            vrais avis : un avis inventé est interdit, et se repère.
+            Ils défilent sur la page d&apos;accueil, sous « Ils nous font
+            confiance » (le champ « Ordre d&apos;affichage » choisit
+            l&apos;ordre) ; la section reste masquée tant qu&apos;il n&apos;y en
+            a aucun. Uniquement de vrais avis : un avis inventé est interdit, et
+            se repère.
           </>
         ),
       },
@@ -501,15 +484,47 @@ const GROUPS: Group[] = [
           <>
             Sous la photo d&apos;ouverture, réglez{" "}
             <strong>« La photo d&apos;ouverture est… »</strong> : sombre (texte
-            et menu en blanc) ou claire (texte et menu en noir), selon la zone
-            sous le titre.
+            et menu en blanc, le réglage habituel) ou claire (texte et menu en
+            noir). Avec « Sombre », gardez{" "}
+            <strong>« Assombrir légèrement la photo »</strong> coché : un voile
+            discret qui rend le texte et le menu lisibles partout.
+          </>,
+          <>
+            <strong>Signature</strong> : votre phrase, affichée en petit entre
+            parenthèses au centre de la photo (« Life is moments »). Laissez la
+            case vide pour garder celle d&apos;aujourd&apos;hui.
           </>,
         ],
         tip: (
           <>
             Après avoir changé la photo d&apos;ouverture, ouvrez le site sur
-            ordinateur et sur téléphone : le titre et le menu doivent bien se
-            lire. Sinon, changez le réglage clair / sombre.
+            ordinateur et sur téléphone : la signature et le menu doivent bien
+            se lire. Sinon, changez le réglage clair / sombre.
+          </>
+        ),
+      },
+      {
+        title: "Changer les photos des pages Événements et Comptoir café",
+        steps: [
+          <>
+            Menu de gauche → <strong>Page Événements</strong> ou{" "}
+            <strong>Page Comptoir café</strong>.
+          </>,
+          <>
+            Deux photos par page : la <strong>grande</strong>, à gauche sous le
+            titre, et la <strong>deuxième</strong>, plus petite, à droite. Des
+            photos en hauteur (portrait) conviennent le mieux.
+          </>,
+          <>
+            Placez le point important avec l&apos;icône de recadrage, puis{" "}
+            <strong>Publier</strong>.
+          </>,
+        ],
+        tip: (
+          <>
+            Une case vide garde la photo actuelle. Pour Événements : vos tables
+            et buffets ; pour le comptoir : le comptoir en service, un détail
+            (une tasse, le matcha).
           </>
         ),
       },
@@ -551,7 +566,10 @@ const GROUPS: Group[] = [
             elle qui apparaît pour « traiteur près de moi ». Demandez un avis à
             vos clients contents : c&apos;est ce qui rassure le plus.
           </>,
-          <>Des réalisations et des actualités de temps en temps.</>,
+          <>
+            Des actualités de temps en temps : vos événements, avec quelques
+            photos.
+          </>,
         ],
       },
       {
@@ -671,7 +689,9 @@ export function GuidePane() {
       <p style={{ ...P, opacity: 0.75 }}>
         En bref : les <strong>produits, prix, commandes et la livraison</strong>{" "}
         se gèrent dans <strong>Shopify</strong> ; les{" "}
-        <strong>textes, menus, réalisations, actualités et partenaires</strong>{" "}
+        <strong>
+          photos, bandeau, infos pratiques, FAQ, avis, actualités et partenaires
+        </strong>{" "}
         ici, dans le Studio.
       </p>
 

@@ -106,6 +106,8 @@ export default defineConfig({
       previous.filter(
         (item) =>
           item.templateId !== "menu" &&
+          // Réalisations too, until a page shows them (sanity/structure.ts).
+          item.templateId !== "pastEvent" &&
           !SINGLETONS.includes(item.templateId as (typeof SINGLETONS)[number]),
       ),
   },

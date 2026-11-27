@@ -9,7 +9,6 @@ import { CommentIcon } from "@sanity/icons/Comment";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { OlistIcon } from "@sanity/icons/Olist";
 import { HomeIcon } from "@sanity/icons/Home";
-import { ImagesIcon } from "@sanity/icons/Images";
 import { PinIcon } from "@sanity/icons/Pin";
 import { TagIcon } from "@sanity/icons/Tag";
 import { UsersIcon } from "@sanity/icons/Users";
@@ -35,8 +34,9 @@ import { ShopifyPane } from "@/sanity/components/ShopifyPane";
  *   maintenance (sanity/components/GuidePane.tsx);
  * - the announcement bar next — the most frequent edit, and the one made in a
  *   hurry ("fermé demain");
- * - "Pages du site": one entry per page, named as in the site's menu;
- * - "Contenus": the lists that grow (a menu, a réalisation, an article);
+ * - "Pages du site": one entry per page, in the order of the site's menu;
+ * - "Contenus": the lists that grow — the map's partners, the reviews, the
+ *   news — named as on the site ("Où nous trouver", 27 November 2026);
  * - "Produits et livraison": a signpost to Shopify, where the first thing an
  *   owner looks for actually lives.
  */
@@ -132,19 +132,38 @@ export const structure: StructureResolver = (S) =>
       //     .schemaType("menu")
       //     .child(S.documentTypeList("menu").title("Menus traiteur")),
 
+      // "Réalisations" left the sidebar on 27 November 2026: no page shows
+      // them yet, so a réalisation filled in led nowhere. The `pastEvent` type
+      // is kept; bringing it back is this item (ordered by date, newest first)
+      // and a page that renders them:
+      //   S.listItem().title("Réalisations").icon(ImagesIcon)
+      //     .schemaType("pastEvent")
+      //     .child(S.documentTypeList("pastEvent").title("Réalisations")
+      //       .defaultOrdering([{ field: "date", direction: "desc" }])),
+
       /**
-       * Ordered by date rather than by Sanity's default, which is last-edited.
-       * These are added in bursts after a busy fortnight, so "the one I touched
-       * most recently" is never the one being looked for.
+       * Alphabetical: this is a directory people scan for one name ("is Café X
+       * already in?"), not a feed. Named after the page it fills.
        */
       S.listItem()
-        .title("Réalisations")
-        .icon(ImagesIcon)
-        .schemaType("pastEvent")
+        .title("Où nous trouver (partenaires)")
+        .icon(PinIcon)
+        .schemaType("partner")
         .child(
-          S.documentTypeList("pastEvent")
-            .title("Réalisations")
-            .defaultOrdering([{ field: "date", direction: "desc" }]),
+          S.documentTypeList("partner")
+            .title("Où nous trouver (partenaires)")
+            .defaultOrdering([{ field: "name", direction: "asc" }]),
+        ),
+
+      /** In the order the home page shows them. */
+      S.listItem()
+        .title("Avis clients")
+        .icon(CommentIcon)
+        .schemaType("testimonial")
+        .child(
+          S.documentTypeList("testimonial")
+            .title("Avis clients")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
         ),
 
       /**
@@ -182,31 +201,6 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList("author").title("Auteurs des articles"),
                 ),
             ]),
-        ),
-
-      /** In the order the home page shows them. */
-      S.listItem()
-        .title("Avis clients")
-        .icon(CommentIcon)
-        .schemaType("testimonial")
-        .child(
-          S.documentTypeList("testimonial")
-            .title("Avis clients")
-            .defaultOrdering([{ field: "order", direction: "asc" }]),
-        ),
-
-      /**
-       * Alphabetical: this is a directory people scan for one name ("is Café X
-       * already in?"), not a feed.
-       */
-      S.listItem()
-        .title("Partenaires")
-        .icon(PinIcon)
-        .schemaType("partner")
-        .child(
-          S.documentTypeList("partner")
-            .title("Partenaires")
-            .defaultOrdering([{ field: "name", direction: "asc" }]),
         ),
 
       S.divider(),
