@@ -17,14 +17,10 @@ import { unstable_cache } from "next/cache";
 import { resolveAddress } from "@/lib/address";
 import type { Coordinates } from "@/lib/delivery/zones";
 import { getPartnerDocuments } from "@/lib/sanity/queries";
+import type { LocaleString } from "@/lib/sanity/locale";
 
 export type PartnerKind =
-  | "cafe"
-  | "restaurant"
-  | "shop"
-  | "hotel"
-  | "office"
-  | "other";
+  "cafe" | "restaurant" | "shop" | "hotel" | "office" | "other";
 
 export type Partner = {
   id: string;
@@ -35,6 +31,8 @@ export type Partner = {
   /** The commune on its own, for grouping the list. */
   city: string;
   url: string | null;
+  /** What Moment products are sold there, three languages (Studio, optional). */
+  offer: LocaleString | null;
   /** Null when the address could not be placed — listed, but not on the map. */
   coordinates: Coordinates | null;
 };
@@ -110,6 +108,7 @@ export async function getPartners(): Promise<Partner[]> {
           address,
           city: doc.city!.trim(),
           url: safeUrl(doc.url),
+          offer: (doc.offer as LocaleString | null | undefined) ?? null,
           coordinates: manual ?? (await geocode(address)),
         }))(),
       ];

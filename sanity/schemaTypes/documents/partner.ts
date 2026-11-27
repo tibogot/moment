@@ -92,6 +92,16 @@ export const partner = defineType({
       validation: (rule) => rule.uri({ scheme: ["https", "http"] }),
     }),
 
+    // The owners' page text promises "les produits Moment proposés sur place"
+    // (27 November 2026): this is where it comes from.
+    defineField({
+      name: "offer",
+      title: "Produits Moment proposés sur place",
+      type: "localeString",
+      description:
+        "Facultatif. Ce que l'on trouve chez ce partenaire, en quelques mots : « Cookies et jus pressés à froid ». Affiché sur la carte et dans la liste. En français suffit : les autres langues reprennent le français tant qu'elles sont vides.",
+    }),
+
     defineField({
       name: "visible",
       title: "Afficher sur la carte",

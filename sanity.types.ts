@@ -190,6 +190,7 @@ export type Partner = {
   postalCode: string;
   city: string;
   url?: string;
+  offer?: LocaleString;
   visible?: boolean;
   location?: Geopoint;
 };
@@ -908,7 +909,7 @@ export type FaqPageQueryResult =
 
 // Source: lib/sanity/queries.ts
 // Variable: partnersQuery
-// Query: *[_type == "partner" && visible != false] | order(name asc) {  _id,  name,  kind,  street,  postalCode,  city,  url,  location}
+// Query: *[_type == "partner" && visible != false] | order(name asc) {  _id,  name,  kind,  street,  postalCode,  city,  url,  offer,  location}
 export type PartnersQueryResult = Array<{
   _id: string;
   name: string;
@@ -917,6 +918,7 @@ export type PartnersQueryResult = Array<{
   postalCode: string;
   city: string;
   url: string | null;
+  offer: LocaleString | null;
   location: Geopoint | null;
 }>;
 
@@ -977,7 +979,7 @@ declare global {
     '*[_id == "eventsPage"][0] {\n  firstImage,\n  secondImage\n}': EventsPageQueryResult;
     '*[_id == "coffeePage"][0] {\n  firstImage,\n  secondImage\n}': CoffeePageQueryResult;
     '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
-    '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  location\n}': PartnersQueryResult;
+    '*[_type == "partner" && visible != false] | order(name asc) {\n  _id,\n  name,\n  kind,\n  street,\n  postalCode,\n  city,\n  url,\n  offer,\n  location\n}': PartnersQueryResult;
     '*[_type == "testimonial" && visible != false && defined(quote.fr) && defined(name)] | order(coalesce(order, 9999) asc, _createdAt desc)[0...12] {\n  _id,\n  quote,\n  name,\n  company\n}': TestimonialsQueryResult;
     '*[_id == "practicalInfo"][0] {\n  phone,\n  email,\n  opensAt,\n  closesAt,\n  openDays,\n  instagram,\n  facebook\n}': PracticalInfoQueryResult;
     '*[_id == "announcement" && enabled == true][0] {\n  message,\n  linkLabel,\n  linkUrl\n}': AnnouncementQueryResult;

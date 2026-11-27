@@ -475,6 +475,7 @@ export const partnersQuery =
   postalCode,
   city,
   url,
+  offer,
   location
 }`);
 

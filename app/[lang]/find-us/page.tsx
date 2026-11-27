@@ -9,6 +9,7 @@ import { DEFAULT_ATELIER } from "@/lib/delivery/zones";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getPartners, type Partner } from "@/lib/partners";
+import { pick } from "@/lib/sanity/locale";
 import { routes } from "@/lib/routes";
 import { localizedMetadata } from "@/lib/seo";
 import { formatAddressLine, SITE_DETAILS, siteIsIndexable } from "@/lib/site";
@@ -119,6 +120,8 @@ export default async function FindUsPage({
               latitude: partner.coordinates.latitude,
               longitude: partner.coordinates.longitude,
               url: partner.url,
+              note:
+                pick(partner.offer ?? undefined, locale)?.trim() || undefined,
             },
           ]
         : [],
@@ -188,6 +191,11 @@ export default async function FindUsPage({
                           <p className="font-archivo-light text-[14px]">
                             {t.kinds[partner.kind]} · {partner.address}
                           </p>
+                          {pick(partner.offer ?? undefined, locale)?.trim() && (
+                            <p className="font-archivo-light mt-1 text-[14px] opacity-70">
+                              {pick(partner.offer ?? undefined, locale)}
+                            </p>
+                          )}
                         </div>
                         <p className="font-archivo-light flex gap-4 text-[13px]">
                           <a
