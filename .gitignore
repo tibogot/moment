@@ -55,3 +55,6 @@ docs/notes-rond-carre.md
 
 # Brand guidelines PDF (8.6 MB): kept locally for design work, not in the repo
 docs/brand/
+
+# Sanity CLI build cache (sanity build / deploy).
+.sanity/
