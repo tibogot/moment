@@ -129,6 +129,14 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
       aussi.
 - [ ] Une page qui n'existe pas affiche la page 404.
 
+## À savoir — le Studio hébergé
+
+Le Studio existe aussi chez Sanity : **https://moment-lab.sanity.studio**
+(déployé le 27 novembre, pour éditer sans accès au site de test). Après
+chaque changement de champ ou de schéma, le republier : `npx sanity deploy`,
+connecté avec tiboguerydev. Le Studio à `/studio` sur le site, lui, suit
+chaque déploiement Vercel.
+
 ## Après le lancement
 
 - [ ] **Google Search Console** : ajouter le domaine (vérification par TXT chez
