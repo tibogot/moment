@@ -72,7 +72,7 @@
     "heroPhoto": {
       "headline": "Life is\nmoments",
       "lead": "",
-      "intro": "Moment delivers your breakfasts, brunches and lunches to the address of your choice.",
+      "intro": "Moment delivers your breakfasts, brunches and lunches anywhere in Belgium, to the address of your choice.",
       "introBody": [
         "Moment is a caterer with its atelier in Forest, focused on breakfasts, brunches, lunches and cold-pressed juices. We make our products from fresh, carefully chosen ingredients and deliver them straight to your home, your office or the venue of your event. From preparation to delivery, we look after their freshness and their presentation.",
         "For a company breakfast, a team lunch or a private event, we offer a range of quality products, made to be both healthy and indulgent. We want to show that eating well need not be a constraint, and need not sacrifice anything in taste or flavour."
@@ -90,7 +90,7 @@
     "delivery": {
       "label": "Delivery",
       "title": "We deliver to you",
-      "body": "We deliver your orders with care, on the date and in the time slot you choose. At home, at the office or at your event's venue, your products arrive fresh and ready to enjoy."
+      "body": "We deliver your orders across Belgium with care, on the date and in the time slot you choose. At home, at the office or at your event's venue, your products arrive fresh and ready to enjoy."
     },
     "hosting": {
       "label": "The table",
@@ -352,7 +352,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Delivery",
-      "description": "We deliver your order to the address of your choice: your home, your office or the venue of your event."
+      "description": "Anywhere in Belgium, to the address of your choice: your home, your office or the venue of your event."
     },
     "pickup": {
       "label": "Click & collect",
@@ -842,7 +842,7 @@
     },
     "fallback": {
       "product": "{title} from the Moment kitchen in Brussels.",
-      "collection": "{title} from Moment — cooked each morning in Brussels and delivered across the city.",
+      "collection": "{title} at Moment — made in our atelier in Forest and delivered across Belgium.",
       "article": "{title} — from the Moment kitchen in Brussels.",
       "menu": "Catering menu",
       "productTitle": "{title} — delivery in Brussels",
@@ -949,7 +949,7 @@
       "cards": [
         {
           "title": "Delivery",
-          "body": "We deliver your orders with care, on the date and in the time slot you choose. At home, at the office or at your event's venue, your products arrive fresh and ready to enjoy."
+          "body": "We deliver your orders across Belgium with care, on the date and in the time slot you choose. At home, at the office or at your event's venue, your products arrive fresh and ready to enjoy."
         },
         {
           "title": "Events",
@@ -1042,7 +1042,7 @@
         "based": "Forest, Brussels",
         "cookFor": "Private clients, companies and event venues",
         "services": "Delivery, buffets for your events, coffee cart, collaborations",
-        "deliveryArea": "Brussels and up to 70 km from the atelier, further on quotation",
+        "deliveryArea": "Across Belgium: up to 70 km from the atelier at the site's rates, further on quotation",
         "leadTime": "48 hours for delivery, on request for an event",
         "diets": "Vegetarian, vegan and gluten-free options",
         "languages": "Français, Nederlands, English"

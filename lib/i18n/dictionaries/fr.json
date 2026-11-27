@@ -72,7 +72,7 @@
     "heroPhoto": {
       "headline": "Life is\nmoments",
       "lead": "",
-      "intro": "Moment livre vos petits-déjeuners, brunchs et lunchs à l'adresse de votre choix.",
+      "intro": "Moment livre vos petits-déjeuners, brunchs et lunchs partout en Belgique, à l'adresse de votre choix.",
       "introBody": [
         "Moment est un traiteur dont l'atelier se situe à Forest, axé sur les petits-déjeuners, les brunchs, les lunchs et les jus pressés à froid. Nous préparons nos produits à partir d'ingrédients frais, choisis avec soin, et nous vous les livrons directement chez vous, au bureau ou sur le lieu de votre événement. De la préparation à la livraison, nous veillons à leur fraîcheur et à leur présentation.",
         "Pour un petit-déjeuner en entreprise, un lunch d'équipe ou un événement privé, nous proposons un assortiment de produits de qualité, préparés de façon à la fois saine et gourmande. Notre volonté est de montrer qu'on peut bien manger sans que cela soit une contrainte et sans rien sacrifier au goût ni aux saveurs."
@@ -90,7 +90,7 @@
     "delivery": {
       "label": "Livraison",
       "title": "Nous vous livrons",
-      "body": "Nous livrons vos commandes avec soin, à la date et au créneau choisis. Chez vous, au bureau ou sur le lieu de votre événement, vos produits arrivent frais et prêts à déguster."
+      "body": "Nous livrons en Belgique vos commandes avec soin, à la date et au créneau choisis. Chez vous, au bureau ou sur le lieu de votre événement, vos produits arrivent frais et prêts à déguster."
     },
     "hosting": {
       "label": "La table",
@@ -352,7 +352,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Livraison",
-      "description": "Nous livrons votre commande à l'adresse de votre choix : chez vous, au bureau ou sur le lieu de votre événement."
+      "description": "Partout en Belgique, à l'adresse de votre choix : chez vous, au bureau ou sur le lieu de votre événement."
     },
     "pickup": {
       "label": "Click & collect",
@@ -843,7 +843,7 @@
     },
     "fallback": {
       "product": "{title} depuis la cuisine de Moment à Bruxelles.",
-      "collection": "{title} chez Moment — cuisiné chaque matin à Bruxelles et livré dans toute la ville.",
+      "collection": "{title} chez Moment — préparé dans notre atelier à Forest et livré partout en Belgique.",
       "article": "{title} — depuis la cuisine de Moment à Bruxelles.",
       "menu": "Menu traiteur",
       "productTitle": "{title} — livraison à Bruxelles",
@@ -950,7 +950,7 @@
       "cards": [
         {
           "title": "Livraison",
-          "body": "Nous livrons vos commandes avec soin, à la date et au créneau choisis. Chez vous, au bureau ou sur le lieu de votre événement, vos produits arrivent frais et prêts à déguster."
+          "body": "Nous livrons en Belgique vos commandes avec soin, à la date et au créneau choisis. Chez vous, au bureau ou sur le lieu de votre événement, vos produits arrivent frais et prêts à déguster."
         },
         {
           "title": "Événements",
@@ -1043,7 +1043,7 @@
         "based": "Forest, Bruxelles",
         "cookFor": "Particuliers, entreprises et lieux événementiels",
         "services": "Livraison, buffets pour vos événements, comptoir café, collaborations",
-        "deliveryArea": "Bruxelles et jusqu'à 70 km autour de l'atelier, au-delà sur devis",
+        "deliveryArea": "Partout en Belgique : jusqu'à 70 km de l'atelier aux tarifs du site, au-delà sur devis",
         "leadTime": "48 heures pour une livraison, sur demande pour un événement",
         "diets": "Des options végétariennes, véganes et sans gluten",
         "languages": "Français, Nederlands, English"

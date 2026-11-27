@@ -72,7 +72,7 @@
     "heroPhoto": {
       "headline": "Life is\nmoments",
       "lead": "",
-      "intro": "Moment levert uw ontbijt, brunch en lunch op het adres van uw keuze.",
+      "intro": "Moment levert uw ontbijt, brunch en lunch overal in België, op het adres van uw keuze.",
       "introBody": [
         "Moment is een traiteur met een atelier in Vorst, gespecialiseerd in ontbijt, brunch, lunch en koudgeperste sappen. We bereiden onze producten met verse, zorgvuldig gekozen ingrediënten en leveren ze rechtstreeks bij u thuis, op kantoor of op de locatie van uw evenement. Van de bereiding tot de levering waken we over hun versheid en presentatie.",
         "Voor een bedrijfsontbijt, een teamlunch of een privéfeest bieden we een assortiment kwaliteitsproducten, tegelijk gezond en lekker bereid. We willen tonen dat goed eten geen opgave hoeft te zijn, en dat je daarvoor niets van smaak hoeft in te leveren."
@@ -90,7 +90,7 @@
     "delivery": {
       "label": "Levering",
       "title": "Wij leveren bij u",
-      "body": "We leveren uw bestellingen met zorg, op de gekozen datum en het gekozen tijdslot. Thuis, op kantoor of op de locatie van uw evenement: uw producten komen vers en klaar om te proeven aan."
+      "body": "We leveren uw bestellingen met zorg in heel België, op de gekozen datum en het gekozen tijdslot. Thuis, op kantoor of op de locatie van uw evenement: uw producten komen vers en klaar om te proeven aan."
     },
     "hosting": {
       "label": "De tafel",
@@ -352,7 +352,7 @@
   "deliveryMethods": {
     "delivery": {
       "label": "Levering",
-      "description": "We leveren uw bestelling op het adres van uw keuze: bij u thuis, op kantoor of op de locatie van uw evenement."
+      "description": "Overal in België, op het adres van uw keuze: bij u thuis, op kantoor of op de locatie van uw evenement."
     },
     "pickup": {
       "label": "Click & collect",
@@ -843,7 +843,7 @@
     },
     "fallback": {
       "product": "{title} uit de keuken van Moment in Brussel.",
-      "collection": "{title} bij Moment — elke ochtend bereid in Brussel en in heel de stad geleverd.",
+      "collection": "{title} bij Moment — bereid in ons atelier in Vorst en geleverd in heel België.",
       "article": "{title} — uit de keuken van Moment in Brussel.",
       "menu": "Cateringmenu",
       "productTitle": "{title} — levering in Brussel",
@@ -950,7 +950,7 @@
       "cards": [
         {
           "title": "Levering",
-          "body": "We leveren uw bestellingen met zorg, op de gekozen datum en het gekozen tijdslot. Thuis, op kantoor of op de locatie van uw evenement: uw producten komen vers en klaar om te proeven aan."
+          "body": "We leveren uw bestellingen met zorg in heel België, op de gekozen datum en het gekozen tijdslot. Thuis, op kantoor of op de locatie van uw evenement: uw producten komen vers en klaar om te proeven aan."
         },
         {
           "title": "Evenementen",
@@ -1043,7 +1043,7 @@
         "based": "Vorst, Brussel",
         "cookFor": "Particulieren, bedrijven en evenementlocaties",
         "services": "Levering, buffetten voor uw evenementen, koffiebar, samenwerkingen",
-        "deliveryArea": "Brussel en tot 70 km rond het atelier, verder op offerte",
+        "deliveryArea": "Overal in België: tot 70 km van het atelier aan de tarieven van de site, verder op offerte",
         "leadTime": "48 uur voor een levering, op aanvraag voor een evenement",
         "diets": "Vegetarische, veganistische en glutenvrije opties",
         "languages": "Français, Nederlands, English"
