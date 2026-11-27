@@ -34,7 +34,7 @@ export function ShopifyPane() {
       <p style={{ margin: "0 0 0.75rem" }}>
         Les produits, les prix, les commandes et les réglages de livraison ne se
         modifient pas ici, mais dans <strong>Shopify</strong>. Ce que vous y
-        changez apparaît sur le site en quelques secondes.
+        changez apparaît sur le site en une minute environ.
       </p>
       <p style={{ margin: "0 0 1.25rem", opacity: 0.75 }}>
         Ce Studio sert aux photos, au bandeau, aux infos pratiques, à la FAQ,

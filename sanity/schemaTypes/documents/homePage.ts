@@ -44,7 +44,7 @@ export const homePage = defineType({
       type: "string",
       placeholder: fr.home.heroPhoto.headline.replace(/\s+/g, " "),
       description:
-        "Votre signature, affichée en petit entre parenthèses sous les mots BRUNCH · LUNCH · CATERING · COFFEE CART · DELIVERY, la même dans les trois langues. Le texte en gris est celui affiché aujourd'hui : laissez la case vide pour le garder, ou écrivez par-dessus. Les parenthèses sont ajoutées par le site.",
+        "Votre signature, affichée en petit entre parenthèses au centre de la photo d'ouverture, la même dans les trois langues. Le texte en gris est celui affiché aujourd'hui : laissez la case vide pour le garder, ou écrivez par-dessus. Les parenthèses sont ajoutées par le site.",
     }),
 
     defineField({
@@ -56,7 +56,7 @@ export const homePage = defineType({
         en: en.home.heroPhoto.lead,
       }),
       description:
-        "Facultatif : aujourd'hui il n'y a pas de phrase sous le titre (votre demande du 26 novembre). Si vous en écrivez une, elle apparaît sous le titre. Une phrase, sans prix ni horaire. Même règle pour les langues que pour le titre.",
+        "Facultatif : aujourd'hui il n'y a pas de phrase sous la signature (votre demande du 26 novembre). Si vous en écrivez une, elle apparaît juste en dessous. Une phrase, sans prix ni horaire. Le néerlandais et l'anglais sont facultatifs : sans traduction, le français s'affiche.",
     }),
 
     defineField({
@@ -80,7 +80,7 @@ export const homePage = defineType({
       title: "La photo d'ouverture est…",
       type: "string",
       description:
-        "Choisissez selon la zone sous le texte. Après avoir changé la photo ou ce réglage, vérifiez sur le site, sur ordinateur et sur téléphone, que le titre et le menu se lisent bien.",
+        "« Sombre » (texte et menu en blanc) convient à la plupart des photos, avec le voile ci-dessous. Après avoir changé la photo ou ce réglage, vérifiez sur le site, sur ordinateur et sur téléphone, que la signature et le menu se lisent bien.",
       options: {
         list: [
           { title: "Sombre : texte et menu en blanc", value: "dark" },
@@ -105,7 +105,7 @@ export const homePage = defineType({
       title: "Photo « La cuisine »",
       type: "image",
       description:
-        "La grande photo verticale à droite du texte « La cuisine », sous le carrousel des produits.",
+        "La grande photo verticale à droite du texte « Dans notre atelier à Forest », sous le carrousel des produits.",
       options: { hotspot: true },
     }),
 
@@ -114,7 +114,7 @@ export const homePage = defineType({
       title: "Photo « Livraison »",
       type: "image",
       description:
-        "La grande photo verticale à gauche du texte « Livraison », sur fond bleu.",
+        "La grande photo verticale à gauche du texte « Nous vous livrons », sur fond bleu.",
       options: { hotspot: true },
     }),
 
@@ -139,19 +139,19 @@ export const homePage = defineType({
 
     defineField({
       name: "companiesImage",
-      title: "Photo « Entreprises »",
+      title: "Photo « Entreprises & catering »",
       type: "image",
       description:
-        "La carte « Entreprises » de la section « Pour chaque moment », qui mène à l'espace professionnel.",
+        "La carte « Entreprises & catering » de la section « Pour chaque moment », qui mène à l'espace professionnel.",
       options: { hotspot: true },
     }),
 
     defineField({
       name: "coffeeImage",
-      title: "Photo « Coffee desk »",
+      title: "Photo « Comptoir café »",
       type: "image",
       description:
-        "La carte « Coffee desk » de la section « Pour chaque moment », qui mène à la page Café.",
+        "La carte « Comptoir café » de la section « Pour chaque moment », qui mène à la page Comptoir café.",
       options: { hotspot: true },
     }),
   ],

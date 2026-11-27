@@ -36,8 +36,9 @@ export const announcement = defineType({
       type: "localeString",
       validation: (rule) =>
         rule.custom((value: { fr?: string } | undefined, context) => {
-          const enabled = (context.document as { enabled?: boolean } | undefined)
-            ?.enabled;
+          const enabled = (
+            context.document as { enabled?: boolean } | undefined
+          )?.enabled;
           if (enabled && !value?.fr?.trim()) {
             return "Le message en français est obligatoire pour afficher le bandeau.";
           }
@@ -57,12 +58,13 @@ export const announcement = defineType({
       name: "linkUrl",
       title: "Adresse du lien (facultatif)",
       description:
-        "Une page du site sans la langue, par exemple /menus ou /shop, ou une adresse complète commençant par https://.",
+        "Une page du site sans la langue, par exemple /events ou /shop, ou une adresse complète commençant par https://.",
       type: "string",
       validation: (rule) =>
         rule.custom((value: string | undefined) => {
           if (!value) return true;
-          if (value.startsWith("/") || value.startsWith("https://")) return true;
+          if (value.startsWith("/") || value.startsWith("https://"))
+            return true;
           return "Commencez par / (une page du site) ou par https:// (un autre site).";
         }),
     }),

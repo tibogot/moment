@@ -56,9 +56,12 @@ const GROUPS: Group[] = [
           </>,
           <>
             <strong>Type de produit</strong> : écrivez-le exactement comme pour
-            les autres — Salades, Jus pressés à froid, Petit-déjeuner, Boissons,
-            Cookies, Cakes, Healthy snacks ou Épicerie. C&apos;est lui qui range
-            le produit dans le bon rayon du site.
+            les autres — Jus pressés à froid, Boissons, Petit-déjeuner, Salades,
+            Dips, Bagels &amp; Sandwiches, Toasts, Cookies, Cakes, Healthy
+            snacks ou Épicerie. C&apos;est lui qui range le produit dans vos six
+            familles du menu « Nos produits » (Cold Pressed Juice &amp; Drinks,
+            Daily Pots, Breads &amp; Toast…). Le champ « Catégorie » de Shopify,
+            lui, n&apos;est pas utilisé : vous pouvez le laisser vide.
           </>,
           <>
             <strong>Tags</strong>, en minuscules, sans accent : les régimes (
@@ -93,6 +96,32 @@ const GROUPS: Group[] = [
         links: [
           { label: "Ajouter un produit", href: shopify("/products/new") },
         ],
+      },
+      {
+        title: "Proposer un produit en deux tailles (M / L)",
+        steps: [
+          <>
+            Sur la fiche du produit, section <strong>Variantes</strong> →{" "}
+            <strong>Ajouter des options comme la taille</strong>.
+          </>,
+          <>
+            <strong>Une seule option</strong>, nommée <strong>Taille</strong>,
+            avec deux valeurs : <strong>M</strong> et <strong>L</strong>.
+          </>,
+          <>
+            Indiquez le <strong>prix de chaque variante</strong> (par exemple M
+            9,00 €, L 12,50 €), puis Enregistrer.
+          </>,
+        ],
+        tip: (
+          <>
+            Le site affiche alors « dès 9,00 € » sur les cartes et le choix M /
+            L sur la fiche, avec le prix qui suit. Ne créez pas une option par
+            taille (une option « M », une option « L ») : cela ne donne
+            qu&apos;une seule variante. Le contenu (300 ml, 400 ml) va dans la
+            description ou dans le champ Portion.
+          </>
+        ),
       },
       {
         title: "Bien remplir les allergènes et le régime",
@@ -310,10 +339,10 @@ const GROUPS: Group[] = [
         title: "Les demandes de devis, de contact et de compte pro",
         body: (
           <p style={P}>
-            Les formulaires du site (contact, devis pour un événement, compte
-            professionnel, partenariat) arrivent <strong>par e-mail</strong>{" "}
-            dans votre boîte de contact. Répondez directement à l&apos;e-mail :
-            la réponse part au client.
+            Les formulaires du site (contact, devis pour un événement,
+            réservation du comptoir café, collaboration, compte professionnel)
+            arrivent <strong>par e-mail</strong> dans votre boîte de contact.
+            Répondez directement à l&apos;e-mail : la réponse part au client.
           </p>
         ),
       },
@@ -345,7 +374,8 @@ const GROUPS: Group[] = [
           <>
             Une phrase courte, en français, et si possible aussi en néerlandais
             et en anglais (sinon le français s&apos;affiche partout). Un lien si
-            vous voulez (par exemple <code>/events</code>).
+            vous voulez (par exemple <code>/events</code> ou <code>/shop</code>
+            ).
           </>,
           <>
             Allumez <strong>Afficher le bandeau</strong>, puis{" "}
