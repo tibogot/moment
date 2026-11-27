@@ -126,11 +126,13 @@
     --body-text: max(18px, min(1.35vw, 2svh));
     /* Fixed, not vw-scaled: the navbar is chrome, and letting it grow with the
        viewport made the links 18px on a 1920 screen. */
-    --nav-text: 14px;
+    /* 13px links and 18px icons with the 150px logo (27 November 2026):
+       a notch smaller, so the bigger logo the owners asked for leads the bar.
+       Same ratio as before — a line icon fills ~80% of its box, so 18px sits
+       level with 13px capitals. */
+    --nav-text: 13px;
     --nav-logo: 150px;
-    /* 20px like the phone's (27 November 2026): a line icon fills ~80% of
-       its box, and at 16px it read smaller than the 14px capitals beside it. */
-    --nav-icon: 20px;
+    --nav-icon: 18px;
     --card-type: 13px;
     --card-price: 15px;
   }
