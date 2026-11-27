@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { StaticImageData } from "next/image";
 import { HeroParallaxImage } from "@/components/HeroParallaxImage";
 import { CellGrid } from "@/components/v2/CellGrid";
+import { HeroWordCycle } from "@/components/v2/HeroWordCycle";
 
 type PhotoHeroProps = {
   /** The five words, in order: "Brunch", "Lunch", "Catering"… */
@@ -71,23 +72,31 @@ export function PhotoHero({
       />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-(--grid-inset) text-center">
-        {/* One word per line on a phone, one line with dots from tablet up. */}
-        <p
-          aria-label={words.join(", ")}
-          className="font-owners-narrow-bold flex flex-col items-center text-[13vw] leading-[0.95] tracking-[-0.005em] uppercase md:flex-row md:flex-nowrap md:justify-center md:gap-x-[0.35em] md:text-[min(3.5vw,8svh)] md:leading-none"
-        >
-          {words.map((word, index) => (
-            <span
-              key={word}
-              aria-hidden
-              className="hero-word inline-flex items-center gap-x-[0.35em] whitespace-nowrap"
-              style={{ "--hero-word-index": index } as CSSProperties}
+        {/* A try (27 November 2026): one word at a time, in brackets, with
+            the block reveal. The owners' row of five stays behind
+            ?hero=list to compare. */}
+        <HeroWordCycle
+          words={words}
+          className="font-owners-narrow-bold text-[13vw] leading-none tracking-[-0.005em] whitespace-nowrap uppercase md:text-[min(7vw,13svh)]"
+          list={
+            <p
+              aria-label={words.join(", ")}
+              className="font-owners-narrow-bold flex flex-col items-center text-[13vw] leading-[0.95] tracking-[-0.005em] uppercase md:flex-row md:flex-nowrap md:justify-center md:gap-x-[0.35em] md:text-[min(3.5vw,8svh)] md:leading-none"
             >
-              {index > 0 && <span className="hidden md:inline">·</span>}
-              {word}
-            </span>
-          ))}
-        </p>
+              {words.map((word, index) => (
+                <span
+                  key={word}
+                  aria-hidden
+                  className="hero-word inline-flex items-center gap-x-[0.35em] whitespace-nowrap"
+                  style={{ "--hero-word-index": index } as CSSProperties}
+                >
+                  {index > 0 && <span className="hidden md:inline">·</span>}
+                  {word}
+                </span>
+              ))}
+            </p>
+          }
+        />
 
         {line && (
           <p
