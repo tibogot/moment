@@ -66,7 +66,19 @@ if (!shop || !clientId || !clientSecret) {
   process.exit(1);
 }
 
-const callbackUrl = siteUrl.replace(/\/$/, "") + ENDPOINT_PATH;
+/*
+ * A site behind Vercel's login (the private test address) rejects Shopify's
+ * calls like any visitor. WEBHOOK_BYPASS_SECRET — the project's "Protection
+ * Bypass for Automation" key — goes in the address, where Vercel reads it;
+ * Shopify cannot send a custom header. Leave it unset for the real domain.
+ */
+const bypass = process.env.WEBHOOK_BYPASS_SECRET?.trim();
+const callbackUrl =
+  siteUrl.replace(/\/$/, "") +
+  ENDPOINT_PATH +
+  (bypass ? `?x-vercel-protection-bypass=${encodeURIComponent(bypass)}` : "");
+/** The address as printed: never the key. */
+const shown = callbackUrl.replace(/(x-vercel-protection-bypass=)[^&]+/, "$1***");
 
 async function token() {
   const response = await fetch(`https://${shop}/admin/oauth/access_token`, {
@@ -149,7 +161,7 @@ for (const sub of elsewhere) {
 }
 
 console.log(
-  `${created} subscription(s) created, ${TYPES.length * TOPICS.length - created} already in place, for ${callbackUrl}.`,
+  `${created} subscription(s) created, ${TYPES.length * TOPICS.length - created} already in place, for ${shown}.`,
 );
 if (elsewhere.length) {
   console.log(
