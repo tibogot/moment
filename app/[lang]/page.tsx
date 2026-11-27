@@ -98,10 +98,12 @@ export async function generateMetadata({
 }
 
 /**
- * After the moments, the four collections the owners asked for on the home
- * (their text document, 26 November 2026: "COLLECTIONS — Cold Pressed Juices
- * (tous nos jus), Daily Pots (salades et sweet pots), Desserts, Healthy
- * Snacks"). An empty or missing one is left out.
+ * The four collections the owners asked for on the home (their text
+ * document, 26 November 2026: "COLLECTIONS — Cold Pressed Juices (tous nos
+ * jus), Daily Pots (salades et sweet pots), Desserts, Healthy Snacks"). Their
+ * own carousel since 27 November 2026, after the two story sections: in one
+ * carousel with the moments, seven tabs were too many choices for one block.
+ * An empty or missing one is left out.
  */
 const COLLECTION_TABS = [
   { key: "juices", handle: "cold-pressed-juice" },
@@ -196,10 +198,6 @@ export default async function Home({
       },
     ];
   });
-  const tabs = [
-    ...momentTabs,
-    ...familyTabs.map((tab, index) => ({ ...tab, startsGroup: index === 0 })),
-  ];
 
   return (
     <>
@@ -232,11 +230,11 @@ export default async function Home({
         {/* Joined: it continues the intro, no rule between them. */}
         <ProductCarouselCells
           joined
-          tabs={tabs}
+          tabs={momentTabs}
           defaultTabId={
-            tabs.some((tab) => tab.id === DEFAULT_HANDLE)
+            momentTabs.some((tab) => tab.id === DEFAULT_HANDLE)
               ? DEFAULT_HANDLE
-              : tabs[0]?.id
+              : momentTabs[0]?.id
           }
           shopLink={{ href: routes.shop, label: home.moments.shop }}
           soldOutLabel={dict.product.soldOut}
@@ -261,6 +259,21 @@ export default async function Home({
           body={home.delivery.body}
           src={photo(images.delivery, deliveryImage)}
         />
+        {/* The owners' four collections, a second way into the shop halfway
+            down the page. */}
+        {familyTabs.length > 0 && (
+          <>
+            <GridSpacer />
+            <ProductCarouselCells
+              tabs={familyTabs}
+              defaultTabId={familyTabs[0].id}
+              shopLink={{ href: routes.shop, label: home.moments.shop }}
+              soldOutLabel={dict.product.soldOut}
+              prevLabel={home.calendar.prev}
+              nextLabel={home.calendar.next}
+            />
+          </>
+        )}
         {/* "La table" left on 27 November 2026 (the owners' text document:
             "à supprimer"). Its Studio photo slot is hidden, not deleted. */}
         {/* Reviews from the Studio — nothing until one is published. A first
