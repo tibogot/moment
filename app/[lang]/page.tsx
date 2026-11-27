@@ -32,9 +32,9 @@ import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 // Built-in photographs: each one shows until the owners upload theirs in the
 // Studio (Page d'accueil).
 import companiesImage from "@/public/images/anita-austvika.jpg";
-// Bright, top-down, on the brand's grid paper — the kind the owners sent
-// (27 November 2026) — until their own is uploaded in the Studio.
-import heroImage from "@/public/images/gemini-moment.webp";
+// The owners' own table photo from their text document (27 November 2026),
+// upscaled until they send the original; a Studio upload replaces it.
+import heroImage from "@/public/images/moment-table.jpg";
 import coffeeImage from "@/public/images/oak-bond-coffee.jpg";
 import eventsImage from "@/public/images/onur-kaya.jpg";
 import kitchenImage from "@/public/images/dan-smedley.jpg";
