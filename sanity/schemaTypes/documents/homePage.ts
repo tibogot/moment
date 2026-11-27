@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { photoRules } from "../objects/photoRules";
 import { HomeIcon } from "@sanity/icons/Home";
 import en from "@/lib/i18n/dictionaries/en.json";
 import fr from "@/lib/i18n/dictionaries/fr.json";
@@ -66,6 +67,7 @@ export const homePage = defineType({
       description:
         "La grande photo plein écran en haut de la page d'accueil. Elle est recadrée très différemment sur un téléphone et sur un écran large — après l'avoir chargée, cliquez sur l'icône de recadrage en haut à droite de la photo (« Rogner l'image ») et placez le point important, c'est lui qui reste toujours visible. Aujourd'hui, case vide : votre table vue du dessus (la photo de votre document).",
       options: { hotspot: true },
+      validation: photoRules(2400),
     }),
 
     /**
@@ -107,6 +109,7 @@ export const homePage = defineType({
       description:
         "La grande photo verticale à droite du texte « Dans notre atelier à Forest », sous le carrousel des produits. Aujourd'hui, case vide : vos salades avec leur carte (la photo de votre document).",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
 
     defineField({
@@ -116,6 +119,7 @@ export const homePage = defineType({
       description:
         "La grande photo verticale à gauche du texte « Nous vous livrons », sur fond bleu. Aujourd'hui, case vide : les boîtes Moment empilées (la photo de votre document).",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
 
     defineField({
@@ -135,6 +139,7 @@ export const homePage = defineType({
       description:
         "La carte « Événements » de la section « Pour chaque moment », qui mène à la page Événements. Aujourd'hui, case vide : une photo d'illustration, à remplacer par l'une de vos tables.",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
 
     defineField({
@@ -144,6 +149,7 @@ export const homePage = defineType({
       description:
         "La carte « Entreprises & catering » de la section « Pour chaque moment », qui mène à l'espace professionnel. Aujourd'hui, case vide : une photo d'illustration, à remplacer par l'une des vôtres.",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
 
     defineField({
@@ -153,6 +159,7 @@ export const homePage = defineType({
       description:
         "La carte « Comptoir café » de la section « Pour chaque moment », qui mène à la page Comptoir café. Aujourd'hui, case vide : votre comptoir café bleu (la photo de votre document).",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
   ],
   preview: {

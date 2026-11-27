@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { photoRules } from "../objects/photoRules";
 import { CaseIcon } from "@sanity/icons/Case";
 
 /**
@@ -23,6 +24,7 @@ export const coffeePage = defineType({
       description:
         "La grande photo verticale à gauche, sous le titre. Le comptoir en service, de préférence en hauteur (portrait). Aujourd'hui, case vide : votre comptoir café bleu (la photo de votre document).",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
     defineField({
       name: "secondImage",
@@ -31,6 +33,7 @@ export const coffeePage = defineType({
       description:
         "La photo plus petite, à droite et plus bas. Un détail (une tasse, le matcha, la machine) répond bien à la grande. En hauteur aussi. Aujourd'hui, case vide : une photo d'illustration, à remplacer par l'une des vôtres.",
       options: { hotspot: true },
+      validation: photoRules(1600),
     }),
   ],
   preview: {

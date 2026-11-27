@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { photoRules } from "../objects/photoRules";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 
 /**
@@ -86,7 +87,8 @@ export const article = defineType({
           validation: (rule) => rule.required(),
         }),
       ],
-      validation: (rule) => rule.required(),
+      // Required, plus the page photos' checks (too small, too heavy).
+      validation: (rule) => [rule.required(), ...photoRules(1600)(rule)],
     }),
     defineField({
       name: "body",

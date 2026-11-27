@@ -501,6 +501,35 @@ const GROUPS: Group[] = [
         ),
       },
       {
+        title: "Quelle photo envoyer ?",
+        when: "Avant de charger une photo, où que ce soit dans le Studio.",
+        steps: [
+          <>
+            Envoyez la <strong>photo originale</strong>, telle qu&apos;elle sort
+            de l&apos;appareil ou du photographe : pas une capture d&apos;écran,
+            ni une photo reçue par WhatsApp ou reprise d&apos;Instagram (elles
+            sont réduites et deviennent floues sur grand écran).
+          </>,
+          <>
+            Pas besoin de la compresser ni de la convertir : le site la
+            redimensionne et l&apos;envoie au bon format (WebP) à chaque
+            visiteur, téléphone ou ordinateur.
+          </>,
+          <>
+            Un <strong>message orange</strong> sous la photo signale
+            qu&apos;elle est petite : vous pouvez publier quand même, mais une
+            plus grande sera plus nette. Au-delà de <strong>25 Mo</strong>, le
+            Studio la refuse : exportez-la en JPEG.
+          </>,
+        ],
+        tip: (
+          <>
+            Les photos font partie de votre identité, surtout celle de
+            l&apos;accueil : en cas de doute, demandez conseil à Rond Carré.
+          </>
+        ),
+      },
+      {
         title: "Changer les photos de la page d'accueil",
         steps: [
           <>
