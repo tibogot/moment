@@ -855,6 +855,11 @@ html:has([data-hero-tone="light"]) [data-nav-logo] {
   filter: brightness(0);
 }
 
+/* The hero's veil, hidden with ?veil=off to compare (VeilToggle). */
+html[data-hero-veil="off"] .hero-veil {
+  display: none;
+}
+
 /* The home hero's words, one after another (components/v2/PhotoHero.tsx,
    27 November 2026): each rises in a beat after the one before. */
 .hero-word {

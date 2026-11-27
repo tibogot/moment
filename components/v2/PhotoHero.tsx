@@ -3,6 +3,7 @@ import type { StaticImageData } from "next/image";
 import { HeroParallaxImage } from "@/components/HeroParallaxImage";
 import { CellGrid } from "@/components/v2/CellGrid";
 import { HeroWordCycle } from "@/components/v2/HeroWordCycle";
+import { VeilToggle } from "@/components/v2/VeilToggle";
 
 type PhotoHeroProps = {
   /** The five words, in order: "Brunch", "Lunch", "Catering"… */
@@ -23,6 +24,12 @@ type PhotoHeroProps = {
    * globals.css). Set in the Studio, "Page d'accueil".
    */
   tone?: "dark" | "light";
+  /**
+   * A light dark veil over the photo, heavier in the centre where the type
+   * sits, so white type reads on a busy or bright photo. Dark tone only.
+   * `?veil=off` in the address hides it, to compare (temporary).
+   */
+  veil?: boolean;
 };
 
 /**
@@ -47,7 +54,8 @@ export function PhotoHero({
   lead,
   image,
   blurDataURL,
-  tone = "light",
+  tone = "dark",
+  veil = true,
 }: PhotoHeroProps) {
   const light = tone === "light";
   const line = signature.replace(/\s+/g, " ").trim();
@@ -63,6 +71,20 @@ export function PhotoHero({
       data-hero-tone={tone}
     >
       <HeroParallaxImage src={image} blurDataURL={blurDataURL} />
+
+      <VeilToggle />
+      {veil && !light && (
+        <div
+          aria-hidden
+          className="hero-veil pointer-events-none absolute inset-0"
+          style={{
+            background:
+              // A band under the navbar, so white links read on a bright edge,
+              // then the centre for the words.
+              "linear-gradient(to bottom, rgb(0 0 0 / 0.3), rgb(0 0 0 / 0) 22%), radial-gradient(ellipse 70% 60% at 50% 50%, rgb(0 0 0 / 0.32), rgb(0 0 0 / 0.14) 70%, rgb(0 0 0 / 0.08))",
+          }}
+        />
+      )}
 
       {/* The frame only: cream over a dark photo, sky over a light one. */}
       <CellGrid

@@ -279,6 +279,7 @@ export const homePageQuery = defineQuery(`*[_id == "homePage"][0] {
   heroLead,
   heroImage { ..., "lqip": asset->metadata.lqip },
   heroTone,
+  heroVeil,
   kitchenImage,
   deliveryImage,
   hostingImage,
@@ -295,6 +296,8 @@ export type HomePageImages = {
   hero: (SanityImage & { lqip?: string }) | null;
   /** "light": dark type over a light photo. Defaults to "dark". */
   heroTone: "dark" | "light";
+  /** A light dark veil over the photo, under white type. Defaults to on. */
+  heroVeil: boolean;
   kitchen: SanityImage | null;
   delivery: SanityImage | null;
   hosting: SanityImage | null;
@@ -307,7 +310,8 @@ const NO_HOME_IMAGES: HomePageImages = {
   heroHeadline: null,
   heroLead: null,
   hero: null,
-  heroTone: "light",
+  heroTone: "dark",
+  heroVeil: true,
   kitchen: null,
   delivery: null,
   hosting: null,
@@ -321,6 +325,7 @@ type HomePageResponse = {
   heroLead?: LocaleString | null;
   heroImage?: (SanityImage & { lqip?: string }) | null;
   heroTone?: string | null;
+  heroVeil?: boolean | null;
   kitchenImage?: SanityImage | null;
   deliveryImage?: SanityImage | null;
   hostingImage?: SanityImage | null;
@@ -357,8 +362,10 @@ export async function getHomePageImages(): Promise<HomePageImages> {
           : ((response.heroHeadline as { fr?: string } | null)?.fr ?? null),
       heroLead: response.heroLead ?? null,
       hero: uploaded(response.heroImage),
-      // Light unless set to dark: the owners' photos are bright (27 Nov 2026).
-      heroTone: response.heroTone === "dark" ? "dark" : "light",
+      // White type unless set to light: even on the owners' bright photo it
+      // reads better than black (the user's test, 27 November 2026).
+      heroTone: response.heroTone === "light" ? "light" : "dark",
+      heroVeil: response.heroVeil !== false,
       kitchen: uploaded(response.kitchenImage),
       delivery: uploaded(response.deliveryImage),
       hosting: uploaded(response.hostingImage),

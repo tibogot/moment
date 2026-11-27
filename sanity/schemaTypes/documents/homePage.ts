@@ -88,7 +88,16 @@ export const homePage = defineType({
         ],
         layout: "radio",
       },
-      initialValue: "light",
+      initialValue: "dark",
+    }),
+
+    defineField({
+      name: "heroVeil",
+      title: "Assombrir légèrement la photo",
+      type: "boolean",
+      description:
+        "Un voile sombre très léger, plus marqué au centre, pour que le texte et le menu blancs se lisent partout. Seulement avec « Sombre ». Décochez si la photo est déjà assez foncée.",
+      initialValue: true,
     }),
 
     defineField({

@@ -262,6 +262,7 @@ export type HomePage = {
     _type: "image";
   };
   heroTone?: "dark" | "light";
+  heroVeil?: boolean;
   kitchenImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -758,13 +759,14 @@ export type PastEventsQueryResult = Array<{
 
 // Source: lib/sanity/queries.ts
 // Variable: homePageQuery
-// Query: *[_id == "homePage"][0] {  heroHeadline,  heroLead,  heroImage { ..., "lqip": asset->metadata.lqip },  heroTone,  kitchenImage,  deliveryImage,  hostingImage,  eventsImage,  companiesImage,  coffeeImage}
+// Query: *[_id == "homePage"][0] {  heroHeadline,  heroLead,  heroImage { ..., "lqip": asset->metadata.lqip },  heroTone,  heroVeil,  kitchenImage,  deliveryImage,  hostingImage,  eventsImage,  companiesImage,  coffeeImage}
 export type HomePageQueryResult =
   | {
       heroHeadline: null;
       heroLead: null;
       heroImage: null;
       heroTone: null;
+      heroVeil: null;
       kitchenImage: null;
       deliveryImage: null;
       hostingImage: null;
@@ -788,6 +790,7 @@ export type HomePageQueryResult =
         lqip: string | null;
       } | null;
       heroTone: "dark" | "light" | null;
+      heroVeil: boolean | null;
       kitchenImage: {
         asset?: SanityImageAssetReference;
         media?: unknown;
@@ -975,7 +978,7 @@ declare global {
     '*[_type == "menu" && slug.current == $slug][0] {\n  \n  _id,\n  title,\n  slug,\n  format,\n  summary,\n  pricePerPerson,\n  priceNote,\n  minGuests,\n  maxGuests,\n  leadTimeDays,\n  includes,\n  excludes,\n  dietaryNote,\n  image\n,\n  \n  courses[]{\n    _key,\n    title,\n    items\n  }\n\n}': MenuBySlugQueryResult;
     '*[_type == "menu" && defined(slug.current)]{\n  "slug": slug.current\n}': MenuSlugsQueryResult;
     '*[_type == "pastEvent" && defined(images[0].asset)] | order(coalesce(featured, false) desc, date desc) {\n  \n  _id,\n  occasion,\n  guests,\n  commune,\n  venue,\n  date,\n  client,\n  note,\n  featured,\n  images,\n  menu->{ title, "slug": slug.current },\n  article->{ title, language, "slug": slug.current }\n\n}': PastEventsQueryResult;
-    '*[_id == "homePage"][0] {\n  heroHeadline,\n  heroLead,\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  heroTone,\n  kitchenImage,\n  deliveryImage,\n  hostingImage,\n  eventsImage,\n  companiesImage,\n  coffeeImage\n}': HomePageQueryResult;
+    '*[_id == "homePage"][0] {\n  heroHeadline,\n  heroLead,\n  heroImage { ..., "lqip": asset->metadata.lqip },\n  heroTone,\n  heroVeil,\n  kitchenImage,\n  deliveryImage,\n  hostingImage,\n  eventsImage,\n  companiesImage,\n  coffeeImage\n}': HomePageQueryResult;
     '*[_id == "eventsPage"][0] {\n  firstImage,\n  secondImage\n}': EventsPageQueryResult;
     '*[_id == "coffeePage"][0] {\n  firstImage,\n  secondImage\n}': CoffeePageQueryResult;
     '*[_id == "faqPage"][0] {\n  steps[]{ _key, title, body },\n  "questions": questions[hidden != true]{ _key, question, answer }\n}': FaqPageQueryResult;
