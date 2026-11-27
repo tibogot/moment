@@ -71,11 +71,11 @@
     },
     "heroPhoto": {
       "headline": "Life is\nmoments",
-      "lead": "Uw moment kiezen, ook als de tijd ontbreekt.",
-      "intro": "Traiteur in Brussel: maaltijden geleverd op kantoor, thuis en voor uw evenementen.",
+      "lead": "",
+      "intro": "Moment levert uw ontbijt, brunch en lunch op het adres van uw keuze.",
       "introBody": [
-        "Salades, ontbijt en koudgeperste sappen, elke ochtend bereid in ons atelier in Vorst met seizoensproducten, en klaar om te serveren geleverd in Brussel en omgeving. U kiest de dag en het tijdslot, wij zorgen voor de rest, op kantoor of thuis.",
-        "Voor een teamlunch die de routine doorbreekt of een evenement waar elk detail telt, stellen wij samen met u het menu samen en verzorgen wij de bediening, van twintig tot tweehonderd gasten. Lancering, vergadering of diner aan tafel, wij passen het formaat aan, nooit de kwaliteit."
+        "Moment is een traiteur met een atelier in Vorst, gespecialiseerd in ontbijt, brunch, lunch en koudgeperste sappen. We bereiden onze producten met verse, zorgvuldig gekozen ingrediënten en leveren ze rechtstreeks bij u thuis, op kantoor of op de locatie van uw evenement. Van de bereiding tot de levering waken we over hun versheid en presentatie.",
+        "Voor een bedrijfsontbijt, een teamlunch of een privéfeest bieden we een assortiment kwaliteitsproducten, tegelijk gezond en lekker bereid. We willen tonen dat goed eten geen opgave hoeft te zijn, en dat je daarvoor niets van smaak hoeft in te leveren."
       ]
     },
     "intro": {
@@ -84,13 +84,13 @@
     },
     "kitchen": {
       "label": "De keuken",
-      "title": "Gekookt op de ochtend zelf.",
-      "body": "Wij beginnen voor zonsopgang, als de stad nog stil is. Gerechten, salades en koudgeperste sappen worden diezelfde ochtend vers gemaakt — seizoensproducten, sauzen die 's nachts inkoken, dressings op het laatste moment aangemaakt. Niets opgewarmd, niets van gisteren."
+      "title": "In ons atelier in Vorst",
+      "body": "Al onze producten worden bereid in ons atelier in Vorst, waar we ook onze sappen koud persen. We kiezen verse ingrediënten met zorg en werken met uitstekende ambachtelijke bakkerijen voor het brood van onze bagels, sandwiches en toasts."
     },
     "delivery": {
       "label": "Levering",
-      "title": "Bereid bij dageraad, geserveerd bij de lunch.",
-      "body": "Wij pakken in en rijden 's ochtends vroeg door Brussel, zodat de lunch aankomt zoals de keuken het bedoelde. Isothermische dozen, porties al opgemaakt, garnituur apart — klaar om uit te pakken en te serveren aan uw bureau, in een vergaderzaal of thuis voor uw gasten binnenkomen."
+      "title": "Wij leveren bij u",
+      "body": "We leveren uw bestellingen met zorg, op de gekozen datum en het gekozen tijdslot. Thuis, op kantoor of op de locatie van uw evenement: uw producten komen vers en klaar om te proeven aan."
     },
     "hosting": {
       "label": "De tafel",
@@ -119,11 +119,11 @@
         "body": "Een volledige cateringservice, waar elk detail telt."
       },
       "companies": {
-        "title": "Bedrijven",
+        "title": "Bedrijven & catering",
         "body": "Een teamlunch die de routine doorbreekt."
       },
       "coffee": {
-        "title": "Coffee desk",
+        "title": "Koffiebar",
         "body": "Een koffie waar u eindelijk de tijd voor neemt."
       }
     },
@@ -706,7 +706,7 @@
   "meta": {
     "home": {
       "title": "Moment — Traiteur & catering in Brussel",
-      "description": "Traiteur in Brussel voor particulieren en bedrijven. Seizoensgerechten, salades en koudgeperste sappen, elke ochtend bereid en klaar om te serveren geleverd.",
+      "description": "Traiteur in Vorst (Brussel): ontbijt, brunch, lunch en koudgeperste sappen, bereid in ons atelier en geleverd bij u thuis, op kantoor of voor uw evenementen.",
       "keywords": [
         "traiteur Brussel",
         "catering Brussel",

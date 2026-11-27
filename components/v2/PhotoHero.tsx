@@ -10,6 +10,7 @@ import { REVEAL_BLOCK, REVEAL_HERO } from "@/lib/colors";
 
 type PhotoHeroProps = {
   headline: string;
+  /** Empty: no sentence under the slogan (the owners removed it, 27 Nov 2026). */
   lead: string;
   cta: string;
   /**
@@ -81,20 +82,22 @@ export function PhotoHero({
             <Lines text={headline} />
           </p>
         </TextReveal>
-        <div className="mt-[3svh]">
-          <TextReveal
-            animateOnScroll={false}
-            blockColor={REVEAL_BLOCK}
-            followColor={REVEAL_HERO}
-            delay={0.6}
-            stagger={0.08}
-            duration={0.6}
-          >
-            <p className="font-archivo-light max-w-[40ch] text-(length:--body-text) leading-snug text-balance">
-              {lead}
-            </p>
-          </TextReveal>
-        </div>
+        {lead && (
+          <div className="mt-[3svh]">
+            <TextReveal
+              animateOnScroll={false}
+              blockColor={REVEAL_BLOCK}
+              followColor={REVEAL_HERO}
+              delay={0.6}
+              stagger={0.08}
+              duration={0.6}
+            >
+              <p className="font-archivo-light max-w-[40ch] text-(length:--body-text) leading-snug text-balance">
+                {lead}
+              </p>
+            </TextReveal>
+          </div>
+        )}
         {/* The button, off for now (25 November 2026). Uncomment it, the
             two imports at the top and "cta" in the props to bring it back.
         <Link

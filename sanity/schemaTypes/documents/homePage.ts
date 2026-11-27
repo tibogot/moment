@@ -57,7 +57,7 @@ export const homePage = defineType({
         en: en.home.heroPhoto.lead,
       }),
       description:
-        "La phrase sous le titre. Le texte en gris est celui affiché aujourd'hui : laissez vide pour le garder, ou écrivez par-dessus. Une phrase, sans prix ni horaire. Même règle pour les langues que pour le titre.",
+        "Facultatif : aujourd'hui il n'y a pas de phrase sous le titre (votre demande du 26 novembre). Si vous en écrivez une, elle apparaît sous le titre. Une phrase, sans prix ni horaire. Même règle pour les langues que pour le titre.",
     }),
 
     defineField({
@@ -114,6 +114,8 @@ export const homePage = defineType({
       name: "hostingImage",
       title: "Photo « La table »",
       type: "image",
+      // The section left the home on 27 November 2026 (the owners' request).
+      hidden: true,
       description: "La grande photo verticale à droite du texte « La table ».",
       options: { hotspot: true },
     }),

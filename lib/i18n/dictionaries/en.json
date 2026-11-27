@@ -71,11 +71,11 @@
     },
     "heroPhoto": {
       "headline": "Life is\nmoments",
-      "lead": "Choosing your moment, even when time is short.",
-      "intro": "Caterer in Brussels: meals delivered to the office, at home and for your events.",
+      "lead": "",
+      "intro": "Moment delivers your breakfasts, brunches and lunches to the address of your choice.",
       "introBody": [
-        "Salads, breakfasts and cold-pressed juices, made every morning in our Forest atelier with seasonal produce, then delivered ready to serve across Brussels and its surroundings. You choose the day and the slot, we take care of the rest, at the office or at home.",
-        "For a team lunch that breaks the routine or an event where every detail counts, we put the menu together with you and run the service, for twenty to two hundred guests. A launch, a meeting or a seated dinner, we adapt the format, never the standard."
+        "Moment is a caterer with its atelier in Forest, focused on breakfasts, brunches, lunches and cold-pressed juices. We make our products from fresh, carefully chosen ingredients and deliver them straight to your home, your office or the venue of your event. From preparation to delivery, we look after their freshness and their presentation.",
+        "For a company breakfast, a team lunch or a private event, we offer a range of quality products, made to be both healthy and indulgent. We want to show that eating well need not be a constraint, and need not sacrifice anything in taste or flavour."
       ]
     },
     "intro": {
@@ -84,13 +84,13 @@
     },
     "kitchen": {
       "label": "The kitchen",
-      "title": "Cooked the morning it is eaten.",
-      "body": "We start before dawn, when the city is still quiet. Plates, salads and cold-pressed juices are made from scratch that same morning — seasonal produce, sauces reduced overnight, dressings mixed at the last minute. Nothing reheated, nothing left over from the day before."
+      "title": "In our atelier in Forest",
+      "body": "All our products are made in our atelier in Forest, where we also cold-press our juices. We choose fresh ingredients with care and work with first-rate artisan bakeries for the bread in our bagels, sandwiches and toasts."
     },
     "delivery": {
       "label": "Delivery",
-      "title": "Prepared at dawn, served by lunch.",
-      "body": "We pack and send across Brussels in the early hours, so lunch arrives as the kitchen intended. Insulated boxes, portions already set, garnishes kept separate — ready to unwrap and serve at your desk, in a meeting room, or at home before your guests walk in."
+      "title": "We deliver to you",
+      "body": "We deliver your orders with care, on the date and in the time slot you choose. At home, at the office or at your event's venue, your products arrive fresh and ready to enjoy."
     },
     "hosting": {
       "label": "The table",
@@ -119,11 +119,11 @@
         "body": "A full catering service, where every detail counts."
       },
       "companies": {
-        "title": "Companies",
+        "title": "Companies & catering",
         "body": "A team lunch that breaks the routine."
       },
       "coffee": {
-        "title": "Coffee desk",
+        "title": "Coffee cart",
         "body": "A coffee you finally take the time to drink."
       }
     },
@@ -706,7 +706,7 @@
   "meta": {
     "home": {
       "title": "Moment — Traiteur & Catering in Brussels",
-      "description": "A traiteur in Brussels for private hosts and companies. Seasonal plates, salads and cold-pressed juices, cooked each morning and delivered ready to serve.",
+      "description": "Caterer in Forest (Brussels): breakfasts, brunches, lunches and cold-pressed juices, made in our atelier and delivered to your home, office or event.",
       "keywords": [
         "traiteur Brussels",
         "catering Brussels",

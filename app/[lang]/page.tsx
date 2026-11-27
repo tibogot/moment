@@ -37,7 +37,6 @@ import coffeeImage from "@/public/images/oak-bond-coffee.jpg";
 import eventsImage from "@/public/images/onur-kaya.jpg";
 import kitchenImage from "@/public/images/dan-smedley.jpg";
 import deliveryImage from "@/public/images/william-king.jpg";
-import hostingImage from "@/public/images/nicole-herrero.jpg";
 
 /**
  * The home, on the v2 grid since 25 November 2026 (the previous one is at
@@ -202,7 +201,7 @@ export default async function Home({
         {/* A row of space: without it the carousel and the beats read as
             one block. */}
         <GridSpacer />
-        {/* The live home's three beats, on the grid. */}
+        {/* Two beats since La table left (27 November 2026). */}
         <StoryCells
           label={home.kitchen.label}
           title={home.kitchen.title}
@@ -217,12 +216,8 @@ export default async function Home({
           body={home.delivery.body}
           src={photo(images.delivery, deliveryImage)}
         />
-        <StoryCells
-          label={home.hosting.label}
-          title={home.hosting.title}
-          body={home.hosting.body}
-          src={photo(images.hosting, hostingImage)}
-        />
+        {/* "La table" left on 27 November 2026 (the owners' text document:
+            "à supprimer"). Its Studio photo slot is hidden, not deleted. */}
         {/* Reviews from the Studio — nothing until one is published. A first
             version, to be redesigned. */}
         <TestimonialCells

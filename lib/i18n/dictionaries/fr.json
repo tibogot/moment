@@ -71,11 +71,11 @@
     },
     "heroPhoto": {
       "headline": "Life is\nmoments",
-      "lead": "Choisir son moment, même quand le temps manque.",
-      "intro": "Traiteur à Bruxelles, repas livrés au bureau, à la maison et pour vos événements.",
+      "lead": "",
+      "intro": "Moment livre vos petits-déjeuners, brunchs et lunchs à l'adresse de votre choix.",
       "introBody": [
-        "Salades, petits-déjeuners et jus pressés à froid, préparés chaque matin dans notre atelier de Forest avec des produits de saison, puis livrés prêts à servir à Bruxelles et dans ses environs. Vous choisissez le jour et le créneau, nous nous occupons du reste, au bureau comme à la maison.",
-        "Pour un déjeuner d’équipe qui change du quotidien ou un événement où chaque détail compte, nous composons le menu avec vous et assurons le service, de vingt à deux cents invités. Lancement, réunion ou dîner assis, nous adaptons le format, jamais l’exigence."
+        "Moment est un traiteur dont l'atelier se situe à Forest, axé sur les petits-déjeuners, les brunchs, les lunchs et les jus pressés à froid. Nous préparons nos produits à partir d'ingrédients frais, choisis avec soin, et nous vous les livrons directement chez vous, au bureau ou sur le lieu de votre événement. De la préparation à la livraison, nous veillons à leur fraîcheur et à leur présentation.",
+        "Pour un petit-déjeuner en entreprise, un lunch d'équipe ou un événement privé, nous proposons un assortiment de produits de qualité, préparés de façon à la fois saine et gourmande. Notre volonté est de montrer qu'on peut bien manger sans que cela soit une contrainte et sans rien sacrifier au goût ni aux saveurs."
       ]
     },
     "intro": {
@@ -84,13 +84,13 @@
     },
     "kitchen": {
       "label": "La cuisine",
-      "title": "Cuisiné le matin même.",
-      "body": "Nous commençons avant l'aube, quand la ville est encore calme. Plats, salades et jus pressés à froid sont préparés le matin même — produits de saison, sauces réduites la nuit, vinaigrettes montées à la dernière minute. Rien de réchauffé, rien de la veille."
+      "title": "Dans notre atelier à Forest",
+      "body": "Tous nos produits sont préparés dans notre atelier à Forest, où nous pressons également nos jus à froid. Nous choisissons des ingrédients frais avec soin et travaillons avec des boulangeries artisanales de premier choix pour les pains de nos bagels, sandwichs et toasts."
     },
     "delivery": {
       "label": "Livraison",
-      "title": "Préparé à l'aube, servi à midi.",
-      "body": "Nous emballons et partons dans Bruxelles aux premières heures, pour que le déjeuner arrive tel que la cuisine l'a voulu. Boîtes isothermes, portions déjà dressées, garnitures à part — prêt à ouvrir et à servir, à votre bureau, en salle de réunion ou chez vous avant l'arrivée de vos invités."
+      "title": "Nous vous livrons",
+      "body": "Nous livrons vos commandes avec soin, à la date et au créneau choisis. Chez vous, au bureau ou sur le lieu de votre événement, vos produits arrivent frais et prêts à déguster."
     },
     "hosting": {
       "label": "La table",
@@ -119,11 +119,11 @@
         "body": "Un service traiteur complet, où chaque détail compte."
       },
       "companies": {
-        "title": "Entreprises",
+        "title": "Entreprises & catering",
         "body": "Un déjeuner d'équipe qui change du quotidien."
       },
       "coffee": {
-        "title": "Coffee desk",
+        "title": "Comptoir café",
         "body": "Un café qu'on prend enfin le temps de boire."
       }
     },
@@ -706,7 +706,7 @@
   "meta": {
     "home": {
       "title": "Moment — Traiteur & catering à Bruxelles",
-      "description": "Traiteur à Bruxelles pour particuliers et entreprises. Plats de saison, salades et jus pressés à froid, préparés chaque matin et livrés prêts à servir.",
+      "description": "Traiteur à Forest (Bruxelles) : petits-déjeuners, brunchs, lunchs et jus pressés à froid, préparés dans notre atelier et livrés chez vous, au bureau ou pour vos événements.",
       "keywords": [
         "traiteur Bruxelles",
         "catering Bruxelles",
