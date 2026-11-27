@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { photoAltField } from "../objects/photoAlt";
 import { HomeIcon } from "@sanity/icons/Home";
 import en from "@/lib/i18n/dictionaries/en.json";
 import fr from "@/lib/i18n/dictionaries/fr.json";
@@ -25,9 +24,10 @@ import { localeFieldWithPlaceholders } from "../objects/locale";
  * the line most likely to change with the season. Both fall back, field by
  * field and language by language, to the dictionaries' wording.
  *
- * Each photo has an optional description (27 November 2026, photoAlt.ts):
- * filled in, it is the alt text; empty, the photo stays decorative — the
- * headline and the panel titles beside it already carry the meaning.
+ * There is no alt-text field on purpose: every one of these is decorative in
+ * the layout — the headline beside the hero and the panel titles carry the
+ * meaning, and the components render them with an empty `alt` so screen readers
+ * skip past rather than announcing a photograph twice.
  */
 export const homePage = defineType({
   name: "homePage",
@@ -66,7 +66,6 @@ export const homePage = defineType({
       description:
         "La grande photo plein écran en haut de la page d'accueil. Elle est recadrée très différemment sur un téléphone et sur un écran large — après l'avoir chargée, cliquez sur l'icône de recadrage en haut à droite de la photo (« Rogner l'image ») et placez le point important, c'est lui qui reste toujours visible.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
 
     /**
@@ -108,7 +107,6 @@ export const homePage = defineType({
       description:
         "La grande photo verticale à droite du texte « Dans notre atelier à Forest », sous le carrousel des produits.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
 
     defineField({
@@ -118,7 +116,6 @@ export const homePage = defineType({
       description:
         "La grande photo verticale à gauche du texte « Nous vous livrons », sur fond bleu.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
 
     defineField({
@@ -129,7 +126,6 @@ export const homePage = defineType({
       hidden: true,
       description: "La grande photo verticale à droite du texte « La table ».",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
 
     defineField({
@@ -139,7 +135,6 @@ export const homePage = defineType({
       description:
         "La carte « Événements » de la section « Pour chaque moment », qui mène à la page Événements.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
 
     defineField({
@@ -149,7 +144,6 @@ export const homePage = defineType({
       description:
         "La carte « Entreprises & catering » de la section « Pour chaque moment », qui mène à l'espace professionnel.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
 
     defineField({
@@ -159,7 +153,6 @@ export const homePage = defineType({
       description:
         "La carte « Comptoir café » de la section « Pour chaque moment », qui mène à la page Comptoir café.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
   ],
   preview: {

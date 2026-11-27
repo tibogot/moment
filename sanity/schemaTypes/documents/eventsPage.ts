@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { photoAltField } from "../objects/photoAlt";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 
 /**
@@ -8,8 +7,8 @@ import { CalendarIcon } from "@sanity/icons/Calendar";
  *
  * The owners asked for photos of their own event tables, which they would
  * send; a slot here lets them place and later change them without us. Same
- * rules as the home's photographs: an optional description (the alt text),
- * and an empty slot keeps the built-in one.
+ * rules as the home's photographs: no alt text (decorative in the layout, the
+ * page title carries the meaning), and an empty slot keeps the built-in one.
  */
 export const eventsPage = defineType({
   name: "eventsPage",
@@ -24,7 +23,6 @@ export const eventsPage = defineType({
       description:
         "La grande photo verticale à gauche, sous le titre. Une table dressée, un buffet : de préférence en hauteur (portrait).",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
     defineField({
       name: "secondImage",
@@ -33,7 +31,6 @@ export const eventsPage = defineType({
       description:
         "La photo plus petite, à droite et plus bas. Un détail (fleurs, plateau, comptoir) répond bien à la grande. En hauteur aussi.",
       options: { hotspot: true },
-      fields: [photoAltField],
     }),
   ],
   preview: {

@@ -59,11 +59,5 @@ export type SanityDecorativeImage = NonNullable<
   NonNullable<HomePageQueryResult>["eventsImage"]
 >;
 
-/**
- * A page photograph from the Studio — the home's, Événements', Comptoir café's:
- * its description (`alt`) is three-language and optional (photoAlt.ts).
- */
-export type SanityPagePhoto = SanityDecorativeImage;
-
 /** A slug field. */
 export type SanitySlug = NewsArticleListItem["slug"];

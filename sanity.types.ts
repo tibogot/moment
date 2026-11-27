@@ -259,7 +259,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   heroTone?: "dark" | "light";
@@ -269,7 +268,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   deliveryImage?: {
@@ -277,7 +275,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   hostingImage?: {
@@ -285,7 +282,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   eventsImage?: {
@@ -293,7 +289,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   companiesImage?: {
@@ -301,7 +296,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   coffeeImage?: {
@@ -309,7 +303,6 @@ export type HomePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
 };
@@ -346,7 +339,6 @@ export type EventsPage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   secondImage?: {
@@ -354,7 +346,6 @@ export type EventsPage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
 };
@@ -370,7 +361,6 @@ export type CoffeePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
   secondImage?: {
@@ -378,7 +368,6 @@ export type CoffeePage = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: LocaleString;
     _type: "image";
   };
 };
@@ -797,7 +786,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
         lqip: string | null;
       } | null;
@@ -808,7 +796,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       deliveryImage: {
@@ -816,7 +803,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       hostingImage: {
@@ -824,7 +810,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       eventsImage: {
@@ -832,7 +817,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       companiesImage: {
@@ -840,7 +824,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       coffeeImage: {
@@ -848,7 +831,6 @@ export type HomePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
     }
@@ -868,7 +850,6 @@ export type EventsPageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       secondImage: {
@@ -876,7 +857,6 @@ export type EventsPageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
     }
@@ -896,7 +876,6 @@ export type CoffeePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
       secondImage: {
@@ -904,7 +883,6 @@ export type CoffeePageQueryResult =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: LocaleString;
         _type: "image";
       } | null;
     }

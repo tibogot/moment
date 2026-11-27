@@ -10,8 +10,6 @@ type OfferCard = {
   href: string;
   /** A URL from the Studio, or a bundled photograph. */
   image: string | StaticImageData;
-  /** The Studio's description of the photo; empty = decorative. */
-  alt?: string;
 };
 
 type OfferCardsProps = {
@@ -87,7 +85,7 @@ export function OfferCards({ title, cards }: OfferCardsProps) {
             <div data-grid-hole className="relative overflow-hidden">
               <Image
                 src={card.image}
-                alt={card.alt ?? ""}
+                alt=""
                 fill
                 sizes="(min-width: 64rem) 25vw, (min-width: 48rem) 33vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
