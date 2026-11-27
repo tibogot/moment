@@ -63,6 +63,15 @@ export default defineConfig({
    * next to the plain Publish button a caterer needs.
    */
   releases: { enabled: false },
+  // The rest of Sanity's collaboration tools, off too (27 November 2026): a
+  // caterer's Studio has two or three editors and no workflow — "Scheduled
+  // Drafts", tasks, comments and Sanity's own announcements were buttons
+  // nobody needed, in a screen that has to read as simple as possible.
+  scheduledDrafts: { enabled: false },
+  scheduledPublishing: { enabled: false },
+  tasks: { enabled: false },
+  variants: { enabled: false },
+  announcements: { enabled: false },
 
   /**
    * An empty list says "Aucun document de ce type" by default, which reads as
@@ -95,6 +104,7 @@ export default defineConfig({
    * why their new phone number never appears.
    */
   document: {
+    comments: { enabled: false },
     // "Voir sur le site" on every document that has a page — see the action.
     actions: (previous, context) =>
       hasSitePage(context.schemaType)
