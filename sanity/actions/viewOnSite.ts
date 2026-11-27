@@ -36,6 +36,16 @@ const PATHS: Record<string, (doc: SanityDocument) => string | null> = {
   },
 };
 
+/**
+ * The site's address: the Studio's own origin when Next serves it at /studio,
+ * the real domain when it runs on Sanity's hosting (moment-lab.sanity.studio).
+ */
+function siteOrigin() {
+  return window.location.hostname.endsWith(".sanity.studio")
+    ? "https://www.moment-lab.be"
+    : window.location.origin;
+}
+
 export function hasSitePage(type: string) {
   return type in PATHS;
 }
@@ -54,7 +64,7 @@ export const ViewOnSiteAction: DocumentActionComponent = ({
       ? "Ouvre la page publiée dans un nouvel onglet."
       : "Publiez d'abord : le site n'affiche que la version publiée.",
     onHandle: () => {
-      if (path) window.open(`${window.location.origin}${path}`, "_blank");
+      if (path) window.open(`${siteOrigin()}${path}`, "_blank");
     },
   };
 };

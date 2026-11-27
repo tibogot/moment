@@ -1,12 +1,23 @@
 import { defineCliConfig } from "sanity/cli";
+
+/*
+ * The Studio is also hosted by Sanity (27 November 2026), at
+ * https://moment-lab.sanity.studio, so people can edit without access to the
+ * private test site: `npx sanity deploy`, logged in with an account that
+ * administers the project. Built that way it sits at the root of its
+ * address, not under /studio — sanity.config.ts reads this flag. Next, which
+ * serves the same Studio at /studio, never loads this file.
+ */
+process.env.SANITY_STUDIO_HOSTED = "true";
 import { sanityDataset, sanityProjectId } from "@/lib/sanity/env";
 
 /**
- * For the `sanity` CLI only — schema deploys, dataset exports, TypeGen. The
- * Studio itself is served by Next at /studio and is not built or deployed by
- * this config, so there is no `sanity build` or `sanity deploy` in the scripts.
+ * For the `sanity` CLI — schema deploys, dataset exports, TypeGen, and the
+ * hosted copy of the Studio (`sanity deploy`, above). The site's own Studio
+ * is served by Next at /studio.
  */
 export default defineCliConfig({
+  studioHost: "moment-lab",
   api: {
     projectId: sanityProjectId,
     dataset: sanityDataset,

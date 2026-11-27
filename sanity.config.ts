@@ -31,7 +31,8 @@ const SINGLETONS = [
 export default defineConfig({
   name: "default",
   title: "Moment",
-  basePath: "/studio",
+  // At the root when Sanity hosts it (sanity.cli.ts), under /studio in Next.
+  basePath: process.env.SANITY_STUDIO_HOSTED === "true" ? "/" : "/studio",
 
   projectId: sanityProjectId,
   dataset: sanityDataset,
