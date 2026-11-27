@@ -58,3 +58,6 @@ docs/brand/
 
 # Sanity CLI build cache (sanity build / deploy).
 .sanity/
+
+# sanity build / deploy output.
+/dist/
