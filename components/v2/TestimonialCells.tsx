@@ -3,6 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
 import { CellGrid } from "@/components/v2/CellGrid";
+import { GridSpacer } from "@/components/v2/GridSpacer";
 import { gsap } from "@/lib/gsap";
 import { loadDraggable, type DraggableInstance } from "@/lib/gsap/draggable";
 import { cn } from "@/lib/utils";
@@ -45,9 +46,15 @@ const COPIES = 3;
  * same review would sit next to itself.
  *
  *   row 1     the label and the arrows
- *   rows 2–4  the cards: 4 cells wide on desktop (four in view), 6 on a
- *             tablet (two), 3 on a phone (one and a cut one: there is more
- *             to swipe)
+ *   rows 2–5  the cards: 4 cells wide and 4 rows tall at every width, the
+ *             same columns as the offer cards under them (OfferCards), and
+ *             3/4 — never a square (27 November 2026: at 4 cells over 3 rows
+ *             the desktop cards were exactly square). Four in view on a
+ *             desktop, three on a tablet, one on a phone — where the arrows
+ *             show too, since no cut card hints at the next one.
+ *
+ * Followed by one empty row of the grid, so the reviews do not run into the
+ * section under them.
  *
  * Renders nothing without a review. The cards move, so they draw their own
  * rule on the right edge; the strip is a `data-grid-hole`.
@@ -162,109 +169,112 @@ export function TestimonialCells({
   const copies = loops ? COPIES : 1;
 
   return (
-    <section
-      aria-labelledby="testimonials-title"
-      className="relative z-1 -mb-(--grid-line) w-full border-b border-sky bg-cream"
-    >
-      <CellGrid
-        lineClassName="bg-sky"
-        bands={false}
-        readout={false}
-        subdivide={2}
-        linesOnTop
-      />
-      <div
-        className="relative grid [--rows:4]"
-        style={{
-          gridTemplateColumns: "var(--s-grid-columns)",
-          gridTemplateRows: "repeat(var(--rows), var(--s-cell-h))",
-        }}
+    <>
+      <section
+        aria-labelledby="testimonials-title"
+        className="relative z-1 -mb-(--grid-line) w-full border-b border-sky bg-cream"
       >
-        {/* Row 1: the label and the arrows. */}
+        <CellGrid
+          lineClassName="bg-sky"
+          bands={false}
+          readout={false}
+          subdivide={2}
+          linesOnTop
+        />
         <div
-          data-grid-hole
-          className="col-[2/span_4] row-[1] flex min-w-0 items-end justify-between gap-3 p-(--v2-pad) md:col-[2/span_12] lg:col-[2/span_16]"
+          className="relative grid [--rows:5]"
+          style={{
+            gridTemplateColumns: "var(--s-grid-columns)",
+            gridTemplateRows: "repeat(var(--rows), var(--s-cell-h))",
+          }}
         >
-          <h2 id="testimonials-title" className={LABEL}>
-            {label}
-          </h2>
-          {loops && (
-            <div className="hidden border border-sky bg-cream md:flex">
-              <button
-                type="button"
-                onClick={() => stepRef.current(-1)}
-                aria-label={prevLabel}
-                className={cn(BUTTON, "border-r border-sky")}
-              >
-                ←
-              </button>
-              <button
-                type="button"
-                onClick={() => stepRef.current(1)}
-                aria-label={nextLabel}
-                className={BUTTON}
-              >
-                →
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* The strip the cards run in: rows 2 to the end, the full width. */}
-        <div
-          ref={viewportRef}
-          data-grid-hole
-          className={cn(
-            "relative col-[2/span_4] row-[2/-1] min-w-0 overflow-hidden md:col-[2/span_12] lg:col-[2/span_16]",
-            loops && "drag-carousel",
-          )}
-          style={{ touchAction: "pan-y" }}
-        >
-          {/* What Draggable actually moves; the track follows it, wrapped. */}
-          <div ref={proxyRef} aria-hidden className="absolute size-0" />
-          <ul
-            ref={trackRef}
-            className="flex h-full w-max will-change-transform"
+          {/* Row 1: the label and the arrows. */}
+          <div
+            data-grid-hole
+            className="col-[2/span_4] row-[1] flex min-w-0 items-end justify-between gap-3 p-(--v2-pad) md:col-[2/span_12] lg:col-[2/span_16]"
           >
-            {Array.from({ length: copies }, (_, copy) =>
-              items.map((item) => {
-                // The middle copy is the real list; the others are filler.
-                const isReal = copies === 1 || copy === 1;
-                return (
-                  <li
-                    key={`${copy}-${item.id}`}
-                    aria-hidden={isReal ? undefined : true}
-                    className="relative h-full w-[calc(var(--s-cell-w)*3)] shrink-0 select-none md:w-[calc(var(--s-cell-w)*6)] lg:w-[calc(var(--s-cell-w)*4)]"
-                  >
-                    <figure className="flex h-full flex-col justify-between p-(--v2-pad)">
-                      <blockquote className="font-archivo-light line-clamp-7 text-(length:--body-text) leading-normal text-pretty">
-                        « {item.quote} »
-                      </blockquote>
-                      <figcaption>
-                        <span className="font-owners-medium block text-[12px] tracking-wide uppercase">
-                          {item.name}
-                        </span>
-                        {/* Always there, a blank space when there is no
+            <h2 id="testimonials-title" className={LABEL}>
+              {label}
+            </h2>
+            {loops && (
+              <div className="flex border border-sky bg-cream">
+                <button
+                  type="button"
+                  onClick={() => stepRef.current(-1)}
+                  aria-label={prevLabel}
+                  className={cn(BUTTON, "border-r border-sky")}
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() => stepRef.current(1)}
+                  aria-label={nextLabel}
+                  className={BUTTON}
+                >
+                  →
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* The strip the cards run in: rows 2 to the end, the full width. */}
+          <div
+            ref={viewportRef}
+            data-grid-hole
+            className={cn(
+              "relative col-[2/span_4] row-[2/-1] min-w-0 overflow-hidden md:col-[2/span_12] lg:col-[2/span_16]",
+              loops && "drag-carousel",
+            )}
+            style={{ touchAction: "pan-y" }}
+          >
+            {/* What Draggable actually moves; the track follows it, wrapped. */}
+            <div ref={proxyRef} aria-hidden className="absolute size-0" />
+            <ul
+              ref={trackRef}
+              className="flex h-full w-max will-change-transform"
+            >
+              {Array.from({ length: copies }, (_, copy) =>
+                items.map((item) => {
+                  // The middle copy is the real list; the others are filler.
+                  const isReal = copies === 1 || copy === 1;
+                  return (
+                    <li
+                      key={`${copy}-${item.id}`}
+                      aria-hidden={isReal ? undefined : true}
+                      className="relative h-full w-[calc(var(--s-cell-w)*4)] shrink-0 select-none"
+                    >
+                      <figure className="flex h-full flex-col justify-between p-(--v2-pad)">
+                        <blockquote className="font-archivo-light line-clamp-7 text-(length:--body-text) leading-normal text-pretty">
+                          « {item.quote} »
+                        </blockquote>
+                        <figcaption>
+                          <span className="font-owners-medium block text-[12px] tracking-wide uppercase">
+                            {item.name}
+                          </span>
+                          {/* Always there, a blank space when there is no
                             company: the names then sit on one line across
                             the cards. */}
-                        <span className="font-archivo-light mt-1 block text-[13px] opacity-70">
-                          {item.company || " "}
-                        </span>
-                      </figcaption>
-                    </figure>
-                    {/* The card's own rule on its right edge, centred on
+                          <span className="font-archivo-light mt-1 block text-[13px] opacity-70">
+                            {item.company || " "}
+                          </span>
+                        </figcaption>
+                      </figure>
+                      {/* The card's own rule on its right edge, centred on
                         the line like the grid's. */}
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) translate-x-1/2 bg-sky"
-                    />
-                  </li>
-                );
-              }),
-            )}
-          </ul>
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) translate-x-1/2 bg-sky"
+                      />
+                    </li>
+                  );
+                }),
+              )}
+            </ul>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <GridSpacer />
+    </>
   );
 }
