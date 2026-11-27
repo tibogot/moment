@@ -32,7 +32,9 @@ import { getDeliveryAvailability } from "@/lib/shopify/delivery";
 // Built-in photographs: each one shows until the owners upload theirs in the
 // Studio (Page d'accueil).
 import companiesImage from "@/public/images/anita-austvika.jpg";
-import heroImage from "@/public/images/maximilian-brol-2WgI7YN7C5A-unsplash.jpg";
+// Bright, top-down, on the brand's grid paper — the kind the owners sent
+// (27 November 2026) — until their own is uploaded in the Studio.
+import heroImage from "@/public/images/gemini-moment.webp";
 import coffeeImage from "@/public/images/oak-bond-coffee.jpg";
 import eventsImage from "@/public/images/onur-kaya.jpg";
 import kitchenImage from "@/public/images/dan-smedley.jpg";
@@ -202,17 +204,16 @@ export default async function Home({
 
       <div className="v2">
         <PhotoHero
-          // The slogan: one value for all three languages.
-          headline={images.heroHeadline?.trim() || home.heroPhoto.headline}
-          // From the brief, not the intro's wording: the intro just below
-          // explains; the hero only sets the tone.
+          // The owners' five words (27 November 2026), then the slogan small
+          // in brackets — one value for all three languages, from the Studio.
+          words={home.heroPhoto.words}
+          signature={images.heroHeadline?.trim() || home.heroPhoto.headline}
           lead={studioText(images.heroLead, locale, home.heroPhoto.lead)}
-          cta={dict.common.aboutUs}
           // Full-bleed, and oversized again for the parallax drift.
           image={photo(images.hero, heroImage, 2400)}
           blurDataURL={images.hero?.lqip}
-          // Only with the owners' own photo: the built-in one is dark.
-          tone={images.hero ? images.heroTone : "dark"}
+          // The built-in photo is bright, like the owners' own.
+          tone={images.hero ? images.heroTone : "light"}
         />
         {/* The live home's intro, on the grid. Its headline is the page's h1:
             it names the trade and the city, the hero's slogan does not. */}

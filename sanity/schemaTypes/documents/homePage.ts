@@ -37,15 +37,14 @@ export const homePage = defineType({
   fields: [
     defineField({
       name: "heroHeadline",
-      title: "Titre d'ouverture",
+      title: "Signature",
       // One box, not three: the headline is the brand's slogan ("Life is
       // moments"), in English and the same on all three versions of the site.
       // The site's wording shown, greyed, while the box is empty.
-      type: "text",
-      rows: 2,
-      placeholder: fr.home.heroPhoto.headline,
+      type: "string",
+      placeholder: fr.home.heroPhoto.headline.replace(/\s+/g, " "),
       description:
-        "Le grand titre au centre de la photo d'ouverture, le même dans les trois langues (c'est votre slogan). Le texte en gris est celui affiché aujourd'hui : laissez la case vide pour le garder, ou écrivez par-dessus. Court : deux ou trois mots ; un retour à la ligne coupe le titre au même endroit sur le site.",
+        "Votre signature, affichée en petit entre parenthèses sous les mots BRUNCH · LUNCH · CATERING · COFFEE CART · DELIVERY, la même dans les trois langues. Le texte en gris est celui affiché aujourd'hui : laissez la case vide pour le garder, ou écrivez par-dessus. Les parenthèses sont ajoutées par le site.",
     }),
 
     defineField({
@@ -89,7 +88,7 @@ export const homePage = defineType({
         ],
         layout: "radio",
       },
-      initialValue: "dark",
+      initialValue: "light",
     }),
 
     defineField({

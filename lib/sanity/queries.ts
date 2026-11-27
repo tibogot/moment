@@ -307,7 +307,7 @@ const NO_HOME_IMAGES: HomePageImages = {
   heroHeadline: null,
   heroLead: null,
   hero: null,
-  heroTone: "dark",
+  heroTone: "light",
   kitchen: null,
   delivery: null,
   hosting: null,
@@ -357,7 +357,8 @@ export async function getHomePageImages(): Promise<HomePageImages> {
           : ((response.heroHeadline as { fr?: string } | null)?.fr ?? null),
       heroLead: response.heroLead ?? null,
       hero: uploaded(response.heroImage),
-      heroTone: response.heroTone === "light" ? "light" : "dark",
+      // Light unless set to dark: the owners' photos are bright (27 Nov 2026).
+      heroTone: response.heroTone === "dark" ? "dark" : "light",
       kitchen: uploaded(response.kitchenImage),
       delivery: uploaded(response.deliveryImage),
       hosting: uploaded(response.hostingImage),

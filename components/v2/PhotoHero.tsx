@@ -1,18 +1,15 @@
 import type { CSSProperties } from "react";
 import type { StaticImageData } from "next/image";
 import { HeroParallaxImage } from "@/components/HeroParallaxImage";
-import { Lines } from "@/components/Lines";
-import TextReveal from "@/components/TextReveal";
-// import { LocaleLink as Link } from "@/components/LocaleLink";
 import { CellGrid } from "@/components/v2/CellGrid";
-import { REVEAL_BLOCK, REVEAL_HERO } from "@/lib/colors";
-// import { routes } from "@/lib/routes";
 
 type PhotoHeroProps = {
-  headline: string;
-  /** Empty: no sentence under the slogan (the owners removed it, 27 Nov 2026). */
+  /** The five words, in order: "Brunch", "Lunch", "Catering"… */
+  words: readonly string[];
+  /** The brand's signature, shown small in brackets: "Life is moments". */
+  signature: string;
+  /** Empty: no sentence under the signature (the owners removed it). */
   lead: string;
-  cta: string;
   /**
    * The photograph: a URL from the Studio (with its blur placeholder), or a
    * bundled one until one is uploaded.
@@ -21,36 +18,38 @@ type PhotoHeroProps = {
   blurDataURL?: string;
   /**
    * "light" for a light photograph: black type and sky lines, and the navbar
-   * turns black over it too (`data-hero-tone`, read by Navbar). Set in the
-   * Studio, "Page d'accueil".
+   * turns black over it too (`data-hero-tone`, read by Navbar and
+   * globals.css). Set in the Studio, "Page d'accueil".
    */
   tone?: "dark" | "light";
 };
 
 /**
- * A home hero without the visible cells (25 November 2026, after Thibault's
- * Figma): the photograph full screen, only the frame drawn over it — the
- * two spines on the margins and the rules of the two bands — in cream, and
- * the type centred: the headline, the lead, the button.
+ * The home hero as the owners asked (their text document, 26 November 2026,
+ * page 3): "Life is moments" is no longer the headline. In its place the
+ * words BRUNCH · LUNCH · CATERING · COFFEE CART · DELIVERY, coming in one by
+ * one, smaller than the old slogan; then "( Life is moments )" smaller still,
+ * in brackets like the logo; no sentence under it.
  *
- * Both texts come in with the site's block reveal, doubled (after
- * good-fella.com): a sky block crosses each line, a cream one follows over
- * it, then they leave in turn — on arrival (not on scroll), the headline
- * first, the lead after. LCP is the full-screen photograph, loaded with
- * priority, not this type, so holding the text back costs PageSpeed nothing.
+ * Their photographs are bright, so the default is the light tone: black type,
+ * sky lines, and a black navbar over it. A dark photo from the Studio sets
+ * "Sombre" and everything turns cream.
  *
- * One screen: the viewport minus the announcement bar when it is on. The
- * navbar is transparent over it, as over the live home's hero
- * (`data-transparent-nav`; the path is listed in Navbar).
+ * The words arrive with a CSS animation (globals.css, `hero-word`), each a
+ * beat after the one before; with reduced motion they are simply there. One
+ * screen: the viewport minus the announcement bar when it is on. The navbar
+ * is transparent over it (`data-transparent-nav`).
  */
 export function PhotoHero({
-  headline,
+  words,
+  signature,
   lead,
   image,
   blurDataURL,
-  tone = "dark",
+  tone = "light",
 }: PhotoHeroProps) {
   const light = tone === "light";
+  const line = signature.replace(/\s+/g, " ").trim();
   return (
     <section
       className={`relative w-full overflow-hidden ${light ? "text-black" : "text-cream"}`}
@@ -72,49 +71,41 @@ export function PhotoHero({
       />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center px-(--grid-inset) text-center">
-        <TextReveal
-          animateOnScroll={false}
-          blockColor={REVEAL_BLOCK}
-          followColor={REVEAL_HERO}
-          delay={0.25}
+        {/* One word per line on a phone, one line with dots from tablet up. */}
+        <p
+          aria-label={words.join(", ")}
+          className="font-owners-narrow-bold flex flex-col items-center text-[13vw] leading-[0.95] tracking-[-0.005em] uppercase md:flex-row md:flex-nowrap md:justify-center md:gap-x-[0.35em] md:text-[min(3.5vw,8svh)] md:leading-none"
         >
-          <p className="font-owners-narrow-bold text-[17vw] leading-[0.85] tracking-[-0.005em] uppercase md:text-[min(10vw,17svh)]">
-            <Lines text={headline} />
-          </p>
-        </TextReveal>
-        {lead && (
-          <div className="mt-[3svh]">
-            <TextReveal
-              animateOnScroll={false}
-              blockColor={REVEAL_BLOCK}
-              followColor={REVEAL_HERO}
-              delay={0.6}
-              stagger={0.08}
-              duration={0.6}
-            >
-              <p className="font-archivo-light max-w-[40ch] text-(length:--body-text) leading-snug text-balance">
-                {lead}
-              </p>
-            </TextReveal>
-          </div>
-        )}
-        {/* The button, off for now (25 November 2026). Uncomment it, the
-            two imports at the top and "cta" in the props to bring it back.
-        <Link
-          href={routes.about}
-          className="group mt-[4svh] inline-block border border-sky bg-sky px-4 py-3 text-black transition-colors duration-500 hover:bg-cream"
-        >
-          <span className="font-owners-medium inline-flex items-center gap-2 text-[11px] tracking-wide uppercase">
-            {cta}
+          {words.map((word, index) => (
             <span
-              className="transition-transform duration-500 group-hover:translate-x-1.5"
+              key={word}
               aria-hidden
+              className="hero-word inline-flex items-center gap-x-[0.35em] whitespace-nowrap"
+              style={{ "--hero-word-index": index } as CSSProperties}
             >
-              &rarr;
+              {index > 0 && <span className="hidden md:inline">·</span>}
+              {word}
             </span>
-          </span>
-        </Link>
-        */}
+          ))}
+        </p>
+
+        {line && (
+          <p
+            className="hero-word font-owners-medium mt-[3svh] text-[13px] tracking-wide uppercase md:text-[15px]"
+            style={{ "--hero-word-index": words.length + 1 } as CSSProperties}
+          >
+            ( {line} )
+          </p>
+        )}
+
+        {lead && (
+          <p
+            className="hero-word font-archivo-light mt-[2svh] max-w-[40ch] text-(length:--body-text) leading-snug text-balance"
+            style={{ "--hero-word-index": words.length + 2 } as CSSProperties}
+          >
+            {lead}
+          </p>
+        )}
       </div>
     </section>
   );
