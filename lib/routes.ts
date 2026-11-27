@@ -94,8 +94,10 @@ export const mainNav = [
   { key: "about", menu: "about" as const },
   // In place of Contact since 27 November 2026, as the owners asked: Contact
   // moved under About ("Nous contacter"), and the map of where to buy their
-  // products takes its place here.
-  { key: "findUs", href: routes.findUs },
+  // products takes its place here. On desktop it sits on the right, with the
+  // tools (search, account, cart) — "find a shop" is one of them, and it frees
+  // the left half; the phone menu lists it with the others.
+  { key: "findUs", href: routes.findUs, side: "right" as const },
 ] as const;
 
 /** The two nav entries that open a panel instead of going somewhere. */

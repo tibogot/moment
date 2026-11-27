@@ -3,10 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
-import {
-  CompactLanguageSwitcher,
-  LanguageSwitcher,
-} from "@/components/LanguageSwitcher";
+import { CompactLanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useBarePathname, useDictionary } from "@/components/LocaleProvider";
 import { usePathname } from "next/navigation";
 import {
@@ -18,7 +15,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useGSAP } from "@gsap/react";
-import { CircleUserRound, Handbag, Menu, Search } from "lucide-react";
+import { CircleUserRound, Handbag, MapPin, Menu, Search } from "lucide-react";
 import { useLenis } from "lenis/react";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
@@ -85,7 +82,7 @@ const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
   "/v1",
 ]);
 /** Must match --breakpoint-nav in app/globals.css. */
-const NAV_MOBILE_MQ = "(width < 110rem)";
+const NAV_MOBILE_MQ = "(width < 90rem)";
 
 function subscribeMobileNav(onStoreChange: () => void) {
   const mq = window.matchMedia(NAV_MOBILE_MQ);
@@ -905,43 +902,45 @@ export function Navbar() {
             className="hidden min-w-0 whitespace-nowrap nav:col-start-2 nav:col-end-5 nav:flex nav:items-center nav:gap-3 nav:pl-(--v2-pad)"
             style={{ fontSize: "var(--nav-text)" }}
           >
-            {mainNav.map((item) =>
-              "menu" in item ? (
-                <li
-                  key={item.key}
-                  onMouseEnter={openNavMenuFor(item.menu)}
-                  onFocus={openNavMenuFor(item.menu)}
-                >
-                  <button
-                    type="button"
-                    className={navLinkClassName}
-                    data-nav-link
-                    aria-expanded={openNavMenu === item.menu}
-                    aria-haspopup="true"
-                    onClick={() =>
-                      withOverlayFocusRelease(() => {
-                        setMenuOpen(false);
-                        setCartOpen(false);
-                        setSearchOpen(false);
-                        setOpenNavMenu(item.menu);
-                      })
-                    }
+            {mainNav
+              .filter((item) => !("side" in item))
+              .map((item) =>
+                "menu" in item ? (
+                  <li
+                    key={item.key}
+                    onMouseEnter={openNavMenuFor(item.menu)}
+                    onFocus={openNavMenuFor(item.menu)}
                   >
-                    {dict.nav[item.key]}
-                  </button>
-                </li>
-              ) : (
-                <li key={item.key} onMouseEnter={closeNavMenu}>
-                  <Link
-                    href={item.href}
-                    className={navLinkClassName}
-                    data-nav-link
-                  >
-                    {dict.nav[item.key]}
-                  </Link>
-                </li>
-              ),
-            )}
+                    <button
+                      type="button"
+                      className={navLinkClassName}
+                      data-nav-link
+                      aria-expanded={openNavMenu === item.menu}
+                      aria-haspopup="true"
+                      onClick={() =>
+                        withOverlayFocusRelease(() => {
+                          setMenuOpen(false);
+                          setCartOpen(false);
+                          setSearchOpen(false);
+                          setOpenNavMenu(item.menu);
+                        })
+                      }
+                    >
+                      {dict.nav[item.key]}
+                    </button>
+                  </li>
+                ) : (
+                  <li key={item.key} onMouseEnter={closeNavMenu}>
+                    <Link
+                      href={item.href}
+                      className={navLinkClassName}
+                      data-nav-link
+                    >
+                      {dict.nav[item.key]}
+                    </Link>
+                  </li>
+                ),
+              )}
           </ul>
 
           {/* The -1.5px is optical, not layout. The links are uppercase, so
@@ -976,6 +975,30 @@ export function Navbar() {
             className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--v2-pad)"
             onMouseEnter={closeNavMenu}
           >
+            {/* "Où nous trouver" with the tools: a pin and the label. */}
+            {mainNav
+              .filter((item) => "side" in item)
+              .map((item) =>
+                "href" in item ? (
+                  <Link
+                    key={item.key}
+                    href={item.href}
+                    data-nav-link
+                    className="hidden nav:block"
+                    style={{ fontSize: "var(--nav-text)" }}
+                  >
+                    {/* The pin beside the label, on one line; the underline
+                        under the label only. */}
+                    <span className="flex items-center gap-1.5">
+                      <MapPin style={iconStyle} strokeWidth={1.5} aria-hidden />
+                      <span className={navLinkClassName}>
+                        {dict.nav[item.key]}
+                      </span>
+                    </span>
+                  </Link>
+                ) : null,
+              )}
+
             <button
               type="button"
               aria-label={dict.nav.search}
@@ -1003,12 +1026,10 @@ export function Navbar() {
               <CircleUserRound style={iconStyle} strokeWidth={1.5} />
             </Link>
 
-            <LanguageSwitcher className="hidden gap-2 nav:flex" />
-
-            {/* Below nav: only the current language, expanding to the rest.
-                Two links on the left of the row and two on the right keeps the
-                logo where it belongs. */}
-            <CompactLanguageSwitcher className="nav:hidden" />
+            {/* Only the current language, opening onto the others — at every
+                width since 27 November 2026: three codes side by side cost
+                the bar room for something changed once, if ever. */}
+            <CompactLanguageSwitcher />
 
             <button
               type="button"
