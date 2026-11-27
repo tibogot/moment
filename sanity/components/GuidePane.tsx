@@ -509,7 +509,10 @@ const GROUPS: Group[] = [
           <>
             Chargez la photo, puis cliquez sur l&apos;icône de recadrage («
             Rogner l&apos;image ») et placez le point important : c&apos;est lui
-            qui reste visible sur téléphone. <strong>Publier</strong>.
+            qui reste visible sur téléphone. Sous la photo,{" "}
+            <strong>Description de la photo</strong> : ce qu&apos;elle montre,
+            en une phrase (lue aux personnes malvoyantes, et utile pour Google).{" "}
+            <strong>Publier</strong>.
           </>,
           <>
             Sous la photo d&apos;ouverture, réglez{" "}
@@ -546,8 +549,9 @@ const GROUPS: Group[] = [
             photos en hauteur (portrait) conviennent le mieux.
           </>,
           <>
-            Placez le point important avec l&apos;icône de recadrage, puis{" "}
-            <strong>Publier</strong>.
+            Placez le point important avec l&apos;icône de recadrage, décrivez
+            la photo en une phrase (<strong>Description de la photo</strong>),
+            puis <strong>Publier</strong>.
           </>,
         ],
         tip: (
