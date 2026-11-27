@@ -872,8 +872,25 @@ html:has([data-hero-tone="light"]) [data-nav-logo] {
   }
 }
 
+/* Hero lab (/v2/hero): a calendar slot is booked left to right. */
+.lab-slot {
+  transform-origin: left center;
+  animation: lab-slot 0.7s cubic-bezier(0.6, 0, 0.2, 1) both;
+  animation-delay: calc(0.3s + var(--hero-word-index, 0) * 0.2s);
+}
+
+@keyframes lab-slot {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-word {
+  .hero-word,
+  .lab-slot {
     animation: none;
   }
 }
