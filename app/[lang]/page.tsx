@@ -207,9 +207,8 @@ export default async function Home({
 
       <div className="v2">
         <PhotoHero
-          // The owners' five words (27 November 2026), then the slogan small
-          // in brackets — one value for all three languages, from the Studio.
-          words={home.heroPhoto.words}
+          // The slogan small in brackets, one value for all three languages,
+          // from the Studio — the only text until the new hero design.
           signature={images.heroHeadline?.trim() || home.heroPhoto.headline}
           lead={studioText(images.heroLead, locale, home.heroPhoto.lead)}
           // Full-bleed, and oversized again for the parallax drift.
