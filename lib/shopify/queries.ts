@@ -253,6 +253,11 @@ export type ShopifyCollection = {
   products: ShopifyProduct[];
   /** False for a collection with no product (yet). */
   hasProducts: boolean;
+  /**
+   * The collection's own photo in Shopify, without the first product's as a
+   * fallback — the header photo of a collection page. Single collection only.
+   */
+  ownImageUrl?: string | null;
 };
 
 export type ShopifyCollectionNode = {

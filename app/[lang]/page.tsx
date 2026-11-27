@@ -35,10 +35,12 @@ import companiesImage from "@/public/images/anita-austvika.jpg";
 // The owners' own table photo from their text document (27 November 2026),
 // upscaled until they send the original; a Studio upload replaces it.
 import heroImage from "@/public/images/moment-table.jpg";
-import coffeeImage from "@/public/images/oak-bond-coffee.jpg";
+import coffeeImage from "@/public/images/moment-coffee-counter.jpg";
 import eventsImage from "@/public/images/onur-kaya.jpg";
-import kitchenImage from "@/public/images/dan-smedley.jpg";
-import deliveryImage from "@/public/images/william-king.jpg";
+// The owners' own photos from their text document (27 November 2026),
+// enlarged until they send the originals; Studio uploads replace them.
+import kitchenImage from "@/public/images/moment-salads-crate.jpg";
+import deliveryImage from "@/public/images/moment-delivery-boxes.jpg";
 
 /**
  * The home, on the v2 grid since 25 November 2026 (the previous one is at

@@ -181,6 +181,7 @@ async function fetchCollectionByHandle(
     imageAlt: collection.image?.altText ?? collection.title,
     products,
     hasProducts: products.length > 0,
+    ownImageUrl: collection.image?.url ?? null,
   } satisfies CollectionWithProducts;
 }
 

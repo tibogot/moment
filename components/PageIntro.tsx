@@ -8,10 +8,17 @@ type PageIntroProps = {
   lead?: string;
   /** Escape hatch for a page that needs its lead off the shared size. */
   leadClassName?: string;
+  /** A button under the lead — an anchor on the same page, usually. */
+  action?: { href: string; label: string };
 };
 
 /** Shared header for the inner pages until each gets its own design. */
-export function PageIntro({ title, lead, leadClassName }: PageIntroProps) {
+export function PageIntro({
+  title,
+  lead,
+  leadClassName,
+  action,
+}: PageIntroProps) {
   return (
     <GridSection className="pt-[22svh] pb-[12svh]">
       <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) text-left md:col-end-8">
@@ -46,6 +53,16 @@ export function PageIntro({ title, lead, leadClassName }: PageIntroProps) {
               {lead}
             </p>
           </TextReveal>
+          {action && (
+            <a
+              href={action.href}
+              className="mt-[4svh] inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+            >
+              <span className="font-owners-medium text-[14px] uppercase tracking-wide">
+                {action.label}
+              </span>
+            </a>
+          )}
         </div>
       )}
     </GridSection>

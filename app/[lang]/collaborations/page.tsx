@@ -35,9 +35,19 @@ export default async function CollaborationsPage({
 
   return (
     <>
-      <PageIntro title={dict.partner.title} lead={dict.partner.lead} />
+      {/* The owners' "Bouton → Devenir partenaire", then the form. */}
+      <PageIntro
+        title={dict.partner.title}
+        lead={dict.partner.lead}
+        action={{ href: "#devenir-partenaire", label: dict.partner.intro }}
+      />
 
-      <ContactForm variant="partner" leadTimeDays={availability.leadTimeDays} />
+      <div id="devenir-partenaire" className="scroll-mt-(--grid-band)">
+        <ContactForm
+          variant="partner"
+          leadTimeDays={availability.leadTimeDays}
+        />
+      </div>
 
       <Footer />
     </>

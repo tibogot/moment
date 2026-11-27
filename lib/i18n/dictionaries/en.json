@@ -183,7 +183,7 @@
       ]
     },
     "calendar": {
-      "label": "Book for delivery",
+      "label": "Book your moment",
       "legendOpen": "Open",
       "legendClosed": "Closed or full",
       "legendTooSoon": "Too soon",
@@ -513,7 +513,8 @@
       ],
       "beyond": "And further, up to {km} km from the atelier: {towns}… Beyond that, ask us for a quote.",
       "towns": "Waterloo, Vilvoorde, Zaventem, Wavre, Leuven, Mechelen, Nivelles, Aalst"
-    }
+    },
+    "emptyCollection": "Nothing in this collection yet."
   },
   "product": {
     "orderPreferences": "Choose when and how you would like your order — you can change it before checkout.",

@@ -59,7 +59,7 @@ export default async function CoffeePage({
           photos={[
             {
               // The owners' counter, from Studio → Page Comptoir café.
-              src: photo(images.first, "/images/oak-bond-coffee.jpg"),
+              src: photo(images.first, "/images/moment-coffee-counter.jpg"),
               alt: "",
               className:
                 "col-[2/span_4] row-[1/span_4] md:col-[2/span_6] md:row-[1/span_6] lg:col-[2/span_8] lg:row-[1/span_8]",

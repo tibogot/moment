@@ -183,7 +183,7 @@
       ]
     },
     "calendar": {
-      "label": "Réserver une livraison",
+      "label": "Réserver votre moment",
       "legendOpen": "Disponible",
       "legendClosed": "Fermé ou complet",
       "legendTooSoon": "Trop tôt",
@@ -513,7 +513,8 @@
       ],
       "beyond": "Et plus loin, jusqu'à {km} km de l'atelier : {towns}… Au-delà, demandez-nous un devis.",
       "towns": "Waterloo, Vilvorde, Zaventem, Wavre, Louvain, Malines, Nivelles, Alost"
-    }
+    },
+    "emptyCollection": "Rien dans cette collection pour le moment."
   },
   "product": {
     "orderPreferences": "Choisissez quand et comment vous voulez votre commande — modifiable jusqu'au paiement.",

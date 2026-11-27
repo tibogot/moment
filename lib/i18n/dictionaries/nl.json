@@ -183,7 +183,7 @@
       ]
     },
     "calendar": {
-      "label": "Levering reserveren",
+      "label": "Reserveer uw moment",
       "legendOpen": "Beschikbaar",
       "legendClosed": "Gesloten of volzet",
       "legendTooSoon": "Te vroeg",
@@ -513,7 +513,8 @@
       ],
       "beyond": "En verder, tot {km} km van het atelier: {towns}… Daarbuiten vraagt u ons een offerte.",
       "towns": "Waterloo, Vilvoorde, Zaventem, Waver, Leuven, Mechelen, Nijvel, Aalst"
-    }
+    },
+    "emptyCollection": "Nog niets in deze collectie."
   },
   "product": {
     "orderPreferences": "Kies wanneer en hoe u uw bestelling wilt — aanpasbaar tot het afrekenen.",

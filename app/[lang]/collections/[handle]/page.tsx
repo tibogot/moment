@@ -5,6 +5,7 @@ import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
 import { ProductGrid } from "@/components/ProductGrid";
+import { ParallaxImage } from "@/components/ParallaxImage";
 import { DEFAULT_LOCALE, toLocale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
@@ -14,6 +15,17 @@ import {
   getCollectionByHandle,
   getCollections,
 } from "@/lib/shopify/collections";
+
+/**
+ * A photo at the top of a family until its collection has its own in Shopify
+ * (the owners' text document, 27 November 2026: "photo à retrouver dans
+ * l'onglet Sweet Pots en haut", "photo dans Bagels & Sandwiches"). Their
+ * photos, enlarged until the originals arrive.
+ */
+const COLLECTION_PHOTOS: Record<string, string> = {
+  "sweet-pots": "/images/moment-sweet-pots.jpg",
+  "bagels-sandwiches": "/images/moment-sandwiches.jpg",
+};
 
 type CollectionPageProps = {
   params: Promise<{ lang: string; handle: string }>;
@@ -73,6 +85,10 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
   if (!collection || handle === HIDDEN_COLLECTION) notFound();
 
+  // Shopify's own collection photo first, else the owners' photo for it.
+  const headerPhoto =
+    collection.ownImageUrl ?? COLLECTION_PHOTOS[collection.handle] ?? null;
+
   return (
     <>
       <JsonLd
@@ -94,12 +110,26 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
         lead={collection.description || undefined}
       />
 
+      {headerPhoto && (
+        <GridSection className="pb-[8svh]">
+          {/* Half the width: the owners' photos are portraits. */}
+          <div className="relative col-start-2 col-end-5 h-[60svh] overflow-hidden md:col-end-5 md:h-[80svh]">
+            <ParallaxImage
+              src={headerPhoto}
+              alt=""
+              sizes="90vw"
+              className="absolute inset-0"
+            />
+          </div>
+        </GridSection>
+      )}
+
       <GridSection className="pb-[14svh]">
         {/* The cards are h3s; a hidden h2 keeps the outline unbroken. */}
         <h2 className="sr-only">{dict.shop.productsHeading}</h2>
         <ProductGrid
           products={collection.products}
-          emptyMessage="Nothing in this collection yet."
+          emptyMessage={dict.shop.emptyCollection}
         />
       </GridSection>
 
