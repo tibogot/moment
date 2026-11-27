@@ -21,7 +21,7 @@ export const coffeePage = defineType({
       title: "Grande photo",
       type: "image",
       description:
-        "La grande photo verticale à gauche, sous le titre. Le comptoir en service, de préférence en hauteur (portrait).",
+        "La grande photo verticale à gauche, sous le titre. Le comptoir en service, de préférence en hauteur (portrait). Aujourd'hui, case vide : votre comptoir café bleu (la photo de votre document).",
       options: { hotspot: true },
     }),
     defineField({
@@ -29,7 +29,7 @@ export const coffeePage = defineType({
       title: "Deuxième photo",
       type: "image",
       description:
-        "La photo plus petite, à droite et plus bas. Un détail (une tasse, le matcha, la machine) répond bien à la grande. En hauteur aussi.",
+        "La photo plus petite, à droite et plus bas. Un détail (une tasse, le matcha, la machine) répond bien à la grande. En hauteur aussi. Aujourd'hui, case vide : une photo d'illustration, à remplacer par l'une des vôtres.",
       options: { hotspot: true },
     }),
   ],

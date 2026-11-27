@@ -104,6 +104,10 @@ Dans l'équipe Vercel **Moment lab** (Pro) :
 - [ ] Dans le Studio, **éteindre le bandeau d'annonce de test** (« Fermé du 24
       décembre au 2 janvier »).
 
+- [ ] **Studio hébergé** : dans `sanity/actions/viewOnSite.ts`, passer
+      `SITE_IS_LIVE` à `true`, pousser, puis `npm run studio:deploy` — le
+      bouton « Voir sur le site » réapparaît sur moment-lab.sanity.studio.
+
 ## Jour J — 5. Les vérifications
 
 - [ ] `https://www.moment-lab.be` s'ouvre, `moment-lab.be` et l'adresse

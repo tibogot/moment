@@ -46,7 +46,19 @@ function siteOrigin() {
     : window.location.origin;
 }
 
+/**
+ * Flip to `true` on launch day (docs/launch-runbook.md): until then
+ * www.moment-lab.be is not the site, so the hosted Studio
+ * (moment-lab.sanity.studio) shows no "Voir sur le site" rather than a button
+ * that opens the wrong page. The Studio at /studio inside the site keeps it.
+ */
+const SITE_IS_LIVE = false;
+
 export function hasSitePage(type: string) {
+  const hosted =
+    typeof window !== "undefined" &&
+    window.location.hostname.endsWith(".sanity.studio");
+  if (hosted && !SITE_IS_LIVE) return false;
   return type in PATHS;
 }
 

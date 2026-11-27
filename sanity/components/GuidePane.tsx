@@ -564,8 +564,9 @@ const GROUPS: Group[] = [
           <p style={P}>
             Après avoir publié, la petite flèche à côté de{" "}
             <strong>Publier</strong> → <strong>Voir sur le site</strong> ouvre
-            la page concernée. Le site affiche la nouvelle version environ une
-            minute après la publication.
+            la page concernée (ce bouton apparaît dès la mise en ligne du site).
+            Le site affiche la nouvelle version environ une minute après la
+            publication.
           </p>
         ),
       },
