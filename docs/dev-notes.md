@@ -153,8 +153,8 @@ cookie says a cart exists (`lib/cart-cookie.ts`); the panel fetches when opened.
 Things that are working, understood, and not worth fixing yet — recorded so
 nobody rediscovers them as bugs.
 
-**The checkout rules are enforced by the site, not by Shopify.** Both checkout
-buttons go through `beginCheckout` (`app/actions/cart.ts`), which re-reads the
+**The checkout rules are enforced by the site, not by Shopify.** The checkout
+button (the cart panel — /cart only redirects to it since 28 November 2026) goes through `beginCheckout` (`app/actions/cart.ts`), which re-reads the
 cart and the live rules — date, cut-off, window, zone, minimum — before handing
 over Shopify's checkout address, and the page never holds that address itself.
 What it cannot see is what happens on Shopify's pages: an address changed at

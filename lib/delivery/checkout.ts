@@ -1,10 +1,10 @@
 /**
  * The one answer to "can this cart go to checkout yet, and if not, why not".
  *
- * It lives on its own because there are two checkout buttons — the cart page
- * and the slide-out panel — and a rule enforced in one of them is not a rule.
- * The date gate was already written twice; the minimum order would have made
- * four copies of two conditions.
+ * It lives on its own so the rule stays out of the component. There were two
+ * checkout buttons — the cart page and the slide-out panel — until 28
+ * November 2026, when /cart became a redirect to the panel; the panel is now
+ * the only caller.
  *
  * Only the reason comes back, never the wording. What the customer is told
  * belongs to the component, which is where it can be translated.

@@ -1,13 +1,20 @@
 "use client";
 
 import { useIsClient } from "@/lib/hooks/useIsClient";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { setDeliveryDate } from "@/app/actions/cart";
 import { GridLines } from "@/components/GridLines";
 import TextReveal from "@/components/TextReveal";
 import { monthCells } from "@/lib/calendar";
-import { notifyCartUpdated } from "@/lib/cart-store";
+import { notifyCartUpdated, openCartPanel } from "@/lib/cart-store";
 import { finishIfReducedMotion, gsap } from "@/lib/gsap";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import {
@@ -35,8 +42,7 @@ import { REVEAL_BLOCK } from "@/lib/colors";
 // the grid is 7 wide. The outer template only carries the margins; the inner
 // grid-cols-7 fills the space between them, so the cell borders land exactly
 // on the page's column lines.
-const MARGIN_COLUMNS =
-  "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
+const MARGIN_COLUMNS = "var(--grid-margin) minmax(0, 1fr) var(--grid-margin)";
 
 const BAR_DURATION = 0.55;
 
@@ -134,7 +140,8 @@ export function CalendarSection({
   const atLastMonth =
     year === lastBookable.getFullYear() && month === lastBookable.getMonth();
 
-  const shiftMonth = (delta: number) => setCursor(new Date(year, month + delta, 1));
+  const shiftMonth = (delta: number) =>
+    setCursor(new Date(year, month + delta, 1));
 
   const chooseDay = (iso: string) => {
     setSelected(iso);
@@ -228,7 +235,11 @@ export function CalendarSection({
             {/* text-left: TextReveal centres each split line unless an ancestor opts out.
                 key remounts the reveal when Prev/Next changes the month. */}
             <div className="w-full min-w-0 text-left md:flex-1">
-              <TextReveal key={monthLabel} blockColor={REVEAL_BLOCK} stagger={0.12}>
+              <TextReveal
+                key={monthLabel}
+                blockColor={REVEAL_BLOCK}
+                stagger={0.12}
+              >
                 {/* Not a heading: the section's heading is the label above,
                     which is stable. This is the month on show, and Prev/Next
                     rewrites it — a document outline whose sections rename
@@ -287,9 +298,7 @@ export function CalendarSection({
                 "h-14 border-b border-l border-sky p-1.5 md:h-[13svh] md:p-2.5";
 
               if (day === null) {
-                return (
-                  <div key={`blank-${index}`} className={cellClassName} />
-                );
+                return <div key={`blank-${index}`} className={cellClassName} />;
               }
 
               const iso = isoFor(day);
@@ -418,29 +427,32 @@ export function CalendarSection({
             </button>
 
             <div className="min-w-0">
-            {isSaved ? (
-              <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
-                {t.savedPrefix}{" "}
-                <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
-                  {formatLongDate(locale, status.date)}
-                </span>
-                {t.savedSuffix}
-              </p>
-            ) : (
-              <>
+              {isSaved ? (
                 <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
-                  {t.deliveryOn}{" "}
+                  {t.savedPrefix}{" "}
                   <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
-                    {selected ? formatLongDate(locale, selected) : ""}
+                    {formatLongDate(locale, status.date)}
                   </span>
+                  {t.savedSuffix}
                 </p>
-                {status.kind === "error" && (
-                  <p role="alert" className="font-archivo-light mt-1 text-[14px] md:text-[15px]">
-                    {status.message}
+              ) : (
+                <>
+                  <p className="font-archivo-light text-[16px] leading-normal md:text-[18px]">
+                    {t.deliveryOn}{" "}
+                    <span className="font-owners-medium text-[14px] uppercase tracking-wide md:text-[15px]">
+                      {selected ? formatLongDate(locale, selected) : ""}
+                    </span>
                   </p>
-                )}
-              </>
-            )}
+                  {status.kind === "error" && (
+                    <p
+                      role="alert"
+                      className="font-archivo-light mt-1 text-[14px] md:text-[15px]"
+                    >
+                      {status.message}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           </div>
 
@@ -450,9 +462,13 @@ export function CalendarSection({
                 <Link href={routes.shop} className={CTA_PRIMARY}>
                   <CtaLabel>{t.choosePlates}</CtaLabel>
                 </Link>
-                <Link href={routes.cart} className={CTA_SECONDARY}>
+                <button
+                  type="button"
+                  onClick={openCartPanel}
+                  className={CTA_SECONDARY}
+                >
                   <CtaLabel>{dict.common.viewCart}</CtaLabel>
-                </Link>
+                </button>
               </>
             ) : (
               <>
@@ -462,9 +478,7 @@ export function CalendarSection({
                   disabled={isPending}
                   className={cn(CTA_PRIMARY, "disabled:opacity-40")}
                 >
-                  <CtaLabel>
-                    {isPending ? t.saving : t.save}
-                  </CtaLabel>
+                  <CtaLabel>{isPending ? t.saving : t.save}</CtaLabel>
                 </button>
                 <Link href={routes.contact} className={CTA_SECONDARY}>
                   <CtaLabel>{t.askAboutDate}</CtaLabel>

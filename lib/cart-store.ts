@@ -49,9 +49,12 @@ function fetchCart(): Promise<void> {
       // a module shared by the navbar, the panel and the preferences bar, and
       // none of them owns the locale. The path always does.
       const lang = window.location.pathname.split("/")[1] || "";
-      const response = await fetch(`/api/cart?lang=${encodeURIComponent(lang)}`, {
-        cache: "no-store",
-      });
+      const response = await fetch(
+        `/api/cart?lang=${encodeURIComponent(lang)}`,
+        {
+          cache: "no-store",
+        },
+      );
       if (!response.ok) {
         cart = null;
         return;
@@ -180,4 +183,12 @@ if (typeof window !== "undefined") {
   window.addEventListener("cart-updated", () => {
     void fetchCart();
   });
+}
+
+/**
+ * Opens the cart panel from anywhere (the navbar listens). The panel is the
+ * only order form since 28 November 2026: /cart redirects to it.
+ */
+export function openCartPanel() {
+  window.dispatchEvent(new Event("cart-open"));
 }

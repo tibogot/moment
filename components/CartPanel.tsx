@@ -348,9 +348,9 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
     deliveryDate && availability && !isBookable(deliveryDate, availability),
   );
 
-  // Same gate as the cart page, from the same function. Two checkout buttons
-  // with two opinions about whether a basket is allowed through is how an order
-  // below its zone's minimum reaches checkout.
+  // The one gate (lib/delivery/checkout.ts). Since 28 November 2026 this panel
+  // is the only order form — /cart redirects here — so it is the only place an
+  // order below its zone's minimum could slip through.
   const blocker = cart
     ? checkoutBlocker(
         {
@@ -608,8 +608,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
               )}
             </>
           ) : isEmpty ? (
-            // Same way out as the empty cart page: an empty basket is a dead
-            // end without a road back to the products.
+            // An empty basket is a dead end without a road back to the
+            // products.
             <div className="px-6 py-10">
               <p className="font-archivo-light text-[16px]">{t.empty}</p>
               <Link

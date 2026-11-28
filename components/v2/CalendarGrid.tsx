@@ -17,7 +17,7 @@ import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import TextReveal from "@/components/TextReveal";
 import { CellGrid } from "@/components/v2/CellGrid";
 import { monthCells } from "@/lib/calendar";
-import { notifyCartUpdated } from "@/lib/cart-store";
+import { notifyCartUpdated, openCartPanel } from "@/lib/cart-store";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import {
   dayState,
@@ -306,9 +306,13 @@ export function CalendarGrid({
               <Link href={routes.shop} className={CTA_PRIMARY}>
                 <CtaLabel>{t.choosePlates}</CtaLabel>
               </Link>
-              <Link href={routes.cart} className={CTA_SECONDARY}>
+              <button
+                type="button"
+                onClick={openCartPanel}
+                className={CTA_SECONDARY}
+              >
                 <CtaLabel>{dict.common.viewCart}</CtaLabel>
-              </Link>
+              </button>
             </>
           ) : (
             <>

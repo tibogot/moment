@@ -1,12 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { reorder } from "@/app/actions/cart";
 import { useLocale } from "@/components/LocaleProvider";
-import { notifyCartUpdated } from "@/lib/cart-store";
+import { notifyCartUpdated, openCartPanel } from "@/lib/cart-store";
 import { interpolate } from "@/lib/i18n/dictionaries";
-import { href, routes } from "@/lib/routes";
 
 type ReorderButtonProps = {
   orderId: string;
@@ -34,7 +32,6 @@ type ReorderButtonProps = {
  */
 export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
   const locale = useLocale();
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<{
     text: string;
@@ -73,7 +70,7 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
         return;
       }
 
-      router.push(href(locale, routes.cart));
+      openCartPanel();
     });
   }
 
@@ -100,9 +97,9 @@ export function ReorderButton({ orderId, labels }: ReorderButtonProps) {
             </button>
           )}
           {message.showCart && (
-            <a href={href(locale, routes.cart)} className="underline">
+            <button type="button" onClick={openCartPanel} className="underline">
               {labels.goToCart}
-            </a>
+            </button>
           )}
         </p>
       )}

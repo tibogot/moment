@@ -256,6 +256,17 @@ export function Navbar() {
     return () => window.removeEventListener("cart-open", openCart);
   }, [withOverlayFocusRelease]);
 
+  // ?cart=open opens the panel on arrival — where /cart redirects (the panel
+  // is the only order form since 28 November 2026), e.g. from Shopify's
+  // "back to cart". The parameter is dropped so a reload does not reopen it.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("cart") !== "open") return;
+    url.searchParams.delete("cart");
+    window.history.replaceState(window.history.state, "", url);
+    window.dispatchEvent(new Event("cart-open"));
+  }, [pathname]);
+
   const headerRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
