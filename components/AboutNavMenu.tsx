@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useDictionary } from "@/components/LocaleProvider";
@@ -39,9 +39,14 @@ type AboutNavMenuProps = {
 const REVEAL_DURATION = 0.75;
 const REVEAL_DELAY = 0.2;
 const REVEAL_STAGGER = 0.15;
-/** The photograph, a little enlarged under the block, settles to its size. */
-const ZOOM_FROM = 1.2;
-const ZOOM_DURATION = 1.4;
+/**
+ * The photograph, a little enlarged under the block, settles to its size —
+ * in the time the block takes to leave, so nothing moves once it has gone
+ * (28 November 2026: at 1.4s the photo went on shrinking alone for 0.6s
+ * after the reveal, and read as the image resizing at the end).
+ */
+const ZOOM_FROM = 1.12;
+const ZOOM_DURATION = REVEAL_DURATION;
 
 /**
  * What sits behind "About": the story, the news, the FAQ, and two
@@ -67,7 +72,9 @@ export function AboutNavMenu({ onNavigate, open = false }: AboutNavMenuProps) {
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
+  // A layout effect, so the photographs are hidden before the panel's first
+  // frame: after a paint, the last opening's photo showed for an instant.
+  useLayoutEffect(() => {
     // Closing: leave the photographs as they are while the panel folds
     // away; the next opening resets them.
     if (!open) return;
@@ -182,7 +189,10 @@ export function AboutNavMenu({ onNavigate, open = false }: AboutNavMenuProps) {
                   ref={(element) => {
                     blockRefs.current[index] = element;
                   }}
-                  className="absolute inset-0"
+                  // A pixel past the frame on every side, cropped by it: at
+                  // fractional positions the block's soft edges let a
+                  // hairline of the photo show through.
+                  className="absolute -inset-px"
                   style={{ backgroundColor: REVEAL_BLOCK }}
                 />
               </div>
