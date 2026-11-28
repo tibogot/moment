@@ -214,6 +214,23 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
           />
         </nav>
       </section>
+      {/* The band that closes the panel, as under the hero: the rule above,
+          then a --grid-band of page with the spines running through — the
+          brand's mirror of the navbar's own band. */}
+      <section
+        aria-hidden
+        className="relative bg-cream"
+        style={{ height: "var(--grid-band)" }}
+      >
+        <CellGrid
+          lineClassName="bg-sky"
+          bands={false}
+          cells={false}
+          readout={false}
+          subdivide={2}
+          topRule={false}
+        />
+      </section>
     </div>
   );
 }

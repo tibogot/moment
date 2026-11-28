@@ -144,48 +144,68 @@ export function AboutNavMenu({ onNavigate, open = false }: AboutNavMenuProps) {
             ))}
           </nav>
 
-          {/* Two portraits, 3 cells by 3 rows each, filling their cells edge
-          to edge like the shop menu's photo. Decorative: the links carry the
-          meaning. */}
+          {/* Two portraits, 3 cells by 3 rows each, each inset by the cell
+          padding (--v2-pad) like the carousels' product photos — so the two
+          have air between them rather than meeting on one rule. Decorative:
+          the links carry the meaning. */}
           {[firstImage, secondImage].map((image, index) => (
             <div
               key={index}
               aria-hidden
               data-grid-hole
-              className="relative min-w-0 overflow-hidden"
+              className="min-w-0 p-(--v2-pad)"
               style={{
                 gridColumn: `${12 + index * 3} / span 3`,
                 gridRow: `1 / span ${ROWS}`,
               }}
             >
-              <div
-                ref={(element) => {
-                  imageRefs.current[index] = element;
-                }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={image}
-                  alt=""
-                  fill
-                  // Not the frame's width (~19vw): a landscape photograph covering
-                  // a 3/4 frame is drawn about twice as wide as the frame, and the
-                  // zoom adds 20% — the frame's width made the browser fetch a
-                  // file a third of the width it was drawn at, and it showed.
-                  sizes="45vw"
-                  className="object-cover"
+              <div className="relative h-full overflow-hidden">
+                <div
+                  ref={(element) => {
+                    imageRefs.current[index] = element;
+                  }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={image}
+                    alt=""
+                    fill
+                    // Not the frame's width (~19vw): a landscape photograph covering
+                    // a 3/4 frame is drawn about twice as wide as the frame, and the
+                    // zoom adds 20% — the frame's width made the browser fetch a
+                    // file a third of the width it was drawn at, and it showed.
+                    sizes="45vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div
+                  ref={(element) => {
+                    blockRefs.current[index] = element;
+                  }}
+                  className="absolute inset-0"
+                  style={{ backgroundColor: REVEAL_BLOCK }}
                 />
               </div>
-              <div
-                ref={(element) => {
-                  blockRefs.current[index] = element;
-                }}
-                className="absolute inset-0"
-                style={{ backgroundColor: REVEAL_BLOCK }}
-              />
             </div>
           ))}
         </div>
+      </section>
+      {/* The band that closes the panel, as under the hero: the rule above,
+          then a --grid-band of page with the spines running through — the
+          brand's mirror of the navbar's own band. */}
+      <section
+        aria-hidden
+        className="relative bg-cream"
+        style={{ height: "var(--grid-band)" }}
+      >
+        <CellGrid
+          lineClassName="bg-sky"
+          bands={false}
+          cells={false}
+          readout={false}
+          subdivide={2}
+          topRule={false}
+        />
       </section>
     </div>
   );
