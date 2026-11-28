@@ -13,13 +13,20 @@
   --font-archivo-light: var(--font-face-archivo-light);
   --font-archivo-light-italic: var(--font-face-archivo-light-italic);
 
+  /* `tracking-wide`: every small capital on the site — nav, menus, tabs,
+     buttons, labels, 9 to 16px. 0.04em, not Tailwind's 0.025em (28 November
+     2026): Owners is drawn tight, which suits the large titles (they keep
+     their own -0.005em) but ran the small capitals together. The partner
+     map's labels were already at 0.04em. */
+  --tracking-wide: 0.04em;
+
   /* Navbar switches from mobile menu to inline links at this width.
      Kept in sync by hand with NAV_MOBILE_MQ in components/Navbar.tsx — the
      media query there cannot read a Tailwind theme variable, and if the two
      disagree the nav renders inline links in a space built for a burger. */
   /* 1440px (27 November 2026): the owners' five links on the left, "Où nous
      trouver" and the language menu on the right — the French links clear
-     the logo from ~1390px. Was 1270px before their menu, 1760px briefly. */
+     the logo from ~1400px. Was 1270px before their menu, 1760px briefly. */
   --breakpoint-nav: 90rem;
 }
 
