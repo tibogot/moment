@@ -30,9 +30,8 @@ const familyClassName =
   "group block font-owners-medium text-(length:--nav-text) uppercase tracking-wide";
 const childClassName =
   "group block font-archivo-light text-[14px] leading-snug";
-/* The bottom line and the photo's caption share one size and line-height 1
-   (28 November 2026): "Tout" in the bar's 13px, with an arrow from a
-   fallback font, sat a few px above the caption beside it. */
+/* The bottom line: one size and line-height 1 (28 November 2026) — "Tout" in
+   the bar's 13px, with an arrow from a fallback font, sat off the line. */
 const smallLinkClassName =
   "group block font-owners-medium text-[12px] leading-none uppercase tracking-wide";
 const labelClassName = "animated-underline";
@@ -47,8 +46,9 @@ const labelClassName = "animated-underline";
  *
  * On the right one photo, 4 cells by 4 rows, that follows the hovered family:
  * the collection's own image from Shopify, else its first product's — and
- * the whole table, "Tous les produits", at rest and on "Tout". Under it, the
- * name of what it shows. At the bottom, one line: the moments of the day
+ * the whole table at rest and on "Tout". No caption: the hovered link is
+ * already underlined beside it (28 November 2026). Under it, a plain cell,
+ * which keeps the photo 3/4 and in line with the bottom row. At the bottom, one line: the moments of the day
  * and "Tout" — a second way into the shop, not a third list.
  *
  * Every block is a `data-grid-hole`, so the grid draws only the rules
@@ -80,8 +80,8 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
   const shown =
     collections.find((c) => c.handle === hovered && c.imageUrl) ?? null;
   const photo = shown
-    ? { src: shown.imageUrl!, alt: shown.imageAlt, title: shown.title }
-    : { src: tableImage, alt: "", title: dict.home.moments.shop };
+    ? { src: shown.imageUrl!, alt: shown.imageAlt }
+    : { src: tableImage, alt: "" };
   const photoHref = shown ? routes.collection(shown.handle) : routes.shop;
 
   const familyRows = Math.max(
@@ -209,8 +209,8 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
             </Link>
           </div>
 
-          {/* The photo, 3/4, and the name of what it shows under it. Both
-              blocks are always there, even before the catalogue has an image:
+          {/* The photo, 3/4, and the plain cell under it. Both blocks are
+              always there, even before the catalogue has an image:
               the grid takes its holes when it mounts, and a block added later
               would get the cell rules drawn across it. */}
           <Link
@@ -236,19 +236,12 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
           </Link>
           <div
             data-grid-hole
-            className="flex min-w-0 items-end p-(--v2-pad)"
+            aria-hidden
             style={{
               gridColumn: "14 / span 4",
               gridRow: `${PHOTO_ROWS + 1} / span ${bottomRow - PHOTO_ROWS}`,
             }}
-          >
-            {/* inline-block and 3px under, like the links' underline box
-                (.animated-underline): without it the caption sat 3px below
-                "Tout" on the same line. */}
-            <span className="font-owners-medium inline-block pb-[3px] text-[12px] leading-none tracking-wide uppercase">
-              {photo.title}
-            </span>
-          </div>
+          />
         </nav>
       </section>
     </div>
