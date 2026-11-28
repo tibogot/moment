@@ -48,21 +48,3 @@ export function resolveFamilies(
     return [{ collection, children }];
   });
 }
-
-/**
- * Below the families: the moments of the day, as in the home's carousel tabs
- * (the occasions left the menu on 27 November 2026 — they stay in the shop's
- * filters). `label` is a key into `home.moments`. An entry whose collection is
- * missing from the shop is simply not shown.
- */
-export const SHOP_NAV_GROUPS = [
-  {
-    key: "byMoment",
-    source: "moments",
-    items: [
-      { handle: "petit-dejeuner", label: "brunch" },
-      { handle: "salades", label: "lunch" },
-      { handle: "pause", label: "pause" },
-    ],
-  },
-] as const;

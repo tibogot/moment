@@ -26,7 +26,7 @@ import { useDictionary } from "@/components/LocaleProvider";
 import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { type SiteDetails } from "@/lib/site";
-import { resolveFamilies, SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
+import { resolveFamilies } from "@/lib/shopify/nav-groups";
 import { useSiteDetails } from "@/components/SiteDetailsProvider";
 import { blurFocusWithin } from "@/lib/overlayFocus";
 import { useOverlayScrollLock } from "@/lib/hooks/useOverlayScrollLock";
@@ -214,9 +214,9 @@ export function MobileNavMenu({
   > = {
     shop: [
       { href: routes.shop, label: dict.nav.all },
-      // As on desktop: the owners' families with their sub-categories, then
-      // the moments (lib/shopify/nav-groups.ts). "Collections" left both
-      // menus on 27 November 2026: the families and moments cover it.
+      // As on desktop: the owners' families with their sub-categories
+      // (lib/shopify/nav-groups.ts). "Collections" left both menus on 27
+      // November 2026, the moments on the 28th (see ShopNavMenu).
       ...resolveFamilies(collections).flatMap(({ collection, children }) => [
         { href: routes.collection(collection.handle), label: collection.title },
         ...children.map((child) => ({
@@ -225,18 +225,6 @@ export function MobileNavMenu({
           indent: true,
         })),
       ]),
-      ...SHOP_NAV_GROUPS.flatMap((group) => {
-        const labels =
-          group.source === "moments" ? dict.home.moments : dict.home.selections;
-        return group.items
-          .filter((item) =>
-            collections.some((collection) => collection.handle === item.handle),
-          )
-          .map((item) => ({
-            href: routes.collection(item.handle),
-            label: labels[item.label as keyof typeof labels],
-          }));
-      }),
     ],
     about: aboutNav.map(({ key, href }) => ({
       href,

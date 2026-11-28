@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { CellGrid } from "@/components/v2/CellGrid";
 import { routes } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
-import { resolveFamilies, SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
+import { resolveFamilies } from "@/lib/shopify/nav-groups";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
 import tableImage from "@/public/images/moment-table.jpg";
 
@@ -48,8 +48,11 @@ const labelClassName = "animated-underline";
  * the collection's own image from Shopify, else its first product's — and
  * the whole table at rest and on "Tout". No caption: the hovered link is
  * already underlined beside it (28 November 2026). Under it, a plain cell,
- * which keeps the photo 3/4 and in line with the bottom row. At the bottom, one line: the moments of the day
- * and "Tout" — a second way into the shop, not a third list.
+ * which keeps the photo 3/4 and in line with the bottom row. At the bottom,
+ * "Tout". The moments of the day (Brunch, Lunch, Pause) left the menu on 28
+ * November 2026: a second way of sorting beside the families, which the
+ * owners never asked for here — they stay on the home's first carousel and
+ * in the shop's filters.
  *
  * Every block is a `data-grid-hole`, so the grid draws only the rules
  * between them; a family slot left empty is one plain block too.
@@ -59,19 +62,6 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
   const [hovered, setHovered] = useState<string | null>(null);
 
   const families = useMemo(() => resolveFamilies(collections), [collections]);
-
-  const moments = useMemo(
-    () =>
-      SHOP_NAV_GROUPS.flatMap((group) =>
-        group.items.flatMap((item) => {
-          const collection = collections.find((c) => c.handle === item.handle);
-          return collection
-            ? [{ collection, label: dict.home.moments[item.label] }]
-            : [];
-        }),
-      ),
-    [collections, dict],
-  );
 
   /* The hovered collection's photo. With nothing hovered, or on "Tout", the
      whole shop: the table laid with everything (the home's opening photo),
@@ -173,32 +163,12 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
             },
           )}
 
-          {/* The bottom line: the moments of the day, then everything. */}
+          {/* The bottom line: everything. */}
           <div
             data-grid-hole
-            className="flex min-w-0 items-end justify-between gap-6 p-(--v2-pad)"
+            className="flex min-w-0 items-end justify-end p-(--v2-pad)"
             style={{ gridColumn: "2 / span 12", gridRow: `${bottomRow}` }}
           >
-            {moments.length > 0 ? (
-              <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
-                <p className="font-archivo-light text-[14px] leading-none opacity-60">
-                  {dict.nav.byMoment}
-                </p>
-                {moments.map(({ collection, label }) => (
-                  <Link
-                    key={collection.handle}
-                    href={routes.collection(collection.handle)}
-                    className={smallLinkClassName}
-                    onClick={onNavigate}
-                    {...hover(collection.handle)}
-                  >
-                    <span className={labelClassName}>{label}</span>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <span />
-            )}
             <Link
               href={routes.shop}
               className={smallLinkClassName}
