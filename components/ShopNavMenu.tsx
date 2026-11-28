@@ -30,8 +30,11 @@ const familyClassName =
   "group block font-owners-medium text-(length:--nav-text) uppercase tracking-wide";
 const childClassName =
   "group block font-archivo-light text-[14px] leading-snug";
+/* The bottom line and the photo's caption share one size and line-height 1
+   (28 November 2026): "Tout" in the bar's 13px, with an arrow from a
+   fallback font, sat a few px above the caption beside it. */
 const smallLinkClassName =
-  "group block font-owners-medium text-[12px] uppercase tracking-wide";
+  "group block font-owners-medium text-[12px] leading-none uppercase tracking-wide";
 const labelClassName = "animated-underline";
 
 /*
@@ -178,7 +181,7 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
           >
             {moments.length > 0 ? (
               <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
-                <p className="font-archivo-light text-[14px] opacity-60">
+                <p className="font-archivo-light text-[14px] leading-none opacity-60">
                   {dict.nav.byMoment}
                 </p>
                 {moments.map(({ collection, label }) => (
@@ -198,7 +201,7 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
             )}
             <Link
               href={routes.shop}
-              className={familyClassName}
+              className={smallLinkClassName}
               onClick={onNavigate}
               {...hover(null)}
             >
@@ -239,7 +242,10 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
               gridRow: `${PHOTO_ROWS + 1} / span ${bottomRow - PHOTO_ROWS}`,
             }}
           >
-            <span className="font-owners-medium text-[12px] tracking-wide uppercase">
+            {/* inline-block and 3px under, like the links' underline box
+                (.animated-underline): without it the caption sat 3px below
+                "Tout" on the same line. */}
+            <span className="font-owners-medium inline-block pb-[3px] text-[12px] leading-none tracking-wide uppercase">
               {photo.title}
             </span>
           </div>
