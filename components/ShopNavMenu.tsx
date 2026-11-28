@@ -182,27 +182,30 @@ export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
           {/* The photo, 3/4, and the plain cell under it. Both blocks are
               always there, even before the catalogue has an image:
               the grid takes its holes when it mounts, and a block added later
-              would get the cell rules drawn across it. */}
+              would get the cell rules drawn across it. The photo is inset
+              by the cell padding, like the À propos menu's portraits. */}
           <Link
             href={photoHref}
             onClick={onNavigate}
             tabIndex={-1}
             aria-hidden
             data-grid-hole
-            className="relative min-w-0 overflow-hidden"
+            className="min-w-0 p-(--v2-pad)"
             style={{
               gridColumn: "14 / span 4",
               gridRow: `1 / span ${PHOTO_ROWS}`,
             }}
           >
-            <Image
-              key={typeof photo.src === "string" ? photo.src : "all"}
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              sizes="25vw"
-              className="animate-[v2-fade_400ms_ease-out] object-cover"
-            />
+            <span className="relative block h-full overflow-hidden">
+              <Image
+                key={typeof photo.src === "string" ? photo.src : "all"}
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="25vw"
+                className="animate-[v2-fade_400ms_ease-out] object-cover"
+              />
+            </span>
           </Link>
           <div
             data-grid-hole
