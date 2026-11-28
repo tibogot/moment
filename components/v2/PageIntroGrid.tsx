@@ -8,8 +8,11 @@ type PageIntroGridProps = {
   /**
    * "small" for a page whose title is a long phrase rather than one word
    * ("Comment ça marche ? & FAQ"): about two-thirds of the usual size.
+   * "intro": the home's intro headline ("Moment livre vos
+   * petits-déjeuners…", IntroCells), same size and leading (Où nous
+   * trouver, 28 November 2026).
    */
-  size?: "default" | "small";
+  size?: "default" | "small" | "intro";
   /**
    * Where the lead sits under the title: pushed right (the default, the
    * events and coffee pages), or from the left under the title's first
@@ -68,10 +71,12 @@ export function PageIntroContent({
             delay={0.15}
           >
             <h1
-              className={`font-owners-narrow-bold max-w-full leading-[0.9] tracking-[-0.005em] wrap-break-word text-black uppercase ${
-                size === "small"
-                  ? "text-[8vw] md:text-[min(5.2vw,8svh)]"
-                  : "text-[11vw] md:text-[min(8vw,12svh)]"
+              className={`font-owners-narrow-bold max-w-full tracking-[-0.005em] wrap-break-word text-black uppercase ${
+                size === "intro"
+                  ? "text-[7vw] leading-[0.95] md:text-[min(4.4vw,7svh)]"
+                  : size === "small"
+                    ? "text-[8vw] leading-[0.9] md:text-[min(5.2vw,8svh)]"
+                    : "text-[11vw] leading-[0.9] md:text-[min(8vw,12svh)]"
               }`}
             >
               {title}

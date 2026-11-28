@@ -146,7 +146,12 @@ export default async function FindUsPage({
             readout={false}
             bottomBand="0px"
           />
-          <PageIntroContent title={t.title} lead={t.lead} leadSide="left" />
+          <PageIntroContent
+            title={t.title}
+            lead={t.lead}
+            leadSide="left"
+            size="intro"
+          />
           <div
             className="relative grid"
             style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
