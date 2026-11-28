@@ -10,6 +10,15 @@ import {
 import { routes } from "@/lib/routes";
 import { absoluteUrl } from "@/lib/seo";
 import { getCollections } from "@/lib/shopify/collections";
+import { SHOP_FAMILIES } from "@/lib/shopify/nav-groups";
+
+/** Brunch, Lunch, Pause: the collections behind the home's first carousel. */
+const MOMENT_COLLECTIONS = ["petit-dejeuner", "salades", "pause"];
+
+const LISTED_COLLECTIONS = new Set<string>([
+  ...SHOP_FAMILIES.flatMap((family) => [family.handle, ...family.children]),
+  ...MOMENT_COLLECTIONS,
+]);
 import { getProducts } from "@/lib/shopify/products";
 
 type Entry = MetadataRoute.Sitemap[number];
@@ -72,7 +81,6 @@ const staticRoutes: {
 }[] = [
   { path: routes.home, changeFrequency: "weekly", priority: 1 },
   { path: routes.shop, changeFrequency: "daily", priority: 0.9 },
-  { path: routes.collections, changeFrequency: "weekly", priority: 0.8 },
   { path: routes.events, changeFrequency: "monthly", priority: 0.8 },
   { path: routes.coffee, changeFrequency: "monthly", priority: 0.7 },
   { path: routes.about, changeFrequency: "monthly", priority: 0.7 },
@@ -158,9 +166,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         : localized(path, { changeFrequency, priority }),
     ),
     ...collections
-      // Shopify seeds every store with a "frontpage" collection; it has no page
-      // of its own worth surfacing.
-      .filter((collection) => collection.handle !== "frontpage")
+      // Only the collections the site uses (28 November 2026): the owners'
+      // families and their sub-categories, and the moments behind the home's
+      // first carousel. The older ones (French names, no translation) and
+      // Shopify's "frontpage" still have pages, but are not advertised.
+      .filter((collection) => LISTED_COLLECTIONS.has(collection.handle))
       .map((collection) =>
         localized(routes.collection(collection.handle), {
           ...editedAt(collection.updatedAt),

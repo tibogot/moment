@@ -58,7 +58,8 @@ export async function generateMetadata({
     getDictionary(locale),
   ]);
 
-  if (!collection || handle === HIDDEN_COLLECTION) return notFoundMetadata(dict.common.notFound.title);
+  if (!collection || handle === HIDDEN_COLLECTION)
+    return notFoundMetadata(dict.common.notFound.title);
 
   return pageMetadata({
     locale,
@@ -96,7 +97,9 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
           collectionSchema(locale, collection),
           breadcrumbSchema(locale, [
             { name: dict.nav.home, path: routes.home },
-            { name: dict.nav.collections, path: routes.collections },
+            // The shop, not the list of collections: that page redirects
+            // to it since 28 November 2026.
+            { name: dict.nav.shop, path: routes.shop },
             {
               name: collection.title,
               path: routes.collection(collection.handle),

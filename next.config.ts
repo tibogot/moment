@@ -49,6 +49,16 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       { source: "/menus/:path*", destination: "/events", permanent: false },
+      // The list of every collection left on 28 November 2026: the six
+      // families are in the menu and the shop shows everything, and the page
+      // was the last place the old French-named collections still showed.
+      // The collection pages themselves (/collections/<handle>) stay.
+      {
+        source: "/:lang(fr|nl|en)/collections",
+        destination: "/:lang/shop",
+        permanent: false,
+      },
+      { source: "/collections", destination: "/shop", permanent: false },
     ];
   },
 
