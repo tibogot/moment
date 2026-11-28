@@ -501,9 +501,11 @@ export function CalendarCells({
         style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
       >
         {/* The information: cells 1–7 on desktop, 1–4 on a tablet. The
-            month, its arrows and the legend at the top; the note and the
-            way to the shop at the foot, level with the month's last row. */}
-        <div className="col-[2/span_4] flex min-w-0 flex-col justify-between gap-[6svh] px-(--v2-pad) md:col-[2/span_5] md:row-[1] lg:col-[2/span_7]">
+            month, its arrows and the legend, then the note and the way to
+            the shop. From a tablet up it is held under the navbar while the
+            month scrolls by (28 November 2026, like the story sections'
+            panels, StoryCells), as far from the bar as it sits at rest. */}
+        <div className="col-[2/span_4] flex min-w-0 flex-col gap-[6svh] px-(--v2-pad) md:sticky md:top-[calc(var(--grid-band)_+_var(--announcement-h,0px)_+_var(--s-cell-h)/2)] md:col-[2/span_5] md:row-[1] md:self-start lg:col-[2/span_7]">
           <div className="flex flex-col gap-[3svh]">
             <h2 className={cn(LEGEND, "flex items-center gap-2")}>
               {/* The site's small 3/4 rectangle before a label. */}
