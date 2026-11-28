@@ -1,18 +1,12 @@
-import { AboutCta } from "@/components/AboutCta";
-import { AboutFacts } from "@/components/AboutFacts";
-import { AboutHero } from "@/components/AboutHero";
-import { AboutIntro } from "@/components/AboutIntro";
-import { AboutPrinciples } from "@/components/AboutPrinciples";
-import { AboutStatement } from "@/components/AboutStatement";
 import { AboutTeam } from "@/components/AboutTeam";
-import { AboutValuesSection } from "@/components/AboutValuesSection";
 import { Footer } from "@/components/Footer";
-import { FullBleedImageSection } from "@/components/FullBleedImageSection";
-import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
-import { ParallaxImage } from "@/components/ParallaxImage";
-import { SplitImageSection } from "@/components/SplitImageSection";
-import { StickyTitleSection } from "@/components/StickyTitleSection";
+import { ColumnsCells, CtaCells, FactsCells } from "@/components/v2/AboutCells";
+import { CellGrid } from "@/components/v2/CellGrid";
+import { IntroCells } from "@/components/v2/IntroCells";
+import { PageIntroContent } from "@/components/v2/PageIntroGrid";
+import { PhotoGridSection } from "@/components/v2/PhotoGridSection";
+import { StoryCells } from "@/components/v2/StoryCells";
 import { toLocale, withLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary, type Dictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
@@ -68,85 +62,108 @@ export default async function AboutPage({
     <>
       <JsonLd data={jsonLd} />
 
-      <AboutHero copy={about.hero} />
-      <AboutIntro copy={about.intro} />
-
-      {/* Tall photograph held to the page spines — margin to margin, not edge
-          to edge — so the grid continues through rather than cutting across. */}
-      <GridSection>
-        <div className="relative col-start-2 col-end-5 h-[70svh] overflow-hidden md:col-end-9 md:h-svh">
-          <ParallaxImage
-            src="/images/onur-kaya.jpg"
-            alt=""
-            sizes="90vw"
-            className="absolute inset-0"
+      {/* On the page's 16 / 12 / 4 grid since 28 November 2026, in the
+          owners' order (their text document, 27 November): who they are, why
+          Moment, the parentheses, the story, their values, what they do, then
+          the practical answers. Each part reuses the home's and the other
+          pages' v2 sections; the three of its own are in v2/AboutCells. */}
+      <div className="v2">
+        <section
+          className="relative w-full bg-cream"
+          style={{ paddingTop: "var(--grid-band)" }}
+        >
+          <CellGrid
+            lineClassName="bg-sky"
+            subdivide={2}
+            cells={false}
+            readout={false}
+            bottomBand="0px"
           />
-        </div>
-      </GridSection>
+          <PageIntroContent title={about.hero.title} lead={about.hero.lead} />
+        </section>
 
-      <AboutStatement headline={about.statement.headline} />
+        <IntroCells copy={about.intro} />
 
-      {/* The owners' order (27 November 2026): why Moment, the parentheses,
-          "c'est de cette idée qu'est né ( moment )", then their values. */}
-      <StickyTitleSection
-        label={about.story.label}
-        title={about.story.title}
-        body={about.story.body}
-        src="/images/anita-austvika.jpg"
-      />
+        {/* Full width, on whole cells: 6 rows on a desktop, a 3/4 portrait
+            of 4 by 4 on a phone. */}
+        <PhotoGridSection
+          rowsClassName="[--rows:4] md:[--rows:6] lg:[--rows:7]"
+          photos={[
+            {
+              src: "/images/onur-kaya.jpg",
+              alt: "",
+              className:
+                "col-[2/span_4] row-[1/span_4] md:col-[2/span_12] md:row-[1/span_6] lg:col-[2/span_16] lg:row-[1/span_7]",
+            },
+          ]}
+        />
 
-      <AboutPrinciples copy={about.principles} />
+        <IntroCells copy={{ headline: about.statement.headline, body: [] }} />
 
-      {/* What Moment does, in the owners' own sentences. */}
-      <AboutValuesSection copy={about.values} />
+        {/* The owners' order (27 November 2026): why Moment, the
+            parentheses, "c'est de cette idée qu'est né ( moment )", then
+            their values. */}
+        <StoryCells
+          label={about.story.label}
+          title={about.story.title}
+          body={about.story.body}
+          src="/images/anita-austvika.jpg"
+        />
 
-      {/* The accordion ("Cuisiné le matin même"…) left on 27 November 2026:
-          its claims were placeholders, and the owners' text document says
-          the same things in the sections around it. */}
+        <ColumnsCells
+          label={about.principles.label}
+          items={about.principles.items}
+        />
 
-      {/* Mirror of the home page's split blocks, flipped: the large image sits
-          on the right half here, with the smaller one answering on the left. */}
-      <SplitImageSection
-        src="/images/nicole-herrero.jpg"
-        alt=""
-        colStart={4}
-        colSpan={3}
-        mobile={{
-          rows: 5,
-          colStart: 1,
-          colSpan: 5,
-          rowStart: 1,
-          rowSpan: 4,
-        }}
-      />
-      <SplitImageSection
-        src="/images/dan-smedley.jpg"
-        alt=""
-        colStart={1}
-        colSpan={2}
-        rowStart={1}
-        rowSpan={2}
-        mobile={{
-          rows: 4,
-          colStart: 1,
-          colSpan: 4,
-          rowStart: 1,
-          rowSpan: 3,
-        }}
-        continueGrid
-        fullBleedBottom
-      />
+        {/* What Moment does, in the owners' own sentences. */}
+        <ColumnsCells
+          label={about.values.label}
+          lead={about.values.lead}
+          aside={about.values.aside}
+          items={about.values.cards}
+        />
 
-      {/* "Approvisionnement" left on 27 November 2026: it named suppliers the
-          owners never mentioned. Their values (below the story) say what is
-          true: organic where possible, local suppliers, artisan bakeries. */}
+        {/* Two photographs staggered, each as many rows as columns so both
+            are 3/4 portraits. Cells, columns · rows:
+              mobile 4 × 7     1–4 · 1–4      2–4 · 5–7
+              tablet 12 × 9    1–6 · 1–6      8–11 · 5–8
+              desktop 16 × 10  1–6 · 1–6      11–14 · 6–9 */}
+        <PhotoGridSection
+          rowsClassName="[--rows:7] md:[--rows:9] lg:[--rows:10]"
+          photos={[
+            {
+              src: "/images/nicole-herrero.jpg",
+              alt: "",
+              className:
+                "col-[2/span_4] row-[1/span_4] md:col-[2/span_6] md:row-[1/span_6] lg:col-[2/span_6] lg:row-[1/span_6]",
+            },
+            {
+              src: "/images/dan-smedley.jpg",
+              alt: "",
+              className:
+                "col-[3/span_3] row-[5/span_3] md:col-[9/span_4] md:row-[5/span_4] lg:col-[12/span_4] lg:row-[6/span_4]",
+            },
+          ]}
+        />
 
-      {/* Full-height breath before the practical half of the page. */}
-      <FullBleedImageSection src="/images/svitlana.jpg" />
+        {/* Full width again, before the practical half of the page. */}
+        <PhotoGridSection
+          rowsClassName="[--rows:4] md:[--rows:6] lg:[--rows:7]"
+          photos={[
+            {
+              src: "/images/svitlana.jpg",
+              alt: "",
+              className:
+                "col-[2/span_4] row-[1/span_4] md:col-[2/span_12] md:row-[1/span_6] lg:col-[2/span_16] lg:row-[1/span_7]",
+            },
+          ]}
+        />
 
-      <AboutTeam copy={about.team} />
-      <AboutFacts copy={about.facts} />
-      <AboutCta copy={about.cta} />
+        {/* Empty until the owners send names and portraits. */}
+        <AboutTeam copy={about.team} />
+        <FactsCells copy={about.facts} />
+        <CtaCells copy={about.cta} />
+      </div>
       <Footer />
     </>
   );

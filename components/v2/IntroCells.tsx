@@ -62,29 +62,33 @@ export function IntroCells({
 
         {/* The paragraphs, two whole cells apart around the centre line:
             cells 3–7 and 10–14 on desktop, 2–5 and 8–11 on a tablet. */}
-        <div className="col-[2/span_4] grid min-w-0 gap-y-[3svh] md:col-[3/span_10] md:grid-cols-10 lg:col-[4/span_12] lg:grid-cols-12">
-          {copy.body.slice(0, 2).map((paragraph, index) => (
-            <div
-              key={paragraph}
-              className={cn(
-                "min-w-0 px-(--v2-pad) text-left",
-                index === 0
-                  ? "md:col-[1/span_4] lg:col-[1/span_5]"
-                  : "md:col-[7/span_4] lg:col-[8/span_5]",
-              )}
-            >
-              <TextReveal
-                blockColor={REVEAL_BLOCK}
-                stagger={0.08}
-                duration={0.6}
+        {/* No paragraphs, no block: a headline alone (À propos'
+            statement) keeps the section's half rows round it. */}
+        {copy.body.length > 0 && (
+          <div className="col-[2/span_4] grid min-w-0 gap-y-[3svh] md:col-[3/span_10] md:grid-cols-10 lg:col-[4/span_12] lg:grid-cols-12">
+            {copy.body.slice(0, 2).map((paragraph, index) => (
+              <div
+                key={paragraph}
+                className={cn(
+                  "min-w-0 px-(--v2-pad) text-left",
+                  index === 0
+                    ? "md:col-[1/span_4] lg:col-[1/span_5]"
+                    : "md:col-[7/span_4] lg:col-[8/span_5]",
+                )}
               >
-                <p className="font-archivo-light text-(length:--body-text) leading-normal wrap-break-word text-black text-pretty">
-                  {paragraph}
-                </p>
-              </TextReveal>
-            </div>
-          ))}
-        </div>
+                <TextReveal
+                  blockColor={REVEAL_BLOCK}
+                  stagger={0.08}
+                  duration={0.6}
+                >
+                  <p className="font-archivo-light text-(length:--body-text) leading-normal wrap-break-word text-black text-pretty">
+                    {paragraph}
+                  </p>
+                </TextReveal>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
