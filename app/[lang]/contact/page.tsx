@@ -2,7 +2,8 @@ import { ContactForm } from "@/components/ContactForm";
 import { ContactDetails } from "@/components/ContactDetails";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
-import { PageIntro } from "@/components/PageIntro";
+import { CellGrid } from "@/components/v2/CellGrid";
+import { PageIntroContent } from "@/components/v2/PageIntroGrid";
 import {
   EMPTY_CONTACT_VALUES,
   OCCASIONS,
@@ -126,10 +127,26 @@ export default async function ContactPage({
         )}
       />
 
-      <PageIntro
-        title={dict.pageIntro.contact.title}
-        lead={dict.contact.lead}
-      />
+      {/* On the page's 16 / 12 / 4 grid since 28 November 2026: the framed
+          intro, the form and the details (both on the grid too). */}
+      <div className="v2">
+        <section
+          className="relative w-full bg-cream"
+          style={{ paddingTop: "var(--grid-band)" }}
+        >
+          <CellGrid
+            lineClassName="bg-sky"
+            subdivide={2}
+            cells={false}
+            readout={false}
+            bottomBand="0px"
+          />
+          <PageIntroContent
+            title={dict.pageIntro.contact.title}
+            lead={dict.contact.lead}
+          />
+        </section>
+      </div>
 
       <ContactForm
         initialValues={initialValues}

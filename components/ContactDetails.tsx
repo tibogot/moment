@@ -1,4 +1,4 @@
-import { GridSection } from "@/components/GridSection";
+import { CellGrid } from "@/components/v2/CellGrid";
 import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
 import { formatWindow, type PickupWindow } from "@/lib/delivery/slots";
 import {
@@ -42,60 +42,76 @@ export function ContactDetails({
   if (!address && !hours && !phone && !email) return null;
 
   return (
-    <GridSection className="pb-[14svh]">
-      <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-8">
-        <dl className="border-t border-sky md:grid md:grid-cols-2 md:gap-(--grid-gutter)">
-          {address && (
-            <div className="border-b border-sky py-[4svh] md:border-b-0">
-              <dt className="font-owners-medium text-[13px] uppercase tracking-wide">
-                {t.addressTitle}
-              </dt>
-              <dd className="font-archivo-light mt-3 text-[18px] leading-normal">
-                {address}
-                <span className="mt-2 block opacity-70">
-                  {interpolate(t.pickupNote, {
-                    window: formatWindow(pickupWindow),
-                  })}
-                </span>
-              </dd>
-            </div>
-          )}
+    // On the page's 16 / 12 / 4 grid since 28 November 2026: the address on
+    // the left half, the hours and the ways to reach Moment on the right.
+    <div className="v2">
+      <section className="relative w-full bg-cream">
+        <CellGrid
+          lineClassName="bg-sky"
+          subdivide={2}
+          cells={false}
+          readout={false}
+          bands={false}
+        />
+        <div
+          className="relative grid pb-[14svh]"
+          style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
+        >
+          <div className="col-[2/-2] min-w-0">
+            <dl className="grid md:grid-cols-2">
+              {address && (
+                <div className="border-b border-sky px-(--v2-pad) py-[5svh] md:border-b-0">
+                  <dt className="font-owners-medium text-[13px] uppercase tracking-wide">
+                    {t.addressTitle}
+                  </dt>
+                  <dd className="font-archivo-light mt-3 text-[18px] leading-normal">
+                    {address}
+                    <span className="mt-2 block opacity-70">
+                      {interpolate(t.pickupNote, {
+                        window: formatWindow(pickupWindow),
+                      })}
+                    </span>
+                  </dd>
+                </div>
+              )}
 
-          {(hours || phone || email) && (
-            <div className="border-b border-sky py-[4svh]">
-              <dt className="font-owners-medium text-[13px] uppercase tracking-wide">
-                {t.hoursTitle}
-              </dt>
-              <dd className="font-archivo-light mt-3 text-[18px] leading-normal">
-                {hours && (
-                  <span className="block">
-                    {interpolate(t.hours, { hours })}
-                  </span>
-                )}
-                {phone && (
-                  <a
-                    // Stripped of spaces for the dialler, shown with them for
-                    // the reader: `tel:` is a machine-readable field and
-                    // "+32 472 35 51 53" is a human-readable one.
-                    href={`tel:${phone.replace(/\s+/g, "")}`}
-                    className="mt-2 block underline underline-offset-4 transition-opacity hover:opacity-60"
-                  >
-                    {phone}
-                  </a>
-                )}
-                {email && (
-                  <a
-                    href={`mailto:${email}`}
-                    className="mt-1 block underline underline-offset-4 transition-opacity hover:opacity-60"
-                  >
-                    {email}
-                  </a>
-                )}
-              </dd>
-            </div>
-          )}
-        </dl>
-      </div>
-    </GridSection>
+              {(hours || phone || email) && (
+                <div className="border-b border-sky px-(--v2-pad) py-[5svh] md:border-b-0">
+                  <dt className="font-owners-medium text-[13px] uppercase tracking-wide">
+                    {t.hoursTitle}
+                  </dt>
+                  <dd className="font-archivo-light mt-3 text-[18px] leading-normal">
+                    {hours && (
+                      <span className="block">
+                        {interpolate(t.hours, { hours })}
+                      </span>
+                    )}
+                    {phone && (
+                      <a
+                        // Stripped of spaces for the dialler, shown with them for
+                        // the reader: `tel:` is a machine-readable field and
+                        // "+32 472 35 51 53" is a human-readable one.
+                        href={`tel:${phone.replace(/\s+/g, "")}`}
+                        className="mt-2 block underline underline-offset-4 transition-opacity hover:opacity-60"
+                      >
+                        {phone}
+                      </a>
+                    )}
+                    {email && (
+                      <a
+                        href={`mailto:${email}`}
+                        className="mt-1 block underline underline-offset-4 transition-opacity hover:opacity-60"
+                      >
+                        {email}
+                      </a>
+                    )}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
