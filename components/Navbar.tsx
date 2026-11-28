@@ -892,7 +892,7 @@ export function Navbar() {
                 })
               }
             >
-              <Menu style={iconStyle} strokeWidth={1.5} />
+              <Menu style={iconStyle} strokeWidth={2} />
             </button>
             <button
               type="button"
@@ -908,7 +908,7 @@ export function Navbar() {
                 })
               }
             >
-              <Search style={iconStyle} strokeWidth={1.5} />
+              <Search style={iconStyle} strokeWidth={2} />
             </button>
           </div>
 
@@ -1027,7 +1027,7 @@ export function Navbar() {
                 })
               }
             >
-              <Search style={iconStyle} strokeWidth={1.5} />
+              <Search style={iconStyle} strokeWidth={2} />
             </button>
 
             <Link
@@ -1036,7 +1036,7 @@ export function Navbar() {
               data-nav-link
               className="hidden nav:block"
             >
-              <CircleUserRound style={iconStyle} strokeWidth={1.5} />
+              <CircleUserRound style={iconStyle} strokeWidth={2} />
             </Link>
 
             {/* Only the current language, opening onto the others — at every
@@ -1058,7 +1058,7 @@ export function Navbar() {
               }
               className="relative"
             >
-              <Handbag style={iconStyle} strokeWidth={1.5} />
+              <Handbag style={iconStyle} strokeWidth={2} />
               {cartCount > 0 && (
                 <span className="font-archivo-light absolute -top-1.5 right-0 text-[10px] leading-none nav:-right-2">
                   {cartCount}
@@ -1116,4 +1116,7 @@ export function Navbar() {
   );
 }
 
+/* Stroke 2, not 1.5 (28 November 2026): drawn on a 24-unit grid and shown
+   at 18px, 1.5 came out ~1.1px — lighter than Owners Medium's ~1.6px stems
+   beside it. 2 lands at ~1.5px, the letters' weight. */
 const iconStyle = { width: "var(--nav-icon)", height: "var(--nav-icon)" };

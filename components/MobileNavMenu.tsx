@@ -292,7 +292,7 @@ export function MobileNavMenu({
             >
               <Handbag
                 style={{ width: "var(--nav-icon)", height: "var(--nav-icon)" }}
-                strokeWidth={1.5}
+                strokeWidth={2}
               />
               {cartCount > 0 && (
                 <span className="font-archivo-light absolute -top-1.5 right-0 text-[10px] leading-none">
