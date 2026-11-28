@@ -25,6 +25,13 @@ type TestimonialCellsProps = {
 
 /** Copies of the list in the track: the real one in the middle. */
 const COPIES = 3;
+/**
+ * How far a swipe must go, as a share of a card, to move to the next review
+ * (28 November 2026). Snapping to the nearest card asked for half a card —
+ * on a phone, where a card is the screen's width, half the screen — so an
+ * ordinary swipe sprang back and only a flick worked.
+ */
+const SWIPE_THRESHOLD = 0.12;
 
 /**
  * Customer reviews on the 16 / 12 / 4 grid, as an endless carousel — a first
@@ -81,6 +88,8 @@ export function TestimonialCells({
 
       let cancelled = false;
       let draggable: DraggableInstance | null = null;
+      // Where the proxy rested when the finger came down.
+      let pressX = 0;
 
       const cardWidth = () =>
         track.querySelector<HTMLElement>("li")?.offsetWidth ?? 1;
@@ -135,13 +144,24 @@ export function TestimonialCells({
           allowNativeTouchScrolling: true,
           cursor: "grab",
           activeCursor: "grabbing",
-          // No bounds: it loops. Every throw still ends on a whole card.
+          // No bounds: it loops. Every throw ends on a whole card, and a
+          // swipe past SWIPE_THRESHOLD moves exactly one review its way —
+          // one per swipe, so a strong flick does not skip any.
           snap: {
-            x: (value: number) => Math.round(value / cardWidth()) * cardWidth(),
+            x: (value: number) => {
+              const width = cardWidth();
+              const start = Math.round(pressX / width) * width;
+              const delta = value - pressX;
+              if (Math.abs(delta) < width * SWIPE_THRESHOLD) return start;
+              return start + Math.sign(delta) * width;
+            },
           },
           onDrag: place,
           onThrowUpdate: place,
-          onPress: () => viewport.setAttribute("data-dragging", ""),
+          onPress: () => {
+            pressX = Number(gsap.getProperty(proxy, "x") ?? 0);
+            viewport.setAttribute("data-dragging", "");
+          },
           onRelease: () => viewport.removeAttribute("data-dragging"),
         })[0];
         setup();
@@ -229,7 +249,11 @@ export function TestimonialCells({
             style={{ touchAction: "pan-y" }}
           >
             {/* What Draggable actually moves; the track follows it, wrapped. */}
-            <div ref={proxyRef} aria-hidden className="absolute size-0" />
+            <div
+              ref={proxyRef}
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+            />
             <ul
               ref={trackRef}
               className="flex h-full w-max will-change-transform"
