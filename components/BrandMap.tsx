@@ -206,7 +206,7 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
         ref={containerRef}
         data-lenis-prevent
         aria-label={labels.mapLabel}
-        className="brand-map h-[60svh] min-h-80 w-full border border-black"
+        className="brand-map h-[60svh] min-h-80 w-full border border-sky"
         // The ground colour before the tiles arrive, so there is no flash.
         style={{ backgroundColor: MAP_COLORS.ground }}
       />
