@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 import { CdnImage as Image } from "@/components/CdnImage";
-import { DietBadges, type DietLabels } from "@/components/DietBadges";
+import type { DietLabels } from "@/components/DietBadges";
+import { DietCode } from "@/components/DietCode";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
@@ -35,6 +36,10 @@ type ProductCellProps = {
  * classes (the sky fill on hover, globals.css). The title size is
  * `--card-title`, which the parent sets: the shop tweens it between its two
  * views. `.product-cell__words` is hidden in the shop's index view.
+ *
+ * The line under the name follows the owners' labels (28 November 2026):
+ * the diet code in Owners Medium — "(gf, v)" — then the ingredients in
+ * Archivo, on one line. No badges on the photo any more: the code says it.
  */
 export function ProductCell({
   product,
@@ -57,11 +62,19 @@ export function ProductCell({
             <h3 className="font-owners-narrow-bold line-clamp-2 text-(length:--card-title) leading-[0.95] uppercase">
               {product.title}
             </h3>
-            {/* A few words under the title: the product's "Accroche"
-                (custom.short_description), else the start of its
-                description, on one line. */}
-            <p className="product-cell__words font-archivo-light mt-1.5 truncate text-[15px] leading-tight">
-              {product.shortDescription || product.description}
+            {/* Under the name, as on the label: the diet code, then a few
+                words — the product's "Accroche" (custom.short_description,
+                ideally the label's ingredient line), else the start of its
+                description — on one line. */}
+            <p className="font-archivo-light mt-1.5 truncate text-[15px] leading-tight">
+              <DietCode
+                tags={product.tags ?? []}
+                labels={dietLabels}
+                className="mr-1.5 text-[14px]"
+              />
+              <span className="product-cell__words">
+                {product.shortDescription || product.description}
+              </span>
             </p>
           </div>
           <span className="font-archivo-light text-[15px]">
@@ -86,11 +99,6 @@ export function ProductCell({
                 {soldOutLabel}
               </span>
             )}
-            <DietBadges
-              tags={product.tags ?? []}
-              labels={dietLabels}
-              className="absolute bottom-3 left-3"
-            />
           </div>
         </div>
       </Link>

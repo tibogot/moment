@@ -15,6 +15,7 @@ import { hasNextDayTag } from "@/lib/delivery/next-day";
 import { TrackViewItem } from "@/components/TrackViewItem";
 import { Footer } from "@/components/Footer";
 import { CellGrid } from "@/components/v2/CellGrid";
+import { DietCode, dietCodes } from "@/components/DietCode";
 import { JsonLd } from "@/components/JsonLd";
 import { OrderPreferencesBar } from "@/components/OrderPreferencesBar";
 import { ProductDetails } from "@/components/ProductDetails";
@@ -193,6 +194,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <h1 className="font-owners-narrow-bold text-[10vw] leading-[0.95] wrap-break-word uppercase md:text-[min(4vw,6svh)]">
                 {product.title}
               </h1>
+              {/* The diet as the label writes it, spelt out beside it. */}
+              {dietCodes(product.tags ?? []).length > 0 && (
+                <p className="font-archivo-light mt-3 text-[17px]">
+                  <DietCode
+                    tags={product.tags ?? []}
+                    labels={dict.shop.filters.tags}
+                    className="mr-2 text-[17px]"
+                  />
+                  {dietCodes(product.tags ?? [])
+                    .map((key) => dict.shop.filters.tags[key])
+                    .join(", ")}
+                </p>
+              )}
 
               {/* Price, size (when there are several) and Add to cart, with
               the description between the price and the sizes. */}

@@ -7,6 +7,7 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { ProductCell } from "@/components/v2/ProductCell";
+import { DIET_CODES } from "@/components/DietCode";
 import { gsap } from "@/lib/gsap";
 import { loadFlip, type FlipType } from "@/lib/gsap/flip";
 import { routes } from "@/lib/routes";
@@ -129,6 +130,16 @@ export function ProductGrid({
   // Falls back to the dictionary rather than defaulting in the signature: a
   // default parameter cannot read a hook.
   const emptyText = emptyMessage ?? dict.shop.unavailable;
+  /* The diet filter gives the key to the cards' codes: "Vegan (vg)". */
+  const dietFilterLabels: Record<string, string> = {
+    ...dict.shop.filters.tags,
+    ...Object.fromEntries(
+      Object.entries(DIET_CODES).map(([tag, code]) => [
+        tag,
+        `${dict.shop.filters.tags[tag as keyof typeof DIET_CODES]} (${code})`,
+      ]),
+    ),
+  };
   const [view, setView] = useState<View>("grid");
   const [sort, setSort] = useState<Sort>("featured");
   const [filters, setFilters] = useState<SelectedFilters>(EMPTY_FILTERS);
@@ -322,7 +333,7 @@ export function ProductGrid({
                 label={dict.shop.filters.diet}
                 tags={dietTags}
                 selected={filters.diet}
-                labels={dict.shop.filters.tags}
+                labels={dietFilterLabels}
                 open={openGroups.includes("diet")}
                 onToggleOpen={() => toggleGroup("diet")}
                 onToggleTag={(tag) => toggleFilter("diet", tag)}

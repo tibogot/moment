@@ -3,7 +3,8 @@ import { LocaleLink as Link } from "@/components/LocaleLink";
 import type { CSSProperties, MouseEvent } from "react";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
-import { DietBadges, type DietLabels } from "@/components/DietBadges";
+import type { DietLabels } from "@/components/DietBadges";
+import { DietCode } from "@/components/DietCode";
 
 type ProductCardProps = {
   product: ShopifyProduct;
@@ -89,13 +90,6 @@ export function ProductCard({
               {soldOutLabel}
             </span>
           )}
-          {dietLabels && (
-            <DietBadges
-              tags={product.tags ?? []}
-              labels={dietLabels}
-              className="absolute bottom-3 left-3"
-            />
-          )}
         </div>
       </div>
 
@@ -107,6 +101,15 @@ export function ProductCard({
             changes what the title *is*, never how it sits. */}
         <Title className="font-owners-medium text-(length:--card-type) uppercase tracking-wide">
           {product.title}
+          {/* The diet as the labels write it, "(gf, v)" — not a badge on
+              the photo any more (28 November 2026). */}
+          {dietLabels && (
+            <DietCode
+              tags={product.tags ?? []}
+              labels={dietLabels}
+              className="ml-1.5 normal-case tracking-normal"
+            />
+          )}
         </Title>
         <span className="font-archivo-light text-(length:--card-price)">
           {product.displayPrice}
