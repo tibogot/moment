@@ -14,7 +14,7 @@ import {
 import { hasNextDayTag } from "@/lib/delivery/next-day";
 import { TrackViewItem } from "@/components/TrackViewItem";
 import { Footer } from "@/components/Footer";
-import { GridSection } from "@/components/GridSection";
+import { CellGrid } from "@/components/v2/CellGrid";
 import { JsonLd } from "@/components/JsonLd";
 import { OrderPreferencesBar } from "@/components/OrderPreferencesBar";
 import { ProductDetails } from "@/components/ProductDetails";
@@ -129,10 +129,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
         )}
       />
 
-      {/* Less on a phone: 22svh there left ~200px of empty cream above the
-          photo and pushed the price and the button below the fold. */}
-      <GridSection className="pt-[calc(var(--grid-band)+5svh)] pb-[12svh] md:pt-[22svh]">
-        {/* Cart-level, not product-level: the same three answers apply to the
+      {/* On the page's 16 / 12 / 4 grid since 28 November 2026, like the shop:
+          the frame, then on the cells — the order preferences across the
+          page, the gallery over cells 1–8 and the product over 10–16 (one
+          cell of air between), stacked on a phone. Less top space on a
+          phone: more left ~200px of empty cream above the photo and pushed
+          the price and the button below the fold. */}
+      <div className="v2">
+        <section
+          className="relative w-full bg-cream"
+          style={{ paddingTop: "var(--grid-band)" }}
+        >
+          <CellGrid
+            lineClassName="bg-sky"
+            subdivide={2}
+            cells={false}
+            readout={false}
+            bottomBand="0px"
+          />
+          <div
+            className="relative grid pt-[5svh] pb-[12svh] md:pt-[12svh]"
+            style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
+          >
+            {/* Cart-level, not product-level: the same three answers apply to the
             whole order. It sits here because this is where the decision to buy
             actually gets made.
 
@@ -142,88 +161,92 @@ export default async function ProductPage({ params }: ProductPageProps) {
             On a phone it moves after the product: stacked first, its date,
             window, address and method filled the whole first screen and pushed
             the photo, the name and the price below the fold. */}
-        <section
-          aria-labelledby="order-preferences"
-          className="order-last col-start-2 col-end-5 mt-[8svh] px-(--grid-gutter) md:order-first md:col-end-9 md:mt-0 md:mb-[6svh]"
-        >
-          {/* A label, not a heading: on desktop it sits above the product,
+            <section
+              aria-labelledby="order-preferences"
+              className="order-last col-[2/-2] mt-[8svh] px-(--v2-pad) md:order-first md:mt-0 md:mb-[6svh]"
+            >
+              {/* A label, not a heading: on desktop it sits above the product,
               and as an h2 it came before the page's h1 in the outline. */}
-          <p
-            id="order-preferences"
-            className="font-owners-narrow-bold text-[7vw] leading-[0.95] uppercase md:text-[min(2.2vw,3.4svh)]"
-          >
-            {dict.product.orderPreferencesTitle}
-          </p>
+              <p
+                id="order-preferences"
+                className="font-owners-narrow-bold text-[7vw] leading-[0.95] uppercase md:text-[min(2.2vw,3.4svh)]"
+              >
+                {dict.product.orderPreferencesTitle}
+              </p>
 
-          {/* No promise that the catalogue changes with these answers — it does
+              {/* No promise that the catalogue changes with these answers — it does
               not. What they do buy is not having to work it out at checkout. */}
-          {/* 18px, the same as every other lead on the site: Archivo Light
+              {/* 18px, the same as every other lead on the site: Archivo Light
               sets small and anything under it stops reading as body copy. */}
-          <p className="font-archivo-light mt-3 mb-6 max-w-[80ch] text-[18px] leading-normal">
-            {dict.product.orderPreferences}
-          </p>
+              <p className="font-archivo-light mt-3 mb-6 max-w-[80ch] text-[18px] leading-normal">
+                {dict.product.orderPreferences}
+              </p>
 
-          <OrderPreferencesBar />
+              <OrderPreferencesBar />
+            </section>
+
+            <div className="col-[2/span_4] min-w-0 px-(--v2-pad) md:col-[2/span_6] lg:col-[2/span_8]">
+              <ProductGallery images={galleryImages} title={product.title} />
+            </div>
+
+            <div className="col-[2/span_4] mt-[5svh] min-w-0 px-(--v2-pad) md:col-[8/span_6] md:mt-0 lg:col-[11/span_7]">
+              <h1 className="font-owners-narrow-bold text-[10vw] leading-[0.95] wrap-break-word uppercase md:text-[min(4vw,6svh)]">
+                {product.title}
+              </h1>
+
+              {/* Price, size (when there are several) and Add to cart, with
+              the description between the price and the sizes. */}
+              <ProductPurchase
+                variants={product.variants}
+                defaultVariantId={product.variantId}
+                analyticsItem={analyticsItem}
+                minimumQuantity={minimumQuantity}
+              >
+                {product.descriptionHtml ? (
+                  <div
+                    className="product-description font-archivo-light mt-6 text-[18px] leading-[1.6] [&_p+p]:mt-4"
+                    dangerouslySetInnerHTML={{
+                      __html: product.descriptionHtml,
+                    }}
+                  />
+                ) : product.description ? (
+                  <p className="font-archivo-light mt-6 text-[18px] leading-[1.6] whitespace-pre-line">
+                    {product.description}
+                  </p>
+                ) : null}
+              </ProductPurchase>
+              <TrackViewItem item={analyticsItem} />
+              {hasNextDayTag(product.tags ?? []) && (
+                <p className="font-archivo-light mt-2 text-[13px] opacity-70">
+                  {interpolate(dict.product.nextDayNote, {
+                    cutoff: formatCutoffHour(
+                      availability.nextDay?.cutoffHour ??
+                        DEFAULT_NEXT_DAY_CUTOFF_HOUR,
+                    ),
+                  })}
+                </p>
+              )}
+
+              <OrderRulesNote
+                locale={locale}
+                dict={dict}
+                zones={zones}
+                className="mt-3"
+              />
+
+              {product.details && (
+                <ProductDetails details={product.details} copy={dict.product} />
+              )}
+            </div>
+          </div>
         </section>
 
-        <div className="col-start-2 col-end-5 px-(--grid-gutter) md:col-end-6">
-          <ProductGallery images={galleryImages} title={product.title} />
-        </div>
-
-        <div className="col-start-2 col-end-5 mt-[5svh] px-(--grid-gutter) md:col-start-6 md:col-end-9 md:mt-0">
-          <h1 className="font-owners-narrow-bold text-[10vw] leading-[0.95] wrap-break-word uppercase md:text-[min(4vw,6svh)]">
-            {product.title}
-          </h1>
-
-          {/* Price, size (when there are several) and Add to cart, with
-              the description between the price and the sizes. */}
-          <ProductPurchase
-            variants={product.variants}
-            defaultVariantId={product.variantId}
-            analyticsItem={analyticsItem}
-            minimumQuantity={minimumQuantity}
-          >
-            {product.descriptionHtml ? (
-              <div
-                className="product-description font-archivo-light mt-6 text-[18px] leading-[1.6] [&_p+p]:mt-4"
-                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
-              />
-            ) : product.description ? (
-              <p className="font-archivo-light mt-6 text-[18px] leading-[1.6] whitespace-pre-line">
-                {product.description}
-              </p>
-            ) : null}
-          </ProductPurchase>
-          <TrackViewItem item={analyticsItem} />
-          {hasNextDayTag(product.tags ?? []) && (
-            <p className="font-archivo-light mt-2 text-[13px] opacity-70">
-              {interpolate(dict.product.nextDayNote, {
-                cutoff: formatCutoffHour(
-                  availability.nextDay?.cutoffHour ??
-                    DEFAULT_NEXT_DAY_CUTOFF_HOUR,
-                ),
-              })}
-            </p>
-          )}
-
-          <OrderRulesNote
-            locale={locale}
-            dict={dict}
-            zones={zones}
-            className="mt-3"
-          />
-
-          {product.details && (
-            <ProductDetails details={product.details} copy={dict.product} />
-          )}
-        </div>
-      </GridSection>
-
-      <ProductRelatedSection
-        similar={similarProducts}
-        allProducts={allProducts}
-        currentHandle={handle}
-      />
+        <ProductRelatedSection
+          similar={similarProducts}
+          allProducts={allProducts}
+          currentHandle={handle}
+        />
+      </div>
 
       <Footer />
     </>

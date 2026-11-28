@@ -17,7 +17,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (images.length === 0) {
-    return <div className="aspect-4/5 w-full bg-sky/20" aria-hidden />;
+    return <div className="aspect-3/4 w-full bg-sky/20" aria-hidden />;
   }
 
   const activeImage = images[activeIndex] ?? images[0];
@@ -32,10 +32,13 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 disabled={images.length === 1}
-                aria-label={interpolate(viewImage, { index: index + 1, total: images.length })}
+                aria-label={interpolate(viewImage, {
+                  index: index + 1,
+                  total: images.length,
+                })}
                 aria-current={index === activeIndex ? "true" : undefined}
                 className={cn(
-                  "relative aspect-4/5 w-full overflow-hidden border transition-colors duration-500",
+                  "relative aspect-3/4 w-full overflow-hidden border transition-colors duration-500",
                   index === activeIndex
                     ? "border-black"
                     : "border-sky hover:border-black/40",
@@ -54,7 +57,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           ))}
         </ul>
 
-        <div className="relative aspect-4/5 min-w-0 flex-1 overflow-hidden bg-sky/20">
+        <div className="relative aspect-3/4 min-w-0 flex-1 overflow-hidden bg-sky/20">
           <Image
             key={activeImage.url}
             src={activeImage.url}
@@ -74,10 +77,13 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               <button
                 type="button"
                 onClick={() => setActiveIndex(index)}
-                aria-label={interpolate(viewImage, { index: index + 1, total: images.length })}
+                aria-label={interpolate(viewImage, {
+                  index: index + 1,
+                  total: images.length,
+                })}
                 aria-current={index === activeIndex ? "true" : undefined}
                 className={cn(
-                  "relative aspect-4/5 w-16 overflow-hidden border transition-colors duration-500",
+                  "relative aspect-3/4 w-16 overflow-hidden border transition-colors duration-500",
                   index === activeIndex
                     ? "border-black"
                     : "border-sky hover:border-black/40",

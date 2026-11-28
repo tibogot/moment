@@ -489,6 +489,7 @@ export function ProductGrid({
                   soldOutLabel={dict.product.soldOut}
                   dietLabels={dict.shop.filters.tags}
                   sizes="(max-width: 768px) 100vw, 25vw"
+                  bottomRule
                 />
               </li>
             ))}

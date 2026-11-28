@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { useDictionary } from "@/components/LocaleProvider";
-import { ProductTabsCarousel } from "@/components/ProductTabsCarousel";
+import { ProductCarouselCells } from "@/components/v2/ProductCarouselCells";
 import {
   RECENTLY_VIEWED_MAX,
   readRecentlyViewedHandles,
@@ -23,6 +23,9 @@ type ProductRelatedSectionProps = {
  * occasion picker. They stay separate tabs rather than one list: similar is
  * a recommendation (and the default, so those links are in the HTML);
  * recently viewed is personal history and only appears after hydration.
+ *
+ * The home's carousel on the 16 / 12 / 4 grid since 28 November 2026 (the
+ * same cards as the home and the shop, ProductCell). Must sit in a `.v2`.
  */
 export function ProductRelatedSection({
   similar,
@@ -56,7 +59,6 @@ export function ProductRelatedSection({
           id: "similar",
           label: dict.product.similar,
           products: similar,
-          viewAllHref: routes.shop,
         }
       : null,
     recentlyViewed.length > 0
@@ -71,12 +73,11 @@ export function ProductRelatedSection({
   if (tabs.length === 0) return null;
 
   return (
-    <ProductTabsCarousel
+    <ProductCarouselCells
       tabs={tabs}
-      defaultTabId="similar"
-      viewAllLabel={dict.common.seeEverything}
+      defaultTabId={tabs[0].id}
+      shopLink={{ href: routes.shop, label: dict.home.moments.shop }}
       soldOutLabel={dict.product.soldOut}
-      dietLabels={dict.shop.filters.tags}
       prevLabel={dict.home.calendar.prev}
       nextLabel={dict.home.calendar.next}
     />

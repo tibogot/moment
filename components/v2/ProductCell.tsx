@@ -13,6 +13,13 @@ type ProductCellProps = {
   sizes: string;
   /** Receives the click first — the carousel cancels it after a drag. */
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  /**
+   * The rule along the bottom: for cards stacked in rows (the shop). Off in
+   * the carousel, which sits on its section's own bottom line — the card's
+   * rules turn cream on hover, and a second one there read as a cream gap
+   * between the fill and the line (28 November 2026).
+   */
+  bottomRule?: boolean;
 };
 
 /**
@@ -35,6 +42,7 @@ export function ProductCell({
   dietLabels,
   sizes,
   onClick,
+  bottomRule = false,
 }: ProductCellProps) {
   return (
     <>
@@ -87,7 +95,7 @@ export function ProductCell({
         </div>
       </Link>
       {/* The card's rules, centred on the lines like the grid's: under the
-          title, on its right edge, along its bottom. */}
+          title, on its right edge, and along its bottom when asked. */}
       <span
         aria-hidden
         className="collection-card__rule pointer-events-none absolute inset-x-0 h-(--grid-line) -translate-y-1/2"
@@ -97,10 +105,12 @@ export function ProductCell({
         aria-hidden
         className="collection-card__rule pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) translate-x-1/2"
       />
-      <span
-        aria-hidden
-        className="collection-card__rule pointer-events-none absolute inset-x-0 bottom-0 h-(--grid-line) translate-y-1/2"
-      />
+      {bottomRule && (
+        <span
+          aria-hidden
+          className="collection-card__rule pointer-events-none absolute inset-x-0 bottom-0 h-(--grid-line) translate-y-1/2"
+        />
+      )}
     </>
   );
 }
