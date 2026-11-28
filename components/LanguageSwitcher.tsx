@@ -32,7 +32,10 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     // The gap belongs to the caller: `cn` is a plain join, so a second gap
     // class here would not lose to one passed in. The mobile menu wants the
     // codes further apart than the desktop bar does.
-    <nav className={cn("flex items-center", className)} aria-label={dict.language.label}>
+    <nav
+      className={cn("flex items-center", className)}
+      aria-label={dict.language.label}
+    >
       {LOCALES.map((locale) => {
         const current = locale === active;
 
@@ -149,7 +152,10 @@ export function CompactLanguageSwitcher({ className }: { className?: string }) {
         className="font-owners-medium -mx-2 flex min-h-11 min-w-11 items-center justify-center uppercase tracking-wide"
         style={{ fontSize: "var(--nav-text)" }}
       >
-        {active}
+        {/* Capitals sit above the middle of their line (no descenders):
+            moved down onto the icons' centre on desktop, as the navbar's
+            links are. On a phone it was already within half a pixel. */}
+        <span className="nav:translate-y-[0.135em]">{active}</span>
       </button>
 
       {open && (

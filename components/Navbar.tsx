@@ -747,8 +747,12 @@ export function Navbar() {
     },
   );
 
+  /* Moved down onto the bar's centre line, where the icons sit (28 November
+     2026, measured at 1440: capitals 3.25px above the icons). 1.5px undoes
+     the lift of the underline's 3px of padding; 0.135em is how far capitals
+     sit above the middle of their line, having no descenders. */
   const navLinkClassName =
-    "animated-underline font-owners-medium uppercase tracking-wide";
+    "animated-underline font-owners-medium uppercase tracking-wide translate-y-[calc(1.5px+0.135em)]";
 
   const dict = useDictionary();
 
