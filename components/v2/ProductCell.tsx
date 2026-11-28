@@ -37,9 +37,9 @@ type ProductCellProps = {
  * `--card-title`, which the parent sets: the shop tweens it between its two
  * views. `.product-cell__words` is hidden in the shop's index view.
  *
- * The line under the name follows the owners' labels (28 November 2026):
- * the diet code in Owners Medium — "(gf, v)" — then the ingredients in
- * Archivo, on one line. No badges on the photo any more: the code says it.
+ * Under the name, as on the owners' labels (28 November 2026): the diet code
+ * in Owners Medium — "(gf, v)" — with the price on its line, then the
+ * ingredients in Archivo. No badges on the photo any more: the code says it.
  */
 export function ProductCell({
   product,
@@ -57,29 +57,29 @@ export function ProductCell({
         className="flex h-full flex-col"
       >
         {/* Title row: one cell high. */}
-        <div className="flex h-(--s-cell-h) shrink-0 flex-col justify-between overflow-hidden p-(--v2-pad)">
-          <div className="min-w-0">
-            <h3 className="font-owners-narrow-bold line-clamp-2 text-(length:--card-title) leading-[0.95] uppercase">
-              {product.title}
-            </h3>
-            {/* Under the name, as on the label: the diet code, then a few
-                words — the product's "Accroche" (custom.short_description,
-                ideally the label's ingredient line), else the start of its
-                description — on one line. */}
-            <p className="font-archivo-light mt-1.5 truncate text-[15px] leading-tight">
-              <DietCode
-                tags={product.tags ?? []}
-                labels={dietLabels}
-                className="mr-1.5 text-[14px]"
-              />
-              <span className="product-cell__words">
-                {product.shortDescription || product.description}
-              </span>
-            </p>
+        <div className="flex h-(--s-cell-h) shrink-0 flex-col overflow-hidden p-(--v2-pad)">
+          <h3 className="font-owners-narrow-bold line-clamp-2 text-(length:--card-title) leading-[0.95] uppercase">
+            {product.title}
+          </h3>
+          {/* Stacked as on the label: the diet code under the name, the
+              ingredients under the code. The price shares the code's line,
+              on the right, so a two-line name still fits the one-cell row —
+              and it sits in the same place on every card, code or not. */}
+          <div className="mt-1.5 flex items-baseline justify-between gap-3">
+            <DietCode
+              tags={product.tags ?? []}
+              labels={dietLabels}
+              className="text-[14px]"
+            />
+            <span className="font-archivo-light ml-auto shrink-0 text-[15px]">
+              {product.displayPrice}
+            </span>
           </div>
-          <span className="font-archivo-light text-[15px]">
-            {product.displayPrice}
-          </span>
+          {/* The product's "Accroche" (custom.short_description, ideally the
+              label's ingredient line), else the start of its description. */}
+          <p className="product-cell__words font-archivo-light mt-1 truncate text-[15px] leading-tight">
+            {product.shortDescription || product.description}
+          </p>
         </div>
         {/* The photo: the rows under the title, inset by the cell's padding.
             (Edge to edge was tried on 25 November 2026.) */}
