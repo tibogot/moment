@@ -50,6 +50,15 @@ Last reviewed **5 November 2026**.
 - **Delivery rules are data.** Days, windows, zones, fees and capacity are read
   from Shopify metaobjects with built-in defaults (`lib/delivery*.ts`). Field
   reference: `shopify-setup.md`.
+- **A panel that scrolls on its own needs `data-lenis-prevent`.** The page's
+  wheel scrolling goes through Lenis (`components/SmoothScroll.tsx`: desktop
+  wheel and trackpad only, 1s glide; phones scroll natively, and it switches
+  off for "reduce motion"). Lenis takes every wheel event for the page, so a
+  box with its own scroll — cart, search, mobile menu, map, address list,
+  cookie panel, ten today — must carry `data-lenis-prevent` or the wheel will
+  not scroll it. **Nothing will warn you:** it works on a phone and with the
+  scrollbar, and only fails with the mouse wheel. Grep the attribute for
+  examples.
 - **Caching.** Nothing revalidates on a clock; every cached read is tagged and
   cleared by `/api/revalidate/*` webhooks, with a 24 h backstop
   (`lib/cache.ts` explains the ISR-write bill that led here).

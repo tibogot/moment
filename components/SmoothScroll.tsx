@@ -58,7 +58,9 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       root
       ref={lenisRef}
       options={{
-        duration: 1.2,
+        // 1s, not 1.2 (28 November 2026): still a glide, but a shop is
+        // scanned, and the longer one read as slightly floaty on a mouse.
+        duration: 1,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         syncTouch: false,
       }}
