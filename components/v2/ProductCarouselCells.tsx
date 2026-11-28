@@ -1,12 +1,10 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { useId, useRef, useState } from "react";
-import { CdnImage as Image } from "@/components/CdnImage";
+import { type CSSProperties, useId, useRef, useState } from "react";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import type { ProductCarouselTab } from "@/components/ProductTabsCarousel";
 import { CellGrid } from "@/components/v2/CellGrid";
-import { DietBadges } from "@/components/DietBadges";
 import { useDictionary } from "@/components/LocaleProvider";
 import { gsap } from "@/lib/gsap";
 import {
@@ -14,8 +12,8 @@ import {
   timeSinceDrag,
   type DraggableInstance,
 } from "@/lib/gsap/draggable";
-import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { ProductCell } from "@/components/v2/ProductCell";
 
 type ProductCarouselCellsProps = {
   tabs: ProductCarouselTab[];
@@ -345,72 +343,25 @@ export function ProductCarouselCells({
           <ul
             ref={trackRef}
             className="flex h-full w-max will-change-transform"
+            style={
+              {
+                "--card-title": "max(18px, calc(var(--s-cell-h) * 0.2))",
+              } as CSSProperties
+            }
           >
             {active.products.map((product) => (
               <li
                 key={product.id}
                 className="collection-card group relative h-full w-[calc(var(--s-cell-w)*3)] shrink-0 transition-colors duration-500 md:w-[calc(var(--s-cell-w)*4)]"
               >
-                <Link
-                  href={routes.product(product.handle)}
+                <ProductCell
+                  product={product}
+                  soldOutLabel={soldOutLabel}
+                  dietLabels={dietLabels}
+                  sizes="(max-width: 768px) 75vw, 25vw"
                   onClick={(event) => {
                     if (timeSinceDrag() < 0.15) event.preventDefault();
                   }}
-                  className="flex h-full flex-col"
-                >
-                  {/* Title row: one cell high. */}
-                  <div className="flex h-(--s-cell-h) shrink-0 flex-col justify-between p-(--v2-pad)">
-                    <div className="min-w-0">
-                      <h3 className="font-owners-narrow-bold line-clamp-2 text-[length:max(18px,calc(var(--s-cell-h)*0.2))] leading-[0.95] uppercase">
-                        {product.title}
-                      </h3>
-                      {/* A few words under the title: the product's
-                          "Accroche" (custom.short_description), else the
-                          start of its description, on one line. */}
-                      <p className="font-archivo-light mt-1.5 truncate text-[15px] leading-tight">
-                        {product.shortDescription || product.description}
-                      </p>
-                    </div>
-                    <span className="font-archivo-light text-[14px]">
-                      {product.displayPrice}
-                    </span>
-                  </div>
-                  {/* The image: the rows under the title, inset by the cell's
-                      padding. (Edge to edge was tried on 25 November 2026.) */}
-                  <div className="min-h-0 flex-1 p-(--v2-pad)">
-                    <div className="collection-card__image relative h-full w-full overflow-hidden">
-                      {product.imageUrl && (
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.imageAlt}
-                          fill
-                          sizes="(max-width: 768px) 75vw, 25vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-                      )}
-                      {!product.availableForSale && (
-                        <span className="font-owners-medium absolute top-3 left-3 bg-cream px-2 py-1 text-[10px] uppercase">
-                          {soldOutLabel}
-                        </span>
-                      )}
-                      <DietBadges
-                        tags={product.tags ?? []}
-                        labels={dietLabels}
-                        className="absolute bottom-3 left-3"
-                      />
-                    </div>
-                  </div>
-                </Link>
-                {/* The card's rules, centred on the lines like the grid's:
-                    under the title, and on its right edge. */}
-                <span
-                  aria-hidden
-                  className="collection-card__rule pointer-events-none absolute inset-x-0 h-(--grid-line) -translate-y-1/2"
-                  style={{ top: "var(--s-cell-h)" }}
-                />
-                <span
-                  aria-hidden
-                  className="collection-card__rule pointer-events-none absolute inset-y-0 right-0 w-(--grid-line) translate-x-1/2"
                 />
               </li>
             ))}

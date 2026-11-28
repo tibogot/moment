@@ -627,6 +627,12 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   initial-value: 14px;
 }
 
+@property --card-title {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 18px;
+}
+
 /* Resting values only. The switch between them is tweened by ProductGrid, not
    by a CSS transition: Flip has to measure the destination layout with the
    final lengths already applied, or it animates toward a stale target and the
@@ -636,11 +642,18 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   --card-gutter: var(--grid-gutter);
   --card-type: 12px;
   --card-price: 14px;
+  /* The cards are whole rows of the grid (ProductCell): a title row and three
+     photo rows in the grid view — 4 cells by 4 rows, 3/4 — a title row and
+     two in the index (28 November 2026). */
+  --card-title: max(18px, calc(var(--s-cell-h) * 0.2));
+  grid-auto-rows: calc(var(--s-cell-h) * 4);
 }
 
 /* Index view: the cards drop onto the page's own column lines, so they need
    the gutter and the padding to come in with them. */
 .product-list[data-view="index"] {
+  --card-title: max(14px, calc(var(--s-cell-h) * 0.14));
+  grid-auto-rows: calc(var(--s-cell-h) * 3);
   --card-pad: 2.4svh;
   --card-gutter: max(0.5rem, 1.5vw);
   --card-type: 11px;
@@ -659,6 +672,11 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
     --card-type: 11px;
     --card-price: 12px;
   }
+}
+
+/* The index view's cards are two cells wide: the name and the price only. */
+.product-list[data-view="index"] .product-cell__words {
+  display: none;
 }
 
 /* Replace the browser’s chunky blue clear control with a thin black X. */

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
-import { GridSection } from "@/components/GridSection";
 import { JsonLd } from "@/components/JsonLd";
-import { PageIntro } from "@/components/PageIntro";
+import { CellGrid } from "@/components/v2/CellGrid";
+import { PageIntroContent } from "@/components/v2/PageIntroGrid";
 import { ProductGrid } from "@/components/ProductGrid";
 import { ParallaxImage } from "@/components/ParallaxImage";
 import { DEFAULT_LOCALE, toLocale } from "@/lib/i18n/config";
@@ -108,33 +108,52 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
         )}
       />
 
-      <PageIntro
-        title={collection.title}
-        lead={collection.description || undefined}
-      />
-
-      {headerPhoto && (
-        <GridSection className="pb-[8svh]">
-          {/* Half the width: the owners' photos are portraits. */}
-          <div className="relative col-start-2 col-end-5 h-[60svh] overflow-hidden md:col-end-5 md:h-[80svh]">
-            <ParallaxImage
-              src={headerPhoto}
-              alt=""
-              sizes="90vw"
-              className="absolute inset-0"
+      {/* On the page's 16 / 12 / 4 grid since 28 November 2026, like the
+          shop: the frame, the title and lead on the cells, the photo as a
+          3/4 block of whole cells (6 by 6 rows on a desktop or a tablet, the
+          full 4 on a phone), then the cards. */}
+      <div className="v2">
+        <section
+          className="relative w-full bg-cream"
+          style={{ paddingTop: "var(--grid-band)" }}
+        >
+          <CellGrid
+            lineClassName="bg-sky"
+            subdivide={2}
+            cells={false}
+            readout={false}
+            bottomBand="0px"
+          />
+          <PageIntroContent
+            title={collection.title}
+            lead={collection.description || undefined}
+          />
+          <div
+            className="relative grid pb-[14svh]"
+            style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
+          >
+            {headerPhoto && (
+              <div className="col-[2/span_4] mb-[8svh] p-(--v2-pad) md:col-[2/span_6]">
+                {/* The owners' photos are portraits. */}
+                <div className="relative aspect-3/4 overflow-hidden">
+                  <ParallaxImage
+                    src={headerPhoto}
+                    alt=""
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="absolute inset-0"
+                  />
+                </div>
+              </div>
+            )}
+            {/* The cards are h3s; a hidden h2 keeps the outline unbroken. */}
+            <h2 className="sr-only">{dict.shop.productsHeading}</h2>
+            <ProductGrid
+              products={collection.products}
+              emptyMessage={dict.shop.emptyCollection}
             />
           </div>
-        </GridSection>
-      )}
-
-      <GridSection className="pb-[14svh]">
-        {/* The cards are h3s; a hidden h2 keeps the outline unbroken. */}
-        <h2 className="sr-only">{dict.shop.productsHeading}</h2>
-        <ProductGrid
-          products={collection.products}
-          emptyMessage={dict.shop.emptyCollection}
-        />
-      </GridSection>
+        </section>
+      </div>
 
       <Footer />
     </>

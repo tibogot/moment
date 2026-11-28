@@ -6,7 +6,7 @@ import { interpolate } from "@/lib/i18n/dictionaries";
 import { LocaleLink as Link } from "@/components/LocaleLink";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductCell } from "@/components/v2/ProductCell";
 import { gsap } from "@/lib/gsap";
 import { loadFlip, type FlipType } from "@/lib/gsap/flip";
 import { routes } from "@/lib/routes";
@@ -56,13 +56,14 @@ const views = [
 ] as const satisfies readonly { id: View; cells: number }[];
 
 /**
- * Index runs on the page's own column count — 3 on mobile, 7 above md — so the
- * card borders land exactly on the grid lines the rest of the site is ruled
- * to. Everything else about the card is identical between the two.
+ * On the page's 16 / 12 / 4 cells (28 November 2026): a card is 4 cells wide
+ * in the grid view — four across a desktop, three on a tablet, one on a
+ * phone — and 2 in the index — eight, six, two — so every card edge is a
+ * grid line. Its height is whole rows (.product-list, globals.css).
  */
 const columns: Record<View, string> = {
-  grid: "grid-cols-2 md:grid-cols-3",
-  index: "grid-cols-3 md:grid-cols-7",
+  grid: "grid-cols-1 md:grid-cols-3 lg:grid-cols-4",
+  index: "grid-cols-2 md:grid-cols-6 lg:grid-cols-8",
 };
 
 const DURATION = 0.75;
@@ -74,6 +75,7 @@ const CARD_VARS = [
   "--card-gutter",
   "--card-type",
   "--card-price",
+  "--card-title",
 ] as const;
 
 type CardVars = Record<(typeof CARD_VARS)[number], string>;
@@ -157,9 +159,9 @@ export function ProductGrid({
   const listRef = useRef<HTMLUListElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   /** Captured in the click handler — Flip needs the layout before React re-renders. */
-  const stateRef = useRef<ReturnType<
-    (typeof FlipType)["getState"]
-  > | null>(null);
+  const stateRef = useRef<ReturnType<(typeof FlipType)["getState"]> | null>(
+    null,
+  );
   const heightRef = useRef(0);
   const cardVarsRef = useRef<CardVars | null>(null);
   const flipRef = useRef<gsap.core.Timeline | null>(null);
@@ -209,10 +211,7 @@ export function ProductGrid({
     );
   };
 
-  const toggleFilter = <G extends FilterGroup>(
-    group: G,
-    tag: FilterTag<G>,
-  ) => {
+  const toggleFilter = <G extends FilterGroup>(group: G, tag: FilterTag<G>) => {
     captureLayout();
     setFilters((current) => {
       const selected = current[group].includes(tag)
@@ -295,15 +294,15 @@ export function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="col-start-2 col-end-5 border-t border-sky px-(--grid-gutter) py-[6svh] md:col-end-9">
-        <p className="font-archivo-light text-[15px]">{emptyText}</p>
+      <div className="col-[2/-2] px-(--v2-pad) py-[6svh]">
+        <p className="font-archivo-light text-[17px]">{emptyText}</p>
       </div>
     );
   }
 
   return (
-    <div className="col-start-2 col-end-5 md:col-end-9">
-      <div className="flex flex-col gap-4 border-t border-sky px-(--grid-gutter) py-[4svh]">
+    <div className="col-[2/-2] min-w-0">
+      <div className="flex flex-col gap-4 px-(--v2-pad) py-[4svh]">
         <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
           <div className="min-w-0 flex-1 md:max-w-md">
             <ul>
@@ -443,7 +442,7 @@ export function ProductGrid({
       </div>
 
       {searchQuery && (
-        <p className="font-archivo-light flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-sky px-(--grid-gutter) py-4 text-[15px]">
+        <p className="font-archivo-light flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-sky px-(--v2-pad) py-4 text-[17px]">
           <span>
             {interpolate(dict.shop.searchResults, { query: searchQuery })}
           </span>
@@ -457,7 +456,7 @@ export function ProductGrid({
       )}
 
       {visibleProducts.length === 0 ? (
-        <p className="font-archivo-light border-t border-sky px-(--grid-gutter) py-[6svh] text-[15px]">
+        <p className="font-archivo-light border-t border-sky px-(--v2-pad) py-[6svh] text-[17px]">
           {hasActiveFilters(filters)
             ? dict.shop.filters.empty
             : searchQuery
@@ -465,26 +464,30 @@ export function ProductGrid({
               : emptyText}
         </p>
       ) : (
-        <div ref={wrapperRef}>
+        <div ref={wrapperRef} className="relative">
+          {/* The rule over the first row, centred on its line like the
+              cards' own (ProductCell draws the rest). */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 z-1 h-(--grid-line) -translate-y-1/2 bg-sky"
+          />
           <ul
             ref={listRef}
             data-view={view}
-            className={cn(
-              "product-list grid border-t border-r border-sky",
-              columns[view],
-            )}
+            className={cn("product-list grid", columns[view])}
           >
             {visibleProducts.map((product) => (
               <li
                 key={product.id}
-                className="product-card border-b border-l border-sky transition-colors duration-500"
+                className="collection-card group relative transition-colors duration-500"
               >
                 {/* `sizes` stays fixed across views on purpose: changing it would
                     swap the srcset candidate and flash the image mid-flip. */}
-                <ProductCard
+                <ProductCell
                   product={product}
                   soldOutLabel={dict.product.soldOut}
                   dietLabels={dict.shop.filters.tags}
+                  sizes="(max-width: 768px) 100vw, 25vw"
                 />
               </li>
             ))}
