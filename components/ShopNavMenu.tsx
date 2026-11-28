@@ -8,9 +8,11 @@ import { routes } from "@/lib/routes";
 import { useDictionary } from "@/components/LocaleProvider";
 import { resolveFamilies, SHOP_NAV_GROUPS } from "@/lib/shopify/nav-groups";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify/queries";
+import tableImage from "@/public/images/moment-table.jpg";
 
 type ShopNavMenuProps = {
-  products: ShopifyProduct[];
+  /** Unused since the resting photo became the table (28 November 2026). */
+  products?: ShopifyProduct[];
   collections: ShopifyCollection[];
   onNavigate?: () => void;
 };
@@ -41,18 +43,15 @@ const labelClassName = "animated-underline";
  * family just starts a new row.
  *
  * On the right one photo, 4 cells by 4 rows, that follows the hovered family:
- * the collection's own image from Shopify, else its first product's. Under
- * it, the collection's name. At the bottom, one line: the moments of the day
+ * the collection's own image from Shopify, else its first product's — and
+ * the whole table, "Tous les produits", at rest and on "Tout". Under it, the
+ * name of what it shows. At the bottom, one line: the moments of the day
  * and "Tout" — a second way into the shop, not a third list.
  *
  * Every block is a `data-grid-hole`, so the grid draws only the rules
  * between them; a family slot left empty is one plain block too.
  */
-export function ShopNavMenu({
-  products,
-  collections,
-  onNavigate,
-}: ShopNavMenuProps) {
+export function ShopNavMenu({ collections, onNavigate }: ShopNavMenuProps) {
   const dict = useDictionary();
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -71,22 +70,15 @@ export function ShopNavMenu({
     [collections, dict],
   );
 
-  /* The collection the photo shows: the hovered one, else the first family.
-     Falls back to a product photo when no collection has an image. */
+  /* The hovered collection's photo. With nothing hovered, or on "Tout", the
+     whole shop: the table laid with everything (the home's opening photo),
+     not the first family's — "Tout" over a juice read as juices only (28
+     November 2026). */
   const shown =
-    collections.find((c) => c.handle === hovered && c.imageUrl) ??
-    families.find(({ collection }) => collection.imageUrl)?.collection ??
-    null;
-  const fallbackProduct = products.find((product) => product.imageUrl);
+    collections.find((c) => c.handle === hovered && c.imageUrl) ?? null;
   const photo = shown
     ? { src: shown.imageUrl!, alt: shown.imageAlt, title: shown.title }
-    : fallbackProduct
-      ? {
-          src: fallbackProduct.imageUrl!,
-          alt: fallbackProduct.imageAlt,
-          title: dict.nav.all,
-        }
-      : null;
+    : { src: tableImage, alt: "", title: dict.home.moments.shop };
   const photoHref = shown ? routes.collection(shown.handle) : routes.shop;
 
   const familyRows = Math.max(
@@ -230,16 +222,14 @@ export function ShopNavMenu({
               gridRow: `1 / span ${PHOTO_ROWS}`,
             }}
           >
-            {photo && (
-              <Image
-                key={photo.src}
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                sizes="25vw"
-                className="animate-[v2-fade_400ms_ease-out] object-cover"
-              />
-            )}
+            <Image
+              key={typeof photo.src === "string" ? photo.src : "all"}
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              sizes="25vw"
+              className="animate-[v2-fade_400ms_ease-out] object-cover"
+            />
           </Link>
           <div
             data-grid-hole
@@ -250,7 +240,7 @@ export function ShopNavMenu({
             }}
           >
             <span className="font-owners-medium text-[12px] tracking-wide uppercase">
-              {photo?.title}
+              {photo.title}
             </span>
           </div>
         </nav>
