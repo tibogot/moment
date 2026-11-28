@@ -679,6 +679,20 @@ html[data-palette="sky"] .focus-within\:bg-sky\/20:focus-within {
   display: none;
 }
 
+/* A phone: two cards of 2 cells in either view, the index's metrics
+   (ProductGrid hides the switch there). */
+@media (width < 48rem) {
+  .product-list,
+  .product-list[data-view="index"] {
+    --card-title: max(14px, calc(var(--s-cell-h) * 0.14));
+    grid-auto-rows: calc(var(--s-cell-h) * 3);
+  }
+
+  .product-list .product-cell__words {
+    display: none;
+  }
+}
+
 /* Replace the browser’s chunky blue clear control with a thin black X. */
 .search-input::-webkit-search-decoration {
   -webkit-appearance: none;

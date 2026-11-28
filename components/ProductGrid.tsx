@@ -57,12 +57,13 @@ const views = [
 
 /**
  * On the page's 16 / 12 / 4 cells (28 November 2026): a card is 4 cells wide
- * in the grid view — four across a desktop, three on a tablet, one on a
- * phone — and 2 in the index — eight, six, two — so every card edge is a
- * grid line. Its height is whole rows (.product-list, globals.css).
+ * in the grid view — four across a desktop, three on a tablet — and 2 in the
+ * index — eight, six — so every card edge is a grid line. A phone shows two
+ * cards of 2 cells in both (one per row made a full screen per product), and
+ * hides the switch. The height is whole rows (.product-list, globals.css).
  */
 const columns: Record<View, string> = {
-  grid: "grid-cols-1 md:grid-cols-3 lg:grid-cols-4",
+  grid: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
   index: "grid-cols-2 md:grid-cols-6 lg:grid-cols-8",
 };
 
@@ -419,7 +420,7 @@ export function ProductGrid({
             <div
               role="group"
               aria-label={dict.shop.layout}
-              className="mt-4 flex self-end border border-sky bg-cream"
+              className="mt-4 hidden self-end border border-sky bg-cream md:flex"
             >
               {views.map(({ id, cells }) => (
                 <button
