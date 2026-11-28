@@ -1,6 +1,7 @@
 import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
-import { PageIntro } from "@/components/PageIntro";
+import { CellGrid } from "@/components/v2/CellGrid";
+import { PageIntroContent } from "@/components/v2/PageIntroGrid";
 import { toLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
@@ -36,11 +37,27 @@ export default async function CollaborationsPage({
   return (
     <>
       {/* The owners' "Bouton → Devenir partenaire", then the form. */}
-      <PageIntro
-        title={dict.partner.title}
-        lead={dict.partner.lead}
-        action={{ href: "#devenir-partenaire", label: dict.partner.intro }}
-      />
+      {/* On the page's 16 / 12 / 4 grid since 28 November 2026: the framed
+          intro, then the form (ContactForm, on the grid too). */}
+      <div className="v2">
+        <section
+          className="relative w-full bg-cream"
+          style={{ paddingTop: "var(--grid-band)" }}
+        >
+          <CellGrid
+            lineClassName="bg-sky"
+            subdivide={2}
+            cells={false}
+            readout={false}
+            bottomBand="0px"
+          />
+          <PageIntroContent
+            title={dict.partner.title}
+            lead={dict.partner.lead}
+            action={{ href: "#devenir-partenaire", label: dict.partner.intro }}
+          />
+        </section>
+      </div>
 
       <div id="devenir-partenaire" className="scroll-mt-(--grid-band)">
         <ContactForm

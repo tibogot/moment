@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { trackGenerateLead } from "@/lib/analytics";
 import { sendContactRequest } from "@/app/actions/contact";
-import { GridSection } from "@/components/GridSection";
+import { CellGrid } from "@/components/v2/CellGrid";
 import TextReveal from "@/components/TextReveal";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import {
@@ -38,8 +38,15 @@ import { cn } from "@/lib/utils";
  * puts the rule between them, and the rule down the middle of the form, on real
  * page column lines rather than near them.
  */
-const ASIDE_COLUMNS = "md:col-span-3";
-const FORM_COLUMNS = "md:col-span-4";
+/*
+ * On the page's 16 / 12 / 4 grid since 28 November 2026: the explanations
+ * over cells 1–6 on a desktop (1–5 on a tablet), the ruled form over 7–16
+ * (6–12). Stacked on a phone.
+ */
+const ASIDE_COLUMNS =
+  "col-[2/span_4] md:col-[2/span_5] lg:col-[2/span_6] min-w-0";
+const FORM_COLUMNS =
+  "col-[2/span_4] md:col-[7/span_7] lg:col-[8/span_10] min-w-0";
 
 /**
  * Every field is a cell in a ruled field: the wrapper paints sky and the cells
@@ -47,7 +54,7 @@ const FORM_COLUMNS = "md:col-span-4";
  * as the search results grid — it means no cell ever doubles a neighbour's line.
  */
 const CELL =
-  "bg-cream px-(--grid-gutter) py-[3.2svh] transition-colors duration-300 focus-within:bg-sky/20";
+  "bg-cream px-(--v2-pad) py-[3.2svh] transition-colors duration-300 focus-within:bg-sky/20";
 
 const LABEL = "font-owners-medium block text-[14px] uppercase tracking-wide";
 
@@ -335,9 +342,7 @@ export function ContactForm({
   const reopen = () => {
     setDismissed(state);
     setValues(
-      booking
-        ? { ...initialValues, occasion: bookingOccasion }
-        : initialValues,
+      booking ? { ...initialValues, occasion: bookingOccasion } : initialValues,
     );
   };
 
@@ -356,35 +361,45 @@ export function ContactForm({
   const { email, phone } = useSiteDetails().contact;
 
   return (
-    <GridSection className="pb-[16svh]">
-      {/* Section label, with the rule that doubles as the top edge of the
-          ruled field below it. */}
-      <div className="col-start-2 col-end-5 min-w-0 px-(--grid-gutter) md:col-end-9">
-        <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
-          {pro
-            ? dict.proAccount.intro
-            : partner
-              ? p.intro
-              : booking
-                ? e.intro
-                : t.title}
-        </h2>
-        <div
-          className="mt-4 h-(--grid-line) bg-sky"
-          style={{
-            marginInline: "calc(-1 * var(--grid-gutter))",
-            width: "calc(100% + 2 * var(--grid-gutter))",
-          }}
-          aria-hidden
+    <div className="v2">
+      <section className="relative w-full bg-cream">
+        <CellGrid
+          lineClassName="bg-sky"
+          subdivide={2}
+          cells={false}
+          readout={false}
+          bands={false}
         />
-      </div>
+        <div
+          className="relative grid pt-[8svh] pb-[16svh]"
+          style={{ gridTemplateColumns: "var(--s-grid-columns)" }}
+        >
+          {/* Section label, with the rule that doubles as the top edge of the
+          ruled field below it. */}
+          <div className="col-[2/-2] min-w-0 px-(--v2-pad)">
+            <h2 className="font-owners-medium text-[12px] uppercase tracking-wide">
+              {pro
+                ? dict.proAccount.intro
+                : partner
+                  ? p.intro
+                  : booking
+                    ? e.intro
+                    : t.title}
+            </h2>
+            <div
+              className="mt-4 h-(--grid-line) bg-sky"
+              style={{
+                marginInline: "calc(-1 * var(--v2-pad))",
+                width: "calc(100% + 2 * var(--v2-pad))",
+              }}
+              aria-hidden
+            />
+          </div>
 
-      <div className="col-start-2 col-end-5 min-w-0 md:col-end-9">
-        <div className="md:grid md:grid-cols-7">
           {/* Aside — how it works, held against the top while the form scrolls
               past it, as in the kitchen section. */}
           <div className={ASIDE_COLUMNS}>
-            <div className="px-(--grid-gutter) pt-[5svh] pb-[6svh] md:sticky md:top-(--grid-band) md:pb-[5svh]">
+            <div className="px-(--v2-pad) pt-[5svh] pb-[6svh] md:sticky md:top-(--grid-band) md:pb-[5svh]">
               {/* text-left: TextReveal centres each split line unless an
                   ancestor opts out. */}
               <div className="min-w-0 text-left">
@@ -478,7 +493,7 @@ export function ContactForm({
               // page's column line — carried on past the panel's own bottom.
               // Kept a plain block: as a flex column it stretched the button to
               // the full width and squeezed the reveal's measured line boxes.
-              <div className="border-b border-sky px-(--grid-gutter) py-[9svh] md:h-full">
+              <div className="border-b border-sky px-(--v2-pad) py-[9svh] md:h-full">
                 <p className="font-owners-medium text-[14px] uppercase tracking-wide">
                   {t.sentTitle}
                 </p>
@@ -660,7 +675,11 @@ export function ContactForm({
                   </>
                 ) : booking ? (
                   <>
-                    <input type="hidden" name="occasion" value={bookingOccasion} />
+                    <input
+                      type="hidden"
+                      name="occasion"
+                      value={bookingOccasion}
+                    />
 
                     <OccasionChips
                       name="eventType"
@@ -862,7 +881,7 @@ export function ContactForm({
             )}
           </div>
         </div>
-      </div>
-    </GridSection>
+      </section>
+    </div>
   );
 }

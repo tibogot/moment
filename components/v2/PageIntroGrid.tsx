@@ -19,6 +19,8 @@ type PageIntroGridProps = {
    * letter (Où nous trouver, 28 November 2026).
    */
   leadSide?: "right" | "left";
+  /** A button under the lead (Collaborations: "Devenir partenaire"). */
+  action?: { href: string; label: string };
 };
 
 /**
@@ -57,6 +59,7 @@ export function PageIntroContent({
   lead,
   size = "default",
   leadSide = "right",
+  action,
 }: PageIntroGridProps) {
   return (
     <div
@@ -101,6 +104,16 @@ export function PageIntroContent({
                 {lead}
               </p>
             </TextReveal>
+            {action && (
+              <a
+                href={action.href}
+                className="mt-[4svh] inline-block border border-sky bg-sky px-3 py-2.5 transition-colors duration-500 hover:bg-cream"
+              >
+                <span className="font-owners-medium text-[14px] uppercase tracking-wide">
+                  {action.label}
+                </span>
+              </a>
+            )}
           </div>
         )}
       </div>
