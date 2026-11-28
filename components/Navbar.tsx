@@ -748,11 +748,13 @@ export function Navbar() {
   );
 
   /* Moved down onto the bar's centre line, where the icons sit (28 November
-     2026, measured at 1440: capitals 3.25px above the icons). 1.5px undoes
-     the lift of the underline's 3px of padding; 0.135em is how far capitals
-     sit above the middle of their line, having no descenders. */
+     2026, measured at 1440: capitals 3.25px above the icons — 1.5px from the
+     lift of the underline's 3px of padding, 1.75px because capitals sit above
+     the middle of their line, having no descenders). A whole 3px, not 3.25:
+     at a fractional offset the 1px hover underline fell between two pixel
+     rows and drew grey instead of black. 0.25px off centre does not show. */
   const navLinkClassName =
-    "animated-underline font-owners-medium uppercase tracking-wide translate-y-[calc(1.5px+0.135em)]";
+    "animated-underline font-owners-medium uppercase tracking-wide translate-y-[3px]";
 
   const dict = useDictionary();
 
