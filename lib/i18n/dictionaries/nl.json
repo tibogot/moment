@@ -436,7 +436,10 @@
     "pickupSlotTitle": "Afhaaluur",
     "pickDayIntroPickup": "Kies de dag waarop u langskomt in het atelier.",
     "chooseSlotPickup": "Kies een afhaaluur",
-    "pickSlot": "Kiezen"
+    "pickSlot": "Kiezen",
+    "chooseMethodShort": "Kies levering of afhalen",
+    "addToOrder": "Voeg {shortfall} toe om te bestellen",
+    "completeQuantities": "Vul de aantallen aan"
   },
   "shop": {
     "title": "Onze producten",

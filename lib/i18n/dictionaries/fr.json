@@ -436,7 +436,10 @@
     "pickupSlotTitle": "Heure de retrait",
     "pickDayIntroPickup": "Choisissez le jour où vous passez à l'atelier.",
     "chooseSlotPickup": "Choisir une heure de retrait",
-    "pickSlot": "Choisir"
+    "pickSlot": "Choisir",
+    "chooseMethodShort": "Choisir livraison ou retrait",
+    "addToOrder": "Ajoutez {shortfall} pour commander",
+    "completeQuantities": "Compléter les quantités"
   },
   "shop": {
     "title": "Nos produits",

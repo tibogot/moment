@@ -148,6 +148,8 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   // behind it. A ref mirrors the state because the debounced writes below read
   // the latest target from outside the render.
   const [pending, setPending] = useState<Record<string, number>>({});
+  // The delivery steps reopened from their one-line summary.
+  const [editingSteps, setEditingSteps] = useState(false);
   const pendingRef = useRef(pending);
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   const queue = useRef<Promise<void>>(Promise.resolve());
@@ -376,6 +378,63 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
   // The free-delivery threshold depends on the band, so it is only quoted once
   // the address has put the cart in one.
   const zone = cart?.deliveryZone ? zoneById(zones, cart.deliveryZone) : null;
+
+  /*
+   * Every step settled — method, address (and so a zone), a bookable day, a
+   * window still offered. The block then folds to one summary line (28
+   * November 2026): pinned under the list, the open steps took half a phone
+   * screen from the products.
+   */
+  const stepsComplete = Boolean(
+    deliveryMethod &&
+    (pickup || zone) &&
+    deliveryDate &&
+    !dateIsStale &&
+    slot &&
+    blocker?.kind !== "stale-slot",
+  );
+  const showStepsSummary = stepsComplete && !editingSteps;
+
+  /*
+   * What the main button says, and opens, while checkout is not ready — the
+   * missing step itself rather than a greyed "Commander" (28 November 2026).
+   * The two date blockers keep their own button below.
+   */
+  const blockerAction: { label: string; onClick?: () => void } | null =
+    !blocker || needsDate
+      ? null
+      : blocker.kind === "no-method"
+        ? { label: t.chooseMethodShort }
+        : blocker.kind === "no-address"
+          ? {
+              label: dict.orderBar.addAddress,
+              onClick: () => setView("address"),
+            }
+          : blocker.kind === "no-slot" || blocker.kind === "stale-slot"
+            ? {
+                label: pickup ? t.chooseSlotPickup : t.chooseSlot,
+                onClick: () => setView("slot"),
+              }
+            : blocker.kind === "below-minimum" ||
+                blocker.kind === "below-pickup-minimum"
+              ? {
+                  label: interpolate(t.addToOrder, {
+                    shortfall: formatMoney(locale, blocker.shortfall),
+                  }),
+                }
+              : blocker.kind === "below-piece-minimum"
+                ? { label: t.completeQuantities }
+                : { label: t.checkout };
+
+  /* The notices that only repeated the button go; the ones that explain
+     something (a minimum, a window withdrawn, quantities) stay. */
+  const blockerToExplain =
+    blocker &&
+    (blocker.kind === "no-method" ||
+      blocker.kind === "no-address" ||
+      blocker.kind === "no-slot")
+      ? null
+      : blocker;
 
   /**
    * An address we can reach but cannot price — held apart from `error` because
@@ -724,118 +783,161 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                 cart attribute, and Shopify's hosted checkout gives the customer
                 no way to change it once they have left this panel. */}
             <div className="border-b border-sky px-6 py-4">
-              <DeliveryMethodToggle
-                value={deliveryMethod}
-                onChange={chooseMethod}
-                disabled={isPending}
-              />
+              {showStepsSummary ? (
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-owners-medium text-[12px] uppercase tracking-wide">
+                      {pickup ? t.pickup : t.delivery}
+                    </p>
+                    <p className="font-archivo-light mt-1 text-[15px] leading-snug">
+                      {[
+                        pickup ? null : cart?.deliveryAddress,
+                        deliveryDate
+                          ? formatLongDate(locale, deliveryDate)
+                          : null,
+                        slot ? formatSlot(slot) : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditingSteps(true)}
+                    className="font-archivo-light shrink-0 text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                  >
+                    {t.change}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {stepsComplete && (
+                    <div className="mb-3 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setEditingSteps(false)}
+                        className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                      >
+                        {t.done}
+                      </button>
+                    </div>
+                  )}
+                  <DeliveryMethodToggle
+                    value={deliveryMethod}
+                    onChange={chooseMethod}
+                    disabled={isPending}
+                  />
 
-              {/* Hidden until a method is picked: the calendar and the times
+                  {/* Hidden until a method is picked: the calendar and the times
                   are not the same for collection and delivery. */}
-              {/* Delivery: the address first, right under the choice — it
+                  {/* Delivery: the address first, right under the choice — it
                   sets the zone, the fee and the minimum, so the day comes
                   after it (audit, 26 November 2026). */}
-              {deliveryMethod && !pickup && (
-                <div className="mt-4 flex items-baseline justify-between gap-3">
-                  <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                    {t.address}
-                  </span>
-                  {cart?.deliveryAddress ? (
-                    <span className="flex min-w-0 items-baseline gap-3">
-                      <span className="font-archivo-light truncate text-[15px]">
-                        {cart.deliveryAddress}
+                  {deliveryMethod && !pickup && (
+                    <div className="mt-4 flex items-baseline justify-between gap-3">
+                      <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                        {t.address}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setView("address")}
-                        className="font-archivo-light shrink-0 text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                      >
-                        {t.change}
-                      </button>
-                    </span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setView("address")}
-                      className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                    >
-                      {dict.orderBar.addAddress}
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {deliveryMethod && (pickup || zone) && (
-                <>
-                  <div className="mt-4 flex items-baseline justify-between gap-3">
-                    <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                      {pickup ? t.pickup : t.delivery}
-                    </span>
-
-                    {deliveryDate && !dateIsStale ? (
-                      <span className="flex items-baseline gap-3">
-                        <span className="font-archivo-light text-[15px]">
-                          {formatLongDate(locale, deliveryDate)}
+                      {cart?.deliveryAddress ? (
+                        <span className="flex min-w-0 items-baseline gap-3">
+                          <span className="font-archivo-light truncate text-[15px]">
+                            {cart.deliveryAddress}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setView("address")}
+                            className="font-archivo-light shrink-0 text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                          >
+                            {t.change}
+                          </button>
                         </span>
+                      ) : (
                         <button
                           type="button"
-                          onClick={() => setView("date")}
-                          className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                          onClick={() => setView("address")}
+                          className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
                         >
-                          {t.change}
+                          {dict.orderBar.addAddress}
                         </button>
-                      </span>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setView("date")}
-                        className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                      >
-                        {dateIsStale ? t.pickAnother : t.pick}
-                      </button>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
 
-                  {/* The delivery window, or the collection time, under the day
+                  {deliveryMethod && (pickup || zone) && (
+                    <>
+                      <div className="mt-4 flex items-baseline justify-between gap-3">
+                        <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                          {pickup ? t.pickup : t.delivery}
+                        </span>
+
+                        {deliveryDate && !dateIsStale ? (
+                          <span className="flex items-baseline gap-3">
+                            <span className="font-archivo-light text-[15px]">
+                              {formatLongDate(locale, deliveryDate)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setView("date")}
+                              className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                            >
+                              {t.change}
+                            </button>
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setView("date")}
+                            className="font-archivo-light text-[15px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                          >
+                            {dateIsStale ? t.pickAnother : t.pick}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* The delivery window, or the collection time, under the day
                   it belongs to. Editable here because Shopify's checkout cannot
                   change a cart attribute either. */}
-                  {
-                    <div className="mt-3 flex items-baseline justify-between gap-3">
-                      <span className="font-owners-medium text-[12px] uppercase tracking-wide">
-                        {t.slot}
-                      </span>
-                      <span className="flex items-baseline gap-3">
-                        {slot && (
-                          <span className="font-archivo-light text-[15px]">
-                            {formatSlot(slot)}
+                      {
+                        <div className="mt-3 flex items-baseline justify-between gap-3">
+                          <span className="font-owners-medium text-[12px] uppercase tracking-wide">
+                            {t.slot}
                           </span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => setView("slot")}
-                          className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
-                        >
-                          {slot ? t.change : t.pickSlot}
-                        </button>
-                      </span>
-                    </div>
-                  }
-
-                  {dateIsStale && deliveryDate && (
-                    <CheckoutNotice
-                      tone="blocker"
-                      title={t.beforeCheckout}
-                      className="mt-4"
-                      action={
-                        <CheckoutNoticeAction onClick={() => setView("date")}>
-                          {t.pickAnother}
-                        </CheckoutNoticeAction>
+                          <span className="flex items-baseline gap-3">
+                            {slot && (
+                              <span className="font-archivo-light text-[15px]">
+                                {formatSlot(slot)}
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setView("slot")}
+                              className="font-archivo-light text-[14px] underline underline-offset-2 transition-opacity hover:opacity-60"
+                            >
+                              {slot ? t.change : t.pickSlot}
+                            </button>
+                          </span>
+                        </div>
                       }
-                    >
-                      {interpolate(t.staleDate, {
-                        date: formatLongDate(locale, deliveryDate),
-                      })}
-                    </CheckoutNotice>
+
+                      {dateIsStale && deliveryDate && (
+                        <CheckoutNotice
+                          tone="blocker"
+                          title={t.beforeCheckout}
+                          className="mt-4"
+                          action={
+                            <CheckoutNoticeAction
+                              onClick={() => setView("date")}
+                            >
+                              {t.pickAnother}
+                            </CheckoutNoticeAction>
+                          }
+                        >
+                          {interpolate(t.staleDate, {
+                            date: formatLongDate(locale, deliveryDate),
+                          })}
+                        </CheckoutNotice>
+                      )}
+                    </>
                   )}
                 </>
               )}
@@ -892,7 +994,7 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                   takes the primary slot rather than disabling the button and
                   leaving the customer to work out why. */}
               <CheckoutBlockerNotice
-                blocker={blocker}
+                blocker={blockerToExplain}
                 compact
                 pickup={pickup}
                 onChooseSlot={() => setView("slot")}
@@ -916,12 +1018,31 @@ export function CartPanel({ open, onClose }: CartPanelProps) {
                     </span>
                   </span>
                 </button>
-              ) : blocker ? (
+              ) : blockerAction?.onClick ? (
+                // A step the customer can take from here: the button opens it.
+                <button
+                  type="button"
+                  onClick={blockerAction.onClick}
+                  className="group mt-4 block w-full border border-sky bg-sky px-3 py-2.5 text-center transition-colors duration-500 hover:bg-cream"
+                >
+                  <span className="font-owners-medium inline-flex items-center justify-center gap-2 text-[11px] uppercase tracking-wide">
+                    {blockerAction.label}
+                    <span
+                      className="transition-transform duration-500 group-hover:translate-x-1.5"
+                      aria-hidden
+                    >
+                      &rarr;
+                    </span>
+                  </span>
+                </button>
+              ) : blockerAction ? (
+                // Nothing to open (a minimum, the method toggle just above):
+                // still not clickable, but it says what is missing.
                 <span
                   aria-disabled
-                  className="font-owners-medium mt-4 block w-full cursor-not-allowed border border-sky px-3 py-2.5 text-center text-[11px] uppercase tracking-wide opacity-40"
+                  className="font-owners-medium mt-4 block w-full cursor-not-allowed border border-sky px-3 py-2.5 text-center text-[11px] uppercase tracking-wide opacity-60"
                 >
-                  {t.checkout}
+                  {blockerAction.label}
                 </span>
               ) : (
                 <CheckoutButton

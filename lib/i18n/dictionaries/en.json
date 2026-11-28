@@ -436,7 +436,10 @@
     "pickupSlotTitle": "Collection time",
     "pickDayIntroPickup": "Choose the day you will come by the atelier.",
     "chooseSlotPickup": "Choose a collection time",
-    "pickSlot": "Choose"
+    "pickSlot": "Choose",
+    "chooseMethodShort": "Choose delivery or pickup",
+    "addToOrder": "Add {shortfall} to order",
+    "completeQuantities": "Complete the quantities"
   },
   "shop": {
     "title": "Our products",
