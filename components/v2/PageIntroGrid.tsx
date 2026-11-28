@@ -10,6 +10,12 @@ type PageIntroGridProps = {
    * ("Comment ça marche ? & FAQ"): about two-thirds of the usual size.
    */
   size?: "default" | "small";
+  /**
+   * Where the lead sits under the title: pushed right (the default, the
+   * events and coffee pages), or from the left under the title's first
+   * letter (Où nous trouver, 28 November 2026).
+   */
+  leadSide?: "right" | "left";
 };
 
 /**
@@ -47,6 +53,7 @@ export function PageIntroContent({
   title,
   lead,
   size = "default",
+  leadSide = "right",
 }: PageIntroGridProps) {
   return (
     <div
@@ -73,7 +80,13 @@ export function PageIntroContent({
         </div>
 
         {lead && (
-          <div className="col-[2/span_3] min-w-0 px-(--v2-pad) text-left md:col-[5/span_8] lg:col-[9/span_8]">
+          <div
+            className={
+              leadSide === "left"
+                ? "col-[1/span_4] min-w-0 px-(--v2-pad) text-left md:col-[1/span_8] lg:col-[1/span_8]"
+                : "col-[2/span_3] min-w-0 px-(--v2-pad) text-left md:col-[5/span_8] lg:col-[9/span_8]"
+            }
+          >
             <TextReveal
               blockColor={REVEAL_BLOCK}
               animateOnScroll={false}
