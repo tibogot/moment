@@ -30,10 +30,10 @@ const familyClassName =
   "group block font-owners-medium text-(length:--nav-text) uppercase tracking-wide";
 const childClassName =
   "group block font-archivo-light text-[14px] leading-snug";
-/* The bottom line: one size and line-height 1 (28 November 2026) — "Tout" in
-   the bar's 13px, with an arrow from a fallback font, sat off the line. */
+/* "Tous les produits": the families' size (the bar's), line-height 1 so the
+   arrow, from a fallback font, does not push it off its line. */
 const smallLinkClassName =
-  "group block font-owners-medium text-[12px] leading-none uppercase tracking-wide";
+  "group block font-owners-medium text-(length:--nav-text) leading-none uppercase tracking-wide";
 const labelClassName = "animated-underline";
 
 /*

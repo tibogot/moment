@@ -7,12 +7,15 @@ import { useDictionary } from "@/components/LocaleProvider";
 import { REVEAL_BLOCK } from "@/lib/colors";
 import { finishIfReducedMotion, gsap } from "@/lib/gsap";
 import { useAboutNav } from "@/components/AboutNavProvider";
+import { CellGrid } from "@/components/v2/CellGrid";
 // Placeholders (25 November 2026) until the owners pick the house's own.
 import firstImage from "@/public/images/svitlana.jpg";
 import secondImage from "@/public/images/nicole-herrero.jpg";
 
+/* The bar's size, like the shop menu's families (28 November 2026): at 12px
+   the two menus read as two different sizes side by side. */
 const linkClassName =
-  "group block w-full cursor-pointer py-2.5 font-owners-medium text-[12px] uppercase tracking-wide";
+  "group block w-full cursor-pointer py-2.5 font-owners-medium text-(length:--nav-text) uppercase tracking-wide";
 
 const linkLabelClassName = "animated-underline";
 
@@ -51,11 +54,13 @@ const ZOOM_DURATION = 1.4;
  * content columns so you don't have to aim at the letters, and stops at the
  * page padding.
  *
- * Since 25 November 2026 the panel is taller and carries two portrait
- * photographs on the right, across the last three columns: the
- * links alone made a thin strip. The panel still opens only as far as its
- * content — now the photographs set its height.
+ * On the page's 16-cell grid since 28 November 2026, like the shop menu (it
+ * was the last panel on the old 7-column layout, and Shift + G showed no grid
+ * on it): three rows; the links in one block over cells 1–10, then two
+ * portraits of 3 cells by 3 rows — 3/4 — side by side. Every block is a
+ * `data-grid-hole`, so the grid draws only the rules between them.
  */
+const ROWS = 3;
 export function AboutNavMenu({ onNavigate, open = false }: AboutNavMenuProps) {
   const dict = useDictionary();
   const aboutNav = useAboutNav();
@@ -105,65 +110,83 @@ export function AboutNavMenu({ onNavigate, open = false }: AboutNavMenuProps) {
   }, [open]);
 
   return (
-    <div
-      className="grid border-t border-sky"
-      style={{ gridTemplateColumns: "var(--grid-columns)" }}
-    >
-      <nav
-        aria-label={dict.nav.about}
-        className="col-start-2 col-end-5 row-start-1 flex flex-col self-start px-(--v2-pad) pt-[6svh] pb-[6svh]"
-      >
-        {aboutNav.map(({ key, href }) => (
-          <Link
-            key={key}
-            href={href}
-            className={linkClassName}
-            onClick={onNavigate}
+    <div className="v2">
+      <section className="relative border-b border-sky bg-cream">
+        <CellGrid
+          lineClassName="bg-sky"
+          bands={false}
+          readout={false}
+          subdivide={2}
+          linesOnTop
+        />
+        <div
+          className="relative grid"
+          style={{
+            gridTemplateColumns: "var(--s-grid-columns)",
+            gridTemplateRows: `repeat(${ROWS}, var(--s-cell-h))`,
+          }}
+        >
+          <nav
+            aria-label={dict.nav.about}
+            data-grid-hole
+            className="flex min-w-0 flex-col p-(--v2-pad)"
+            style={{ gridColumn: "2 / span 10", gridRow: `1 / span ${ROWS}` }}
           >
-            <span className={linkLabelClassName}>{dict.aboutNav[key]}</span>
-          </Link>
-        ))}
-      </nav>
+            {aboutNav.map(({ key, href }) => (
+              <Link
+                key={key}
+                href={href}
+                className={linkClassName}
+                onClick={onNavigate}
+              >
+                <span className={linkLabelClassName}>{dict.aboutNav[key]}</span>
+              </Link>
+            ))}
+          </nav>
 
-      {/* Two portraits across the last three columns, a cell's padding apart. Decorative: the links carry
-          the meaning. */}
-      <div
-        className="col-start-6 col-end-9 row-start-1 flex gap-(--v2-pad) px-(--v2-pad) py-[6svh]"
-        aria-hidden
-      >
-        {[firstImage, secondImage].map((image, index) => (
-          <div
-            key={index}
-            className="relative aspect-3/4 min-w-0 flex-1 overflow-hidden"
-          >
+          {/* Two portraits, 3 cells by 3 rows each, filling their cells edge
+          to edge like the shop menu's photo. Decorative: the links carry the
+          meaning. */}
+          {[firstImage, secondImage].map((image, index) => (
             <div
-              ref={(element) => {
-                imageRefs.current[index] = element;
+              key={index}
+              aria-hidden
+              data-grid-hole
+              className="relative min-w-0 overflow-hidden"
+              style={{
+                gridColumn: `${12 + index * 3} / span 3`,
+                gridRow: `1 / span ${ROWS}`,
               }}
-              className="absolute inset-0"
             >
-              <Image
-                src={image}
-                alt=""
-                fill
-                // Not the frame's width (~15vw): a landscape photograph covering
-                // a 3/4 frame is drawn about twice as wide as the frame, and the
-                // zoom adds 20% — 15vw made the browser fetch a file a third of
-                // the width it was drawn at, and it showed.
-                sizes="35vw"
-                className="object-cover"
+              <div
+                ref={(element) => {
+                  imageRefs.current[index] = element;
+                }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={image}
+                  alt=""
+                  fill
+                  // Not the frame's width (~19vw): a landscape photograph covering
+                  // a 3/4 frame is drawn about twice as wide as the frame, and the
+                  // zoom adds 20% — the frame's width made the browser fetch a
+                  // file a third of the width it was drawn at, and it showed.
+                  sizes="45vw"
+                  className="object-cover"
+                />
+              </div>
+              <div
+                ref={(element) => {
+                  blockRefs.current[index] = element;
+                }}
+                className="absolute inset-0"
+                style={{ backgroundColor: REVEAL_BLOCK }}
               />
             </div>
-            <div
-              ref={(element) => {
-                blockRefs.current[index] = element;
-              }}
-              className="absolute inset-0"
-              style={{ backgroundColor: REVEAL_BLOCK }}
-            />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
