@@ -15,7 +15,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useGSAP } from "@gsap/react";
-import { CircleUserRound, Handbag, MapPin, Menu, Search } from "lucide-react";
+import { CircleUserRound, Handbag, Menu, Search } from "lucide-react";
 import { useLenis } from "lenis/react";
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
@@ -986,7 +986,8 @@ export function Navbar() {
             className="flex items-center gap-4 justify-self-end nav:col-start-6 nav:col-end-9 nav:justify-end nav:pr-(--v2-pad)"
             onMouseEnter={closeNavMenu}
           >
-            {/* "Où nous trouver" with the tools: a pin and the label. */}
+            {/* "Où nous trouver" with the tools, the label alone (the pin
+                beside it left on 28 November 2026). */}
             {mainNav
               .filter((item) => "side" in item)
               .map((item) =>
@@ -998,13 +999,8 @@ export function Navbar() {
                     className="hidden nav:block"
                     style={{ fontSize: "var(--nav-text)" }}
                   >
-                    {/* The pin beside the label, on one line; the underline
-                        under the label only. */}
-                    <span className="flex items-center gap-1.5">
-                      <MapPin style={iconStyle} strokeWidth={1.5} aria-hidden />
-                      <span className={navLinkClassName}>
-                        {dict.nav[item.key]}
-                      </span>
+                    <span className={navLinkClassName}>
+                      {dict.nav[item.key]}
                     </span>
                   </Link>
                 ) : null,
