@@ -106,6 +106,7 @@ export function ProductCard({
           {dietLabels && (
             <DietCode
               tags={product.tags ?? []}
+              productType={product.productType}
               labels={dietLabels}
               className="ml-1.5 normal-case tracking-normal"
             />

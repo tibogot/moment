@@ -68,6 +68,7 @@ export function ProductCell({
           <div className="mt-1.5 flex items-baseline justify-between gap-3">
             <DietCode
               tags={product.tags ?? []}
+              productType={product.productType}
               labels={dietLabels}
               className="text-[14px]"
             />
