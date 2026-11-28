@@ -187,7 +187,7 @@ export function BrandMap({ points, styleUrl, labels }: BrandMapProps) {
   return (
     <div>
       {/* What the markers mean, before anyone has to click one. */}
-      <ul className="font-archivo-light mb-3 flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
+      <ul className="font-archivo-light mb-3 flex flex-wrap gap-x-6 gap-y-2 text-[15px]">
         <li className="flex items-center gap-2">
           <span aria-hidden className="brand-legend brand-legend--atelier">
             {/* eslint-disable-next-line @next/next/no-img-element */}

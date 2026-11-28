@@ -191,7 +191,7 @@ export default async function FindUsPage({
               </h2>
 
               {partners.length === 0 ? (
-                <p className="font-archivo-light mt-5 max-w-150 text-[15px]">
+                <p className="font-archivo-light mt-5 max-w-150 text-[17px]">
                   {t.empty}
                 </p>
               ) : (
@@ -211,19 +211,19 @@ export default async function FindUsPage({
                               <p className="font-owners-medium text-[14px] uppercase tracking-wide">
                                 {partner.name}
                               </p>
-                              <p className="font-archivo-light text-[14px]">
+                              <p className="font-archivo-light text-[16px]">
                                 {t.kinds[partner.kind]} · {partner.address}
                               </p>
                               {pick(
                                 partner.offer ?? undefined,
                                 locale,
                               )?.trim() && (
-                                <p className="font-archivo-light mt-1 text-[14px] opacity-70">
+                                <p className="font-archivo-light mt-1 text-[16px] opacity-70">
                                   {pick(partner.offer ?? undefined, locale)}
                                 </p>
                               )}
                             </div>
-                            <p className="font-archivo-light flex gap-4 text-[13px]">
+                            <p className="font-archivo-light flex gap-4 text-[15px]">
                               <a
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${partner.name}, ${partner.address}`)}`}
                                 target="_blank"
@@ -251,7 +251,7 @@ export default async function FindUsPage({
                 </div>
               )}
 
-              <p className="font-archivo-light mt-12 border-t border-sky pt-6 text-[15px]">
+              <p className="font-archivo-light mt-12 border-t border-sky pt-6 text-[17px]">
                 {t.partnerCta}{" "}
                 <LocaleLink
                   href={routes.collaborations}
